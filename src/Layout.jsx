@@ -19,35 +19,59 @@ import {
   X,
   LogOut,
   ChevronRight,
-  Shield
+  Shield,
+  CheckCircle2,
+  Badge as BadgeIcon,
+  Video,
+  AlertTriangle,
+  DollarSign,
+  Bell,
+  HelpCircle
 } from 'lucide-react';
 
-const getNavItems = (userRole) => {
-  const baseItems = [
-    { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
-    { name: 'Opportunities', page: 'Opportunities', icon: Search, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
-    { name: 'Documents', page: 'Documents', icon: FileText, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
-    { name: 'AI Writer', page: 'BoilerplateBuilder', icon: Sparkles, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
-    { name: 'Templates', page: 'Templates', icon: BookOpen, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
-    { name: 'Learning', page: 'Learning', icon: BookOpen, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
-    { name: 'Community', page: 'Community', icon: Users, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
-    { name: 'Profile', page: 'Profile', icon: Building2, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
-  ];
+// User Portal Navigation
+const getUserPortalNav = () => [
+  { name: 'Dashboard', page: 'Home', icon: LayoutDashboard },
+  { name: 'My Organization', page: 'Profile', icon: Building2 },
+  { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
+  { name: 'Documents', page: 'Documents', icon: FileText },
+  { name: 'Templates', page: 'Templates', icon: BookOpen },
+  { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
+  { name: 'Opportunities', page: 'Opportunities', icon: Search },
+  { name: 'Learning Hub', page: 'Learning', icon: BookOpen },
+  { name: 'Community', page: 'Community', icon: Users },
+  { name: 'Readiness Status', page: 'ReadinessStatus', icon: Badge },
+  { name: 'Settings', page: 'Settings', icon: SettingsIcon },
+];
 
-  const coachItems = [
-    { name: 'Coach Dashboard', page: 'CoachDashboard', icon: Users, roles: ['coach', 'owner', 'admin'] },
-  ];
+// Coach Portal Navigation
+const getCoachPortalNav = () => [
+  { name: 'Coach Dashboard', page: 'CoachDashboard', icon: LayoutDashboard },
+  { name: 'Assigned Organizations', page: 'AssignedOrganizations', icon: Building2 },
+  { name: 'Review Queue', page: 'ReviewQueue', icon: FileText },
+  { name: 'Video Feedback', page: 'VideoFeedback', icon: Video },
+  { name: 'Teaching & Content', page: 'TeachingContent', icon: BookOpen },
+  { name: 'Flags & Notes', page: 'FlagsNotes', icon: AlertTriangle },
+  { name: 'Settings', page: 'Settings', icon: SettingsIcon },
+];
 
-  const adminItems = [
-    { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield, roles: ['owner', 'admin'] },
-  ];
+// Admin Portal Navigation
+const getAdminPortalNav = () => [
+  { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
+  { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
+  { name: 'Readiness Logic', page: 'ReadinessLogic', icon: Settings },
+  { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
+  { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
+  { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
+  { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
+  { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
+  { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },
+];
 
-  const settingsItem = { name: 'Settings', page: 'Settings', icon: SettingsIcon, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] };
-
-  const role = userRole || 'user';
-  const allItems = [...baseItems, ...coachItems, ...adminItems, settingsItem];
-  
-  return allItems.filter(item => item.roles.includes(role));
+const getNavItems = (portalView) => {
+  if (portalView === 'coach') return getCoachPortalNav();
+  if (portalView === 'admin') return getAdminPortalNav();
+  return getUserPortalNav();
 };
 
 export default function Layout({ children, currentPageName }) {
@@ -67,17 +91,26 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
+  const navItems = getNavItems(effectiveRole);
 
   const handleLogout = () => {
     base44.auth.logout();
   };
+
+  // Portal color schemes
+  const portalColors = {
+    user: { bg: 'bg-emerald-50', border: 'border-emerald-200', accent: 'bg-emerald-600', accentHover: 'hover:bg-emerald-700' },
+    coach: { bg: 'bg-green-50', border: 'border-green-200', accent: 'bg-green-600', accentHover: 'hover:bg-green-700' },
+    admin: { bg: 'bg-red-50', border: 'border-red-200', accent: 'bg-red-600', accentHover: 'hover:bg-red-700' }
+  };
+
+  const currentPortalColors = portalColors[effectiveRole] || portalColors.user;
 
   // Skip layout for onboarding and coach setup
   if ((currentPageName === 'Home' || currentPageName === 'CoachProfileSetup') && !user) {
     return children;
   }
 
-  const navItems = getNavItems(effectiveRole);
   const canSwitchPortals = user?.role === 'owner' || user?.role === 'admin' || user?.role === 'coach';
 
   return (
@@ -134,14 +167,14 @@ export default function Layout({ children, currentPageName }) {
                       to={createPageUrl(item.page)}
                       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                         isActive
-                          ? 'bg-emerald-50 text-emerald-700'
+                          ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
                           : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                       }`}
                     >
-                      <item.icon className={`w-5 h-5 ${isActive ? 'text-emerald-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                      <item.icon className={`w-5 h-5 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400 group-hover:text-slate-600'}`} />
                       {item.name}
                       {isActive && (
-                        <ChevronRight className="w-4 h-4 ml-auto text-emerald-400" />
+                        <ChevronRight className={`w-4 h-4 ml-auto ${currentPortalColors.accent.replace('bg-', 'text-').replace('600', '400')}`} />
                       )}
                     </Link>
                   </li>
@@ -178,7 +211,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </aside>
 
-      {/* Mobile Header */}
+      {/* Global Top Bar - Mobile */}
       <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-slate-200">
         <div className="flex items-center justify-between px-4 py-3">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
@@ -187,15 +220,36 @@ export default function Layout({ children, currentPageName }) {
             </div>
             <span className="font-semibold text-slate-900 text-sm">GC Accelerator</span>
           </Link>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu className="w-6 h-6" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <HelpCircle className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </Button>
+          </div>
         </div>
       </header>
+
+      {/* Global Top Bar - Desktop */}
+      <div className="hidden lg:block lg:pl-64 sticky top-0 z-30 bg-white border-b border-slate-200">
+        <div className="flex items-center justify-end gap-4 px-6 py-3">
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="w-5 h-5 text-slate-600" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          </Button>
+          <Button variant="ghost" size="icon">
+            <HelpCircle className="w-5 h-5 text-slate-600" />
+          </Button>
+        </div>
+      </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -261,11 +315,11 @@ export default function Layout({ children, currentPageName }) {
                           onClick={() => setMobileMenuOpen(false)}
                           className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium ${
                             isActive
-                              ? 'bg-emerald-50 text-emerald-700'
+                              ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
                               : 'text-slate-600 hover:bg-slate-50'
                           }`}
                         >
-                          <item.icon className={`w-5 h-5 ${isActive ? 'text-emerald-600' : 'text-slate-400'}`} />
+                          <item.icon className={`w-5 h-5 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400'}`} />
                           {item.name}
                         </Link>
                       </li>
