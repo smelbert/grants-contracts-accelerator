@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
+import ClientDetailView from './ClientDetailView';
 
 const TIER_COLORS = {
   base: 'bg-slate-100 text-slate-700',
@@ -27,6 +28,7 @@ const STATUS_COLORS = {
 export default function ClientManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [selectedClient, setSelectedClient] = useState(null);
 
   const { data: organizations, isLoading: orgsLoading } = useQuery({
     queryKey: ['allOrganizations'],
@@ -82,6 +84,10 @@ export default function ClientManagement() {
 
   if (orgsLoading || usersLoading || subsLoading) {
     return <Card><CardContent className="py-8 text-center">Loading clients...</CardContent></Card>;
+  }
+
+  if (selectedClient) {
+    return <ClientDetailView client={selectedClient} onBack={() => setSelectedClient(null)} />;
   }
 
   return (
@@ -239,7 +245,11 @@ export default function ClientManagement() {
                   </div>
 
                   {/* Actions */}
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setSelectedClient(client)}
+                  >
                     <Eye className="w-4 h-4 mr-2" />
                     View
                   </Button>
