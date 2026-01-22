@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Sparkles, AlertTriangle, CheckCircle2, Copy, RefreshCw, Save, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
 
 const CONTENT_TYPES = [
   { value: 'mission_statement', label: 'Mission Statement', description: 'A clear, compelling statement of your purpose' },
@@ -128,6 +129,12 @@ Generate a ${selectedType.description}. Be authentic and grounded in the actual 
 
   return (
     <div className="space-y-6">
+      {/* AI Guardrails Notice */}
+      <AIGuardrailsNotice 
+        mode="review" 
+        showWarnings={missingData}
+      />
+
       {/* Content Type Selection */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-slate-700">What would you like to generate?</label>

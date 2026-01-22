@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,18 +8,20 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   X, MessageSquare, Video, History, Eye, Lock, 
-  Save, Send, AlertTriangle, Sparkles, Shield
+  Save, Send, AlertTriangle, Sparkles, Shield, CheckCircle2
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
 
 export default function DocumentViewer({ 
   document, 
   onClose, 
   userRole = 'user',
-  onSaveComment,
   onRequestReview 
 }) {
-  const [comments, setComments] = useState([]);
+  const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState('');
   const [editedContent, setEditedContent] = useState(document?.content || '');
 
@@ -27,18 +29,108 @@ export default function DocumentViewer({
   const canEdit = document?.status === 'draft' || document?.status === 'needs_revision';
   const aiAssisted = document?.ai_assisted;
 
+  // Fetch comments
+  const { data: comments = [] } = useQuery({
+    queryKey: ['documentComments', document?.id],
+    queryFn: () => base44.entities.DocumentComment.filter({ document_id: document?.id }, '-created_date'),
+    enabled: !!document?.id,
+  });
+
+  // Fetch versions
+  const { data: versions = [] } = useQuery({
+    queryKey: ['documentVersions', document?.id],
+    queryFn: () => base44.entities.DocumentVersion.filter({ document_id: document?.id }, '-version_number'),
+    enabled: !!document?.id,
+  });
+
+  // Add comment mutation
+  const addCommentMutation = useMutation({
+    mutationFn: (commentData) => base44.entities.DocumentComment.create(commentData),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['documentComments', document?.id]);
+      setNewComment('');
+    },
+  });
+
+  // Save document mutation
+  const saveDocumentMutation = useMutation({
+    mutationFn: async ({ content }) => {
+      // Create a new version
+      const newVersionNumber = Math.max(...versions.map(v => v.version_number || 0), 0) + 1;
+      await base44.entities.DocumentVersion.create({
+        document_id: document.id,
+        version_number: newVersionNumber,
+        content: content,
+        change_summary: 'Manual edit',
+      });
+      // Update the document
+      return base44.entities.Document.update(document.id, { content });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['documents']);
+      queryClient.invalidateQueries(['documentVersions', document?.id]);
+    },
+  });
+
+  // Update document status mutation
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ status, comment }) => {
+      const promises = [
+        base44.entities.Document.update(document.id, { status })
+      ];
+      if (comment) {
+        promises.push(
+          base44.entities.DocumentComment.create({
+            document_id: document.id,
+            comment_text: comment,
+            author_role: userRole,
+            comment_type: 'feedback'
+          })
+        );
+      }
+      return Promise.all(promises);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['documents']);
+      queryClient.invalidateQueries(['documentComments', document?.id]);
+    },
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   const handleAddComment = () => {
     if (newComment.trim()) {
-      const comment = {
-        id: Date.now(),
-        text: newComment,
-        author: userRole,
-        timestamp: new Date().toISOString(),
-        type: 'comment'
-      };
-      setComments([...comments, comment]);
-      onSaveComment?.(comment);
-      setNewComment('');
+      addCommentMutation.mutate({
+        document_id: document.id,
+        comment_text: newComment,
+        author_name: user?.full_name || user?.email,
+        author_role: userRole,
+        comment_type: 'comment'
+      });
+    }
+  };
+
+  const handleSave = () => {
+    saveDocumentMutation.mutate({ content: editedContent });
+  };
+
+  const handleApprove = () => {
+    updateStatusMutation.mutate({ 
+      status: 'approved',
+      comment: 'Document approved by coach'
+    });
+  };
+
+  const handleRequestRevisions = () => {
+    const feedback = prompt('Please provide revision feedback:');
+    if (feedback) {
+      updateStatusMutation.mutate({ 
+        status: 'needs_revision',
+        comment: feedback
+      });
     }
   };
 
@@ -78,13 +170,7 @@ export default function DocumentViewer({
         {/* AI Guardrail Alert */}
         {aiAssisted && (
           <div className="px-6 pt-4">
-            <Alert className="bg-violet-50 border-violet-200">
-              <Shield className="w-4 h-4 text-violet-600" />
-              <AlertDescription className="text-sm text-violet-700">
-                <strong>AI-Generated Content:</strong> This content was created using AI based on your 
-                organizational data. Review carefully and verify all claims before submission.
-              </AlertDescription>
-            </Alert>
+            <AIGuardrailsNotice mode="review" />
           </div>
         )}
 
@@ -95,19 +181,24 @@ export default function DocumentViewer({
             <div className="lg:col-span-2 p-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-slate-900">Document Content</h3>
-                  <div className="flex gap-2">
+                <h3 className="font-semibold text-slate-900">Document Content</h3>
+                <div className="flex gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    v{versions.length > 0 ? Math.max(...versions.map(v => v.version_number || 1)) : 1}
+                  </Badge>
+                  {versions.length > 1 && (
                     <Button variant="outline" size="sm">
                       <History className="w-4 h-4 mr-2" />
-                      Versions
+                      {versions.length} Versions
                     </Button>
-                    {isCoach && (
-                      <Button variant="outline" size="sm">
-                        <Video className="w-4 h-4 mr-2" />
-                        Video Feedback
-                      </Button>
-                    )}
-                  </div>
+                  )}
+                  {isCoach && (
+                    <Button variant="outline" size="sm">
+                      <Video className="w-4 h-4 mr-2" />
+                      Video Feedback
+                    </Button>
+                  )}
+                </div>
                 </div>
 
                 {canEdit ? (
@@ -127,9 +218,13 @@ export default function DocumentViewer({
 
                 {canEdit && (
                   <div className="flex gap-2">
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button 
+                      onClick={handleSave}
+                      disabled={saveDocumentMutation.isPending}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
                       <Save className="w-4 h-4 mr-2" />
-                      Save Changes
+                      {saveDocumentMutation.isPending ? 'Saving...' : 'Save Changes'}
                     </Button>
                     {document?.status === 'draft' && (
                       <Button variant="outline" onClick={onRequestReview}>
@@ -166,16 +261,29 @@ export default function DocumentViewer({
                   </p>
                 ) : (
                   comments.map((comment) => (
-                    <div key={comment.id} className="p-3 bg-white rounded-lg border border-slate-200">
+                    <div 
+                      key={comment.id} 
+                      className={`p-3 rounded-lg border ${
+                        comment.comment_type === 'feedback' 
+                          ? 'bg-blue-50 border-blue-200' 
+                          : 'bg-white border-slate-200'
+                      }`}
+                    >
                       <div className="flex items-center gap-2 mb-1">
                         <Badge variant="outline" className="text-xs capitalize">
-                          {comment.author}
+                          {comment.author_role}
                         </Badge>
                         <span className="text-xs text-slate-500">
-                          {format(new Date(comment.timestamp), 'MMM d, h:mm a')}
+                          {format(new Date(comment.created_date), 'MMM d, h:mm a')}
                         </span>
+                        {comment.comment_type === 'feedback' && (
+                          <Badge variant="outline" className="text-xs bg-blue-100">
+                            Coach Feedback
+                          </Badge>
+                        )}
                       </div>
-                      <p className="text-sm text-slate-700">{comment.text}</p>
+                      <p className="text-sm font-medium text-slate-600 mb-1">{comment.author_name}</p>
+                      <p className="text-sm text-slate-700">{comment.comment_text}</p>
                     </div>
                   ))
                 )}
@@ -191,22 +299,33 @@ export default function DocumentViewer({
                 />
                 <Button 
                   onClick={handleAddComment} 
-                  disabled={!newComment.trim()}
+                  disabled={!newComment.trim() || addCommentMutation.isPending}
                   size="sm"
                   className="w-full"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
-                  Add {isCoach ? 'Feedback' : 'Comment'}
+                  {addCommentMutation.isPending ? 'Adding...' : `Add ${isCoach ? 'Feedback' : 'Comment'}`}
                 </Button>
               </div>
 
               {/* Coach Review Actions */}
-              {isCoach && document?.status === 'submitted_for_review' && (
+              {isCoach && (document?.status === 'submitted_for_review' || document?.status === 'in_review') && (
                 <div className="mt-4 pt-4 border-t border-slate-200 space-y-2">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                  <Button 
+                    onClick={handleApprove}
+                    disabled={updateStatusMutation.isPending}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
                     Approve Document
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleRequestRevisions}
+                    disabled={updateStatusMutation.isPending}
+                    className="w-full"
+                  >
+                    <AlertTriangle className="w-4 h-4 mr-2" />
                     Request Revisions
                   </Button>
                 </div>
