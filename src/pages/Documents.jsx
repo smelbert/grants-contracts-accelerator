@@ -15,6 +15,7 @@ import {
   CheckCircle2, Clock, AlertCircle, Download
 } from 'lucide-react';
 import { format } from 'date-fns';
+import DocumentViewer from '@/components/documents/DocumentViewer';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', icon: Edit, color: 'slate' },
@@ -213,7 +214,12 @@ export default function DocumentsPage() {
                       </p>
 
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="flex-1">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => setSelectedDoc(doc)}
+                        >
                           <Eye className="w-3 h-3 mr-1" />
                           View
                         </Button>
@@ -240,6 +246,19 @@ export default function DocumentsPage() {
               );
             })}
           </div>
+        )}
+
+        {/* Document Viewer Modal */}
+        {selectedDoc && (
+          <DocumentViewer
+            document={selectedDoc}
+            userRole={user?.role}
+            onClose={() => setSelectedDoc(null)}
+            onRequestReview={() => {
+              requestReviewMutation.mutate(selectedDoc.id);
+              setSelectedDoc(null);
+            }}
+          />
         )}
       </div>
     </div>

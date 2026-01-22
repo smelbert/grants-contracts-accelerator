@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Sparkles, FileText, Edit, Trash2, CheckCircle2, AlertTriangle } from 'lucide-react';
 import ContentGenerator from '@/components/boilerplate/ContentGenerator';
+import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
 
 const CONTENT_TYPE_LABELS = {
   mission_statement: 'Mission Statement',
@@ -83,21 +84,14 @@ export default function BoilerplateBuilderPage() {
           </p>
         </motion.div>
 
-        {/* Ethics Notice */}
+        {/* AI Guardrails Notice */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="mb-6"
         >
-          <Alert className="bg-violet-50 border-violet-200">
-            <AlertTriangle className="w-4 h-4 text-violet-600" />
-            <AlertDescription className="text-violet-700">
-              <strong>Ethical AI:</strong> This tool only uses your verified organizational data. 
-              It will flag missing information rather than fabricate content. Always review and 
-              approve generated content before using it in applications.
-            </AlertDescription>
-          </Alert>
+          <AIGuardrailsNotice mode="ethical" />
         </motion.div>
 
         {/* Tabs */}
