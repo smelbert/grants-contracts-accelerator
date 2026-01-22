@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Sparkles, FileText, Edit, Trash2, CheckCircle2, AlertTriangle } from 'lucide-react';
 import ContentGenerator from '@/components/boilerplate/ContentGenerator';
 import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
+import ProposalGenerator from '@/components/boilerplate/ProposalGenerator';
 
 const CONTENT_TYPE_LABELS = {
   mission_statement: 'Mission Statement',
@@ -22,6 +23,7 @@ const CONTENT_TYPE_LABELS = {
 
 export default function BoilerplateBuilderPage() {
   const [activeTab, setActiveTab] = useState('generate');
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -39,6 +41,11 @@ export default function BoilerplateBuilderPage() {
     queryKey: ['boilerplate', user?.email],
     queryFn: () => base44.entities.BoilerplateContent.filter({ created_by: user?.email }),
     enabled: !!user?.email,
+  });
+
+  const { data: opportunities } = useQuery({
+    queryKey: ['opportunities'],
+    queryFn: () => base44.entities.FundingOpportunity.filter({ is_active: true }),
   });
 
   const saveMutation = useMutation({
@@ -104,11 +111,15 @@ export default function BoilerplateBuilderPage() {
             <TabsList className="bg-white border border-slate-200 p-1 mb-6">
               <TabsTrigger value="generate" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
                 <Sparkles className="w-4 h-4 mr-2" />
-                Generate
+                Generate Content
+              </TabsTrigger>
+              <TabsTrigger value="proposal" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
+                <FileText className="w-4 h-4 mr-2" />
+                Full Proposal
               </TabsTrigger>
               <TabsTrigger value="saved" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
                 <FileText className="w-4 h-4 mr-2" />
-                Saved Content ({savedContent?.length || 0})
+                Saved ({savedContent?.length || 0})
               </TabsTrigger>
             </TabsList>
 
@@ -127,6 +138,56 @@ export default function BoilerplateBuilderPage() {
                       organization={organization} 
                       onSave={handleSave}
                     />
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="proposal">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Generate Full Grant Proposal</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {!organization ? (
+                    <div className="text-center py-8">
+                      <p className="text-slate-500">Complete onboarding first to use the proposal generator.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Select Opportunity (Optional) */}
+                      {opportunities && opportunities.length > 0 && (
+                        <div>
+                          <label className="text-sm font-medium text-slate-700 mb-2 block">
+                            Target Opportunity (Optional)
+                          </label>
+                          <select
+                            value={selectedOpportunity?.id || ''}
+                            onChange={(e) => {
+                              const opp = opportunities.find(o => o.id === e.target.value);
+                              setSelectedOpportunity(opp || null);
+                            }}
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                          >
+                            <option value="">General Proposal</option>
+                            {opportunities.slice(0, 10).map(opp => (
+                              <option key={opp.id} value={opp.id}>
+                                {opp.title} - {opp.funder_name}
+                              </option>
+                            ))}
+                          </select>
+                          <p className="text-xs text-slate-500 mt-1">
+                            Select a specific opportunity to tailor the proposal, or leave blank for a general proposal
+                          </p>
+                        </div>
+                      )}
+                      
+                      <ProposalGenerator
+                        organization={organization}
+                        fundingOpportunity={selectedOpportunity}
+                        onSave={() => setActiveTab('saved')}
+                      />
+                    </div>
                   )}
                 </CardContent>
               </Card>

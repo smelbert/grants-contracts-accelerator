@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
 import VideoFeedback from '@/components/documents/VideoFeedback';
 import DocumentComparison from '@/components/documents/DocumentComparison';
+import AIDocumentAssistant from '@/components/documents/AIDocumentAssistant';
 
 export default function DocumentViewer({ 
   document, 
@@ -198,6 +199,16 @@ export default function DocumentViewer({
           <div className="grid grid-cols-1 lg:grid-cols-3 divide-x divide-slate-200 h-full">
             {/* Document Content */}
             <div className="lg:col-span-2 p-6">
+              {/* AI Assistant */}
+              {canEdit && (
+                <div className="mb-6">
+                  <AIDocumentAssistant
+                    document={document}
+                    onApplySuggestion={(improvedContent) => setEditedContent(improvedContent)}
+                  />
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-slate-900">Document Content</h3>
