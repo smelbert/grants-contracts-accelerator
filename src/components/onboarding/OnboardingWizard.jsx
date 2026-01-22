@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, ArrowLeft, Building2, MapPin, Users, Wallet, Target, CheckCircle2 } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { ArrowRight, ArrowLeft, Building2, MapPin, Users, Wallet, Target, CheckCircle2, ChevronRight } from 'lucide-react';
 
 const STEPS = [
   { id: 'org_type', title: 'Organization Type', icon: Building2 },
@@ -18,7 +19,7 @@ const STEPS = [
 ];
 
 export default function OnboardingWizard({ onComplete, initialData = {} }) {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1); // Start at welcome screen
   const [data, setData] = useState({
     name: initialData.name || '',
     type: initialData.type || '',
@@ -282,6 +283,65 @@ export default function OnboardingWizard({ onComplete, initialData = {} }) {
         return null;
     }
   };
+
+  // Welcome Screen
+  if (step === -1) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-3xl"
+        >
+          <Card className="border-2 border-emerald-200">
+            <CardHeader className="text-center pb-6">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
+                <span className="text-white font-bold text-2xl">G</span>
+              </div>
+              <CardTitle className="text-3xl mb-4">
+                Welcome to the Grants + Contracts Accelerator
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 pb-8">
+              <div className="space-y-4 text-center max-w-2xl mx-auto">
+                <p className="text-lg text-slate-700 leading-relaxed">
+                  This is a <strong>self-led platform</strong>.
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  You don't need permission to move forward.<br />
+                  You don't need to apply for funding before you're ready.<br />
+                  And you will never be told that "anyone can get a grant."
+                </p>
+                <p className="text-slate-700 leading-relaxed">
+                  You'll get <strong>tools, guidance, and honest direction</strong> — immediately.
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  Support is available when you want it, <strong>not required to proceed</strong>.
+                </p>
+              </div>
+
+              <div className="pt-6 flex justify-center">
+                <Button
+                  onClick={() => setStep(0)}
+                  size="lg"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-lg px-8 py-6"
+                >
+                  Start My Readiness Profile
+                  <ChevronRight className="w-5 h-5 ml-2" />
+                </Button>
+              </div>
+
+              <div className="pt-4 text-center">
+                <p className="text-xs text-slate-500">
+                  This isn't a test. It's a starting point. Takes about 5 minutes.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 flex items-center justify-center p-4">
