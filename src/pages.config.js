@@ -4,6 +4,8 @@ import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import Learning from './pages/Learning';
 import Community from './pages/Community';
 import FundingLane from './pages/FundingLane';
+import Profile from './pages/Profile';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -13,9 +15,11 @@ export const PAGES = {
     "Learning": Learning,
     "Community": Community,
     "FundingLane": FundingLane,
+    "Profile": Profile,
 }
 
 export const pagesConfig = {
     mainPage: "Home",
     Pages: PAGES,
+    Layout: __Layout,
 };
