@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Loader2, Settings as SettingsIcon, CreditCard, Receipt, 
-  Check, Sparkles, Crown, Star, Download, AlertCircle
+  Check, Sparkles, Crown, Star, Download, AlertCircle, Users
 } from 'lucide-react';
 import { format } from 'date-fns';
+import TeamManagement from '@/components/settings/TeamManagement';
 
 const TIER_CONFIG = {
   base: {
@@ -128,11 +130,19 @@ export default function SettingsPage() {
               <SettingsIcon className="w-6 h-6 text-slate-600" />
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-              Settings & Billing
+              Settings
             </h1>
           </div>
         </motion.div>
 
+        {/* Tabs */}
+        <Tabs defaultValue="billing" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="billing">Billing & Subscription</TabsTrigger>
+            <TabsTrigger value="team">Team Management</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="billing" className="space-y-6">
         {/* Current Subscription */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -327,6 +337,12 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </motion.div>
+          </TabsContent>
+
+          <TabsContent value="team">
+            <TeamManagement currentUser={user} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
