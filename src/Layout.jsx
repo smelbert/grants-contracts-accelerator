@@ -59,7 +59,7 @@ const getCoachPortalNav = () => [
 const getAdminPortalNav = () => [
   { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
   { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
-  { name: 'Readiness Logic', page: 'ReadinessLogic', icon: Settings },
+  { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
   { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
   { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
   { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
