@@ -1,5 +1,6 @@
 import AdminDashboard from './pages/AdminDashboard';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
+import CoachDashboard from './pages/CoachDashboard';
 import CoachProfileSetup from './pages/CoachProfileSetup';
 import Community from './pages/Community';
 import Documents from './pages/Documents';
@@ -11,13 +12,13 @@ import Opportunities from './pages/Opportunities';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Templates from './pages/Templates';
-import CoachDashboard from './pages/CoachDashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "BoilerplateBuilder": BoilerplateBuilder,
+    "CoachDashboard": CoachDashboard,
     "CoachProfileSetup": CoachProfileSetup,
     "Community": Community,
     "Documents": Documents,
@@ -29,7 +30,6 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Templates": Templates,
-    "CoachDashboard": CoachDashboard,
 }
 
 export const pagesConfig = {

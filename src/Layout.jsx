@@ -52,11 +52,21 @@ const getNavItems = (userRole) => {
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [portalView, setPortalView] = useState(() => {
+    return localStorage.getItem('portalView') || 'auto';
+  });
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
+
+  const handlePortalChange = (view) => {
+    setPortalView(view);
+    localStorage.setItem('portalView', view);
+  };
+
+  const effectiveRole = portalView === 'auto' ? user?.role : portalView;
 
   const handleLogout = () => {
     base44.auth.logout();
@@ -67,7 +77,8 @@ export default function Layout({ children, currentPageName }) {
     return children;
   }
 
-  const navItems = getNavItems(user?.role);
+  const navItems = getNavItems(effectiveRole);
+  const canSwitchPortals = user?.role === 'owner' || user?.role === 'admin' || user?.role === 'coach';
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -85,12 +96,30 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </Link>
 
-          {/* Role Badge */}
-          {user?.role && user.role !== 'user' && (
+          {/* Portal Switcher */}
+          {canSwitchPortals && (
             <div className="mb-4">
-              <Badge variant="outline" className="capitalize">
-                {user.role}
-              </Badge>
+              <p className="text-xs text-slate-500 mb-2">Portal View</p>
+              <select
+                value={portalView}
+                onChange={(e) => handlePortalChange(e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white"
+              >
+                <option value="auto">Auto ({user.role})</option>
+                {(user?.role === 'owner' || user?.role === 'admin') && (
+                  <>
+                    <option value="admin">Admin Portal</option>
+                    <option value="coach">Coach Portal</option>
+                    <option value="user">User Portal</option>
+                  </>
+                )}
+                {user?.role === 'coach' && (
+                  <>
+                    <option value="coach">Coach Portal</option>
+                    <option value="user">User Portal</option>
+                  </>
+                )}
+              </select>
             </div>
           )}
 
@@ -197,11 +226,29 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </div>
               <nav className="p-4">
-                {user?.role && user.role !== 'user' && (
+                {canSwitchPortals && (
                   <div className="mb-4 px-3">
-                    <Badge variant="outline" className="capitalize">
-                      {user.role}
-                    </Badge>
+                    <p className="text-xs text-slate-500 mb-2">Portal View</p>
+                    <select
+                      value={portalView}
+                      onChange={(e) => handlePortalChange(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white"
+                    >
+                      <option value="auto">Auto ({user.role})</option>
+                      {(user?.role === 'owner' || user?.role === 'admin') && (
+                        <>
+                          <option value="admin">Admin Portal</option>
+                          <option value="coach">Coach Portal</option>
+                          <option value="user">User Portal</option>
+                        </>
+                      )}
+                      {user?.role === 'coach' && (
+                        <>
+                          <option value="coach">Coach Portal</option>
+                          <option value="user">User Portal</option>
+                        </>
+                      )}
+                    </select>
                   </div>
                 )}
                 <ul className="space-y-1">
