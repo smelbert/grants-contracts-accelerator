@@ -8,6 +8,7 @@ import { Shield, Loader2, AlertTriangle } from 'lucide-react';
 import PlatformOverview from '@/components/admin/PlatformOverview';
 import GovernanceControls from '@/components/admin/GovernanceControls';
 import TemplateManagement from '@/components/admin/TemplateManagement';
+import ClientManagement from '@/components/admin/ClientManagement';
 
 export default function AdminDashboardPage() {
   const { data: user, isLoading: userLoading } = useQuery({
@@ -91,12 +92,17 @@ export default function AdminDashboardPage() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="clients">Clients</TabsTrigger>
             <TabsTrigger value="governance">Governance</TabsTrigger>
             <TabsTrigger value="templates">Templates</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview">
             <PlatformOverview stats={stats} />
+          </TabsContent>
+
+          <TabsContent value="clients">
+            <ClientManagement />
           </TabsContent>
 
           <TabsContent value="governance">
