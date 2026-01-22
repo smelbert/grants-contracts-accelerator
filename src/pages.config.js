@@ -8,6 +8,8 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Landing from './pages/Landing';
 import Documents from './pages/Documents';
+import CoachProfileSetup from './pages/CoachProfileSetup';
+import AdminDashboard from './pages/AdminDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +24,8 @@ export const PAGES = {
     "Settings": Settings,
     "Landing": Landing,
     "Documents": Documents,
+    "CoachProfileSetup": CoachProfileSetup,
+    "AdminDashboard": AdminDashboard,
 }
 
 export const pagesConfig = {

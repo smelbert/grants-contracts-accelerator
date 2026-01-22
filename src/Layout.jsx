@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   LayoutDashboard, 
   Search, 
@@ -17,19 +18,32 @@ import {
   Menu,
   X,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Shield
 } from 'lucide-react';
 
-const NAV_ITEMS = [
-  { name: 'Dashboard', page: 'Home', icon: LayoutDashboard },
-  { name: 'Opportunities', page: 'Opportunities', icon: Search },
-  { name: 'Documents', page: 'Documents', icon: FileText },
-  { name: 'AI Writer', page: 'BoilerplateBuilder', icon: Sparkles },
-  { name: 'Learning', page: 'Learning', icon: BookOpen },
-  { name: 'Community', page: 'Community', icon: Users },
-  { name: 'Profile', page: 'Profile', icon: Building2 },
-  { name: 'Settings', page: 'Settings', icon: SettingsIcon },
-];
+const getNavItems = (userRole) => {
+  const baseItems = [
+    { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
+    { name: 'Opportunities', page: 'Opportunities', icon: Search, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
+    { name: 'Documents', page: 'Documents', icon: FileText, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
+    { name: 'AI Writer', page: 'BoilerplateBuilder', icon: Sparkles, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
+    { name: 'Learning', page: 'Learning', icon: BookOpen, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
+    { name: 'Community', page: 'Community', icon: Users, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
+    { name: 'Profile', page: 'Profile', icon: Building2, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
+  ];
+
+  const adminItems = [
+    { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield, roles: ['owner', 'admin'] },
+  ];
+
+  const settingsItem = { name: 'Settings', page: 'Settings', icon: SettingsIcon, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] };
+
+  const role = userRole || 'user';
+  const allItems = [...baseItems, ...adminItems, settingsItem];
+  
+  return allItems.filter(item => item.roles.includes(role));
+};
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -43,10 +57,12 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.logout();
   };
 
-  // Skip layout for onboarding
-  if (currentPageName === 'Home' && !user) {
+  // Skip layout for onboarding and coach setup
+  if ((currentPageName === 'Home' || currentPageName === 'CoachProfileSetup') && !user) {
     return children;
   }
+
+  const navItems = getNavItems(user?.role);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -64,10 +80,19 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </Link>
 
+          {/* Role Badge */}
+          {user?.role && user.role !== 'user' && (
+            <div className="mb-4">
+              <Badge variant="outline" className="capitalize">
+                {user.role}
+              </Badge>
+            </div>
+          )}
+
           {/* Navigation */}
           <nav className="flex flex-1 flex-col mt-6">
             <ul className="flex flex-1 flex-col gap-1">
-              {NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 const isActive = currentPageName === item.page;
                 return (
                   <li key={item.name}>
@@ -167,8 +192,15 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </div>
               <nav className="p-4">
+                {user?.role && user.role !== 'user' && (
+                  <div className="mb-4 px-3">
+                    <Badge variant="outline" className="capitalize">
+                      {user.role}
+                    </Badge>
+                  </div>
+                )}
                 <ul className="space-y-1">
-                  {NAV_ITEMS.map((item) => {
+                  {navItems.map((item) => {
                     const isActive = currentPageName === item.page;
                     return (
                       <li key={item.name}>
