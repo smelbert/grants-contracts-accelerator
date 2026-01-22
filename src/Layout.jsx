@@ -33,6 +33,7 @@ import {
 const getUserPortalNav = () => [
   { name: 'Dashboard', page: 'Home', icon: LayoutDashboard },
   { name: 'My Organization', page: 'Profile', icon: Building2 },
+  { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
   { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
   { name: 'Documents', page: 'Documents', icon: FileText },
   { name: 'Templates', page: 'Templates', icon: BookOpen },
@@ -40,7 +41,7 @@ const getUserPortalNav = () => [
   { name: 'Opportunities', page: 'Opportunities', icon: Search },
   { name: 'Learning Hub', page: 'Learning', icon: BookOpen },
   { name: 'Community', page: 'Community', icon: Users },
-  { name: 'Readiness Status', page: 'ReadinessStatus', icon: Badge },
+  { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
   { name: 'Settings', page: 'Settings', icon: SettingsIcon },
 ];
 

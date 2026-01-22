@@ -17,6 +17,7 @@ import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
 import VideoFeedback from '@/components/documents/VideoFeedback';
 import DocumentComparison from '@/components/documents/DocumentComparison';
 import AIDocumentAssistant from '@/components/documents/AIDocumentAssistant';
+import CollaborativeComments from '@/components/collaboration/CollaborativeComments';
 
 export default function DocumentViewer({ 
   document, 
@@ -328,23 +329,9 @@ export default function DocumentViewer({
                 )}
               </div>
 
-              {/* Add Comment */}
-              <div className="space-y-2 pt-4 border-t border-slate-200">
-                <Textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder={isCoach ? "Add feedback for the organization..." : "Add notes or questions..."}
-                  className="min-h-[80px]"
-                />
-                <Button 
-                  onClick={handleAddComment} 
-                  disabled={!newComment.trim() || addCommentMutation.isPending}
-                  size="sm"
-                  className="w-full"
-                >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  {addCommentMutation.isPending ? 'Adding...' : `Add ${isCoach ? 'Feedback' : 'Comment'}`}
-                </Button>
+              {/* Collaborative Comments */}
+              <div className="pt-4 border-t border-slate-200">
+                <CollaborativeComments documentId={document?.id} />
               </div>
 
               {/* Coach Review Actions */}

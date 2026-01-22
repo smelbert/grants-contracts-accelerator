@@ -27,6 +27,7 @@ import CoachesStaff from './pages/CoachesStaff';
 import Pricing from './pages/Pricing';
 import EthicsCompliance from './pages/EthicsCompliance';
 import PlatformSettings from './pages/PlatformSettings';
+import TeamCollaboration from './pages/TeamCollaboration';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "Pricing": Pricing,
     "EthicsCompliance": EthicsCompliance,
     "PlatformSettings": PlatformSettings,
+    "TeamCollaboration": TeamCollaboration,
 }
 
 export const pagesConfig = {
