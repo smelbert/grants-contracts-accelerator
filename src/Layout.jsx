@@ -12,6 +12,7 @@ import {
   BookOpen, 
   Users, 
   Building2,
+  FileText,
   Settings as SettingsIcon,
   Menu,
   X,
@@ -22,6 +23,7 @@ import {
 const NAV_ITEMS = [
   { name: 'Dashboard', page: 'Home', icon: LayoutDashboard },
   { name: 'Opportunities', page: 'Opportunities', icon: Search },
+  { name: 'Documents', page: 'Documents', icon: FileText },
   { name: 'AI Writer', page: 'BoilerplateBuilder', icon: Sparkles },
   { name: 'Learning', page: 'Learning', icon: BookOpen },
   { name: 'Community', page: 'Community', icon: Users },

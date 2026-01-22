@@ -6,6 +6,8 @@ import Community from './pages/Community';
 import FundingLane from './pages/FundingLane';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Landing from './pages/Landing';
+import Documents from './pages/Documents';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +20,8 @@ export const PAGES = {
     "FundingLane": FundingLane,
     "Profile": Profile,
     "Settings": Settings,
+    "Landing": Landing,
+    "Documents": Documents,
 }
 
 export const pagesConfig = {

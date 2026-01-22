@@ -7,6 +7,7 @@ import OnboardingWizard from '@/components/onboarding/OnboardingWizard';
 import ReadinessIndicator from '@/components/dashboard/ReadinessIndicator';
 import FundingLaneCard from '@/components/dashboard/FundingLaneCard';
 import QuickActions from '@/components/dashboard/QuickActions';
+import GraduationModal from '@/components/graduation/GraduationModal';
 
 function calculateReadiness(org) {
   if (!org) return 'pre_funding';
@@ -81,6 +82,8 @@ function calculateLaneProgress(org, lane) {
 
 export default function HomePage() {
   const queryClient = useQueryClient();
+  const [showGraduation, setShowGraduation] = useState(false);
+  const [graduationType, setGraduationType] = useState(null);
   
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
@@ -102,6 +105,18 @@ export default function HomePage() {
 
   const organization = organizations?.[0];
   const needsOnboarding = !orgsLoading && (!organizations || organizations.length === 0 || !organization?.onboarding_completed);
+
+  // Check for graduation moments
+  useEffect(() => {
+    if (organization?.readiness_status) {
+      const hasSeenGraduation = localStorage.getItem(`graduation_${organization.id}_${organization.readiness_status}`);
+      if (!hasSeenGraduation && (organization.readiness_status === 'grant_eligible' || organization.readiness_status === 'contract_ready')) {
+        setGraduationType(organization.readiness_status);
+        setShowGraduation(true);
+        localStorage.setItem(`graduation_${organization.id}_${organization.readiness_status}`, 'true');
+      }
+    }
+  }, [organization?.readiness_status, organization?.id]);
 
   const handleOnboardingComplete = async (data) => {
     const readinessStatus = calculateReadiness(data);
@@ -127,8 +142,14 @@ export default function HomePage() {
   const readinessStatus = organization?.readiness_status || calculateReadiness(organization);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
-      <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+    <>
+      <GraduationModal 
+        isOpen={showGraduation} 
+        onClose={() => setShowGraduation(false)}
+        graduationType={graduationType}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -211,7 +232,8 @@ export default function HomePage() {
             harm your reputation or waste your time.
           </p>
         </motion.div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
