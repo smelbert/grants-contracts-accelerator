@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import DocumentViewer from '@/components/documents/DocumentViewer';
+import ReviewPaymentFlow from '@/components/payments/ReviewPaymentFlow';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', icon: Edit, color: 'slate' },
@@ -29,6 +30,7 @@ export default function DocumentsPage() {
   const queryClient = useQueryClient();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [formData, setFormData] = useState({
     doc_name: '',
     doc_type: 'proposal',
@@ -226,8 +228,10 @@ export default function DocumentsPage() {
                         {doc.status === 'draft' && (
                           <Button 
                             size="sm" 
-                            onClick={() => requestReviewMutation.mutate(doc.id)}
-                            disabled={requestReviewMutation.isPending}
+                            onClick={() => {
+                              setSelectedDoc(doc);
+                              setShowPaymentFlow(true);
+                            }}
                             className="flex-1 bg-blue-600 hover:bg-blue-700"
                           >
                             Request Review
@@ -249,17 +253,35 @@ export default function DocumentsPage() {
         )}
 
         {/* Document Viewer Modal */}
-        {selectedDoc && (
+        {selectedDoc && !showPaymentFlow && (
           <DocumentViewer
             document={selectedDoc}
             userRole={user?.role}
             onClose={() => setSelectedDoc(null)}
             onRequestReview={() => {
-              requestReviewMutation.mutate(selectedDoc.id);
-              setSelectedDoc(null);
+              setShowPaymentFlow(true);
             }}
           />
         )}
+
+        {/* Review Payment Flow */}
+        <Dialog open={showPaymentFlow} onOpenChange={setShowPaymentFlow}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Request Document Review</DialogTitle>
+            </DialogHeader>
+            <ReviewPaymentFlow
+              documentId={selectedDoc?.id}
+              reviewType="single_document"
+              onPaymentComplete={() => {
+                requestReviewMutation.mutate(selectedDoc.id);
+                setShowPaymentFlow(false);
+                setSelectedDoc(null);
+              }}
+              onCancel={() => setShowPaymentFlow(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -8,12 +8,14 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   X, MessageSquare, Video, History, Eye, Lock, 
-  Save, Send, AlertTriangle, Sparkles, Shield, CheckCircle2
+  Save, Send, AlertTriangle, Sparkles, Shield, CheckCircle2, ArrowLeftRight
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
+import VideoFeedback from '@/components/documents/VideoFeedback';
+import DocumentComparison from '@/components/documents/DocumentComparison';
 
 export default function DocumentViewer({ 
   document, 
@@ -24,6 +26,9 @@ export default function DocumentViewer({
   const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState('');
   const [editedContent, setEditedContent] = useState(document?.content || '');
+  const [showComparison, setShowComparison] = useState(false);
+  const [comparisonVersions, setComparisonVersions] = useState([null, null]);
+  const [videoFeedbackUrl, setVideoFeedbackUrl] = useState(document?.review_video_url || null);
 
   const isCoach = userRole === 'coach' || userRole === 'owner' || userRole === 'admin';
   const canEdit = document?.status === 'draft' || document?.status === 'needs_revision';
@@ -134,6 +139,20 @@ export default function DocumentViewer({
     }
   };
 
+  const handleVideoUploaded = async (url) => {
+    setVideoFeedbackUrl(url);
+    if (url) {
+      await base44.entities.Document.update(document.id, { review_video_url: url });
+    }
+  };
+
+  const handleCompareVersions = () => {
+    if (versions.length >= 2) {
+      setComparisonVersions([versions[versions.length - 2], versions[versions.length - 1]]);
+      setShowComparison(true);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
       <motion.div
@@ -187,15 +206,13 @@ export default function DocumentViewer({
                     v{versions.length > 0 ? Math.max(...versions.map(v => v.version_number || 1)) : 1}
                   </Badge>
                   {versions.length > 1 && (
-                    <Button variant="outline" size="sm">
-                      <History className="w-4 h-4 mr-2" />
-                      {versions.length} Versions
-                    </Button>
-                  )}
-                  {isCoach && (
-                    <Button variant="outline" size="sm">
-                      <Video className="w-4 h-4 mr-2" />
-                      Video Feedback
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleCompareVersions}
+                    >
+                      <ArrowLeftRight className="w-4 h-4 mr-2" />
+                      Compare
                     </Button>
                   )}
                 </div>
@@ -252,6 +269,17 @@ export default function DocumentViewer({
                 <MessageSquare className="w-5 h-5" />
                 Comments & Feedback
               </h3>
+
+              {/* Video Feedback */}
+              {isCoach && (
+                <div className="mb-4">
+                  <VideoFeedback
+                    documentId={document?.id}
+                    existingVideoUrl={videoFeedbackUrl}
+                    onVideoUploaded={handleVideoUploaded}
+                  />
+                </div>
+              )}
 
               {/* Comments List */}
               <div className="flex-1 space-y-3 mb-4 overflow-y-auto">
@@ -334,6 +362,15 @@ export default function DocumentViewer({
           </div>
         </div>
       </motion.div>
+
+      {/* Document Comparison Modal */}
+      {showComparison && comparisonVersions[0] && comparisonVersions[1] && (
+        <DocumentComparison
+          version1={comparisonVersions[0]}
+          version2={comparisonVersions[1]}
+          onClose={() => setShowComparison(false)}
+        />
+      )}
     </div>
   );
 }

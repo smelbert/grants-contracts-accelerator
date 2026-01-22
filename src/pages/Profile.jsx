@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReadinessBadge from '@/components/readiness/ReadinessBadge';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
