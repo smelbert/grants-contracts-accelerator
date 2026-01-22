@@ -11,6 +11,7 @@ import Opportunities from './pages/Opportunities';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Templates from './pages/Templates';
+import CoachDashboard from './pages/CoachDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +29,7 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Templates": Templates,
+    "CoachDashboard": CoachDashboard,
 }
 
 export const pagesConfig = {

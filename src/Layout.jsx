@@ -34,6 +34,10 @@ const getNavItems = (userRole) => {
     { name: 'Profile', page: 'Profile', icon: Building2, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
   ];
 
+  const coachItems = [
+    { name: 'Coach Dashboard', page: 'CoachDashboard', icon: Users, roles: ['coach', 'owner', 'admin'] },
+  ];
+
   const adminItems = [
     { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield, roles: ['owner', 'admin'] },
   ];
@@ -41,7 +45,7 @@ const getNavItems = (userRole) => {
   const settingsItem = { name: 'Settings', page: 'Settings', icon: SettingsIcon, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] };
 
   const role = userRole || 'user';
-  const allItems = [...baseItems, ...adminItems, settingsItem];
+  const allItems = [...baseItems, ...coachItems, ...adminItems, settingsItem];
   
   return allItems.filter(item => item.roles.includes(role));
 };
