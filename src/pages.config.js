@@ -1,31 +1,33 @@
-import Home from './pages/Home';
-import Opportunities from './pages/Opportunities';
+import AdminDashboard from './pages/AdminDashboard';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
-import Learning from './pages/Learning';
+import CoachProfileSetup from './pages/CoachProfileSetup';
 import Community from './pages/Community';
+import Documents from './pages/Documents';
 import FundingLane from './pages/FundingLane';
+import Home from './pages/Home';
+import Landing from './pages/Landing';
+import Learning from './pages/Learning';
+import Opportunities from './pages/Opportunities';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
-import Landing from './pages/Landing';
-import Documents from './pages/Documents';
-import CoachProfileSetup from './pages/CoachProfileSetup';
-import AdminDashboard from './pages/AdminDashboard';
+import Templates from './pages/Templates';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "Opportunities": Opportunities,
+    "AdminDashboard": AdminDashboard,
     "BoilerplateBuilder": BoilerplateBuilder,
-    "Learning": Learning,
+    "CoachProfileSetup": CoachProfileSetup,
     "Community": Community,
+    "Documents": Documents,
     "FundingLane": FundingLane,
+    "Home": Home,
+    "Landing": Landing,
+    "Learning": Learning,
+    "Opportunities": Opportunities,
     "Profile": Profile,
     "Settings": Settings,
-    "Landing": Landing,
-    "Documents": Documents,
-    "CoachProfileSetup": CoachProfileSetup,
-    "AdminDashboard": AdminDashboard,
+    "Templates": Templates,
 }
 
 export const pagesConfig = {

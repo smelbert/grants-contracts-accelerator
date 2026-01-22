@@ -8,6 +8,7 @@ import ReadinessIndicator from '@/components/dashboard/ReadinessIndicator';
 import FundingLaneCard from '@/components/dashboard/FundingLaneCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import GraduationModal from '@/components/graduation/GraduationModal';
+import NextBestAction from '@/components/dashboard/NextBestAction';
 
 function calculateReadiness(org) {
   if (!org) return 'pre_funding';
@@ -172,15 +173,14 @@ export default function HomePage() {
           <ReadinessIndicator status={readinessStatus} />
         </motion.div>
 
-        {/* Quick Actions */}
+        {/* Next Best Action */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Quick Actions</h2>
-          <QuickActions />
+          <NextBestAction readinessStatus={readinessStatus} />
         </motion.div>
 
         {/* Funding Lanes */}

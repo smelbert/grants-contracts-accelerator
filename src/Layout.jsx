@@ -28,6 +28,7 @@ const getNavItems = (userRole) => {
     { name: 'Opportunities', page: 'Opportunities', icon: Search, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
     { name: 'Documents', page: 'Documents', icon: FileText, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
     { name: 'AI Writer', page: 'BoilerplateBuilder', icon: Sparkles, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
+    { name: 'Templates', page: 'Templates', icon: BookOpen, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
     { name: 'Learning', page: 'Learning', icon: BookOpen, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
     { name: 'Community', page: 'Community', icon: Users, roles: ['user', 'coach', 'owner', 'admin', 'staff'] },
     { name: 'Profile', page: 'Profile', icon: Building2, roles: ['user', 'coach', 'owner', 'admin', 'staff', 'board'] },
