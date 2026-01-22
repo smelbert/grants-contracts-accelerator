@@ -12,6 +12,21 @@ import Opportunities from './pages/Opportunities';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Templates from './pages/Templates';
+import ReadinessChecklists from './pages/ReadinessChecklists';
+import ReadinessStatus from './pages/ReadinessStatus';
+import AssignedOrganizations from './pages/AssignedOrganizations';
+import ReviewQueue from './pages/ReviewQueue';
+import VideoFeedback from './pages/VideoFeedback';
+import TeachingContent from './pages/TeachingContent';
+import FlagsNotes from './pages/FlagsNotes';
+import OrganizationsOverview from './pages/OrganizationsOverview';
+import ReadinessLogic from './pages/ReadinessLogic';
+import TemplateLibrary from './pages/TemplateLibrary';
+import AIGuardrails from './pages/AIGuardrails';
+import CoachesStaff from './pages/CoachesStaff';
+import Pricing from './pages/Pricing';
+import EthicsCompliance from './pages/EthicsCompliance';
+import PlatformSettings from './pages/PlatformSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +45,21 @@ export const PAGES = {
     "Profile": Profile,
     "Settings": Settings,
     "Templates": Templates,
+    "ReadinessChecklists": ReadinessChecklists,
+    "ReadinessStatus": ReadinessStatus,
+    "AssignedOrganizations": AssignedOrganizations,
+    "ReviewQueue": ReviewQueue,
+    "VideoFeedback": VideoFeedback,
+    "TeachingContent": TeachingContent,
+    "FlagsNotes": FlagsNotes,
+    "OrganizationsOverview": OrganizationsOverview,
+    "ReadinessLogic": ReadinessLogic,
+    "TemplateLibrary": TemplateLibrary,
+    "AIGuardrails": AIGuardrails,
+    "CoachesStaff": CoachesStaff,
+    "Pricing": Pricing,
+    "EthicsCompliance": EthicsCompliance,
+    "PlatformSettings": PlatformSettings,
 }
 
 export const pagesConfig = {
