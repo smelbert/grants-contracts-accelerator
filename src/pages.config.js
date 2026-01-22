@@ -5,6 +5,7 @@ import Learning from './pages/Learning';
 import Community from './pages/Community';
 import FundingLane from './pages/FundingLane';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "Community": Community,
     "FundingLane": FundingLane,
     "Profile": Profile,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {

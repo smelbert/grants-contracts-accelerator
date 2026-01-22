@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -6,8 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Search, Loader2, Info, SlidersHorizontal } from 'lucide-react';
+import { Search, Loader2, Info, SlidersHorizontal, Sparkles } from 'lucide-react';
 import OpportunityCard from '@/components/opportunities/OpportunityCard';
+import AIMatchScore from '@/components/opportunities/AIMatchScore';
 import {
   Sheet,
   SheetContent,
@@ -22,21 +23,18 @@ import { format } from 'date-fns';
 function determineReadinessMatch(opportunity, organization) {
   if (!organization) return 'not_ready';
   
-  // Check org type eligibility
   if (opportunity.required_org_types?.length > 0) {
     if (!opportunity.required_org_types.includes(organization.type)) {
       return 'not_ready';
     }
   }
   
-  // Check stage eligibility
   if (opportunity.required_stages?.length > 0) {
     if (!opportunity.required_stages.includes(organization.stage)) {
       return 'partial';
     }
   }
   
-  // Check if org is in pre_funding status
   if (organization.readiness_status === 'pre_funding') {
     return 'not_ready';
   }
@@ -44,11 +42,73 @@ function determineReadinessMatch(opportunity, organization) {
   return 'ready';
 }
 
+async function calculateAIMatch(opportunity, organization) {
+  if (!organization) return null;
+  
+  try {
+    const prompt = `You are a funding readiness expert. Analyze how well this organization matches this funding opportunity.
+
+ORGANIZATION PROFILE:
+- Type: ${organization.type}
+- Stage: ${organization.stage}
+- Annual Budget: ${organization.annual_budget}
+- Staff Structure: ${organization.staff_structure}
+- Governance: ${organization.governance_status}
+- Funding Experience: ${organization.funding_experience}
+- Readiness Status: ${organization.readiness_status}
+- Mission: ${organization.mission_statement || 'Not provided'}
+- Location: ${organization.city}, ${organization.state}
+
+OPPORTUNITY:
+- Title: ${opportunity.title}
+- Type: ${opportunity.type}
+- Funder: ${opportunity.funder_name}
+- Amount: $${opportunity.amount_min}-$${opportunity.amount_max}
+- Eligibility: ${opportunity.eligibility_summary}
+- Required Org Types: ${opportunity.required_org_types?.join(', ') || 'Any'}
+- Required Stages: ${opportunity.required_stages?.join(', ') || 'Any'}
+- Focus Areas: ${opportunity.sector_focus?.join(', ') || 'General'}
+
+Provide a detailed match analysis with scores for: eligibility (0-100), alignment (0-100), readiness (0-100), and capacity (0-100). Calculate overall_score as average. Include 2-3 specific concerns if score < 80.`;
+
+    const response = await base44.integrations.Core.InvokeLLM({
+      prompt,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          overall_score: { type: 'number' },
+          category_scores: {
+            type: 'object',
+            properties: {
+              eligibility: { type: 'number' },
+              alignment: { type: 'number' },
+              readiness: { type: 'number' },
+              capacity: { type: 'number' }
+            }
+          },
+          recommendation: { type: 'string' },
+          concerns: {
+            type: 'array',
+            items: { type: 'string' }
+          }
+        }
+      }
+    });
+
+    return response;
+  } catch (error) {
+    console.error('AI match calculation failed:', error);
+    return null;
+  }
+}
+
 export default function OpportunitiesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLane, setSelectedLane] = useState('all');
   const [amountFilter, setAmountFilter] = useState('all');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [aiMatches, setAiMatches] = useState({});
+  const [calculatingMatches, setCalculatingMatches] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -67,6 +127,31 @@ export default function OpportunitiesPage() {
   });
 
   const organization = organizations?.[0];
+
+  // Calculate AI matches when opportunities and organization are loaded
+  useEffect(() => {
+    if (opportunities && organization && opportunities.length > 0) {
+      const calculateMatches = async () => {
+        setCalculatingMatches(true);
+        const matches = {};
+        
+        // Calculate for first 5 opportunities to avoid rate limits
+        const oppsToAnalyze = opportunities.slice(0, 5);
+        
+        for (const opp of oppsToAnalyze) {
+          const match = await calculateAIMatch(opp, organization);
+          if (match) {
+            matches[opp.id] = match;
+          }
+        }
+        
+        setAiMatches(matches);
+        setCalculatingMatches(false);
+      };
+      
+      calculateMatches();
+    }
+  }, [opportunities, organization]);
 
   const filteredOpportunities = (opportunities || []).filter(opp => {
     const matchesSearch = !searchQuery || 
@@ -113,11 +198,11 @@ export default function OpportunitiesPage() {
           transition={{ delay: 0.1 }}
           className="mb-6"
         >
-          <Alert className="bg-blue-50 border-blue-200">
-            <Info className="w-4 h-4 text-blue-600" />
-            <AlertDescription className="text-blue-700">
-              Opportunities are color-coded based on your organization's readiness. 
-              We recommend focusing on "Good Fit" opportunities to maximize your success.
+          <Alert className="bg-violet-50 border-violet-200">
+            <Sparkles className="w-4 h-4 text-violet-600" />
+            <AlertDescription className="text-violet-700">
+              <strong>AI-Powered Matching:</strong> Each opportunity is analyzed by AI to provide detailed match scores based on your organization's profile, readiness, and capacity.
+              {calculatingMatches && <span className="ml-2 text-violet-600">Calculating matches...</span>}
             </AlertDescription>
           </Alert>
         </motion.div>
@@ -202,6 +287,7 @@ export default function OpportunitiesPage() {
                 <OpportunityCard
                   opportunity={opp}
                   readinessStatus={determineReadinessMatch(opp, organization)}
+                  aiMatchData={aiMatches[opp.id]}
                   onViewDetails={setSelectedOpportunity}
                 />
               </motion.div>
@@ -263,6 +349,13 @@ export default function OpportunitiesPage() {
                           <Badge key={i} variant="secondary">{sector}</Badge>
                         ))}
                       </div>
+                    </div>
+                  )}
+
+                  {aiMatches[selectedOpportunity.id] && (
+                    <div>
+                      <p className="text-sm text-slate-500 mb-3">AI Match Analysis</p>
+                      <AIMatchScore matchData={aiMatches[selectedOpportunity.id]} />
                     </div>
                   )}
 

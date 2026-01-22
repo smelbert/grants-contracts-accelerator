@@ -12,6 +12,7 @@ import {
   BookOpen, 
   Users, 
   Building2,
+  Settings as SettingsIcon,
   Menu,
   X,
   LogOut,
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { name: 'Learning', page: 'Learning', icon: BookOpen },
   { name: 'Community', page: 'Community', icon: Users },
   { name: 'Profile', page: 'Profile', icon: Building2 },
+  { name: 'Settings', page: 'Settings', icon: SettingsIcon },
 ];
 
 export default function Layout({ children, currentPageName }) {
