@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, DollarSign, MapPin, ExternalLink, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import AIMatchScore from './AIMatchScore';
 
 const READINESS_CONFIG = {
   ready: {
@@ -30,7 +31,7 @@ const LANE_COLORS = {
   public_funds: 'bg-amber-500',
 };
 
-export default function OpportunityCard({ opportunity, readinessStatus = 'ready', onViewDetails }) {
+export default function OpportunityCard({ opportunity, readinessStatus = 'ready', aiMatchData, onViewDetails }) {
   const readinessConfig = READINESS_CONFIG[readinessStatus];
   const ReadinessIcon = readinessConfig.icon;
 
@@ -67,6 +68,13 @@ export default function OpportunityCard({ opportunity, readinessStatus = 'ready'
             {readinessConfig.label}
           </Badge>
         </div>
+
+        {/* AI Match Score */}
+        {aiMatchData && (
+          <div className="mt-3">
+            <AIMatchScore matchData={aiMatchData} compact />
+          </div>
+        )}
 
         {/* Details */}
         <div className="mt-4 flex flex-wrap gap-3 text-sm">
