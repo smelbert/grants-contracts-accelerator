@@ -37,6 +37,7 @@ const getUserPortalNav = () => [
   { name: 'My Organization', page: 'Profile', icon: Building2 },
   { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
   { name: 'Proposal Workflows', page: 'ProposalWorkflows', icon: CheckCircle2 },
+  { name: 'Readiness Assessment', page: 'GrantReadinessAssessment', icon: CheckCircle2 },
   { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
   { name: 'Documents', page: 'Documents', icon: FileText },
   { name: 'Templates', page: 'Templates', icon: BookOpen },

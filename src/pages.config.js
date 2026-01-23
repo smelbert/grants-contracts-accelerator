@@ -33,6 +33,7 @@ import GrantSubmission from './pages/GrantSubmission';
 import GrantDashboard from './pages/GrantDashboard';
 import ProposalWorkflows from './pages/ProposalWorkflows';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
+import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +73,7 @@ export const PAGES = {
     "GrantDashboard": GrantDashboard,
     "ProposalWorkflows": ProposalWorkflows,
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
+    "GrantReadinessAssessment": GrantReadinessAssessment,
 }
 
 export const pagesConfig = {
