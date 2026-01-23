@@ -58,6 +58,11 @@ export default function GrantSubmissionPage() {
     queryFn: () => base44.entities.Organization.list()
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   const createGrantMutation = useMutation({
     mutationFn: async (grantData) => {
       const grant = await base44.entities.FundingOpportunity.create(grantData);
@@ -151,6 +156,8 @@ export default function GrantSubmissionPage() {
 
   const grantStats = {
     total: grants.length,
+    saved: savedGrants.length,
+    hidden: hiddenGrants.length,
     byStatus: {
       researching: grants.filter(g => g.status === 'researching').length,
       drafting: grants.filter(g => g.status === 'drafting').length,
@@ -758,27 +765,41 @@ export default function GrantSubmissionPage() {
                   )}
 
                   {/* Internal Notes (Admin Only) */}
-                  {selectedGrant.internal_notes && user?.role === 'admin' && (
-                    <div className="bg-amber-50 border-l-4 border-amber-400 rounded p-4">
-                      <h4 className="font-semibold text-amber-900 mb-2">Internal Strategy Notes</h4>
-                      <p className="text-amber-900 text-sm">{selectedGrant.internal_notes}</p>
-                    </div>
+                  {selectedGrant.internal_notes && (user?.role === 'admin' || user?.role === 'owner') && (
+                   <div className="bg-amber-50 border-l-4 border-amber-400 rounded p-4">
+                     <h4 className="font-semibold text-amber-900 mb-2">Internal Strategy Notes</h4>
+                     <p className="text-amber-900 text-sm">{selectedGrant.internal_notes}</p>
+                   </div>
                   )}
+
+                  {/* 990 Data Notice */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                   <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                     <FileText className="w-4 h-4 text-blue-600" />
+                     Funder Research
+                   </h4>
+                   <p className="text-sm text-blue-800 mb-2">
+                     Want deeper funder insights? We can pull IRS 990 data, past grantee information, and giving patterns to help you understand {selectedGrant.funder_name}'s priorities.
+                   </p>
+                   <p className="text-xs text-blue-700">
+                     💡 This feature requires backend integration with nonprofit data APIs like Candid (Foundation Directory) or ProPublica Nonprofit Explorer.
+                   </p>
+                  </div>
 
                   {/* Actions */}
                   <div className="flex gap-3 pt-4 border-t">
-                    {selectedGrant.application_url && (
-                      <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
-                        <a href={selectedGrant.application_url} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View Application Portal
-                        </a>
-                      </Button>
-                    )}
-                    <Button variant="outline">
-                      <Award className="w-4 h-4 mr-2" />
-                      Start Application
-                    </Button>
+                   {selectedGrant.application_url && (
+                     <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+                       <a href={selectedGrant.application_url} target="_blank" rel="noopener noreferrer">
+                         <ExternalLink className="w-4 h-4 mr-2" />
+                         View Application Portal
+                       </a>
+                     </Button>
+                   )}
+                   <Button variant="outline">
+                     <Award className="w-4 h-4 mr-2" />
+                     Start Application
+                   </Button>
                   </div>
                 </div>
               </>
