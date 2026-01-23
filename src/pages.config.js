@@ -31,6 +31,8 @@ import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import GrantSubmission from './pages/GrantSubmission';
 import GrantDashboard from './pages/GrantDashboard';
+import ProposalWorkflows from './pages/ProposalWorkflows';
+import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -68,6 +70,8 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "GrantSubmission": GrantSubmission,
     "GrantDashboard": GrantDashboard,
+    "ProposalWorkflows": ProposalWorkflows,
+    "ProposalWorkflowDetail": ProposalWorkflowDetail,
 }
 
 export const pagesConfig = {
