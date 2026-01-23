@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { createPageUrl } from '@/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Play, Lock, BookOpen, Video, FileText, Users } from 'lucide-react';
@@ -85,7 +86,7 @@ export default function LearningCard({ content, isPremium = false, hasAccess = t
           <Button
             size="sm"
             variant={hasAccess ? "default" : "outline"}
-            onClick={() => onStart?.(content)}
+            onClick={() => window.location.href = createPageUrl('LearningModule') + '?id=' + content.id}
             disabled={isPremium && !hasAccess}
             className={hasAccess ? "bg-emerald-600 hover:bg-emerald-700" : ""}
           >
