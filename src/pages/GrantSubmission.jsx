@@ -352,50 +352,73 @@ export default function GrantSubmissionPage() {
                           {grant.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-slate-600 mb-1">{grant.funder_name}</p>
-                      <p className="text-sm text-slate-700 mb-3">{grant.description}</p>
+                      <p className="text-sm font-medium text-slate-700 mb-2">{grant.funder_name}</p>
+                      {grant.description && (
+                        <p className="text-sm text-slate-600 mb-3 line-clamp-2">{grant.description}</p>
+                      )}
                       
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                          {(grant.amount_min || grant.amount_max) && (
-                            <div className="flex items-center gap-1">
-                              <DollarSign className="w-4 h-4" />
-                              <span>
-                                {grant.amount_min && `$${parseInt(grant.amount_min).toLocaleString()}`}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                        {(grant.amount_min || grant.amount_max) && (
+                          <div className="flex items-start gap-2">
+                            <DollarSign className="w-4 h-4 text-emerald-600 mt-0.5" />
+                            <div>
+                              <p className="text-xs text-slate-500">Funding Range</p>
+                              <p className="text-sm font-medium text-slate-900">
+                                {grant.amount_min && `$${(parseInt(grant.amount_min) / 1000).toFixed(0)}K`}
                                 {grant.amount_min && grant.amount_max && ' - '}
-                                {grant.amount_max && `$${parseInt(grant.amount_max).toLocaleString()}`}
-                              </span>
+                                {grant.amount_max && `$${(parseInt(grant.amount_max) / 1000).toFixed(0)}K`}
+                              </p>
                             </div>
-                          )}
-                          {grant.geographic_focus && (
-                            <span>📍 {grant.geographic_focus}</span>
-                          )}
-                          {grant.rolling_deadline && (
-                            <Badge variant="outline" className="text-xs">Rolling</Badge>
-                          )}
-                        </div>
-
-                        {(grant.deadline_loi || grant.deadline_pre || grant.deadline_full) && (
-                          <div className="flex items-center gap-4 text-sm text-slate-600">
-                            {grant.deadline_loi && (
-                              <span>LOI: {format(new Date(grant.deadline_loi), 'MMM d')}</span>
-                            )}
-                            {grant.deadline_pre && (
-                              <span>Pre: {format(new Date(grant.deadline_pre), 'MMM d')}</span>
-                            )}
-                            {grant.deadline_full && (
-                              <span>Full: {format(new Date(grant.deadline_full), 'MMM d')}</span>
-                            )}
                           </div>
                         )}
-
-                        {grant.internal_notes && (
-                          <div className="bg-amber-50 border border-amber-200 rounded p-2 text-xs text-amber-800">
-                            <span className="font-medium">Staff Notes: </span>
-                            {grant.internal_notes}
+                        {grant.geographic_focus && (
+                          <div className="flex items-start gap-2">
+                            <span className="text-sm">📍</span>
+                            <div>
+                              <p className="text-xs text-slate-500">Geography</p>
+                              <p className="text-sm font-medium text-slate-900">{grant.geographic_focus}</p>
+                            </div>
+                          </div>
+                        )}
+                        {grant.deadline_full && (
+                          <div className="flex items-start gap-2">
+                            <Calendar className="w-4 h-4 text-emerald-600 mt-0.5" />
+                            <div>
+                              <p className="text-xs text-slate-500">Full Deadline</p>
+                              <p className="text-sm font-medium text-slate-900">
+                                {format(new Date(grant.deadline_full), 'MMM d, yyyy')}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        {grant.rolling_deadline && (
+                          <div className="flex items-start gap-2">
+                            <Clock className="w-4 h-4 text-emerald-600 mt-0.5" />
+                            <div>
+                              <p className="text-xs text-slate-500">Timeline</p>
+                              <Badge variant="outline" className="text-xs">Rolling</Badge>
+                            </div>
                           </div>
                         )}
                       </div>
+
+                      {(grant.deadline_loi || grant.deadline_pre) && (
+                        <div className="flex items-center gap-4 text-xs text-slate-600 mb-2 pb-2 border-b">
+                          {grant.deadline_loi && (
+                            <span>LOI: {format(new Date(grant.deadline_loi), 'MMM d')}</span>
+                          )}
+                          {grant.deadline_pre && (
+                            <span>Pre-App: {format(new Date(grant.deadline_pre), 'MMM d')}</span>
+                          )}
+                        </div>
+                      )}
+
+                      {grant.internal_notes && (
+                        <div className="bg-amber-50 border-l-4 border-amber-400 rounded p-2 text-xs text-amber-900">
+                          <span className="font-semibold">Strategy: </span>
+                          {grant.internal_notes}
+                        </div>
+                      )}
 
                       {grant.application_url && (
                         <a
