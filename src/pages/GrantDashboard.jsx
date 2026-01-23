@@ -23,6 +23,11 @@ export default function GrantDashboardPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLane, setSelectedLane] = useState('all');
   const [hasNewGrants, setHasNewGrants] = useState(false);
+  const [deadlineFilter, setDeadlineFilter] = useState('all');
+  const [amountMin, setAmountMin] = useState('');
+  const [amountMax, setAmountMax] = useState('');
+  const [selectedType, setSelectedType] = useState('all');
+  const [sortBy, setSortBy] = useState('relevance');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -68,13 +73,53 @@ export default function GrantDashboardPage() {
     }
   }, [grants]);
 
-  const filteredGrants = grants?.filter(grant => {
+  const getDeadlineDays = (deadline) => {
+    if (!deadline) return null;
+    return Math.ceil((new Date(deadline) - new Date()) / (1000 * 60 * 60 * 24));
+  };
+
+  const filteredAndSortedGrants = grants?.filter(grant => {
     const matchesSearch = grant.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          grant.funder_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          grant.description?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLane = selectedLane === 'all' || grant.funding_lane === selectedLane;
+    const matchesType = selectedType === 'all' || grant.type === selectedType;
     const isActive = grant.is_active !== false;
-    return matchesSearch && matchesLane && isActive;
+
+    // Deadline filter
+    let matchesDeadline = true;
+    if (deadlineFilter !== 'all' && grant.deadline) {
+      const days = getDeadlineDays(grant.deadline);
+      if (days !== null) {
+        switch(deadlineFilter) {
+          case 'urgent': matchesDeadline = days <= 7; break;
+          case 'this_month': matchesDeadline = days <= 30; break;
+          case 'this_quarter': matchesDeadline = days <= 90; break;
+          case 'rolling': matchesDeadline = grant.rolling_deadline === true; break;
+        }
+      }
+    }
+
+    // Amount filter
+    const grantMax = grant.amount_max || 0;
+    const matchesAmount = (!amountMin || grantMax >= parseInt(amountMin)) &&
+                         (!amountMax || grantMax <= parseInt(amountMax));
+
+    return matchesSearch && matchesLane && matchesType && matchesDeadline && matchesAmount && isActive;
+  }).sort((a, b) => {
+    switch(sortBy) {
+      case 'deadline':
+        const deadlineA = a.deadline ? new Date(a.deadline) : new Date('2099-12-31');
+        const deadlineB = b.deadline ? new Date(b.deadline) : new Date('2099-12-31');
+        return deadlineA - deadlineB;
+      case 'amount_high':
+        return (b.amount_max || 0) - (a.amount_max || 0);
+      case 'amount_low':
+        return (a.amount_max || 0) - (b.amount_max || 0);
+      case 'relevance':
+      default:
+        return new Date(b.created_date) - new Date(a.created_date);
+    }
   });
 
   const newGrantsCount = grants?.filter(g => {
@@ -156,30 +201,131 @@ export default function GrantDashboardPage() {
         {/* Filters */}
         <Card className="mb-6">
           <CardContent className="p-4">
-            <div className="flex items-center gap-4">
-              <div className="flex-1 relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
-                <Input
-                  placeholder="Search grants by title, funder, or description..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+            <div className="space-y-4">
+              {/* Search and Main Filters */}
+              <div className="flex items-center gap-4">
+                <div className="flex-1 relative">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                  <Input
+                    placeholder="Search grants by title, funder, or description..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-slate-600" />
+                  <select
+                    value={selectedLane}
+                    onChange={(e) => setSelectedLane(e.target.value)}
+                    className="px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                  >
+                    <option value="all">All Lanes</option>
+                    <option value="grants">Grants</option>
+                    <option value="contracts">Contracts</option>
+                    <option value="donors">Donors</option>
+                    <option value="public_funds">Public Funds</option>
+                  </select>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-slate-600" />
-                <select
-                  value={selectedLane}
-                  onChange={(e) => setSelectedLane(e.target.value)}
-                  className="px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                >
-                  <option value="all">All Types</option>
-                  <option value="grants">Grants</option>
-                  <option value="contracts">Contracts</option>
-                  <option value="donors">Donors</option>
-                  <option value="public_funds">Public Funds</option>
-                </select>
+
+              {/* Advanced Filters Row */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-3 border-t">
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Deadline</label>
+                  <select
+                    value={deadlineFilter}
+                    onChange={(e) => setDeadlineFilter(e.target.value)}
+                    className="w-full px-2 py-1.5 border border-slate-300 rounded text-sm"
+                  >
+                    <option value="all">All Deadlines</option>
+                    <option value="urgent">Next 7 Days</option>
+                    <option value="this_month">This Month</option>
+                    <option value="this_quarter">This Quarter</option>
+                    <option value="rolling">Rolling</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Grant Type</label>
+                  <select
+                    value={selectedType}
+                    onChange={(e) => setSelectedType(e.target.value)}
+                    className="w-full px-2 py-1.5 border border-slate-300 rounded text-sm"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="grant">Grant</option>
+                    <option value="rfp">RFP</option>
+                    <option value="rfq">RFQ</option>
+                    <option value="contract">Contract</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Min Amount</label>
+                  <Input
+                    type="number"
+                    placeholder="$0"
+                    value={amountMin}
+                    onChange={(e) => setAmountMin(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Max Amount</label>
+                  <Input
+                    type="number"
+                    placeholder="Any"
+                    value={amountMax}
+                    onChange={(e) => setAmountMax(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-600 mb-1 block">Sort By</label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="w-full px-2 py-1.5 border border-slate-300 rounded text-sm"
+                  >
+                    <option value="relevance">Relevance (Newest)</option>
+                    <option value="deadline">Deadline (Soonest)</option>
+                    <option value="amount_high">Amount (High to Low)</option>
+                    <option value="amount_low">Amount (Low to High)</option>
+                  </select>
+                </div>
               </div>
+
+              {/* Active Filters Display */}
+              {(deadlineFilter !== 'all' || selectedType !== 'all' || amountMin || amountMax || selectedLane !== 'all') && (
+                <div className="flex items-center gap-2 pt-2 border-t">
+                  <span className="text-xs text-slate-600">Active filters:</span>
+                  {selectedLane !== 'all' && <Badge variant="outline" className="text-xs">{selectedLane}</Badge>}
+                  {selectedType !== 'all' && <Badge variant="outline" className="text-xs">{selectedType}</Badge>}
+                  {deadlineFilter !== 'all' && <Badge variant="outline" className="text-xs">{deadlineFilter.replace('_', ' ')}</Badge>}
+                  {(amountMin || amountMax) && (
+                    <Badge variant="outline" className="text-xs">
+                      ${amountMin || '0'} - ${amountMax || '∞'}
+                    </Badge>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedLane('all');
+                      setSelectedType('all');
+                      setDeadlineFilter('all');
+                      setAmountMin('');
+                      setAmountMax('');
+                    }}
+                    className="text-xs h-6"
+                  >
+                    Clear all
+                  </Button>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -191,7 +337,7 @@ export default function GrantDashboardPage() {
               Loading grants...
             </CardContent>
           </Card>
-        ) : filteredGrants?.length === 0 ? (
+        ) : filteredAndSortedGrants?.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-3" />
@@ -200,7 +346,7 @@ export default function GrantDashboardPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {filteredGrants?.map(grant => {
+            {filteredAndSortedGrants?.map(grant => {
               const isNew = new Date(grant.created_date) > new Date(Date.now() - 24 * 60 * 60 * 1000);
               const deadlineSoon = isDeadlineSoon(grant.deadline);
 

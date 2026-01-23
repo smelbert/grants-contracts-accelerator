@@ -11,6 +11,9 @@ import Documents from './pages/Documents';
 import EthicsCompliance from './pages/EthicsCompliance';
 import FlagsNotes from './pages/FlagsNotes';
 import FundingLane from './pages/FundingLane';
+import GrantDashboard from './pages/GrantDashboard';
+import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
+import GrantSubmission from './pages/GrantSubmission';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
@@ -19,6 +22,8 @@ import OrganizationsOverview from './pages/OrganizationsOverview';
 import PlatformSettings from './pages/PlatformSettings';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
+import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
+import ProposalWorkflows from './pages/ProposalWorkflows';
 import ReadinessChecklists from './pages/ReadinessChecklists';
 import ReadinessLogic from './pages/ReadinessLogic';
 import ReadinessStatus from './pages/ReadinessStatus';
@@ -29,11 +34,6 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
-import GrantSubmission from './pages/GrantSubmission';
-import GrantDashboard from './pages/GrantDashboard';
-import ProposalWorkflows from './pages/ProposalWorkflows';
-import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
-import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import __Layout from './Layout.jsx';
 
 
@@ -51,6 +51,9 @@ export const PAGES = {
     "EthicsCompliance": EthicsCompliance,
     "FlagsNotes": FlagsNotes,
     "FundingLane": FundingLane,
+    "GrantDashboard": GrantDashboard,
+    "GrantReadinessAssessment": GrantReadinessAssessment,
+    "GrantSubmission": GrantSubmission,
     "Home": Home,
     "Landing": Landing,
     "Learning": Learning,
@@ -59,6 +62,8 @@ export const PAGES = {
     "PlatformSettings": PlatformSettings,
     "Pricing": Pricing,
     "Profile": Profile,
+    "ProposalWorkflowDetail": ProposalWorkflowDetail,
+    "ProposalWorkflows": ProposalWorkflows,
     "ReadinessChecklists": ReadinessChecklists,
     "ReadinessLogic": ReadinessLogic,
     "ReadinessStatus": ReadinessStatus,
@@ -69,11 +74,6 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
-    "GrantSubmission": GrantSubmission,
-    "GrantDashboard": GrantDashboard,
-    "ProposalWorkflows": ProposalWorkflows,
-    "ProposalWorkflowDetail": ProposalWorkflowDetail,
-    "GrantReadinessAssessment": GrantReadinessAssessment,
 }
 
 export const pagesConfig = {
