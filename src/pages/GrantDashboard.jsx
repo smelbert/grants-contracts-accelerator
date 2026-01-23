@@ -221,6 +221,9 @@ export default function GrantDashboardPage() {
                               Deadline Soon
                             </Badge>
                           )}
+                          <Badge variant="outline" className="text-xs uppercase">
+                            {grant.type}
+                          </Badge>
                           <Badge variant="outline" className="text-xs capitalize">
                             {grant.funding_lane?.replace('_', ' ')}
                           </Badge>

@@ -159,7 +159,23 @@ export default function GrantSubmissionPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-5 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Type</label>
+                    <Select value={formData.type} onValueChange={(val) => handleChange('type', val)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="grant">Grant</SelectItem>
+                        <SelectItem value="contract">Contract</SelectItem>
+                        <SelectItem value="rfp">RFP</SelectItem>
+                        <SelectItem value="rfq">RFQ</SelectItem>
+                        <SelectItem value="donor_program">Donor Program</SelectItem>
+                        <SelectItem value="public_fund">Public Fund</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div>
                     <label className="text-sm font-medium text-slate-700 mb-1 block">Funding Lane</label>
                     <Select value={formData.funding_lane} onValueChange={(val) => handleChange('funding_lane', val)}>
