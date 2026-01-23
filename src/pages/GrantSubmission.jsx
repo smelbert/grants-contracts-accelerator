@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -8,11 +7,23 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Save, Trash2, ExternalLink, Calendar, DollarSign, TrendingUp, Target, Clock, CheckCircle2, BarChart3, Building2, AlertCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Plus, Save, Trash2, ExternalLink, Calendar, DollarSign, TrendingUp, Target, Clock, CheckCircle2, BarChart3, Building2, AlertCircle, Bookmark, BookmarkCheck, EyeOff, X, MapPin, Users, FileText, Award } from 'lucide-react';
 import { format } from 'date-fns';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function GrantSubmissionPage() {
   const [showForm, setShowForm] = useState(false);
+  const [selectedGrant, setSelectedGrant] = useState(null);
+  const [savedGrants, setSavedGrants] = useState(() => {
+    const saved = localStorage.getItem('savedGrants');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [hiddenGrants, setHiddenGrants] = useState(() => {
+    const hidden = localStorage.getItem('hiddenGrants');
+    return hidden ? JSON.parse(hidden) : [];
+  });
+  const [viewMode, setViewMode] = useState('all');
   const [formData, setFormData] = useState({
     title: '',
     project_category: '',
@@ -110,6 +121,34 @@ export default function GrantSubmissionPage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const toggleSave = (grantId) => {
+    setSavedGrants(prev => {
+      const updated = prev.includes(grantId) 
+        ? prev.filter(id => id !== grantId)
+        : [...prev, grantId];
+      localStorage.setItem('savedGrants', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const toggleHide = (grantId) => {
+    setHiddenGrants(prev => {
+      const updated = prev.includes(grantId)
+        ? prev.filter(id => id !== grantId)
+        : [...prev, grantId];
+      localStorage.setItem('hiddenGrants', JSON.stringify(updated));
+      return updated;
+    });
+    setSelectedGrant(null);
+  };
+
+  const filteredGrantsByView = grants?.filter(g => {
+    if (hiddenGrants.includes(g.id) && viewMode !== 'hidden') return false;
+    if (viewMode === 'saved') return savedGrants.includes(g.id);
+    if (viewMode === 'hidden') return hiddenGrants.includes(g.id);
+    return true;
+  }) || [];
+
   const grantStats = {
     total: grants.length,
     byStatus: {
@@ -130,15 +169,47 @@ export default function GrantSubmissionPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Open & Forecasted Grants</h1>
-            <p className="text-slate-600">Research pipeline and opportunity management</p>
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">Funding Opportunities</h1>
+              <p className="text-slate-600">Discover and manage grants, RFPs, and contracts</p>
+            </div>
+            <Button onClick={() => setShowForm(!showForm)} className="bg-emerald-600 hover:bg-emerald-700">
+              <Plus className="w-4 h-4 mr-2" />
+              {showForm ? 'Cancel' : 'Add Opportunity'}
+            </Button>
           </div>
-          <Button onClick={() => setShowForm(!showForm)} className="bg-emerald-600 hover:bg-emerald-700">
-            <Plus className="w-4 h-4 mr-2" />
-            {showForm ? 'Cancel' : 'Add Opportunity'}
-          </Button>
+
+          {/* View Mode Tabs */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant={viewMode === 'all' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('all')}
+              className={viewMode === 'all' ? 'bg-emerald-600' : ''}
+            >
+              All ({grantStats.total - grantStats.hidden})
+            </Button>
+            <Button
+              variant={viewMode === 'saved' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('saved')}
+              className={viewMode === 'saved' ? 'bg-emerald-600' : ''}
+            >
+              <BookmarkCheck className="w-3 h-3 mr-1" />
+              Saved ({grantStats.saved})
+            </Button>
+            <Button
+              variant={viewMode === 'hidden' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('hidden')}
+              className={viewMode === 'hidden' ? 'bg-emerald-600' : ''}
+            >
+              <EyeOff className="w-3 h-3 mr-1" />
+              Hidden ({grantStats.hidden})
+            </Button>
+          </div>
         </div>
 
         {/* Dashboard Stats */}
@@ -433,140 +504,287 @@ export default function GrantSubmissionPage() {
           </Card>
         )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-emerald-600" />
-              Opportunity Pipeline
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="py-12 text-center text-slate-600">Loading opportunities...</div>
-            ) : grants.length === 0 ? (
-              <div className="py-12 text-center">
-                <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">No opportunities added yet</h3>
-                <p className="text-slate-600">Start by adding your first grant opportunity</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {grants.map(grant => (
-                  <div key={grant.id} className="border rounded-lg p-4 hover:border-emerald-500 transition-colors bg-white">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2 flex-wrap">
-                          {grant.project_category && (
-                            <Badge variant="outline" className="text-xs font-normal bg-slate-50">{grant.project_category}</Badge>
-                          )}
-                          <Badge className="text-xs uppercase bg-emerald-100 text-emerald-800">{grant.type}</Badge>
-                          <Badge variant="outline" className="text-xs">{grant.funding_lane}</Badge>
-                          <Badge className={
-                            grant.status === 'awarded' ? 'bg-green-100 text-green-800' :
-                            grant.status === 'submitted' ? 'bg-blue-100 text-blue-800' :
-                            grant.status === 'drafting' ? 'bg-amber-100 text-amber-800' :
-                            'bg-slate-100 text-slate-800'
-                          }>
-                            {grant.status}
-                          </Badge>
-                        </div>
-                        <h3 className="text-lg font-semibold text-slate-900 mb-1">{grant.title}</h3>
-                        <p className="text-sm font-medium text-slate-700 mb-2">{grant.funder_name}</p>
-                        {grant.description && (
-                          <p className="text-sm text-slate-600 mb-3 line-clamp-2">{grant.description}</p>
-                        )}
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                          {(grant.amount_min || grant.amount_max) && (
-                            <div className="flex items-start gap-2">
-                              <DollarSign className="w-4 h-4 text-emerald-600 mt-0.5" />
-                              <div>
-                                <p className="text-xs text-slate-500">Funding Range</p>
-                                <p className="text-sm font-medium text-slate-900">
-                                  {grant.amount_min && `$${(parseInt(grant.amount_min) / 1000).toFixed(0)}K`}
-                                  {grant.amount_min && grant.amount_max && ' - '}
-                                  {grant.amount_max && `$${(parseInt(grant.amount_max) / 1000).toFixed(0)}K`}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                          {grant.geographic_focus && (
-                            <div className="flex items-start gap-2">
-                              <span className="text-sm">📍</span>
-                              <div>
-                                <p className="text-xs text-slate-500">Geography</p>
-                                <p className="text-sm font-medium text-slate-900">{grant.geographic_focus}</p>
-                              </div>
-                            </div>
-                          )}
-                          {grant.deadline_full && (
-                            <div className="flex items-start gap-2">
-                              <Calendar className="w-4 h-4 text-emerald-600 mt-0.5" />
-                              <div>
-                                <p className="text-xs text-slate-500">Full Deadline</p>
-                                <p className="text-sm font-medium text-slate-900">
-                                  {format(new Date(grant.deadline_full), 'MMM d, yyyy')}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                          {grant.rolling_deadline && (
-                            <div className="flex items-start gap-2">
-                              <Clock className="w-4 h-4 text-emerald-600 mt-0.5" />
-                              <div>
-                                <p className="text-xs text-slate-500">Timeline</p>
-                                <Badge variant="outline" className="text-xs">Rolling</Badge>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {(grant.deadline_loi || grant.deadline_pre) && (
-                          <div className="flex items-center gap-4 text-xs text-slate-600 mb-2 pb-2 border-b">
-                            {grant.deadline_loi && (
-                              <span>LOI: {format(new Date(grant.deadline_loi), 'MMM d')}</span>
-                            )}
-                            {grant.deadline_pre && (
-                              <span>Pre-App: {format(new Date(grant.deadline_pre), 'MMM d')}</span>
+        {/* Opportunity Cards Grid */}
+        {isLoading ? (
+          <div className="py-12 text-center text-slate-600">Loading opportunities...</div>
+        ) : filteredGrantsByView.length === 0 ? (
+          <div className="py-12 text-center">
+            <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              {viewMode === 'saved' ? 'No saved opportunities' : 
+               viewMode === 'hidden' ? 'No hidden opportunities' : 
+               'No opportunities added yet'}
+            </h3>
+            <p className="text-slate-600">
+              {viewMode === 'all' ? 'Start by adding your first grant opportunity' :
+               viewMode === 'saved' ? 'Save opportunities to track them here' :
+               'Hidden opportunities will appear here'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <AnimatePresence>
+              {filteredGrantsByView.map(grant => (
+                <motion.div
+                  key={grant.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  layout
+                >
+                  <Card 
+                    className="cursor-pointer hover:shadow-lg transition-all border-2 hover:border-emerald-500 h-full flex flex-col"
+                    onClick={() => setSelectedGrant(grant)}
+                  >
+                    <CardContent className="p-4 flex flex-col flex-1">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-1 mb-2 flex-wrap">
+                            <Badge className="text-xs uppercase bg-emerald-100 text-emerald-800 border-emerald-200">
+                              {grant.type}
+                            </Badge>
+                            {grant.rolling_deadline && (
+                              <Badge variant="outline" className="text-xs">Rolling</Badge>
                             )}
                           </div>
-                        )}
-
-                        {grant.internal_notes && (
-                          <div className="bg-amber-50 border-l-4 border-amber-400 rounded p-2 text-xs text-amber-900 mb-2">
-                            <span className="font-semibold">Strategy: </span>
-                            {grant.internal_notes}
-                          </div>
-                        )}
-
-                        {grant.application_url && (
-                          <a
-                            href={grant.application_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700"
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSave(grant.id);
+                            }}
                           >
-                            <ExternalLink className="w-4 h-4" />
-                            Application Link
-                          </a>
+                            {savedGrants.includes(grant.id) ? (
+                              <BookmarkCheck className="w-4 h-4 text-emerald-600" />
+                            ) : (
+                              <Bookmark className="w-4 h-4 text-slate-400" />
+                            )}
+                          </Button>
+                          {user?.role === 'admin' && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteGrantMutation.mutate(grant.id);
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <h3 className="text-base font-semibold text-slate-900 mb-1 line-clamp-2">
+                        {grant.title}
+                      </h3>
+                      <p className="text-sm font-medium text-emerald-700 mb-2">{grant.funder_name}</p>
+                      <p className="text-sm text-slate-600 mb-3 line-clamp-3 flex-1">
+                        {grant.description || 'No description provided'}
+                      </p>
+
+                      {/* Key Info */}
+                      <div className="space-y-2 mt-auto pt-3 border-t">
+                        {(grant.amount_min || grant.amount_max) && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <DollarSign className="w-4 h-4 text-emerald-600" />
+                            <span className="font-semibold text-slate-900">
+                              {grant.amount_min && `$${(parseInt(grant.amount_min) / 1000).toFixed(0)}K`}
+                              {grant.amount_min && grant.amount_max && ' - '}
+                              {grant.amount_max && `$${(parseInt(grant.amount_max) / 1000).toFixed(0)}K`}
+                            </span>
+                          </div>
+                        )}
+                        {grant.deadline_full && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <Calendar className="w-4 h-4 text-emerald-600" />
+                            <span className="text-slate-700">
+                              {format(new Date(grant.deadline_full), 'MMM d, yyyy')}
+                            </span>
+                          </div>
+                        )}
+                        {grant.geographic_focus && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <MapPin className="w-4 h-4 text-emerald-600" />
+                            <span className="text-slate-700">{grant.geographic_focus}</span>
+                          </div>
                         )}
                       </div>
 
+                      {/* Footer */}
+                      <div className="flex items-center gap-2 mt-3 pt-3 border-t">
+                        <Badge variant="outline" className="text-xs">{grant.funding_lane}</Badge>
+                        {grant.project_category && (
+                          <Badge variant="outline" className="text-xs bg-slate-50">{grant.project_category}</Badge>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {/* Detail Modal */}
+        <Dialog open={!!selectedGrant} onOpenChange={() => setSelectedGrant(null)}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            {selectedGrant && (
+              <>
+                <DialogHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge className="uppercase bg-emerald-100 text-emerald-800">
+                          {selectedGrant.type}
+                        </Badge>
+                        <Badge variant="outline">{selectedGrant.funding_lane}</Badge>
+                        {selectedGrant.rolling_deadline && (
+                          <Badge variant="outline">Rolling Deadline</Badge>
+                        )}
+                      </div>
+                      <DialogTitle className="text-2xl mb-2">{selectedGrant.title}</DialogTitle>
+                      <div className="flex items-center gap-2 text-emerald-700 font-medium">
+                        <Building2 className="w-4 h-4" />
+                        {selectedGrant.funder_name}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
                       <Button
-                        variant="ghost"
+                        variant={savedGrants.includes(selectedGrant.id) ? 'default' : 'outline'}
                         size="sm"
-                        onClick={() => deleteGrantMutation.mutate(grant.id)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => toggleSave(selectedGrant.id)}
+                        className={savedGrants.includes(selectedGrant.id) ? 'bg-emerald-600' : ''}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        {savedGrants.includes(selectedGrant.id) ? (
+                          <><BookmarkCheck className="w-4 h-4 mr-1" />Saved</>
+                        ) : (
+                          <><Bookmark className="w-4 h-4 mr-1" />Save</>
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleHide(selectedGrant.id)}
+                      >
+                        <EyeOff className="w-4 h-4 mr-1" />
+                        Hide
                       </Button>
                     </div>
                   </div>
-                ))}
-              </div>
+                </DialogHeader>
+
+                <div className="space-y-6 mt-4">
+                  {/* Key Details */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {(selectedGrant.amount_min || selectedGrant.amount_max) && (
+                      <div className="bg-slate-50 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <DollarSign className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs text-slate-600">Award Range</span>
+                        </div>
+                        <p className="text-lg font-bold text-slate-900">
+                          {selectedGrant.amount_min && `$${(parseInt(selectedGrant.amount_min) / 1000).toFixed(0)}K`}
+                          {selectedGrant.amount_min && selectedGrant.amount_max && ' - '}
+                          {selectedGrant.amount_max && `$${(parseInt(selectedGrant.amount_max) / 1000).toFixed(0)}K`}
+                        </p>
+                      </div>
+                    )}
+                    {selectedGrant.deadline_full && (
+                      <div className="bg-slate-50 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Calendar className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs text-slate-600">Application Deadline</span>
+                        </div>
+                        <p className="text-sm font-bold text-slate-900">
+                          {format(new Date(selectedGrant.deadline_full), 'MMMM d, yyyy')}
+                        </p>
+                      </div>
+                    )}
+                    {selectedGrant.geographic_focus && (
+                      <div className="bg-slate-50 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <MapPin className="w-4 h-4 text-emerald-600" />
+                          <span className="text-xs text-slate-600">Geographic Focus</span>
+                        </div>
+                        <p className="text-sm font-bold text-slate-900">{selectedGrant.geographic_focus}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Additional Deadlines */}
+                  {(selectedGrant.deadline_loi || selectedGrant.deadline_pre) && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-amber-600" />
+                        Important Deadlines
+                      </h4>
+                      <div className="space-y-1 text-sm">
+                        {selectedGrant.deadline_loi && (
+                          <p><span className="font-medium">Letter of Intent:</span> {format(new Date(selectedGrant.deadline_loi), 'MMMM d, yyyy')}</p>
+                        )}
+                        {selectedGrant.deadline_pre && (
+                          <p><span className="font-medium">Pre-Application:</span> {format(new Date(selectedGrant.deadline_pre), 'MMMM d, yyyy')}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Description */}
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-emerald-600" />
+                      Description
+                    </h4>
+                    <p className="text-slate-700 whitespace-pre-line">{selectedGrant.description}</p>
+                  </div>
+
+                  {/* Eligibility */}
+                  {selectedGrant.eligibility_summary && (
+                    <div>
+                      <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                        <Users className="w-4 h-4 text-emerald-600" />
+                        Eligibility
+                      </h4>
+                      <p className="text-slate-700">{selectedGrant.eligibility_summary}</p>
+                    </div>
+                  )}
+
+                  {/* Internal Notes (Admin Only) */}
+                  {selectedGrant.internal_notes && user?.role === 'admin' && (
+                    <div className="bg-amber-50 border-l-4 border-amber-400 rounded p-4">
+                      <h4 className="font-semibold text-amber-900 mb-2">Internal Strategy Notes</h4>
+                      <p className="text-amber-900 text-sm">{selectedGrant.internal_notes}</p>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="flex gap-3 pt-4 border-t">
+                    {selectedGrant.application_url && (
+                      <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+                        <a href={selectedGrant.application_url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          View Application Portal
+                        </a>
+                      </Button>
+                    )}
+                    <Button variant="outline">
+                      <Award className="w-4 h-4 mr-2" />
+                      Start Application
+                    </Button>
+                  </div>
+                </div>
+              </>
             )}
-          </CardContent>
-        </Card>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
