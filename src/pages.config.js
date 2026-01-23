@@ -2,6 +2,7 @@ import AIGuardrails from './pages/AIGuardrails';
 import AdminDashboard from './pages/AdminDashboard';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
+import BudgetBuilder from './pages/BudgetBuilder';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachProfileSetup from './pages/CoachProfileSetup';
 import CoachesStaff from './pages/CoachesStaff';
@@ -28,7 +29,8 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
-import BudgetBuilder from './pages/BudgetBuilder';
+import GrantSubmission from './pages/GrantSubmission';
+import GrantDashboard from './pages/GrantDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -37,6 +39,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AssignedOrganizations": AssignedOrganizations,
     "BoilerplateBuilder": BoilerplateBuilder,
+    "BudgetBuilder": BudgetBuilder,
     "CoachDashboard": CoachDashboard,
     "CoachProfileSetup": CoachProfileSetup,
     "CoachesStaff": CoachesStaff,
@@ -63,7 +66,8 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
-    "BudgetBuilder": BudgetBuilder,
+    "GrantSubmission": GrantSubmission,
+    "GrantDashboard": GrantDashboard,
 }
 
 export const pagesConfig = {

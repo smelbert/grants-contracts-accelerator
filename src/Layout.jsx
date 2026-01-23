@@ -27,7 +27,8 @@ import {
   DollarSign,
   Bell,
   HelpCircle,
-  Calculator
+  Calculator,
+  Plus
 } from 'lucide-react';
 
 // User Portal Navigation
@@ -40,7 +41,8 @@ const getUserPortalNav = () => [
   { name: 'Templates', page: 'Templates', icon: BookOpen },
         { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
         { name: 'Budget Builder', page: 'BudgetBuilder', icon: Calculator },
-  { name: 'Opportunities', page: 'Opportunities', icon: Search },
+        { name: 'Grant Dashboard', page: 'GrantDashboard', icon: Sparkles },
+        { name: 'Opportunities', page: 'Opportunities', icon: Search },
   { name: 'Learning Hub', page: 'Learning', icon: BookOpen },
   { name: 'Community', page: 'Community', icon: Users },
   { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
@@ -53,6 +55,7 @@ const getCoachPortalNav = () => [
   { name: 'Assigned Organizations', page: 'AssignedOrganizations', icon: Building2 },
   { name: 'Review Queue', page: 'ReviewQueue', icon: FileText },
   { name: 'Video Feedback', page: 'VideoFeedback', icon: Video },
+  { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
   { name: 'Teaching & Content', page: 'TeachingContent', icon: BookOpen },
   { name: 'Flags & Notes', page: 'FlagsNotes', icon: AlertTriangle },
   { name: 'Settings', page: 'Settings', icon: SettingsIcon },
@@ -62,6 +65,7 @@ const getCoachPortalNav = () => [
 const getAdminPortalNav = () => [
   { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
   { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
+  { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
   { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
   { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
   { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
