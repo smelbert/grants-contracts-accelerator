@@ -26,7 +26,8 @@ import {
   AlertTriangle,
   DollarSign,
   Bell,
-  HelpCircle
+  HelpCircle,
+  Calculator
 } from 'lucide-react';
 
 // User Portal Navigation
@@ -37,7 +38,8 @@ const getUserPortalNav = () => [
   { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
   { name: 'Documents', page: 'Documents', icon: FileText },
   { name: 'Templates', page: 'Templates', icon: BookOpen },
-  { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
+        { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
+        { name: 'Budget Builder', page: 'BudgetBuilder', icon: Calculator },
   { name: 'Opportunities', page: 'Opportunities', icon: Search },
   { name: 'Learning Hub', page: 'Learning', icon: BookOpen },
   { name: 'Community', page: 'Community', icon: Users },
