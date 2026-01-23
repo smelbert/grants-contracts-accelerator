@@ -14,16 +14,23 @@ export default function GrantSubmissionPage() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
+    project_category: '',
     funder_name: '',
     type: 'grant',
     funding_lane: 'grants',
     amount_min: '',
     amount_max: '',
+    deadline_loi: '',
+    deadline_pre: '',
+    deadline_full: '',
     deadline: '',
+    rolling_deadline: false,
+    status: 'researching',
     description: '',
     eligibility_summary: '',
     application_url: '',
     geographic_focus: '',
+    internal_notes: '',
     is_active: true
   });
 
@@ -64,16 +71,23 @@ export default function GrantSubmissionPage() {
       setShowForm(false);
       setFormData({
         title: '',
+        project_category: '',
         funder_name: '',
         type: 'grant',
         funding_lane: 'grants',
         amount_min: '',
         amount_max: '',
+        deadline_loi: '',
+        deadline_pre: '',
+        deadline_full: '',
         deadline: '',
+        rolling_deadline: false,
+        status: 'researching',
         description: '',
         eligibility_summary: '',
         application_url: '',
         geographic_focus: '',
+        internal_notes: '',
         is_active: true
       });
     }
@@ -116,7 +130,15 @@ export default function GrantSubmissionPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Project Category</label>
+                    <Input
+                      value={formData.project_category}
+                      onChange={(e) => handleChange('project_category', e.target.value)}
+                      placeholder="e.g., Youth Lead, Adult Work"
+                    />
+                  </div>
                   <div>
                     <label className="text-sm font-medium text-slate-700 mb-1 block">Grant Title *</label>
                     <Input
@@ -137,7 +159,7 @@ export default function GrantSubmissionPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-4 gap-4">
                   <div>
                     <label className="text-sm font-medium text-slate-700 mb-1 block">Funding Lane</label>
                     <Select value={formData.funding_lane} onValueChange={(val) => handleChange('funding_lane', val)}>
@@ -149,6 +171,21 @@ export default function GrantSubmissionPage() {
                         <SelectItem value="contracts">Contracts</SelectItem>
                         <SelectItem value="donors">Donors</SelectItem>
                         <SelectItem value="public_funds">Public Funds</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Status</label>
+                    <Select value={formData.status} onValueChange={(val) => handleChange('status', val)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="researching">Researching</SelectItem>
+                        <SelectItem value="drafting">Drafting</SelectItem>
+                        <SelectItem value="submitted">Submitted</SelectItem>
+                        <SelectItem value="awarded">Awarded</SelectItem>
+                        <SelectItem value="declined">Declined</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -172,13 +209,29 @@ export default function GrantSubmissionPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-4 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-slate-700 mb-1 block">Deadline</label>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">LOI Deadline</label>
                     <Input
                       type="date"
-                      value={formData.deadline}
-                      onChange={(e) => handleChange('deadline', e.target.value)}
+                      value={formData.deadline_loi}
+                      onChange={(e) => handleChange('deadline_loi', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Pre-App Deadline</label>
+                    <Input
+                      type="date"
+                      value={formData.deadline_pre}
+                      onChange={(e) => handleChange('deadline_pre', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Full App Deadline</label>
+                    <Input
+                      type="date"
+                      value={formData.deadline_full}
+                      onChange={(e) => handleChange('deadline_full', e.target.value)}
                     />
                   </div>
                   <div>
@@ -186,9 +239,20 @@ export default function GrantSubmissionPage() {
                     <Input
                       value={formData.geographic_focus}
                       onChange={(e) => handleChange('geographic_focus', e.target.value)}
-                      placeholder="e.g., California, Nationwide"
+                      placeholder="e.g., California"
                     />
                   </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="rolling"
+                    checked={formData.rolling_deadline}
+                    onChange={(e) => handleChange('rolling_deadline', e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor="rolling" className="text-sm text-slate-700">Rolling deadline</label>
                 </div>
 
                 <div>
@@ -222,6 +286,16 @@ export default function GrantSubmissionPage() {
                   />
                 </div>
 
+                <div>
+                  <label className="text-sm font-medium text-slate-700 mb-1 block">Internal Notes (Staff Only)</label>
+                  <Textarea
+                    value={formData.internal_notes}
+                    onChange={(e) => handleChange('internal_notes', e.target.value)}
+                    rows={2}
+                    placeholder="Strategy notes, fit assessment, contact requirements..."
+                  />
+                </div>
+
                 <div className="flex items-center justify-end gap-3 pt-4 border-t">
                   <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
                     Cancel
@@ -248,32 +322,62 @@ export default function GrantSubmissionPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
+                        {grant.project_category && (
+                          <Badge variant="outline" className="text-xs font-normal">{grant.project_category}</Badge>
+                        )}
                         <h3 className="text-lg font-semibold text-slate-900">{grant.title}</h3>
                         <Badge variant="outline" className="text-xs">{grant.funding_lane}</Badge>
-                        {grant.is_active && <Badge className="bg-green-100 text-green-800 text-xs">Active</Badge>}
+                        <Badge className={
+                          grant.status === 'awarded' ? 'bg-green-100 text-green-800' :
+                          grant.status === 'submitted' ? 'bg-blue-100 text-blue-800' :
+                          grant.status === 'drafting' ? 'bg-amber-100 text-amber-800' :
+                          'bg-slate-100 text-slate-800'
+                        }>
+                          {grant.status}
+                        </Badge>
                       </div>
                       <p className="text-sm text-slate-600 mb-1">{grant.funder_name}</p>
                       <p className="text-sm text-slate-700 mb-3">{grant.description}</p>
                       
-                      <div className="flex items-center gap-4 text-sm text-slate-600">
-                        {(grant.amount_min || grant.amount_max) && (
-                          <div className="flex items-center gap-1">
-                            <DollarSign className="w-4 h-4" />
-                            <span>
-                              {grant.amount_min && `$${parseInt(grant.amount_min).toLocaleString()}`}
-                              {grant.amount_min && grant.amount_max && ' - '}
-                              {grant.amount_max && `$${parseInt(grant.amount_max).toLocaleString()}`}
-                            </span>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-4 text-sm text-slate-600">
+                          {(grant.amount_min || grant.amount_max) && (
+                            <div className="flex items-center gap-1">
+                              <DollarSign className="w-4 h-4" />
+                              <span>
+                                {grant.amount_min && `$${parseInt(grant.amount_min).toLocaleString()}`}
+                                {grant.amount_min && grant.amount_max && ' - '}
+                                {grant.amount_max && `$${parseInt(grant.amount_max).toLocaleString()}`}
+                              </span>
+                            </div>
+                          )}
+                          {grant.geographic_focus && (
+                            <span>📍 {grant.geographic_focus}</span>
+                          )}
+                          {grant.rolling_deadline && (
+                            <Badge variant="outline" className="text-xs">Rolling</Badge>
+                          )}
+                        </div>
+
+                        {(grant.deadline_loi || grant.deadline_pre || grant.deadline_full) && (
+                          <div className="flex items-center gap-4 text-sm text-slate-600">
+                            {grant.deadline_loi && (
+                              <span>LOI: {format(new Date(grant.deadline_loi), 'MMM d')}</span>
+                            )}
+                            {grant.deadline_pre && (
+                              <span>Pre: {format(new Date(grant.deadline_pre), 'MMM d')}</span>
+                            )}
+                            {grant.deadline_full && (
+                              <span>Full: {format(new Date(grant.deadline_full), 'MMM d')}</span>
+                            )}
                           </div>
                         )}
-                        {grant.deadline && (
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>Deadline: {format(new Date(grant.deadline), 'MMM d, yyyy')}</span>
+
+                        {grant.internal_notes && (
+                          <div className="bg-amber-50 border border-amber-200 rounded p-2 text-xs text-amber-800">
+                            <span className="font-medium">Staff Notes: </span>
+                            {grant.internal_notes}
                           </div>
-                        )}
-                        {grant.geographic_focus && (
-                          <span>📍 {grant.geographic_focus}</span>
                         )}
                       </div>
 
