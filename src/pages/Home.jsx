@@ -9,6 +9,7 @@ import FundingLaneCard from '@/components/dashboard/FundingLaneCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import GraduationModal from '@/components/graduation/GraduationModal';
 import NextBestAction from '@/components/dashboard/NextBestAction';
+import OnboardingTour from '@/components/onboarding/OnboardingTour';
 
 function calculateReadiness(org) {
   if (!org) return 'pre_funding';
@@ -144,12 +145,13 @@ export default function HomePage() {
 
   return (
     <>
+      <OnboardingTour />
       <GraduationModal 
         isOpen={showGraduation} 
         onClose={() => setShowGraduation(false)}
         graduationType={graduationType}
       />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30" data-tour="dashboard">
         <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
         {/* Header */}
         <motion.div
