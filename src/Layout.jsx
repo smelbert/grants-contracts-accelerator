@@ -28,7 +28,8 @@ import {
   Bell,
   HelpCircle,
   Calculator,
-  Plus
+  Plus,
+  User
 } from 'lucide-react';
 
 // User Portal Navigation
@@ -56,6 +57,7 @@ const getUserPortalNav = () => [
 // Coach Portal Navigation
 const getCoachPortalNav = () => [
   { name: 'Coach Dashboard', page: 'CoachDashboard', icon: LayoutDashboard },
+  { name: 'My Profile', page: 'CoachProfile', icon: User },
   { name: 'Assigned Organizations', page: 'AssignedOrganizations', icon: Building2 },
   { name: 'Review Queue', page: 'ReviewQueue', icon: FileText },
   { name: 'Video Feedback', page: 'VideoFeedback', icon: Video },
@@ -74,6 +76,7 @@ const getAdminPortalNav = () => [
   { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
   { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
   { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
+  { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
   { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
   { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
   { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },

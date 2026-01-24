@@ -38,6 +38,8 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
+import CoachProfile from './pages/CoachProfile';
+import CoachProfileManager from './pages/CoachProfileManager';
 import __Layout from './Layout.jsx';
 
 
@@ -82,6 +84,8 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
+    "CoachProfile": CoachProfile,
+    "CoachProfileManager": CoachProfileManager,
 }
 
 export const pagesConfig = {
