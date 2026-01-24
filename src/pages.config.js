@@ -35,6 +35,8 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import LearningModule from './pages/LearningModule';
+import FunderProfile from './pages/FunderProfile';
+import ApplicationTracker from './pages/ApplicationTracker';
 import __Layout from './Layout.jsx';
 
 
@@ -76,6 +78,8 @@ export const PAGES = {
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
     "LearningModule": LearningModule,
+    "FunderProfile": FunderProfile,
+    "ApplicationTracker": ApplicationTracker,
 }
 
 export const pagesConfig = {

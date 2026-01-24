@@ -592,7 +592,15 @@ export default function GrantSubmissionPage() {
                       <h3 className="text-base font-semibold text-slate-900 mb-1 line-clamp-2">
                         {grant.title}
                       </h3>
-                      <p className="text-sm font-medium text-emerald-700 mb-2">{grant.funder_name}</p>
+                      <p 
+                        className="text-sm font-medium text-emerald-700 mb-2 cursor-pointer hover:underline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = createPageUrl('FunderProfile') + '?name=' + encodeURIComponent(grant.funder_name);
+                        }}
+                      >
+                        {grant.funder_name}
+                      </p>
                       <p className="text-sm text-slate-600 mb-3 line-clamp-3 flex-1">
                         {grant.description || 'No description provided'}
                       </p>
@@ -658,7 +666,12 @@ export default function GrantSubmissionPage() {
                         )}
                       </div>
                       <DialogTitle className="text-2xl mb-2">{selectedGrant.title}</DialogTitle>
-                      <div className="flex items-center gap-2 text-emerald-700 font-medium">
+                      <div 
+                        className="flex items-center gap-2 text-emerald-700 font-medium cursor-pointer hover:underline"
+                        onClick={() => {
+                          window.location.href = createPageUrl('FunderProfile') + '?name=' + encodeURIComponent(selectedGrant.funder_name);
+                        }}
+                      >
                         <Building2 className="w-4 h-4" />
                         {selectedGrant.funder_name}
                       </div>

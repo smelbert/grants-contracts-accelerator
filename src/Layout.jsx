@@ -33,19 +33,20 @@ import {
 
 // User Portal Navigation
 const getUserPortalNav = () => [
-  { name: 'Dashboard', page: 'Home', icon: LayoutDashboard },
+  { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, dataTour: 'dashboard' },
   { name: 'My Organization', page: 'Profile', icon: Building2 },
+  { name: 'Application Tracker', page: 'ApplicationTracker', icon: CheckCircle2, dataTour: 'workflows' },
   { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
   { name: 'Proposal Workflows', page: 'ProposalWorkflows', icon: CheckCircle2 },
   { name: 'Readiness Assessment', page: 'GrantReadinessAssessment', icon: CheckCircle2 },
   { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
   { name: 'Documents', page: 'Documents', icon: FileText },
-  { name: 'Templates', page: 'Templates', icon: BookOpen },
+  { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
         { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
         { name: 'Budget Builder', page: 'BudgetBuilder', icon: Calculator },
         { name: 'Grant Dashboard', page: 'GrantDashboard', icon: Sparkles },
-        { name: 'Opportunities', page: 'Opportunities', icon: Search },
-  { name: 'Learning Hub', page: 'Learning', icon: BookOpen },
+        { name: 'Opportunities', page: 'Opportunities', icon: Search, dataTour: 'opportunities' },
+  { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
   { name: 'Community', page: 'Community', icon: Users },
   { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
   { name: 'Settings', page: 'Settings', icon: SettingsIcon },
@@ -174,6 +175,7 @@ export default function Layout({ children, currentPageName }) {
                   <li key={item.name}>
                     <Link
                       to={createPageUrl(item.page)}
+                      data-tour={item.dataTour}
                       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
                         isActive
                           ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
