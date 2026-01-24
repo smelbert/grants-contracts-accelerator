@@ -1,5 +1,7 @@
+import AIFundingMatcher from './pages/AIFundingMatcher';
 import AIGuardrails from './pages/AIGuardrails';
 import AdminDashboard from './pages/AdminDashboard';
+import ApplicationTracker from './pages/ApplicationTracker';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import BudgetBuilder from './pages/BudgetBuilder';
@@ -10,6 +12,7 @@ import Community from './pages/Community';
 import Documents from './pages/Documents';
 import EthicsCompliance from './pages/EthicsCompliance';
 import FlagsNotes from './pages/FlagsNotes';
+import FunderProfile from './pages/FunderProfile';
 import FundingLane from './pages/FundingLane';
 import GrantDashboard from './pages/GrantDashboard';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
@@ -17,6 +20,7 @@ import GrantSubmission from './pages/GrantSubmission';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
+import LearningModule from './pages/LearningModule';
 import Opportunities from './pages/Opportunities';
 import OrganizationsOverview from './pages/OrganizationsOverview';
 import PlatformSettings from './pages/PlatformSettings';
@@ -34,16 +38,14 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
-import LearningModule from './pages/LearningModule';
-import FunderProfile from './pages/FunderProfile';
-import ApplicationTracker from './pages/ApplicationTracker';
-import AIFundingMatcher from './pages/AIFundingMatcher';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AIFundingMatcher": AIFundingMatcher,
     "AIGuardrails": AIGuardrails,
     "AdminDashboard": AdminDashboard,
+    "ApplicationTracker": ApplicationTracker,
     "AssignedOrganizations": AssignedOrganizations,
     "BoilerplateBuilder": BoilerplateBuilder,
     "BudgetBuilder": BudgetBuilder,
@@ -54,6 +56,7 @@ export const PAGES = {
     "Documents": Documents,
     "EthicsCompliance": EthicsCompliance,
     "FlagsNotes": FlagsNotes,
+    "FunderProfile": FunderProfile,
     "FundingLane": FundingLane,
     "GrantDashboard": GrantDashboard,
     "GrantReadinessAssessment": GrantReadinessAssessment,
@@ -61,6 +64,7 @@ export const PAGES = {
     "Home": Home,
     "Landing": Landing,
     "Learning": Learning,
+    "LearningModule": LearningModule,
     "Opportunities": Opportunities,
     "OrganizationsOverview": OrganizationsOverview,
     "PlatformSettings": PlatformSettings,
@@ -78,10 +82,6 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
-    "LearningModule": LearningModule,
-    "FunderProfile": FunderProfile,
-    "ApplicationTracker": ApplicationTracker,
-    "AIFundingMatcher": AIFundingMatcher,
 }
 
 export const pagesConfig = {

@@ -19,10 +19,12 @@ import {
   AlertCircle,
   TrendingUp,
   Trophy,
-  X as XIcon
+  X as XIcon,
+  Sparkles
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import AIProposalDrafter from '@/components/ai/AIProposalDrafter';
 
 const STATUS_CONFIG = {
   planning: { label: 'Planning', color: 'bg-slate-100 text-slate-700', icon: Clock },
@@ -55,6 +57,14 @@ export default function ApplicationTrackerPage() {
     queryKey: ['documents'],
     queryFn: () => base44.entities.Document.list(),
   });
+
+  const { data: organizations = [] } = useQuery({
+    queryKey: ['organizations', user?.email],
+    queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
+  });
+
+  const organization = organizations[0];
 
   const createAppMutation = useMutation({
     mutationFn: (data) => base44.entities.GrantApplication.create(data),
@@ -445,6 +455,17 @@ export default function ApplicationTrackerPage() {
                       <h4 className="font-semibold text-slate-900 mb-2">Notes</h4>
                       <p className="text-slate-700 whitespace-pre-line">{selectedApp.notes}</p>
                     </div>
+                  )}
+
+                  {/* AI Proposal Drafter */}
+                  {organization && (
+                    <AIProposalDrafter
+                      opportunity={opportunities.find(o => o.id === selectedApp.opportunity_id)}
+                      organization={organization}
+                      onDraftGenerated={(draft) => {
+                        console.log('Draft generated:', draft);
+                      }}
+                    />
                   )}
 
                   {/* Documents */}

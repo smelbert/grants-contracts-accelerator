@@ -84,6 +84,51 @@ export default function TeamCollaborationPage() {
     },
   });
 
+  const autoSuggestTasksMutation = useMutation({
+    mutationFn: async ({ opportunity }) => {
+      const prompt = `Suggest 3-5 actionable tasks for researching and applying to this funding opportunity:
+
+OPPORTUNITY:
+- Title: ${opportunity.title}
+- Funder: ${opportunity.funder_name}
+- Type: ${opportunity.type}
+- Description: ${opportunity.description || 'Not provided'}
+- Deadline: ${opportunity.deadline || 'Not specified'}
+
+Return a JSON array of suggested tasks. Each task should have:
+- title: short, actionable task title
+- description: 1-2 sentence description
+- task_type: one of "research", "document", "review", "application", "meeting", "follow_up"
+- priority: "low", "medium", "high", or "urgent"
+- estimated_hours: estimated time in hours`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        add_context_from_internet: false,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            tasks: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  description: { type: "string" },
+                  task_type: { type: "string" },
+                  priority: { type: "string" },
+                  estimated_hours: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      return result.tasks;
+    }
+  });
+
   const updateTaskMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.TeamTask.update(id, data),
     onSuccess: () => {
