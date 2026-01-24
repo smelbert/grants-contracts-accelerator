@@ -35,6 +35,7 @@ import {
 const getUserPortalNav = () => [
   { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, dataTour: 'dashboard' },
   { name: 'My Organization', page: 'Profile', icon: Building2 },
+  { name: 'AI Funding Matcher', page: 'AIFundingMatcher', icon: Sparkles },
   { name: 'Application Tracker', page: 'ApplicationTracker', icon: CheckCircle2, dataTour: 'workflows' },
   { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
   { name: 'Proposal Workflows', page: 'ProposalWorkflows', icon: CheckCircle2 },

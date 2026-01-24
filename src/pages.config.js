@@ -37,6 +37,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import LearningModule from './pages/LearningModule';
 import FunderProfile from './pages/FunderProfile';
 import ApplicationTracker from './pages/ApplicationTracker';
+import AIFundingMatcher from './pages/AIFundingMatcher';
 import __Layout from './Layout.jsx';
 
 
@@ -80,6 +81,7 @@ export const PAGES = {
     "LearningModule": LearningModule,
     "FunderProfile": FunderProfile,
     "ApplicationTracker": ApplicationTracker,
+    "AIFundingMatcher": AIFundingMatcher,
 }
 
 export const pagesConfig = {

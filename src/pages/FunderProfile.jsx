@@ -19,7 +19,8 @@ import {
   Sparkles,
   Loader2,
   ExternalLink,
-  RefreshCw
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -55,7 +56,10 @@ export default function FunderProfilePage() {
   "total_assets": 5000000,
   "annual_giving": 500000,
   "website": "https://example.org",
-  "data_sources": ["source1", "source2"]
+  "data_sources": ["source1", "source2"],
+  "application_requirements": "Key eligibility criteria, required documents, application process details, and any specific requirements",
+  "common_pitfalls": "Common mistakes applicants make, reasons for rejections, and what to avoid based on past application patterns",
+  "preferred_contacts": [{"name": "Contact Name", "role": "Program Officer", "email": "contact@funder.org", "phone": "555-1234"}]
 }`;
 
       const result = await base44.integrations.Core.InvokeLLM({
@@ -74,7 +78,21 @@ export default function FunderProfilePage() {
             total_assets: { type: "number" },
             annual_giving: { type: "number" },
             website: { type: "string" },
-            data_sources: { type: "array", items: { type: "string" } }
+            data_sources: { type: "array", items: { type: "string" } },
+            application_requirements: { type: "string" },
+            common_pitfalls: { type: "string" },
+            preferred_contacts: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  role: { type: "string" },
+                  email: { type: "string" },
+                  phone: { type: "string" }
+                }
+              }
+            }
           }
         }
       });
@@ -316,6 +334,64 @@ export default function FunderProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-700 whitespace-pre-line">{funder.irs_990_summary}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Application Requirements */}
+            {funder.application_requirements && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-emerald-600" />
+                    Application Requirements
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-700 whitespace-pre-line">{funder.application_requirements}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Common Pitfalls */}
+            {funder.common_pitfalls && (
+              <Card className="border-amber-200 bg-amber-50/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-amber-900">
+                    <AlertCircle className="w-5 h-5 text-amber-600" />
+                    Common Application Pitfalls
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-700 whitespace-pre-line">{funder.common_pitfalls}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Preferred Contacts */}
+            {funder.preferred_contacts && funder.preferred_contacts.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="w-5 h-5 text-emerald-600" />
+                    Key Contacts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {funder.preferred_contacts.map((contact, idx) => (
+                      <div key={idx} className="p-3 bg-slate-50 rounded-lg">
+                        <p className="font-medium text-slate-900">{contact.name}</p>
+                        {contact.role && <p className="text-sm text-slate-600">{contact.role}</p>}
+                        {contact.email && (
+                          <a href={`mailto:${contact.email}`} className="text-sm text-emerald-600 hover:underline">
+                            {contact.email}
+                          </a>
+                        )}
+                        {contact.phone && <p className="text-sm text-slate-600">{contact.phone}</p>}
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             )}
