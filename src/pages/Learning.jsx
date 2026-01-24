@@ -5,9 +5,11 @@ import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles } from 'lucide-react';
+import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles, MessageSquare } from 'lucide-react';
 import LearningCard from '@/components/learning/LearningCard';
 import AILearningRecommendations from '@/components/ai/AILearningRecommendations';
+import LearningRequestForm from '@/components/learning/LearningRequestForm';
+import MyLearningRequests from '@/components/learning/MyLearningRequests';
 
 const CONTENT_TYPES = [
   { value: 'all', label: 'All Types', icon: BookOpen },
@@ -79,6 +81,11 @@ export default function LearningPage() {
           </p>
         </motion.div>
 
+        {/* Header Actions */}
+        <div className="flex justify-end">
+          <LearningRequestForm organization={organization} />
+        </div>
+
         {/* Main Tabs - Recommended vs Browse */}
         <Tabs defaultValue={organization ? "recommended" : "browse"} className="space-y-6">
           <TabsList className="bg-white border border-slate-200 p-1 h-auto">
@@ -95,6 +102,13 @@ export default function LearningPage() {
             >
               <BookOpen className="w-4 h-4 mr-2" />
               Browse All
+            </TabsTrigger>
+            <TabsTrigger 
+              value="requests"
+              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            >
+              <MessageSquare className="w-4 h-4 mr-2" />
+              My Requests
             </TabsTrigger>
           </TabsList>
 
@@ -203,6 +217,11 @@ export default function LearningPage() {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          {/* My Requests Tab */}
+          <TabsContent value="requests">
+            <MyLearningRequests userEmail={user?.email} />
           </TabsContent>
         </Tabs>
       </div>
