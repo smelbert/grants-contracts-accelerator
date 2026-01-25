@@ -9,11 +9,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ReactQuill from 'react-quill';
+import VersionHistory from '@/components/templates/VersionHistory';
+import TemplateComments from '@/components/templates/TemplateComments';
+import ActiveEditors from '@/components/templates/ActiveEditors';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   BookOpen, FileText, DollarSign, RefreshCw, Briefcase, 
   Heart, Building2, TrendingUp, Sparkles, CheckSquare, 
-  AlertCircle, Plus, Edit, Eye, Download
+  AlertCircle, Plus, Edit, Eye, Download, Star, MessageSquare,
+  History, Save
 } from 'lucide-react';
 
 const CATEGORY_CONFIG = {
@@ -104,7 +108,20 @@ export default function TemplateLibraryPage() {
     queryFn: () => base44.entities.Template.list('-created_date'),
   });
 
+  const { data: organizations = [] } = useQuery({
+    queryKey: ['organizations', user?.email],
+    queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
+  });
+
+  const { data: favorites = [] } = useQuery({
+    queryKey: ['template-favorites', user?.email],
+    queryFn: () => base44.entities.TemplateFavorite.filter({ user_email: user?.email }),
+    enabled: !!user?.email,
+  });
+
   const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+  const organization = organizations[0];
 
   const createTemplateMutation = useMutation({
     mutationFn: (data) => base44.entities.Template.create(data),
@@ -115,14 +132,54 @@ export default function TemplateLibraryPage() {
   });
 
   const updateTemplateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Template.update(id, data),
+    mutationFn: async ({ id, data, changeSummary, currentTemplate }) => {
+      // Create version history
+      const versions = await base44.entities.TemplateVersion.filter({ template_id: id });
+      const versionNumber = versions.length + 1;
+      
+      await base44.entities.TemplateVersion.create({
+        template_id: id,
+        version_number: versionNumber,
+        template_content: currentTemplate.template_content,
+        template_name: currentTemplate.template_name,
+        purpose: currentTemplate.purpose,
+        when_to_use: currentTemplate.when_to_use,
+        when_not_to_use: currentTemplate.when_not_to_use,
+        what_funders_look_for: currentTemplate.what_funders_look_for,
+        common_mistakes: currentTemplate.common_mistakes,
+        change_summary: changeSummary,
+        edited_by_email: user?.email,
+        edited_by_name: user?.full_name
+      });
+      
+      return base44.entities.Template.update(id, data);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['templates']);
       setEditTemplate(null);
     }
   });
 
+  const toggleFavoriteMutation = useMutation({
+    mutationFn: async (templateId) => {
+      const existing = favorites.find(f => f.template_id === templateId);
+      if (existing) {
+        return base44.entities.TemplateFavorite.delete(existing.id);
+      } else {
+        return base44.entities.TemplateFavorite.create({
+          template_id: templateId,
+          user_email: user?.email,
+          organization_id: organization?.id
+        });
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries(['template-favorites'])
+  });
+
   const filteredTemplates = templates?.filter(t => {
+    if (selectedCategory === 'favorites') {
+      return favorites.some(f => f.template_id === t.id) && t.is_active;
+    }
     const matchesCategory = selectedCategory === 'all' || t.category === selectedCategory;
     const matchesSearch = !searchQuery || 
       t.template_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -179,6 +236,15 @@ export default function TemplateLibraryPage() {
           >
             All Categories
           </Button>
+          <Button
+            variant={selectedCategory === 'favorites' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSelectedCategory('favorites')}
+            className="gap-2"
+          >
+            <Star className={`w-4 h-4 ${selectedCategory === 'favorites' ? '' : 'fill-amber-400 text-amber-400'}`} />
+            Favorites ({favorites.length})
+          </Button>
           {Object.entries(CATEGORY_CONFIG).map(([key, config]) => {
             const Icon = config.icon;
             return (
@@ -214,13 +280,15 @@ export default function TemplateLibraryPage() {
                   </div>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categoryTemplates.map(template => (
-                      <TemplateCard 
-                        key={template.id} 
-                        template={template}
-                        onView={setViewTemplate}
-                        onEdit={isAdmin ? setEditTemplate : null}
-                        config={config}
-                      />
+                     <TemplateCard 
+                       key={template.id} 
+                       template={template}
+                       onView={setViewTemplate}
+                       onEdit={isAdmin ? setEditTemplate : null}
+                       config={config}
+                       isFavorite={favorites.some(f => f.template_id === template.id)}
+                       onToggleFavorite={toggleFavoriteMutation.mutate}
+                     />
                     ))}
                   </div>
                 </div>
@@ -235,6 +303,8 @@ export default function TemplateLibraryPage() {
                   onView={setViewTemplate}
                   onEdit={isAdmin ? setEditTemplate : null}
                   config={CATEGORY_CONFIG[template.category]}
+                  isFavorite={favorites.some(f => f.template_id === template.id)}
+                  onToggleFavorite={toggleFavoriteMutation.mutate}
                 />
               ))}
             </div>
@@ -259,7 +329,14 @@ export default function TemplateLibraryPage() {
           <TemplateEditDialog 
             template={editTemplate} 
             onClose={() => setEditTemplate(null)}
-            onSave={(data) => updateTemplateMutation.mutate({ id: editTemplate.id, data })}
+            onSave={({ changeSummary, currentTemplate, ...data }) => 
+              updateTemplateMutation.mutate({ 
+                id: editTemplate.id, 
+                data,
+                changeSummary,
+                currentTemplate: editTemplate
+              })
+            }
           />
         )}
 
@@ -275,15 +352,25 @@ export default function TemplateLibraryPage() {
   );
 }
 
-function TemplateCard({ template, onView, onEdit, config }) {
+function TemplateCard({ template, onView, onEdit, config, isFavorite, onToggleFavorite }) {
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className="hover:shadow-lg transition-shadow relative">
       <CardHeader>
         <div className="flex items-start justify-between">
           <CardTitle className="text-base">{template.template_name}</CardTitle>
-          <Badge className={`bg-${config.color}-100 text-${config.color}-700`}>
-            {template.maturity_level}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge className={`bg-${config.color}-100 text-${config.color}-700`}>
+              {template.maturity_level}
+            </Badge>
+            {onToggleFavorite && (
+              <button
+                onClick={() => onToggleFavorite(template.id)}
+                className="p-1 hover:bg-slate-100 rounded transition-colors"
+              >
+                <Star className={`w-4 h-4 ${isFavorite ? 'fill-amber-500 text-amber-500' : 'text-slate-400'}`} />
+              </button>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -307,13 +394,37 @@ function TemplateCard({ template, onView, onEdit, config }) {
 }
 
 function TemplateViewDialog({ template, onClose }) {
+  const [activeTab, setActiveTab] = React.useState('content');
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   return (
     <Dialog open={!!template} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle>{template.template_name}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+          <TabsList className="mb-4">
+            <TabsTrigger value="content">
+              <FileText className="w-4 h-4 mr-2" />
+              Content
+            </TabsTrigger>
+            <TabsTrigger value="comments">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Comments
+            </TabsTrigger>
+            <TabsTrigger value="history">
+              <History className="w-4 h-4 mr-2" />
+              Version History
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="flex-1 overflow-y-auto">
+            <TabsContent value="content" className="mt-0 space-y-4">
           <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-lg">
             <div>
               <p className="text-xs text-slate-600 mb-1">Category</p>
@@ -353,25 +464,40 @@ function TemplateViewDialog({ template, onClose }) {
             </div>
           )}
 
-          {template.template_content && (
-            <div>
-              <h3 className="font-semibold mb-2 text-lg">Template Content</h3>
-              <div className="p-6 bg-white rounded-lg border-2 border-slate-200 shadow-lg prose prose-slate max-w-none"
-                   style={{
-                     fontFamily: 'Georgia, "Times New Roman", serif',
-                     lineHeight: '1.8'
-                   }}>
-                <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
-              </div>
-            </div>
-          )}
-        </div>
+              {template.template_content && (
+                <div>
+                  <h3 className="font-semibold mb-2 text-lg">Template Content</h3>
+                  <div className="p-6 bg-white rounded-lg border-2 border-slate-200 shadow-lg prose prose-slate max-w-none"
+                       style={{
+                         fontFamily: 'Georgia, "Times New Roman", serif',
+                         lineHeight: '1.8'
+                       }}>
+                    <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="comments" className="mt-0">
+              <TemplateComments templateId={template.id} currentUser={user} />
+            </TabsContent>
+
+            <TabsContent value="history" className="mt-0">
+              <VersionHistory templateId={template.id} onRestore={() => {}} />
+            </TabsContent>
+          </div>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
 }
 
 function TemplateEditDialog({ template, onClose, onSave }) {
+  const [changeSummary, setChangeSummary] = useState('');
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
   const [formData, setFormData] = useState(template || {
     template_name: '',
     category: 'foundational',
@@ -416,12 +542,27 @@ function TemplateEditDialog({ template, onClose, onSave }) {
     'link', 'image'
   ];
 
+  const handleSave = () => {
+    if (template && !changeSummary.trim()) {
+      alert('Please describe what changed in this version');
+      return;
+    }
+    if (template) {
+      onSave({ ...formData, changeSummary, currentTemplate: template });
+    } else {
+      onSave(formData);
+    }
+  };
+
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl">{template ? 'Edit Template' : 'New Template'}</DialogTitle>
         </DialogHeader>
+
+        {template && <ActiveEditors templateId={template.id} currentUser={user} />}
+
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -551,12 +692,27 @@ function TemplateEditDialog({ template, onClose, onSave }) {
             </div>
           </div>
 
+          {template && (
+            <div>
+              <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+                <Save className="w-4 h-4" />
+                Change Summary (Required for Version History)
+              </label>
+              <Input
+                placeholder="e.g., Updated funder guidance section, added budget examples"
+                value={changeSummary}
+                onChange={(e) => setChangeSummary(e.target.value)}
+              />
+            </div>
+          )}
+
           <div className="flex gap-3 pt-4 border-t">
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button onClick={() => onSave(formData)} className="flex-1 bg-purple-600 hover:bg-purple-700">
-              {template ? 'Update Template' : 'Create Template'}
+            <Button onClick={handleSave} className="flex-1 bg-purple-600 hover:bg-purple-700">
+              <Save className="w-4 h-4 mr-2" />
+              {template ? 'Save Changes' : 'Create Template'}
             </Button>
           </div>
         </div>
