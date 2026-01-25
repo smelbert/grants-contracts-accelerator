@@ -390,15 +390,31 @@ function TemplateEditDialog({ template, onClose, onSave }) {
 
   const quillModules = {
     toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'font': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
       [{ 'indent': '-1'}, { 'indent': '+1' }],
       [{ 'align': [] }],
-      ['link'],
+      ['blockquote', 'code-block'],
+      ['link', 'image'],
       ['clean']
     ]
   };
+
+  const quillFormats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'script',
+    'list', 'bullet', 'check',
+    'indent', 'align',
+    'blockquote', 'code-block',
+    'link', 'image'
+  ];
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -527,8 +543,10 @@ function TemplateEditDialog({ template, onClose, onSave }) {
                 value={formData.template_content}
                 onChange={(content) => setFormData({...formData, template_content: content})}
                 modules={quillModules}
+                formats={quillFormats}
                 className="min-h-[400px]"
-                placeholder="Start writing your template content here. Use the toolbar to format text, add lists, headings, etc."
+                placeholder="Start writing your template content here. Use the toolbar to format text, add headers with different colors, lists, etc."
+                style={{ height: '500px' }}
               />
             </div>
           </div>
