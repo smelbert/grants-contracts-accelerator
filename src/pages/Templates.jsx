@@ -12,6 +12,7 @@ import {
   CheckCircle2, Sparkles, BookOpen
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
 
 const LANE_LABELS = {
   grants: 'Grants',
@@ -321,15 +322,18 @@ export default function TemplatesPage() {
                     </Button>
                   </div>
                   
-                  <div className="bg-white rounded-xl border-2 border-slate-200 shadow-lg p-8 min-h-[400px]" 
-                       style={{
-                         fontFamily: 'Georgia, "Times New Roman", serif',
-                         lineHeight: '1.8'
-                       }}>
-                    <div 
-                      className="prose prose-slate max-w-none"
-                      dangerouslySetInnerHTML={{ __html: selectedTemplate.template_content?.replace(/\n/g, '<br/>') }}
-                    />
+                  <div className="rounded-xl border-2 border-slate-200 shadow-lg overflow-hidden">
+                    <BrandedTemplateWrapper>
+                      <div 
+                        className="prose prose-slate max-w-none"
+                        style={{
+                          fontFamily: 'Georgia, "Times New Roman", serif',
+                          lineHeight: '1.8'
+                        }}
+                      >
+                        <div dangerouslySetInnerHTML={{ __html: selectedTemplate.template_content?.replace(/\n/g, '<br/>') }} />
+                      </div>
+                    </BrandedTemplateWrapper>
                   </div>
                 </div>
               </div>
