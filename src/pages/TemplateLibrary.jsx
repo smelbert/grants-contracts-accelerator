@@ -12,6 +12,7 @@ import ReactQuill from 'react-quill';
 import VersionHistory from '@/components/templates/VersionHistory';
 import TemplateComments from '@/components/templates/TemplateComments';
 import ActiveEditors from '@/components/templates/ActiveEditors';
+import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   BookOpen, FileText, DollarSign, RefreshCw, Briefcase, 
@@ -467,12 +468,18 @@ function TemplateViewDialog({ template, onClose }) {
               {template.template_content && (
                 <div>
                   <h3 className="font-semibold mb-2 text-lg">Template Content</h3>
-                  <div className="p-6 bg-white rounded-lg border-2 border-slate-200 shadow-lg prose prose-slate max-w-none"
-                       style={{
-                         fontFamily: 'Georgia, "Times New Roman", serif',
-                         lineHeight: '1.8'
-                       }}>
-                    <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
+                  <div className="rounded-lg border-2 border-slate-200 shadow-lg overflow-hidden">
+                    <BrandedTemplateWrapper>
+                      <div 
+                        className="prose prose-slate max-w-none"
+                        style={{
+                          fontFamily: 'Georgia, "Times New Roman", serif',
+                          lineHeight: '1.8'
+                        }}
+                      >
+                        <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
+                      </div>
+                    </BrandedTemplateWrapper>
                   </div>
                 </div>
               )}
