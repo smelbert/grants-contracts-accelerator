@@ -13,143 +13,77 @@ const ASSESSMENT_DATA = {
   level1: {
     title: "Level 1 — Foundational Readiness",
     subtitle: "Are you structurally eligible to pursue grants?",
-    maxScore: 15,
-    sections: [
-      {
-        name: "Business Status & Structure",
-        items: [
-          "Organization is legally registered (LLC, Corporation, nonprofit, etc.)",
-          "EIN obtained",
-          "Business/organizational bank account established",
-          "Legal status clearly identified (for-profit, nonprofit, fiscal sponsor)"
-        ]
-      },
-      {
-        name: "Mission & Impact",
-        items: [
-          "Clear mission statement",
-          "Defined population or community served",
-          "Specific community, workforce, or economic impact articulated"
-        ]
-      },
-      {
-        name: "Services & Market",
-        items: [
-          "Services or programs clearly defined",
-          "Target customers/participants identified",
-          "Evidence of demand (interest, pilots, MOUs, contracts, waitlists)"
-        ]
-      },
-      {
-        name: "Financial Basics",
-        items: [
-          "Startup or operating budget drafted",
-          "Clear funding amount identified",
-          "Planned and allowable use of funds outlined"
-        ]
-      },
-      {
-        name: "Mindset & Ethics",
-        items: [
-          "Understanding that grants are competitive, not guaranteed",
-          "Willingness to invest in preparation before applying",
-          "Understanding that grant writers cannot be paid from grant funds"
-        ]
-      }
+    maxScore: 16,
+    items: [
+      "Organization legally registered",
+      "EIN obtained",
+      "Business/organizational bank account established",
+      "Legal status clearly identified",
+      "Clear mission statement",
+      "Defined population served",
+      "Specific community/workforce impact articulated",
+      "Services clearly defined",
+      "Target customers/participants identified",
+      "Evidence of demand",
+      "Startup or operating budget drafted",
+      "Funding amount identified",
+      "Planned use of funds outlined",
+      "Understand grants are competitive",
+      "Willing to invest in preparation",
+      "Understand grant writers cannot be paid from grant funds"
     ]
   },
   level2: {
     title: "Level 2 — Fundability Readiness",
     subtitle: "Would a funder trust you with their money?",
     maxScore: 20,
-    sections: [
-      {
-        name: "Governance & Leadership",
-        items: [
-          "Leadership roles clearly defined (Executive, Program, Finance)",
-          "Decision-making authority is clear",
-          "Board of Directors is active (if nonprofit)",
-          "Board understands fiduciary and fundraising responsibilities"
-        ]
-      },
-      {
-        name: "Program Design",
-        items: [
-          "Clear problem/need statement supported by data",
-          "Program activities clearly outlined",
-          "Logical connection between activities → outcomes",
-          "Realistic implementation timeline identified"
-        ]
-      },
-      {
-        name: "Evaluation & Outcomes",
-        items: [
-          "Outputs and outcomes clearly defined",
-          "Success metrics identified",
-          "Data collection method identified",
-          "Responsibility for evaluation assigned"
-        ]
-      },
-      {
-        name: "Financial Controls",
-        items: [
-          "Ability to track grant funds separately",
-          "Basic financial controls in place",
-          "Experience managing restricted funds or contracts",
-          "Cash flow capacity for reimbursement-based grants"
-        ]
-      },
-      {
-        name: "Partnerships",
-        items: [
-          "Strategic partners identified (if applicable)",
-          "Partner roles clearly defined",
-          "Willingness to formalize partnerships (MOUs/letters)"
-        ]
-      }
+    items: [
+      "Leadership roles defined",
+      "Decision-making authority clear",
+      "Board active (if nonprofit)",
+      "Board understands fiduciary responsibility",
+      "Data-supported problem statement",
+      "Program activities defined",
+      "Activities logically lead to outcomes",
+      "Realistic timeline identified",
+      "Outputs and outcomes defined",
+      "Metrics identified",
+      "Data collection method identified",
+      "Evaluation responsibility assigned",
+      "Can track grant funds separately",
+      "Financial controls in place",
+      "Experience managing restricted funds",
+      "Cash flow for reimbursement grants",
+      "Strategic partners identified",
+      "Partner roles defined",
+      "Willing to formalize partnerships",
+      "Other"
     ]
   },
   level3: {
     title: "Level 3 — Competitive Readiness",
     subtitle: "Are you ready for state, federal, and highly competitive funding?",
-    maxScore: 20,
-    sections: [
-      {
-        name: "Compliance & Infrastructure",
-        items: [
-          "Organization is in good standing with the state",
-          "No unresolved audit or compliance issues",
-          "Required registrations completed (e.g., SAM.gov / UEI if applicable)",
-          "Insurance and risk requirements can be met"
-        ]
-      },
-      {
-        name: "Grant Strategy",
-        items: [
-          "Clear understanding of funder priorities",
-          "Ability to assess alignment (and say no to misfit funding)",
-          "Grant calendar or pipeline identified",
-          "Long-term sustainability beyond one grant considered"
-        ]
-      },
-      {
-        name: "Grant History & Learning",
-        items: [
-          "Prior grant or contract experience (awarded or not)",
-          "Ability to articulate lessons learned",
-          "Willingness to respond to reviewer feedback",
-          "Basic grant tracking system in place"
-        ]
-      },
-      {
-        name: "Capacity & Professional Standards",
-        items: [
-          "Internal point person for grants identified",
-          "Timely review and approval processes established",
-          "Agreement that payment for grant writing is due regardless of award",
-          "Understanding that writing ≠ funding guarantee"
-        ]
-      }
+    maxScore: 19,
+    items: [
+      "Organization in good standing",
+      "No unresolved audits/compliance issues",
+      "Required registrations completed (SAM/UEI if applicable)",
+      "Insurance requirements can be met",
+      "Understand funder priorities",
+      "Can assess alignment and decline misfit funding",
+      "Grant pipeline/calendar exists",
+      "Sustainability beyond grant considered",
+      "Prior grant or contract experience",
+      "Lessons learned identified",
+      "Willing to respond to reviewer feedback",
+      "Grant tracking system exists",
+      "Internal grants lead identified",
+      "Timely review/approval process",
+      "Agree payment is due regardless of award",
+      "Understand writing does not guarantee funding",
+      "Can manage compliance requirements",
+      "Have capacity for grant administration",
+      "Understand post-award obligations"
     ]
   }
 };
@@ -219,39 +153,34 @@ export default function GrantReadinessAssessmentPage() {
   };
 
   const renderLevel = (levelKey, levelData) => {
-    let itemIndex = 0;
     return (
       <div className="space-y-6">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-slate-900 mb-2">{levelData.title}</h2>
           <p className="text-slate-600 italic">{levelData.subtitle}</p>
+          <p className="text-sm text-slate-500 mt-2">Check each item that applies to your organization</p>
         </div>
 
-        {levelData.sections.map((section, sectionIdx) => (
-          <Card key={sectionIdx}>
-            <CardHeader>
-              <CardTitle className="text-lg">{section.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {section.items.map((item) => {
-                const key = `item_${itemIndex++}`;
-                return (
-                  <div key={key} className="flex items-start gap-3">
-                    <Checkbox
-                      id={key}
-                      checked={responses[levelKey]?.[key] || false}
-                      onCheckedChange={(checked) => handleToggle(levelKey, key, checked)}
-                      className="mt-0.5"
-                    />
-                    <label htmlFor={key} className="text-sm text-slate-700 cursor-pointer flex-1">
-                      {item}
-                    </label>
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
-        ))}
+        <Card>
+          <CardContent className="pt-6 space-y-3">
+            {levelData.items.map((item, idx) => {
+              const key = `item_${idx}`;
+              return (
+                <div key={key} className="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+                  <Checkbox
+                    id={`${levelKey}_${key}`}
+                    checked={responses[levelKey]?.[key] || false}
+                    onCheckedChange={(checked) => handleToggle(levelKey, key, checked)}
+                    className="mt-0.5"
+                  />
+                  <label htmlFor={`${levelKey}_${key}`} className="text-sm text-slate-700 cursor-pointer flex-1">
+                    {item}
+                  </label>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
 
         <div className="flex items-center justify-between pt-4">
           <div className="text-lg font-semibold text-slate-900">

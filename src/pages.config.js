@@ -6,6 +6,8 @@ import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import BudgetBuilder from './pages/BudgetBuilder';
 import CoachDashboard from './pages/CoachDashboard';
+import CoachProfile from './pages/CoachProfile';
+import CoachProfileManager from './pages/CoachProfileManager';
 import CoachProfileSetup from './pages/CoachProfileSetup';
 import CoachesStaff from './pages/CoachesStaff';
 import Community from './pages/Community';
@@ -38,8 +40,6 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
-import CoachProfile from './pages/CoachProfile';
-import CoachProfileManager from './pages/CoachProfileManager';
 import __Layout from './Layout.jsx';
 
 
@@ -52,6 +52,8 @@ export const PAGES = {
     "BoilerplateBuilder": BoilerplateBuilder,
     "BudgetBuilder": BudgetBuilder,
     "CoachDashboard": CoachDashboard,
+    "CoachProfile": CoachProfile,
+    "CoachProfileManager": CoachProfileManager,
     "CoachProfileSetup": CoachProfileSetup,
     "CoachesStaff": CoachesStaff,
     "Community": Community,
@@ -84,8 +86,6 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
-    "CoachProfile": CoachProfile,
-    "CoachProfileManager": CoachProfileManager,
 }
 
 export const pagesConfig = {
