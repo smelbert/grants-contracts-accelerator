@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import ReactQuill from 'react-quill';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   BookOpen, FileText, DollarSign, RefreshCw, Briefcase, 
@@ -354,9 +355,13 @@ function TemplateViewDialog({ template, onClose }) {
 
           {template.template_content && (
             <div>
-              <h3 className="font-semibold mb-2">Template Content</h3>
-              <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 whitespace-pre-wrap text-sm">
-                {template.template_content}
+              <h3 className="font-semibold mb-2 text-lg">Template Content</h3>
+              <div className="p-6 bg-white rounded-lg border-2 border-slate-200 shadow-lg prose prose-slate max-w-none"
+                   style={{
+                     fontFamily: 'Georgia, "Times New Roman", serif',
+                     lineHeight: '1.8'
+                   }}>
+                <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
               </div>
             </div>
           )}
@@ -383,19 +388,32 @@ function TemplateEditDialog({ template, onClose, onSave }) {
     template_content: ''
   });
 
+  const quillModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'align': [] }],
+      ['link'],
+      ['clean']
+    ]
+  };
+
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{template ? 'Edit Template' : 'New Template'}</DialogTitle>
+          <DialogTitle className="text-2xl">{template ? 'Edit Template' : 'New Template'}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Template Name</label>
               <Input
                 value={formData.template_name}
                 onChange={(e) => setFormData({...formData, template_name: e.target.value})}
+                placeholder="e.g., Logic Model Template"
               />
             </div>
             <div>
@@ -448,57 +466,81 @@ function TemplateEditDialog({ template, onClose, onSave }) {
               value={formData.purpose}
               onChange={(e) => setFormData({...formData, purpose: e.target.value})}
               rows={2}
+              placeholder="Brief description of what this template is for"
             />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block text-emerald-700">When to Use</label>
+              <Textarea
+                value={formData.when_to_use}
+                onChange={(e) => setFormData({...formData, when_to_use: e.target.value})}
+                rows={3}
+                className="border-emerald-200"
+                placeholder="Guidance on when this template is appropriate"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block text-red-700">When NOT to Use</label>
+              <Textarea
+                value={formData.when_not_to_use}
+                onChange={(e) => setFormData({...formData, when_not_to_use: e.target.value})}
+                rows={3}
+                className="border-red-200"
+                placeholder="Guidance on when to avoid this template"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block text-blue-700">What Funders Look For</label>
+              <Textarea
+                value={formData.what_funders_look_for}
+                onChange={(e) => setFormData({...formData, what_funders_look_for: e.target.value})}
+                rows={3}
+                className="border-blue-200"
+                placeholder="Key elements funders want to see"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block text-amber-700">Common Mistakes</label>
+              <Textarea
+                value={formData.common_mistakes}
+                onChange={(e) => setFormData({...formData, common_mistakes: e.target.value})}
+                rows={3}
+                className="border-amber-200"
+                placeholder="Typical errors to avoid"
+              />
+            </div>
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">When to Use</label>
-            <Textarea
-              value={formData.when_to_use}
-              onChange={(e) => setFormData({...formData, when_to_use: e.target.value})}
-              rows={2}
-            />
+            <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Template Content (Rich Text Editor)
+            </label>
+            <div className="border-2 border-slate-200 rounded-lg overflow-hidden bg-white">
+              <ReactQuill
+                theme="snow"
+                value={formData.template_content}
+                onChange={(content) => setFormData({...formData, template_content: content})}
+                modules={quillModules}
+                className="min-h-[400px]"
+                placeholder="Start writing your template content here. Use the toolbar to format text, add lists, headings, etc."
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="text-sm font-medium mb-2 block">When NOT to Use</label>
-            <Textarea
-              value={formData.when_not_to_use}
-              onChange={(e) => setFormData({...formData, when_not_to_use: e.target.value})}
-              rows={2}
-            />
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+            <Button onClick={() => onSave(formData)} className="flex-1 bg-purple-600 hover:bg-purple-700">
+              {template ? 'Update Template' : 'Create Template'}
+            </Button>
           </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">What Funders Look For</label>
-            <Textarea
-              value={formData.what_funders_look_for}
-              onChange={(e) => setFormData({...formData, what_funders_look_for: e.target.value})}
-              rows={2}
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Common Mistakes</label>
-            <Textarea
-              value={formData.common_mistakes}
-              onChange={(e) => setFormData({...formData, common_mistakes: e.target.value})}
-              rows={2}
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Template Content</label>
-            <Textarea
-              value={formData.template_content}
-              onChange={(e) => setFormData({...formData, template_content: e.target.value})}
-              rows={8}
-            />
-          </div>
-
-          <Button onClick={() => onSave(formData)} className="w-full">
-            {template ? 'Update Template' : 'Create Template'}
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
