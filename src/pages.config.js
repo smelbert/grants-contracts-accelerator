@@ -40,6 +40,9 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
+import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
+import OrganizationSettings from './pages/OrganizationSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -86,6 +89,9 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
+    "Projects": Projects,
+    "ProjectDetail": ProjectDetail,
+    "OrganizationSettings": OrganizationSettings,
 }
 
 export const pagesConfig = {
