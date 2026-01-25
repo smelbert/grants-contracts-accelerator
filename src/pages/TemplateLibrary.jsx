@@ -14,6 +14,8 @@ import VersionHistory from '@/components/templates/VersionHistory';
 import TemplateComments from '@/components/templates/TemplateComments';
 import ActiveEditors from '@/components/templates/ActiveEditors';
 import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
+import TemplateAISuggestions from '@/components/ai/TemplateAISuggestions';
+import AIContentGenerator from '@/components/ai/AIContentGenerator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   BookOpen, FileText, DollarSign, RefreshCw, Briefcase, 
@@ -219,7 +221,7 @@ export default function TemplateLibraryPage() {
             )}
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-6">
             <Input
               placeholder="Search templates..."
               value={searchQuery}
@@ -227,6 +229,12 @@ export default function TemplateLibraryPage() {
               className="max-w-md"
             />
           </div>
+
+          {/* AI Suggestions */}
+          <TemplateAISuggestions 
+            organization={organization}
+            onTemplateSelect={(name) => setSearchQuery(name)}
+          />
         </motion.div>
 
         {/* Category Filters */}

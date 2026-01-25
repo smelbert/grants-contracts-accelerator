@@ -36,6 +36,7 @@ import {
 const getUserPortalNav = () => [
   { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, dataTour: 'dashboard' },
   { name: 'My Organization', page: 'Profile', icon: Building2 },
+  { name: 'Projects', page: 'Projects', icon: CheckCircle2 },
   { name: 'AI Funding Matcher', page: 'AIFundingMatcher', icon: Sparkles },
   { name: 'Application Tracker', page: 'ApplicationTracker', icon: CheckCircle2, dataTour: 'workflows' },
   { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
@@ -51,6 +52,7 @@ const getUserPortalNav = () => [
   { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
   { name: 'Community', page: 'Community', icon: Users },
   { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
+  { name: 'Organization Settings', page: 'OrganizationSettings', icon: SettingsIcon },
   { name: 'Settings', page: 'Settings', icon: SettingsIcon },
 ];
 
