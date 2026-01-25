@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import VersionHistory from '@/components/templates/VersionHistory';
 import TemplateComments from '@/components/templates/TemplateComments';
 import ActiveEditors from '@/components/templates/ActiveEditors';
