@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Loader2, Save, Plus, Tag, ExternalLink, Brain, Wand2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import ContentWorkflowAutomation from '@/components/admin/ContentWorkflowAutomation';
 
 export default function AIContentManagementPage() {
   const queryClient = useQueryClient();
@@ -575,6 +576,9 @@ Ensure all information is accurate as of 2026.`;
           <h1 className="text-3xl font-bold text-slate-900 mb-2">AI Content Management</h1>
           <p className="text-slate-600">Leverage AI to create, enhance, and organize learning content</p>
         </div>
+
+        {/* Workflow Automation */}
+        <ContentWorkflowAutomation />
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-5">

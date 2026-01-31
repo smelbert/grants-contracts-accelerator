@@ -47,6 +47,7 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import AIContentManagement from './pages/AIContentManagement';
 import AIFundingMatcher from './pages/AIFundingMatcher';
 import AIGuardrails from './pages/AIGuardrails';
 import AdminDashboard from './pages/AdminDashboard';
@@ -72,6 +73,7 @@ import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
 import LearningModule from './pages/LearningModule';
+import LearningProgress from './pages/LearningProgress';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -92,12 +94,11 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
-import LearningProgress from './pages/LearningProgress';
-import AIContentManagement from './pages/AIContentManagement';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AIContentManagement": AIContentManagement,
     "AIFundingMatcher": AIFundingMatcher,
     "AIGuardrails": AIGuardrails,
     "AdminDashboard": AdminDashboard,
@@ -123,6 +124,7 @@ export const PAGES = {
     "Landing": Landing,
     "Learning": Learning,
     "LearningModule": LearningModule,
+    "LearningProgress": LearningProgress,
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -143,8 +145,6 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
-    "LearningProgress": LearningProgress,
-    "AIContentManagement": AIContentManagement,
 }
 
 export const pagesConfig = {
