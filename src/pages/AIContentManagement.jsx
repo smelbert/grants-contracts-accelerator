@@ -49,6 +49,11 @@ export default function AIContentManagementPage() {
   });
   const [suggestedTags, setSuggestedTags] = useState(null);
 
+  // Content Refresh State
+  const [refreshAnalysis, setRefreshAnalysis] = useState(null);
+  const [selectedRefreshContent, setSelectedRefreshContent] = useState(null);
+  const [proposedUpdates, setProposedUpdates] = useState(null);
+
   const { data: allContent = [] } = useQuery({
     queryKey: ['all-learning-content'],
     queryFn: () => base44.entities.LearningContent.list(),
@@ -356,6 +361,181 @@ Base recommendations on content analysis and best practices for nonprofit capaci
     }
   });
 
+  // Analyze Content for Refresh Needs
+  const analyzeRefreshMutation = useMutation({
+    mutationFn: async () => {
+      const now = new Date();
+      const analysisPrompt = `Analyze these learning modules and identify which ones need content refreshes based on their age and topic relevance.
+
+Current Date: ${now.toISOString().split('T')[0]}
+
+Modules:
+${allContent.map(c => `
+- ID: ${c.id}
+- Title: ${c.title}
+- Created: ${c.created_date}
+- Updated: ${c.updated_date || c.created_date}
+- Topic: ${c.funding_lane}
+`).join('\n')}
+
+For each module that needs updating, provide:
+1. Why it needs refresh (age, outdated practices, new regulations, etc.)
+2. Priority level (high/medium/low)
+3. Specific areas to update
+
+Focus on:
+- Content older than 12 months
+- Topics related to regulations, technology, or best practices that frequently change
+- Grant writing guidelines that may have evolved`;
+
+      return await base44.integrations.Core.InvokeLLM({
+        prompt: analysisPrompt,
+        add_context_from_internet: true,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            modules_needing_refresh: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  content_id: { type: "string" },
+                  priority: { type: "string" },
+                  reason: { type: "string" },
+                  areas_to_update: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  age_in_months: { type: "number" }
+                }
+              }
+            },
+            summary: { type: "string" }
+          }
+        }
+      });
+    },
+    onSuccess: (data) => {
+      setRefreshAnalysis(data);
+      toast.success('Content refresh analysis complete!');
+    }
+  });
+
+  // Generate Proposed Updates
+  const generateUpdatesMutation = useMutation({
+    mutationFn: async () => {
+      const content = allContent.find(c => c.id === selectedRefreshContent);
+      if (!content) throw new Error('Content not found');
+
+      const contentText = content.curriculum_sections
+        ?.map(s => `${s.title}: ${s.content}`)
+        .join('\n\n') || content.description;
+
+      const prompt = `Review this learning module and propose comprehensive updates to refresh the content with current best practices, recent developments, and improved clarity.
+
+Module: ${content.title}
+Last Updated: ${content.updated_date || content.created_date}
+Current Date: 2026-01-31
+
+Current Content:
+${contentText}
+
+Tips:
+${content.tips?.map(t => `${t.title}: ${t.content}`).join('\n')}
+
+Provide:
+1. UPDATED CURRICULUM SECTIONS - refresh all sections with:
+   - Current best practices and guidelines
+   - Recent developments in the field
+   - Updated examples and case studies
+   - Improved clarity and structure
+   
+2. NEW/UPDATED TIPS - add or revise tips based on:
+   - Recent trends
+   - Common mistakes identified
+   - Pro tips from current practices
+
+3. CHANGE SUMMARY - brief description of what was updated and why
+
+4. ADDITIONAL RESOURCES - suggest 3-5 current external resources
+
+Ensure all information is accurate as of 2026.`;
+
+      return await base44.integrations.Core.InvokeLLM({
+        prompt,
+        add_context_from_internet: true,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            updated_curriculum_sections: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  description: { type: "string" },
+                  duration_minutes: { type: "number" },
+                  content: { type: "string" },
+                  key_updates: { 
+                    type: "array",
+                    items: { type: "string" }
+                  }
+                }
+              }
+            },
+            updated_tips: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  content: { type: "string" },
+                  category: { type: "string" },
+                  is_new: { type: "boolean" }
+                }
+              }
+            },
+            change_summary: { type: "string" },
+            additional_resources: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  url: { type: "string" },
+                  description: { type: "string" }
+                }
+              }
+            },
+            update_date: { type: "string" }
+          }
+        }
+      });
+    },
+    onSuccess: (data) => {
+      setProposedUpdates(data);
+      toast.success('Proposed updates generated!');
+    }
+  });
+
+  // Apply Updates
+  const applyUpdatesMutation = useMutation({
+    mutationFn: async () => {
+      const content = allContent.find(c => c.id === selectedRefreshContent);
+      return await base44.entities.LearningContent.update(content.id, {
+        curriculum_sections: proposedUpdates.updated_curriculum_sections,
+        tips: proposedUpdates.updated_tips,
+        updated_date: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['all-learning-content'] });
+      toast.success('Content updated successfully!');
+      setProposedUpdates(null);
+      setSelectedRefreshContent(null);
+    }
+  });
+
   // Save Generated Module
   const saveModuleMutation = useMutation({
     mutationFn: async () => {
@@ -397,7 +577,7 @@ Base recommendations on content analysis and best practices for nonprofit capaci
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="generate">
               <Sparkles className="w-4 h-4 mr-2" />
               Generate Module
@@ -413,6 +593,10 @@ Base recommendations on content analysis and best practices for nonprofit capaci
             <TabsTrigger value="categorize">
               <Tag className="w-4 h-4 mr-2" />
               Auto-Categorize
+            </TabsTrigger>
+            <TabsTrigger value="refresh">
+              <Wand2 className="w-4 h-4 mr-2" />
+              Refresh Content
             </TabsTrigger>
           </TabsList>
 
@@ -757,6 +941,155 @@ Base recommendations on content analysis and best practices for nonprofit capaci
                         <p className="text-xs text-slate-600 italic">{suggestedTags.rationale}</p>
                       </div>
                     )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Content Refresh Tab */}
+          <TabsContent value="refresh">
+            <div className="space-y-6">
+              {!refreshAnalysis ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Analyze Content for Updates</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-slate-600">
+                      AI will analyze all learning modules to identify which ones need content refreshes based on age, 
+                      topic relevance, and current best practices.
+                    </p>
+                    <Button
+                      onClick={() => analyzeRefreshMutation.mutate()}
+                      disabled={analyzeRefreshMutation.isPending}
+                      className="w-full"
+                    >
+                      {analyzeRefreshMutation.isPending ? (
+                        <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing...</>
+                      ) : (
+                        <><Wand2 className="w-4 h-4 mr-2" /> Analyze All Modules</>
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-4">
+                  <Card className="border-orange-200 bg-orange-50">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <CardTitle>Content Refresh Analysis</CardTitle>
+                        <Button size="sm" variant="ghost" onClick={() => setRefreshAnalysis(null)}>
+                          Re-analyze
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-slate-700 mb-4">{refreshAnalysis.summary}</p>
+                      <p className="text-sm font-medium mb-3">
+                        {refreshAnalysis.modules_needing_refresh?.length} modules need updating
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {refreshAnalysis.modules_needing_refresh?.map((item) => {
+                      const module = allContent.find(c => c.id === item.content_id);
+                      return module ? (
+                        <Card key={item.content_id} className="border-l-4 border-l-orange-400">
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-slate-900">{module.title}</h3>
+                                <p className="text-xs text-slate-500 mt-1">
+                                  Age: {item.age_in_months} months • Priority: {item.priority}
+                                </p>
+                              </div>
+                              <Badge className={
+                                item.priority === 'high' ? 'bg-red-100 text-red-800' :
+                                item.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-blue-100 text-blue-800'
+                              }>
+                                {item.priority}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-slate-600 mb-3">{item.reason}</p>
+                            <div className="mb-3">
+                              <p className="text-xs font-medium text-slate-700 mb-1">Areas to update:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {item.areas_to_update?.map((area, idx) => (
+                                  <Badge key={idx} variant="outline" className="text-xs">
+                                    {area}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                setSelectedRefreshContent(item.content_id);
+                                generateUpdatesMutation.mutate();
+                              }}
+                              disabled={generateUpdatesMutation.isPending}
+                            >
+                              {generateUpdatesMutation.isPending && selectedRefreshContent === item.content_id ? (
+                                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
+                              ) : (
+                                <><Sparkles className="w-4 h-4 mr-2" /> Generate Updates</>
+                              )}
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {proposedUpdates && (
+                <Card className="border-emerald-200 bg-emerald-50">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <CardTitle>Proposed Content Updates</CardTitle>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="ghost" onClick={() => setProposedUpdates(null)}>
+                          Cancel
+                        </Button>
+                        <Button size="sm" onClick={() => applyUpdatesMutation.mutate()}>
+                          <Save className="w-4 h-4 mr-2" />
+                          Apply Updates
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="bg-white p-4 rounded-lg">
+                      <p className="text-sm font-medium mb-2">Change Summary:</p>
+                      <p className="text-sm text-slate-700">{proposedUpdates.change_summary}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium mb-2">
+                        Updated Sections ({proposedUpdates.updated_curriculum_sections?.length})
+                      </p>
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {proposedUpdates.updated_curriculum_sections?.map((section, idx) => (
+                          <div key={idx} className="bg-white p-3 rounded">
+                            <p className="font-medium text-sm">{section.title}</p>
+                            <p className="text-xs text-slate-600 mt-1">{section.description}</p>
+                            {section.key_updates?.length > 0 && (
+                              <div className="mt-2">
+                                <p className="text-xs font-medium text-emerald-700">Key updates:</p>
+                                <ul className="text-xs text-slate-600 list-disc list-inside">
+                                  {section.key_updates.map((update, i) => (
+                                    <li key={i}>{update}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               )}
