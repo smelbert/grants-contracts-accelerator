@@ -76,6 +76,7 @@ const getAdminPortalNav = () => [
   { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
   { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
   { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
+  { name: 'AI Content Management', page: 'AIContentManagement', icon: Sparkles },
   { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
   { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
   { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },

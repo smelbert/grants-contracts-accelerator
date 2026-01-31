@@ -93,6 +93,7 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import LearningProgress from './pages/LearningProgress';
+import AIContentManagement from './pages/AIContentManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -143,6 +144,7 @@ export const PAGES = {
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
     "LearningProgress": LearningProgress,
+    "AIContentManagement": AIContentManagement,
 }
 
 export const pagesConfig = {
