@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles, MessageSquare } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles, MessageSquare, TrendingUp, Clock, Award } from 'lucide-react';
 import LearningCard from '@/components/learning/LearningCard';
 import AILearningRecommendations from '@/components/ai/AILearningRecommendations';
 import AIContentRecommendations from '@/components/learning/AIContentRecommendations';
@@ -24,6 +29,9 @@ export default function LearningPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLane, setSelectedLane] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+  const [durationFilter, setDurationFilter] = useState('all');
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -41,7 +49,38 @@ export default function LearningPage() {
     queryFn: () => base44.entities.LearningContent.list(),
   });
 
+  const { data: curatedPaths = [] } = useQuery({
+    queryKey: ['curated-paths'],
+    queryFn: () => base44.entities.CuratedPath.filter({ is_active: true }),
+  });
+
+  const { data: recentlyViewed = [] } = useQuery({
+    queryKey: ['recently-viewed', user?.email],
+    queryFn: () => base44.entities.RecentlyViewed.filter({ user_email: user?.email }, '-last_viewed', 5),
+    enabled: !!user?.email,
+  });
+
   const organization = organizations?.[0];
+
+  // Track recently viewed
+  const trackViewMutation = useMutation({
+    mutationFn: async (contentId) => {
+      const existing = recentlyViewed.find(rv => rv.learning_content_id === contentId);
+      if (existing) {
+        return base44.entities.RecentlyViewed.update(existing.id, {
+          last_viewed: new Date().toISOString()
+        });
+      }
+      return base44.entities.RecentlyViewed.create({
+        user_email: user.email,
+        learning_content_id: contentId,
+        last_viewed: new Date().toISOString()
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recently-viewed'] });
+    }
+  });
 
   const filteredContent = (learningContent || []).filter(content => {
     const matchesSearch = !searchQuery || 
@@ -51,10 +90,22 @@ export default function LearningPage() {
     const matchesLane = selectedLane === 'all' || content.funding_lane === selectedLane;
     const matchesType = selectedType === 'all' || content.content_type === selectedType;
     
-    return matchesSearch && matchesLane && matchesType;
+    const matchesDuration = durationFilter === 'all' || 
+      (durationFilter === 'short' && content.duration_minutes <= 30) ||
+      (durationFilter === 'medium' && content.duration_minutes > 30 && content.duration_minutes <= 60) ||
+      (durationFilter === 'long' && content.duration_minutes > 60);
+    
+    return matchesSearch && matchesLane && matchesType && matchesDuration;
   });
 
+  const recentlyViewedContent = recentlyViewed
+    .map(rv => learningContent?.find(c => c.id === rv.learning_content_id))
+    .filter(Boolean);
+
   const handleStartContent = (content) => {
+    if (user?.email) {
+      trackViewMutation.mutate(content.id);
+    }
     if (content.content_url) {
       window.open(content.content_url, '_blank');
     }
@@ -83,9 +134,81 @@ export default function LearningPage() {
         </motion.div>
 
         {/* Header Actions */}
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          <Button asChild variant="outline">
+            <Link to={createPageUrl('LearningProgress')}>
+              <TrendingUp className="w-4 h-4 mr-2" />
+              My Progress
+            </Link>
+          </Button>
           <LearningRequestForm organization={organization} />
         </div>
+
+        {/* Continue Learning Section */}
+        {recentlyViewedContent.length > 0 && (
+          <Card className="border-blue-200 bg-blue-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Clock className="w-5 h-5 text-blue-600" />
+                Continue Learning
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recentlyViewedContent.slice(0, 3).map(content => (
+                  <LearningCard
+                    key={content.id}
+                    content={content}
+                    isPremium={content.is_premium}
+                    hasAccess={!content.is_premium}
+                    onStart={handleStartContent}
+                  />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Curated Learning Paths */}
+        {curatedPaths.length > 0 && (
+          <Card className="border-purple-200 bg-purple-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Award className="w-5 h-5 text-purple-600" />
+                Curated Learning Paths
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {curatedPaths.map(path => (
+                  <Card key={path.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="font-semibold text-lg text-slate-900">{path.path_name}</h3>
+                          <p className="text-sm text-slate-600 mt-1">{path.description}</p>
+                        </div>
+                        <Badge className="bg-purple-100 text-purple-800">
+                          {path.difficulty_level}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-slate-500">
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="w-4 h-4" />
+                          {path.module_sequence?.length || 0} modules
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {path.estimated_hours}h
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Main Tabs - Recommended vs Browse */}
         <Tabs defaultValue={organization ? "recommended" : "browse"} className="space-y-6">
@@ -176,10 +299,10 @@ export default function LearningPage() {
                 </TabsList>
               </Tabs>
 
-              {/* Lane Filter */}
-              <div className="flex items-center gap-4">
+              {/* Advanced Filters */}
+              <div className="flex flex-wrap items-center gap-3">
                 <Select value={selectedLane} onValueChange={setSelectedLane}>
-                  <SelectTrigger className="w-48">
+                  <SelectTrigger className="w-40">
                     <SelectValue placeholder="Funding lane" />
                   </SelectTrigger>
                   <SelectContent>
@@ -191,8 +314,21 @@ export default function LearningPage() {
                     <SelectItem value="general">General</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-sm text-slate-500">
-                  {filteredContent.length} resources available
+
+                <Select value={durationFilter} onValueChange={setDurationFilter}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Durations</SelectItem>
+                    <SelectItem value="short">Short (≤30 min)</SelectItem>
+                    <SelectItem value="medium">Medium (30-60 min)</SelectItem>
+                    <SelectItem value="long">Long (>60 min)</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <p className="text-sm text-slate-500 ml-auto">
+                  {filteredContent.length} resources found
                 </p>
               </div>
             </motion.div>
