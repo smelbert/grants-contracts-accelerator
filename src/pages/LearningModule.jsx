@@ -29,8 +29,11 @@ import CurriculumViewer from '@/components/learning/CurriculumViewer';
 import HandoutsSection from '@/components/learning/HandoutsSection';
 import TipsSection from '@/components/learning/TipsSection';
 import FlashcardActivity from '@/components/learning/FlashcardActivity';
+import SpacedRepetitionFlashcards from '@/components/learning/SpacedRepetitionFlashcards';
 import MatchingActivity from '@/components/learning/MatchingActivity';
 import QuestionSubmission from '@/components/learning/QuestionSubmission';
+import GamificationDashboard from '@/components/learning/GamificationDashboard';
+import Leaderboard from '@/components/learning/Leaderboard';
 
 export default function LearningModulePage() {
   const [searchParams] = useSearchParams();
@@ -290,7 +293,10 @@ export default function LearningModulePage() {
                         {activities.map((activity, idx) => (
                           <TabsContent key={idx} value={idx.toString()}>
                             {activity.activity_type === 'flashcards' && (
-                              <FlashcardActivity activity={activity} />
+                              <SpacedRepetitionFlashcards 
+                                activity={activity} 
+                                userEmail={user?.email}
+                              />
                             )}
                             {activity.activity_type === 'matching' && (
                               <MatchingActivity activity={activity} />
@@ -310,6 +316,14 @@ export default function LearningModulePage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Gamification Dashboard */}
+            {user && (
+              <>
+                <GamificationDashboard userEmail={user.email} />
+                <Leaderboard userEmail={user.email} />
+              </>
+            )}
+            
             {/* Module Info */}
             <Card>
               <CardHeader>
