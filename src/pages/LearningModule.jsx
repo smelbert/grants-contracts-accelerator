@@ -17,9 +17,20 @@ import {
   CheckCircle2,
   AlertCircle,
   Send,
-  Loader2
+  Loader2,
+  BookOpen,
+  FileText,
+  Lightbulb,
+  Brain
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import CurriculumViewer from '@/components/learning/CurriculumViewer';
+import HandoutsSection from '@/components/learning/HandoutsSection';
+import TipsSection from '@/components/learning/TipsSection';
+import FlashcardActivity from '@/components/learning/FlashcardActivity';
+import MatchingActivity from '@/components/learning/MatchingActivity';
+import QuestionSubmission from '@/components/learning/QuestionSubmission';
 
 export default function LearningModulePage() {
   const [searchParams] = useSearchParams();
@@ -42,6 +53,12 @@ export default function LearningModulePage() {
   const { data: feedback = [] } = useQuery({
     queryKey: ['learning-feedback', moduleId],
     queryFn: () => base44.entities.LearningFeedback.filter({ learning_content_id: moduleId }, '-created_date'),
+    enabled: !!moduleId,
+  });
+
+  const { data: activities = [] } = useQuery({
+    queryKey: ['learning-activities', moduleId],
+    queryFn: () => base44.entities.LearningActivity.filter({ learning_content_id: moduleId }),
     enabled: !!moduleId,
   });
 
@@ -160,166 +177,135 @@ export default function LearningModulePage() {
               </CardHeader>
             </Card>
 
-            {/* Embedded Content */}
-            {embedUrl && (
-              <Card>
-                <CardContent className="p-0">
-                  {isDirectVideo ? (
-                    <video 
-                      controls 
-                      className="w-full rounded-t-lg"
-                      style={{ maxHeight: '500px' }}
-                    >
-                      <source src={embedUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : (
-                    <iframe
-                      src={embedUrl}
-                      className="w-full rounded-t-lg"
-                      style={{ height: '500px', border: 'none' }}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            {/* Tabbed Content Area */}
+            <Tabs defaultValue="overview" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-5">
+                <TabsTrigger value="overview">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
+                <TabsTrigger value="handouts">Handouts</TabsTrigger>
+                <TabsTrigger value="tips">Tips</TabsTrigger>
+                <TabsTrigger value="review">Review</TabsTrigger>
+              </TabsList>
 
-            {/* Questions & Feedback Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-blue-600" />
-                  Questions & Feedback
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Submit Form */}
-                <form onSubmit={handleSubmitFeedback} className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 mb-2 block">
-                      What would you like to share?
-                    </label>
-                    <div className="flex gap-2 mb-3">
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant={feedbackType === 'question' ? 'default' : 'outline'}
-                        onClick={() => setFeedbackType('question')}
-                        className={feedbackType === 'question' ? 'bg-blue-600' : ''}
-                      >
-                        Ask Question
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant={feedbackType === 'feedback' ? 'default' : 'outline'}
-                        onClick={() => setFeedbackType('feedback')}
-                        className={feedbackType === 'feedback' ? 'bg-blue-600' : ''}
-                      >
-                        Give Feedback
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant={feedbackType === 'comment' ? 'default' : 'outline'}
-                        onClick={() => setFeedbackType('comment')}
-                        className={feedbackType === 'comment' ? 'bg-blue-600' : ''}
-                      >
-                        Leave Comment
-                      </Button>
-                    </div>
-                    <Textarea
-                      value={feedbackMessage}
-                      onChange={(e) => setFeedbackMessage(e.target.value)}
-                      placeholder={
-                        feedbackType === 'question' 
-                          ? 'Ask your question here...'
-                          : feedbackType === 'feedback'
-                          ? 'Share your feedback...'
-                          : 'Leave a comment...'
-                      }
-                      rows={4}
-                      className="resize-none"
-                    />
-                  </div>
-                  <Button 
-                    type="submit" 
-                    disabled={!feedbackMessage.trim() || submitFeedbackMutation.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {submitFeedbackMutation.isPending ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4 mr-2" />
-                    )}
-                    Submit
-                  </Button>
-                </form>
+              {/* Overview Tab */}
+              <TabsContent value="overview" className="space-y-6">
+                {embedUrl && (
+                  <Card>
+                    <CardContent className="p-0">
+                      {isDirectVideo ? (
+                        <video 
+                          controls 
+                          className="w-full rounded-t-lg"
+                          style={{ maxHeight: '500px' }}
+                        >
+                          <source src={embedUrl} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : (
+                        <iframe
+                          src={embedUrl}
+                          className="w-full rounded-t-lg"
+                          style={{ height: '500px', border: 'none' }}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
 
-                <Separator />
+              {/* Curriculum Tab */}
+              <TabsContent value="curriculum">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BookOpen className="w-5 h-5 text-blue-600" />
+                      Course Curriculum
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CurriculumViewer sections={module.curriculum_sections} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-                {/* Feedback List */}
-                <div className="space-y-4">
-                  <h4 className="font-medium text-slate-900">
-                    Discussion ({feedback.length})
-                  </h4>
-                  {feedback.length === 0 ? (
-                    <p className="text-sm text-slate-500 text-center py-8">
-                      No questions or feedback yet. Be the first to contribute!
-                    </p>
-                  ) : (
-                    feedback.map((item) => (
-                      <div key={item.id} className="border border-slate-200 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <span className="text-sm font-medium text-blue-700">
-                                {item.author_name?.[0]?.toUpperCase() || 'A'}
-                              </span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-slate-900">
-                                {item.author_name}
-                              </p>
-                              <p className="text-xs text-slate-500">
-                                {format(new Date(item.created_date), 'MMM d, yyyy')}
-                              </p>
-                            </div>
-                          </div>
-                          <Badge 
-                            variant="outline" 
-                            className={
-                              item.feedback_type === 'question' 
-                                ? 'border-blue-200 text-blue-700 bg-blue-50'
-                                : item.feedback_type === 'feedback'
-                                ? 'border-green-200 text-green-700 bg-green-50'
-                                : 'border-slate-200 text-slate-700 bg-slate-50'
-                            }
-                          >
-                            {item.feedback_type}
-                          </Badge>
-                        </div>
-                        <p className="text-slate-700 text-sm mb-3">{item.message}</p>
-                        
-                        {item.response && (
-                          <div className="bg-blue-50 border-l-4 border-blue-400 rounded p-3 mt-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                              <p className="text-xs font-medium text-blue-900">
-                                Response from {item.response_by}
-                              </p>
-                            </div>
-                            <p className="text-sm text-blue-800">{item.response}</p>
-                          </div>
-                        )}
+              {/* Handouts Tab */}
+              <TabsContent value="handouts">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-blue-600" />
+                      Downloadable Handouts
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <HandoutsSection handouts={module.handouts} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Tips Tab */}
+              <TabsContent value="tips">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Lightbulb className="w-5 h-5 text-amber-600" />
+                      Tips & Best Practices
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <TipsSection tips={module.tips} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Review Tab */}
+              <TabsContent value="review" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brain className="w-5 h-5 text-purple-600" />
+                      Review & Practice
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {activities.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Brain className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                        <p className="text-slate-500">No review activities available yet.</p>
                       </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    ) : (
+                      <Tabs defaultValue="0" className="w-full">
+                        <TabsList className="mb-6">
+                          {activities.map((activity, idx) => (
+                            <TabsTrigger key={idx} value={idx.toString()}>
+                              {activity.title}
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+                        {activities.map((activity, idx) => (
+                          <TabsContent key={idx} value={idx.toString()}>
+                            {activity.activity_type === 'flashcards' && (
+                              <FlashcardActivity activity={activity} />
+                            )}
+                            {activity.activity_type === 'matching' && (
+                              <MatchingActivity activity={activity} />
+                            )}
+                          </TabsContent>
+                        ))}
+                      </Tabs>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+
+            {/* Question Submission - Always Visible */}
+            <QuestionSubmission learningContentId={moduleId} user={user} />
           </div>
 
           {/* Sidebar */}
