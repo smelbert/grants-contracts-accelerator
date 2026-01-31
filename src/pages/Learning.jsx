@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles, MessageSquare } from 'lucide-react';
 import LearningCard from '@/components/learning/LearningCard';
 import AILearningRecommendations from '@/components/ai/AILearningRecommendations';
+import AIContentRecommendations from '@/components/learning/AIContentRecommendations';
 import LearningRequestForm from '@/components/learning/LearningRequestForm';
 import MyLearningRequests from '@/components/learning/MyLearningRequests';
 
@@ -115,11 +116,19 @@ export default function LearningPage() {
           {/* Recommended Tab */}
           <TabsContent value="recommended">
             {organization && learningContent ? (
-              <AILearningRecommendations
-                organization={organization}
-                learningContent={learningContent || []}
-                fundingGaps={organization.readiness_status ? `Current readiness: ${organization.readiness_status}` : null}
-              />
+              <div className="space-y-6">
+                <AIContentRecommendations
+                  user={user}
+                  organization={organization}
+                  userProgress={userProgress}
+                  allContent={learningContent}
+                />
+                <AILearningRecommendations
+                  organization={organization}
+                  learningContent={learningContent || []}
+                  fundingGaps={organization.readiness_status ? `Current readiness: ${organization.readiness_status}` : null}
+                />
+              </div>
             ) : (
               <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
                 <Sparkles className="w-12 h-12 text-slate-300 mx-auto mb-3" />

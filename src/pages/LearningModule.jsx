@@ -34,6 +34,7 @@ import MatchingActivity from '@/components/learning/MatchingActivity';
 import QuestionSubmission from '@/components/learning/QuestionSubmission';
 import GamificationDashboard from '@/components/learning/GamificationDashboard';
 import Leaderboard from '@/components/learning/Leaderboard';
+import PersonalizedLearningPath from '@/components/learning/PersonalizedLearningPath';
 
 export default function LearningModulePage() {
   const [searchParams] = useSearchParams();
@@ -320,6 +321,7 @@ export default function LearningModulePage() {
             {user && (
               <>
                 <GamificationDashboard userEmail={user.email} />
+                <PersonalizedLearningPath userEmail={user.email} currentModuleId={moduleId} />
                 <Leaderboard userEmail={user.email} />
               </>
             )}
