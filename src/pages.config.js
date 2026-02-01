@@ -95,6 +95,12 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import EmailHub from './pages/EmailHub';
+import Events from './pages/Events';
+import LiveStreams from './pages/LiveStreams';
+import Discussions from './pages/Discussions';
+import Chat from './pages/Chat';
+import WebsiteBuilder from './pages/WebsiteBuilder';
+import DeveloperTools from './pages/DeveloperTools';
 import __Layout from './Layout.jsx';
 
 
@@ -147,6 +153,12 @@ export const PAGES = {
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
     "EmailHub": EmailHub,
+    "Events": Events,
+    "LiveStreams": LiveStreams,
+    "Discussions": Discussions,
+    "Chat": Chat,
+    "WebsiteBuilder": WebsiteBuilder,
+    "DeveloperTools": DeveloperTools,
 }
 
 export const pagesConfig = {
