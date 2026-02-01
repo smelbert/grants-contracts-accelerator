@@ -29,7 +29,8 @@ import {
   HelpCircle,
   Calculator,
   Plus,
-  User
+  User,
+  Mail
 } from 'lucide-react';
 
 // User Portal Navigation
@@ -50,6 +51,7 @@ const getUserPortalNav = () => [
         { name: 'Grant Dashboard', page: 'GrantDashboard', icon: Sparkles },
         { name: 'Opportunities', page: 'Opportunities', icon: Search, dataTour: 'opportunities' },
   { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
+  { name: 'Email Hub', page: 'EmailHub', icon: Mail },
   { name: 'Community', page: 'Community', icon: Users },
   { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
   { name: 'Organization Settings', page: 'OrganizationSettings', icon: SettingsIcon },
