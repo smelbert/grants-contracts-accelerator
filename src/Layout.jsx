@@ -60,6 +60,8 @@ const getUserPortalNav = () => [
   { name: 'Discussions', page: 'Discussions', icon: MessageSquare },
   { name: 'Chat', page: 'Chat', icon: MessageCircle },
   { name: 'Community', page: 'Community', icon: Users },
+  { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
+  { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
   { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
   { name: 'Organization Settings', page: 'OrganizationSettings', icon: SettingsIcon },
   { name: 'Settings', page: 'Settings', icon: SettingsIcon },
