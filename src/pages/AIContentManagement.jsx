@@ -23,7 +23,10 @@ export default function AIContentManagementPage() {
     targetAudience: '',
     fundingLane: 'general',
     skillLevel: 'beginner',
-    duration: 60
+    duration: 60,
+    courseType: 'self_paced',
+    scheduledStartDate: '',
+    dripSchedule: []
   });
   const [generatedModule, setGeneratedModule] = useState(null);
 
@@ -544,6 +547,7 @@ Ensure all information is accurate as of 2026.`;
         title: generatedModule.title,
         description: generatedModule.description,
         content_type: 'course',
+        course_type: moduleInput.courseType,
         funding_lane: moduleInput.fundingLane,
         duration_minutes: moduleInput.duration,
         curriculum_sections: generatedModule.curriculum_sections,
@@ -552,6 +556,20 @@ Ensure all information is accurate as of 2026.`;
         target_stages: [moduleInput.skillLevel],
         is_premium: false
       };
+
+      // Add scheduled start date if course type is scheduled
+      if (moduleInput.courseType === 'scheduled' && moduleInput.scheduledStartDate) {
+        moduleData.scheduled_start_date = new Date(moduleInput.scheduledStartDate).toISOString();
+      }
+
+      // Generate drip schedule for structured/scheduled courses
+      if (moduleInput.courseType !== 'self_paced' && generatedModule.curriculum_sections) {
+        moduleData.drip_schedule = generatedModule.curriculum_sections.map((_, index) => ({
+          section_index: index,
+          unlock_after_days: index * 7 // Unlock each section after 7 days
+        }));
+      }
+
       return await base44.entities.LearningContent.create(moduleData);
     },
     onSuccess: () => {
@@ -564,7 +582,10 @@ Ensure all information is accurate as of 2026.`;
         targetAudience: '',
         fundingLane: 'general',
         skillLevel: 'beginner',
-        duration: 60
+        duration: 60,
+        courseType: 'self_paced',
+        scheduledStartDate: '',
+        dripSchedule: []
       });
     }
   });
@@ -674,6 +695,67 @@ Ensure all information is accurate as of 2026.`;
                       value={moduleInput.duration}
                       onChange={(e) => setModuleInput({...moduleInput, duration: parseInt(e.target.value)})}
                     />
+                  </div>
+
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium mb-3 block">Course Type</label>
+                    <div className="space-y-3">
+                      <label className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                        <input
+                          type="radio"
+                          name="courseType"
+                          value="self_paced"
+                          checked={moduleInput.courseType === 'self_paced'}
+                          onChange={(e) => setModuleInput({...moduleInput, courseType: e.target.value})}
+                          className="mt-1"
+                        />
+                        <div>
+                          <p className="font-medium text-sm">Self-paced</p>
+                          <p className="text-xs text-slate-600">Course starts when a member enrolls. All content is available immediately.</p>
+                        </div>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                        <input
+                          type="radio"
+                          name="courseType"
+                          value="structured"
+                          checked={moduleInput.courseType === 'structured'}
+                          onChange={(e) => setModuleInput({...moduleInput, courseType: e.target.value})}
+                          className="mt-1"
+                        />
+                        <div>
+                          <p className="font-medium text-sm">Structured</p>
+                          <p className="text-xs text-slate-600">Course starts when a member enrolls. Sections are dripped relative to their enrollment date.</p>
+                        </div>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                        <input
+                          type="radio"
+                          name="courseType"
+                          value="scheduled"
+                          checked={moduleInput.courseType === 'scheduled'}
+                          onChange={(e) => setModuleInput({...moduleInput, courseType: e.target.value})}
+                          className="mt-1"
+                        />
+                        <div>
+                          <p className="font-medium text-sm">Scheduled</p>
+                          <p className="text-xs text-slate-600">Course starts on a specific date. Sections are dripped relative to that date.</p>
+                        </div>
+                      </label>
+                    </div>
+
+                    {moduleInput.courseType === 'scheduled' && (
+                      <div className="mt-3">
+                        <label className="text-sm font-medium">Start Date</label>
+                        <Input
+                          type="datetime-local"
+                          value={moduleInput.scheduledStartDate}
+                          onChange={(e) => setModuleInput({...moduleInput, scheduledStartDate: e.target.value})}
+                        />
+                      </div>
+                    )}
                   </div>
                   <Button
                     onClick={() => generateModuleMutation.mutate()}
