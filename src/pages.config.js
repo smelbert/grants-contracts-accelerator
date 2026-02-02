@@ -109,6 +109,8 @@ import Register from './pages/Register';
 import Calendar from './pages/Calendar';
 import MyClassroom from './pages/MyClassroom';
 import CohortManagement from './pages/CohortManagement';
+import PublicHome from './pages/PublicHome';
+import AboutEIS from './pages/AboutEIS';
 import __Layout from './Layout.jsx';
 
 
@@ -175,6 +177,8 @@ export const PAGES = {
     "Calendar": Calendar,
     "MyClassroom": MyClassroom,
     "CohortManagement": CohortManagement,
+    "PublicHome": PublicHome,
+    "AboutEIS": AboutEIS,
 }
 
 export const pagesConfig = {
