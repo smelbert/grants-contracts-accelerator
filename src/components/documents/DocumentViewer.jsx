@@ -17,6 +17,7 @@ import AIGuardrailsNotice from '@/components/boilerplate/AIGuardrailsNotice';
 import VideoFeedback from '@/components/documents/VideoFeedback';
 import DocumentComparison from '@/components/documents/DocumentComparison';
 import AIDocumentAssistant from '@/components/documents/AIDocumentAssistant';
+import AIDocumentAnalyzer from '@/components/documents/AIDocumentAnalyzer';
 import CollaborativeComments from '@/components/collaboration/CollaborativeComments';
 
 export default function DocumentViewer({ 
@@ -209,6 +210,17 @@ export default function DocumentViewer({
                   />
                 </div>
               )}
+
+              {/* AI Document Analyzer */}
+              <div className="mb-6">
+                <AIDocumentAnalyzer
+                  document={document}
+                  onTemplateSuggested={(category) => {
+                    // Navigate to templates filtered by category
+                    window.open(`${window.location.origin}${createPageUrl('Templates')}?category=${category}`, '_blank');
+                  }}
+                />
+              </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-4">
