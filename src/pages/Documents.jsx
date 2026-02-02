@@ -17,6 +17,7 @@ import {
 import { format } from 'date-fns';
 import DocumentViewer from '@/components/documents/DocumentViewer';
 import ReviewPaymentFlow from '@/components/payments/ReviewPaymentFlow';
+import CreateDocumentFlow from '@/components/documents/CreateDocumentFlow';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', icon: Edit, color: 'slate' },
