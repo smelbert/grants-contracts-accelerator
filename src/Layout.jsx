@@ -58,14 +58,13 @@ const getUserPortalNav = () => [
     groupName: 'Learning',
     items: [
       { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
-      { name: 'Calendar', page: 'Calendar', icon: Calendar },
-      { name: 'Events', page: 'Events', icon: Calendar },
+      { name: 'Live Sessions / Events', page: 'Calendar', icon: Calendar },
     ]
   },
   {
     groupName: 'Community',
     items: [
-      { name: 'Discussions', page: 'Discussions', icon: MessageSquare },
+      { name: 'Community Spaces', page: 'Community', icon: Users },
       { name: 'Direct Messages', page: 'Chat', icon: MessageCircle },
     ]
   },
