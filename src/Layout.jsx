@@ -104,6 +104,7 @@ const getAdminPortalNav = () => [
       { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
       { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
       { name: 'Member Management', page: 'MemberManagement', icon: Users },
+      { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
     ]
   },
   {
@@ -133,6 +134,7 @@ const getAdminPortalNav = () => [
   {
     groupName: 'Platform Management',
     items: [
+      { name: 'Registration Pages', page: 'RegistrationBuilder', icon: Plus },
       { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
       { name: 'Email Hub', page: 'EmailHub', icon: Mail },
       { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },

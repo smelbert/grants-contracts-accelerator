@@ -115,6 +115,8 @@ import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import UserProfile from './pages/UserProfile';
 import RegistrationBuilder from './pages/RegistrationBuilder';
 import DynamicRegistration from './pages/DynamicRegistration';
+import RegistrationFlow from './pages/RegistrationFlow';
+import RegistrationManagement from './pages/RegistrationManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -187,6 +189,8 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "RegistrationBuilder": RegistrationBuilder,
     "DynamicRegistration": DynamicRegistration,
+    "RegistrationFlow": RegistrationFlow,
+    "RegistrationManagement": RegistrationManagement,
 }
 
 export const pagesConfig = {
