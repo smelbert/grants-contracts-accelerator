@@ -113,6 +113,8 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import UserProfile from './pages/UserProfile';
+import RegistrationBuilder from './pages/RegistrationBuilder';
+import DynamicRegistration from './pages/DynamicRegistration';
 import __Layout from './Layout.jsx';
 
 
@@ -183,6 +185,8 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
     "UserProfile": UserProfile,
+    "RegistrationBuilder": RegistrationBuilder,
+    "DynamicRegistration": DynamicRegistration,
 }
 
 export const pagesConfig = {
