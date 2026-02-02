@@ -161,6 +161,9 @@ export default function Layout({ children, currentPageName }) {
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
   const navItems = getNavItems(effectiveRole);
 
+  // Show onboarding flow for all users
+  const showOnboardingFlow = user && currentPageName !== 'CoachProfileSetup';
+
   const handleLogout = () => {
     base44.auth.logout();
   };
@@ -439,6 +442,14 @@ export default function Layout({ children, currentPageName }) {
       <main className="lg:pl-64">
         {children}
       </main>
+
+      {/* Onboarding Flow */}
+      {showOnboardingFlow && (
+        <OnboardingFlow 
+          userEmail={user.email} 
+          userRole={effectiveRole} 
+        />
+      )}
     </div>
   );
 }
