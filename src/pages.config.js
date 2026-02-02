@@ -111,6 +111,7 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
+import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import __Layout from './Layout.jsx';
 
 
@@ -179,6 +180,7 @@ export const PAGES = {
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
+    "WorkflowsAutomation": WorkflowsAutomation,
 }
 
 export const pagesConfig = {

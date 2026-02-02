@@ -92,36 +92,66 @@ const getCoachPortalNav = () => [
 
 // Admin Portal Navigation
 const getAdminPortalNav = () => [
-  { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
-  { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
-  { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
-  { name: 'Member Management', page: 'MemberManagement', icon: Users },
-  { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
-  { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
-  { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
-  { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
-  { name: 'AI Content Management', page: 'AIContentManagement', icon: Sparkles },
-  { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
-  { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
-  { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
-  { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
-  { name: 'Email Hub', page: 'EmailHub', icon: Mail },
-  { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
-  { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
-  { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
-  { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
-  { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },
+  {
+    groupName: 'Overview',
+    items: [
+      { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
+    ]
+  },
+  {
+    groupName: 'Community & Engagement',
+    items: [
+      { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
+      { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
+      { name: 'Member Management', page: 'MemberManagement', icon: Users },
+    ]
+  },
+  {
+    groupName: 'Organizations & Content',
+    items: [
+      { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
+      { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
+      { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
+      { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
+    ]
+  },
+  {
+    groupName: 'AI & Automation',
+    items: [
+      { name: 'AI Content Management', page: 'AIContentManagement', icon: Sparkles },
+      { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
+      { name: 'Workflows & Automation', page: 'WorkflowsAutomation', icon: SettingsIcon },
+    ]
+  },
+  {
+    groupName: 'Team & Staff',
+    items: [
+      { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
+      { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
+    ]
+  },
+  {
+    groupName: 'Platform Management',
+    items: [
+      { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
+      { name: 'Email Hub', page: 'EmailHub', icon: Mail },
+      { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
+      { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
+      { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
+      { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },
+      { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
+    ]
+  },
 ];
 
 const getNavItems = (portalView) => {
-  // Coach and Admin portals return flat arrays, User portal returns grouped arrays
+  // All portals now return grouped arrays
   if (portalView === 'coach') {
     const items = getCoachPortalNav();
     return [{ groupName: 'Menu', items }];
   }
   if (portalView === 'admin') {
-    const items = getAdminPortalNav();
-    return [{ groupName: 'Menu', items }];
+    return getAdminPortalNav();
   }
   return getUserPortalNav();
 };
