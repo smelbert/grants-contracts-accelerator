@@ -17,8 +17,12 @@ export default function AIOnboardingAssistant({ userRole, currentPage, userProgr
   // Role-based context
   const getRoleContext = () => {
     const contexts = {
+      owner: 'platform owner with full system access',
       admin: 'platform administrator managing spaces, content, and users',
       coach: 'coach working with organizations and providing guidance',
+      workshop_facilitator: 'workshop facilitator creating and managing workshops and live sessions',
+      content_creator: 'content creator developing learning materials and templates',
+      community_moderator: 'community moderator managing discussions and spaces',
       user: 'community member accessing learning resources and community spaces'
     };
     return contexts[userRole] || contexts.user;
@@ -92,6 +96,22 @@ export default function AIOnboardingAssistant({ userRole, currentPage, userProgr
 
   const getWelcomeMessage = () => {
     const roleMessages = {
+      owner: `👋 **Welcome, Platform Owner!**
+
+I'm your AI onboarding assistant. You have full system access.
+
+**Your Capabilities:**
+- Complete platform control and settings
+- User and role management
+- Billing and subscription oversight
+- System integrations and developer tools
+
+**Quick Start:**
+1. Review role management and assign team members
+2. Configure platform settings and branding
+3. Set up pricing and monetization
+
+How can I assist you today?`,
       admin: `👋 **Welcome, Administrator!**
 
 I'm your AI onboarding assistant, here to help you get the most out of the platform.
@@ -124,6 +144,54 @@ As a coach, you can:
 3. Familiarize yourself with the review queue
 
 What would you like to know more about?`,
+      workshop_facilitator: `👋 **Welcome, Workshop Facilitator!**
+
+I'm here to help you create amazing learning experiences!
+
+**Your Focus Areas:**
+- **Create Workshops**: Design engaging workshop experiences
+- **Manage Live Rooms**: Host live sessions and events
+- **Track Attendance**: Monitor registrations and participation
+- **Build Content**: Develop learning materials
+
+**Quick Start:**
+1. Create your first workshop or event
+2. Set up live room sessions
+3. Explore registration management tools
+
+Ready to get started?`,
+      content_creator: `👋 **Welcome, Content Creator!**
+
+I'm your AI assistant for creating impactful learning content.
+
+**What You Can Do:**
+- **Create Learning Modules**: Build courses and tutorials
+- **Design Templates**: Develop reusable resources
+- **Write Blog Posts**: Share insights and stories
+- **Publish Content**: Make your work available to the community
+
+**Quick Start:**
+1. Explore the content creation tools
+2. Review existing templates and courses
+3. Create your first learning module
+
+What type of content would you like to create?`,
+      community_moderator: `👋 **Welcome, Community Moderator!**
+
+I'm here to help you build a thriving, safe community.
+
+**Your Responsibilities:**
+- **Moderate Discussions**: Review and manage posts
+- **Manage Spaces**: Organize community areas
+- **Enforce Guidelines**: Maintain community standards
+- **Support Members**: Help users connect and engage
+
+**Quick Start:**
+1. Review community guidelines
+2. Explore moderation tools
+3. Get familiar with your community spaces
+
+How can I support your moderation work?`,
       user: `👋 **Welcome to EIS!**
 
 I'm your AI onboarding assistant, here to help you navigate the platform and achieve your funding goals.

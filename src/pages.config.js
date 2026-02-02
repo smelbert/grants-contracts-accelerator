@@ -117,6 +117,7 @@ import RegistrationBuilder from './pages/RegistrationBuilder';
 import DynamicRegistration from './pages/DynamicRegistration';
 import RegistrationFlow from './pages/RegistrationFlow';
 import RegistrationManagement from './pages/RegistrationManagement';
+import RoleManagement from './pages/RoleManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -191,6 +192,7 @@ export const PAGES = {
     "DynamicRegistration": DynamicRegistration,
     "RegistrationFlow": RegistrationFlow,
     "RegistrationManagement": RegistrationManagement,
+    "RoleManagement": RoleManagement,
 }
 
 export const pagesConfig = {
