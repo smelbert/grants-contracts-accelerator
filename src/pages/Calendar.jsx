@@ -21,6 +21,14 @@ import { Link } from 'react-router-dom';
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [filters, setFilters] = useState({
+    events: true,
+    liveRooms: true,
+    liveStreams: true,
+    workshops: true,
+    webinars: true,
+    trainings: true
+  });
 
   const { data: events = [] } = useQuery({
     queryKey: ['events'],
