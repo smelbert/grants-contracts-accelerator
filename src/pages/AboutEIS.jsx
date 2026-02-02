@@ -53,7 +53,7 @@ export default function AboutEISPage() {
               About EIS
             </h1>
             <p className="text-xl text-slate-600 leading-relaxed">
-              Empowering nonprofits and social enterprises to achieve their missions through strategic funding, capacity building, and expert guidance
+              Empowering organizations of all types—nonprofits, for-profits, solopreneurs, and enterprises—to achieve their missions through strategic funding, capacity building, and expert guidance
             </p>
           </div>
         </div>
@@ -66,10 +66,10 @@ export default function AboutEISPage() {
             <div>
               <h2 className="text-4xl font-bold text-slate-900 mb-6">Our Mission</h2>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                EIS exists to bridge the gap between passionate changemakers and the resources they need to create lasting impact. We believe that every nonprofit, regardless of size or stage, deserves access to expert guidance and proven strategies for sustainable funding.
+                EIS exists to bridge the gap between passionate changemakers and the resources they need to create lasting impact. We believe that every organization—whether nonprofit, for-profit, solopreneur, or LLC—deserves access to expert guidance and proven strategies for sustainable funding.
               </p>
               <p className="text-lg text-slate-600 leading-relaxed">
-                Through personalized coaching, comprehensive training, and strategic support, we help organizations build the capacity and confidence to secure grants, contracts, and donor relationships that fuel their growth.
+                Through personalized coaching, comprehensive training, and strategic support, we help organizations build the capacity and confidence to secure grants, RFPs, contracts, bids, and funding relationships that fuel their growth.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -264,7 +264,7 @@ export default function AboutEISPage() {
                 className="h-10 w-auto mb-4"
               />
               <p className="text-sm">
-                Empowering nonprofits to achieve sustainable growth through strategic funding and capacity building.
+                Empowering all organizations to achieve sustainable growth through strategic funding, capacity building, and leadership development.
               </p>
             </div>
             <div>

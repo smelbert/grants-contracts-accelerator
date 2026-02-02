@@ -47,13 +47,13 @@ export default function PublicHomePage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-[#E5C089]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
                 <Award className="w-4 h-4" />
-                Expert Guidance for Nonprofit Success
+                Strategic Funding for Every Organization
               </div>
               <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
-                Transform Your Nonprofit with Strategic Funding
+                Transform Your Organization with Strategic Funding Solutions
               </h1>
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Unlock sustainable growth through expert-guided grant writing, contracts, and donor engagement strategies. Build capacity, secure funding, and amplify your impact.
+                Whether you're a nonprofit, for-profit, solopreneur, or established business—unlock sustainable growth through expert-guided grants, RFPs, contracts, and comprehensive funding strategies tailored to your organization.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to={createPageUrl('Register')}>
@@ -130,9 +130,9 @@ export default function PublicHomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Comprehensive Support for Your Mission</h2>
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Comprehensive Support for Every Organization Type</h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              From startup to scale, we provide the tools, training, and expertise you need to secure sustainable funding
+              From startups to established enterprises—nonprofits, for-profits, solopreneurs, and LLCs—we provide the tools, training, and expertise you need to secure sustainable funding
             </p>
           </div>
 
@@ -229,7 +229,7 @@ export default function PublicHomePage() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Funding Future?</h2>
           <p className="text-xl text-[#E5C089]/80 mb-8">
-            Join hundreds of nonprofits who have successfully secured sustainable funding with EIS
+            Join hundreds of organizations—nonprofits, for-profits, and entrepreneurs—who have successfully secured sustainable funding with EIS
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Register')}>
@@ -258,7 +258,7 @@ export default function PublicHomePage() {
                 className="h-10 w-auto mb-4"
               />
               <p className="text-sm">
-                Empowering nonprofits to achieve sustainable growth through strategic funding and capacity building.
+                Empowering all organizations to achieve sustainable growth through strategic funding, capacity building, and leadership development.
               </p>
             </div>
             <div>
