@@ -206,7 +206,7 @@ export default function Layout({ children, currentPageName }) {
                 onChange={(e) => handlePortalChange(e.target.value)}
                 className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white"
               >
-                <option value="auto">Auto ({user.role})</option>
+                <option value="auto">Auto ({user?.role})</option>
                 {(user?.role === 'owner' || user?.role === 'admin') && (
                   <>
                     <option value="admin">Admin Portal</option>
@@ -366,7 +366,7 @@ export default function Layout({ children, currentPageName }) {
                       onChange={(e) => handlePortalChange(e.target.value)}
                       className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white"
                     >
-                      <option value="auto">Auto ({user.role})</option>
+                      <option value="auto">Auto ({user?.role})</option>
                       {(user?.role === 'owner' || user?.role === 'admin') && (
                         <>
                           <option value="admin">Admin Portal</option>
