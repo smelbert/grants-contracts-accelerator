@@ -34,7 +34,8 @@ import {
   Mail,
   Calendar,
   MessageSquare,
-  MessageCircle
+  MessageCircle,
+  Palette
 } from 'lucide-react';
 
 // User Portal Navigation with Groups

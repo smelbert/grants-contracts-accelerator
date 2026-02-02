@@ -54,6 +54,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
+import BrandingSettings from './pages/BrandingSettings';
 import BudgetBuilder from './pages/BudgetBuilder';
 import Chat from './pages/Chat';
 import CoachDashboard from './pages/CoachDashboard';
@@ -79,7 +80,9 @@ import Landing from './pages/Landing';
 import Learning from './pages/Learning';
 import LearningModule from './pages/LearningModule';
 import LearningProgress from './pages/LearningProgress';
+import LiveRoomManagement from './pages/LiveRoomManagement';
 import LiveStreams from './pages/LiveStreams';
+import MemberManagement from './pages/MemberManagement';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -95,16 +98,13 @@ import ReadinessLogic from './pages/ReadinessLogic';
 import ReadinessStatus from './pages/ReadinessStatus';
 import ReviewQueue from './pages/ReviewQueue';
 import Settings from './pages/Settings';
+import SpaceManagement from './pages/SpaceManagement';
 import TeachingContent from './pages/TeachingContent';
 import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
-import SpaceManagement from './pages/SpaceManagement';
-import MemberManagement from './pages/MemberManagement';
-import LiveRoomManagement from './pages/LiveRoomManagement';
-import BrandingSettings from './pages/BrandingSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -116,6 +116,7 @@ export const PAGES = {
     "ApplicationTracker": ApplicationTracker,
     "AssignedOrganizations": AssignedOrganizations,
     "BoilerplateBuilder": BoilerplateBuilder,
+    "BrandingSettings": BrandingSettings,
     "BudgetBuilder": BudgetBuilder,
     "Chat": Chat,
     "CoachDashboard": CoachDashboard,
@@ -141,7 +142,9 @@ export const PAGES = {
     "Learning": Learning,
     "LearningModule": LearningModule,
     "LearningProgress": LearningProgress,
+    "LiveRoomManagement": LiveRoomManagement,
     "LiveStreams": LiveStreams,
+    "MemberManagement": MemberManagement,
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -157,16 +160,13 @@ export const PAGES = {
     "ReadinessStatus": ReadinessStatus,
     "ReviewQueue": ReviewQueue,
     "Settings": Settings,
+    "SpaceManagement": SpaceManagement,
     "TeachingContent": TeachingContent,
     "TeamCollaboration": TeamCollaboration,
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
-    "SpaceManagement": SpaceManagement,
-    "MemberManagement": MemberManagement,
-    "LiveRoomManagement": LiveRoomManagement,
-    "BrandingSettings": BrandingSettings,
 }
 
 export const pagesConfig = {
