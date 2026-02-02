@@ -125,6 +125,7 @@ const getCoachPortalNav = () => [
 const getAdminPortalNav = () => [
   { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
   { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
+  { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
   { name: 'Member Management', page: 'MemberManagement', icon: Users },
   { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
   { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
@@ -134,6 +135,7 @@ const getAdminPortalNav = () => [
   { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
   { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
   { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
+  { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
   { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
   { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
   { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },

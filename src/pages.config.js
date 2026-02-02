@@ -103,6 +103,8 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import SpaceManagement from './pages/SpaceManagement';
 import MemberManagement from './pages/MemberManagement';
+import LiveRoomManagement from './pages/LiveRoomManagement';
+import BrandingSettings from './pages/BrandingSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -163,6 +165,8 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "SpaceManagement": SpaceManagement,
     "MemberManagement": MemberManagement,
+    "LiveRoomManagement": LiveRoomManagement,
+    "BrandingSettings": BrandingSettings,
 }
 
 export const pagesConfig = {
