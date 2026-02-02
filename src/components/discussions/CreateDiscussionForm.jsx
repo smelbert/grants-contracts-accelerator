@@ -45,52 +45,60 @@ export default function CreateDiscussionForm({ open, onOpenChange, userEmail, us
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Create New Discussion</DialogTitle>
-          <DialogDescription>Start a new conversation with the community</DialogDescription>
+          <DialogTitle className="text-2xl">Start a Discussion</DialogTitle>
+          <DialogDescription>Share your thoughts, ask questions, or spark conversations with the community</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title" className="text-base font-semibold">Discussion Title</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="What's your discussion about?"
+              placeholder="What would you like to discuss?"
+              className="mt-2 h-11"
               required
             />
           </div>
           <div>
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category" className="text-base font-semibold">Category</Label>
             <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
-              <SelectTrigger>
+              <SelectTrigger className="mt-2 h-11">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="general">General</SelectItem>
-                <SelectItem value="grants">Grants</SelectItem>
-                <SelectItem value="contracts">Contracts</SelectItem>
-                <SelectItem value="donors">Donors</SelectItem>
-                <SelectItem value="strategy">Strategy</SelectItem>
+                <SelectItem value="general">💬 General Discussion</SelectItem>
+                <SelectItem value="grants">📝 Grants & Funding</SelectItem>
+                <SelectItem value="contracts">📋 Contracts & RFPs</SelectItem>
+                <SelectItem value="donors">🤝 Donor Relations</SelectItem>
+                <SelectItem value="strategy">🎯 Strategy & Planning</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label htmlFor="content">Content</Label>
+            <Label htmlFor="content" className="text-base font-semibold">Your Message</Label>
             <Textarea
               id="content"
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              placeholder="Share your thoughts, questions, or insights..."
-              className="h-32"
+              placeholder="Share your thoughts, questions, or insights with the community..."
+              className="mt-2 h-40 resize-none"
               required
             />
+            <p className="text-xs text-slate-500 mt-2">
+              Be respectful and constructive in your discussion
+            </p>
           </div>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-3 pt-4 border-t">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={createMutation.isPending}>
-              Post Discussion
+            <Button 
+              type="submit" 
+              disabled={createMutation.isPending}
+              className="bg-[#143A50] hover:bg-[#1E4F58] min-w-[120px]"
+            >
+              {createMutation.isPending ? 'Posting...' : 'Post Discussion'}
             </Button>
           </div>
         </form>
