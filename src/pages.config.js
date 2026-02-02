@@ -50,18 +50,21 @@
 import AIContentManagement from './pages/AIContentManagement';
 import AIFundingMatcher from './pages/AIFundingMatcher';
 import AIGuardrails from './pages/AIGuardrails';
+import AboutEIS from './pages/AboutEIS';
 import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import BrandingSettings from './pages/BrandingSettings';
 import BudgetBuilder from './pages/BudgetBuilder';
+import Calendar from './pages/Calendar';
 import Chat from './pages/Chat';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachProfile from './pages/CoachProfile';
 import CoachProfileManager from './pages/CoachProfileManager';
 import CoachProfileSetup from './pages/CoachProfileSetup';
 import CoachesStaff from './pages/CoachesStaff';
+import CohortManagement from './pages/CohortManagement';
 import Community from './pages/Community';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
@@ -83,6 +86,7 @@ import LearningProgress from './pages/LearningProgress';
 import LiveRoomManagement from './pages/LiveRoomManagement';
 import LiveStreams from './pages/LiveStreams';
 import MemberManagement from './pages/MemberManagement';
+import MyClassroom from './pages/MyClassroom';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -93,9 +97,11 @@ import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
 import ProposalWorkflows from './pages/ProposalWorkflows';
+import PublicHome from './pages/PublicHome';
 import ReadinessChecklists from './pages/ReadinessChecklists';
 import ReadinessLogic from './pages/ReadinessLogic';
 import ReadinessStatus from './pages/ReadinessStatus';
+import Register from './pages/Register';
 import ReviewQueue from './pages/ReviewQueue';
 import Settings from './pages/Settings';
 import SpaceManagement from './pages/SpaceManagement';
@@ -105,12 +111,6 @@ import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
-import Register from './pages/Register';
-import Calendar from './pages/Calendar';
-import MyClassroom from './pages/MyClassroom';
-import CohortManagement from './pages/CohortManagement';
-import PublicHome from './pages/PublicHome';
-import AboutEIS from './pages/AboutEIS';
 import __Layout from './Layout.jsx';
 
 
@@ -118,18 +118,21 @@ export const PAGES = {
     "AIContentManagement": AIContentManagement,
     "AIFundingMatcher": AIFundingMatcher,
     "AIGuardrails": AIGuardrails,
+    "AboutEIS": AboutEIS,
     "AdminDashboard": AdminDashboard,
     "ApplicationTracker": ApplicationTracker,
     "AssignedOrganizations": AssignedOrganizations,
     "BoilerplateBuilder": BoilerplateBuilder,
     "BrandingSettings": BrandingSettings,
     "BudgetBuilder": BudgetBuilder,
+    "Calendar": Calendar,
     "Chat": Chat,
     "CoachDashboard": CoachDashboard,
     "CoachProfile": CoachProfile,
     "CoachProfileManager": CoachProfileManager,
     "CoachProfileSetup": CoachProfileSetup,
     "CoachesStaff": CoachesStaff,
+    "CohortManagement": CohortManagement,
     "Community": Community,
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
@@ -151,6 +154,7 @@ export const PAGES = {
     "LiveRoomManagement": LiveRoomManagement,
     "LiveStreams": LiveStreams,
     "MemberManagement": MemberManagement,
+    "MyClassroom": MyClassroom,
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -161,9 +165,11 @@ export const PAGES = {
     "Projects": Projects,
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
     "ProposalWorkflows": ProposalWorkflows,
+    "PublicHome": PublicHome,
     "ReadinessChecklists": ReadinessChecklists,
     "ReadinessLogic": ReadinessLogic,
     "ReadinessStatus": ReadinessStatus,
+    "Register": Register,
     "ReviewQueue": ReviewQueue,
     "Settings": Settings,
     "SpaceManagement": SpaceManagement,
@@ -173,12 +179,6 @@ export const PAGES = {
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
-    "Register": Register,
-    "Calendar": Calendar,
-    "MyClassroom": MyClassroom,
-    "CohortManagement": CohortManagement,
-    "PublicHome": PublicHome,
-    "AboutEIS": AboutEIS,
 }
 
 export const pagesConfig = {

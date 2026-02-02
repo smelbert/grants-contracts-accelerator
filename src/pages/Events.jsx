@@ -4,9 +4,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, MapPin, Users, Video, Clock, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
+import RSVPButton from '@/components/events/RSVPButton';
+import { hasPermission, PERMISSIONS } from '@/lib/permissions';
 
 export default function EventsPage() {
   const { data: events = [] } = useQuery({
@@ -19,8 +22,23 @@ export default function EventsPage() {
     queryFn: () => base44.auth.me(),
   });
 
+  const { data: myRegistrations = [] } = useQuery({
+    queryKey: ['myUpcomingEvents', user?.email],
+    queryFn: async () => {
+      const regs = await base44.entities.EventRegistration.filter({
+        attendee_email: user.email,
+        registration_status: 'registered'
+      });
+      const eventIds = regs.map(r => r.event_id);
+      const registeredEvents = events.filter(e => eventIds.includes(e.id));
+      return registeredEvents.filter(e => new Date(e.start_date) > new Date());
+    },
+    enabled: !!user?.email && events.length > 0,
+  });
+
   const upcomingEvents = events.filter(e => e.status === 'upcoming');
   const liveEvents = events.filter(e => e.status === 'live');
+  const canCreateEvents = hasPermission(user?.role, PERMISSIONS.CREATE_EVENTS);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30 p-6">
@@ -33,7 +51,7 @@ export default function EventsPage() {
             </h1>
             <p className="text-slate-600 mt-2">Join workshops, webinars, and networking events</p>
           </div>
-          {user?.role === 'admin' && (
+          {canCreateEvents && (
             <Button>
               <Plus className="w-4 h-4 mr-2" />
               Create Event
@@ -41,38 +59,67 @@ export default function EventsPage() {
           )}
         </div>
 
-        {liveEvents.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">🔴 Live Now</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {liveEvents.map(event => (
-                <EventCard key={event.id} event={event} isLive />
-              ))}
-            </div>
-          </div>
-        )}
+        <Tabs defaultValue="all">
+          <TabsList>
+            <TabsTrigger value="all">All Events</TabsTrigger>
+            <TabsTrigger value="my-events">My Events ({myRegistrations.length})</TabsTrigger>
+          </TabsList>
 
-        <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {upcomingEvents.map(event => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </div>
+          <TabsContent value="all" className="space-y-8">
+            {liveEvents.length > 0 && (
+              <div>
+                <h2 className="text-xl font-bold mb-4">🔴 Live Now</h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {liveEvents.map(event => (
+                    <EventCard key={event.id} event={event} userEmail={user?.email} isLive />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {upcomingEvents.map(event => (
+                  <EventCard key={event.id} event={event} userEmail={user?.email} />
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="my-events">
+            {myRegistrations.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {myRegistrations.map(event => (
+                  <EventCard key={event.id} event={event} userEmail={user?.email} isRegistered />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <p className="text-slate-600">You haven't registered for any events yet</p>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
 }
 
-function EventCard({ event, isLive }) {
+function EventCard({ event, userEmail, isLive, isRegistered }) {
   return (
-    <Card className={isLive ? 'border-red-500 border-2' : ''}>
+    <Card className={isLive ? 'border-red-500 border-2' : isRegistered ? 'border-emerald-500 border-2' : ''}>
       {event.cover_image_url && (
         <img src={event.cover_image_url} alt={event.event_name} className="w-full h-40 object-cover rounded-t-xl" />
       )}
       <CardHeader>
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg">{event.event_name}</CardTitle>
-          {isLive && <Badge className="bg-red-500">Live</Badge>}
+          <div className="flex gap-2">
+            {isLive && <Badge className="bg-red-500">Live</Badge>}
+            {isRegistered && <Badge className="bg-emerald-500">Registered</Badge>}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -89,13 +136,19 @@ function EventCard({ event, isLive }) {
           {event.max_attendees && (
             <div className="flex items-center gap-2 text-slate-600">
               <Users className="w-4 h-4" />
-              {event.total_registered} / {event.max_attendees} registered
+              {event.total_registered || 0} / {event.max_attendees} registered
             </div>
           )}
         </div>
-        <Button className="w-full" variant={isLive ? 'default' : 'outline'}>
-          {isLive ? 'Join Now' : 'Register'}
-        </Button>
+        {isLive && event.meeting_url ? (
+          <Button className="w-full" asChild>
+            <a href={event.meeting_url} target="_blank" rel="noopener noreferrer">
+              Join Now
+            </a>
+          </Button>
+        ) : (
+          <RSVPButton event={event} userEmail={userEmail} />
+        )}
       </CardContent>
     </Card>
   );

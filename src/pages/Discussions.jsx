@@ -30,6 +30,17 @@ export default function DiscussionsPage() {
     queryFn: () => base44.auth.me(),
   });
 
+  const likeDiscussionMutation = useMutation({
+    mutationFn: (discussion) => base44.entities.Discussion.update(discussion.id, {
+      total_likes: (discussion.total_likes || 0) + 1
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['discussions'] });
+    },
+  });
+
+  const canCreateDiscussions = hasPermission(user?.role, PERMISSIONS.CREATE_DISCUSSIONS);
+
   const categories = ['all', 'general', 'grants', 'contracts', 'fundraising', 'questions', 'success_stories'];
 
   const filteredDiscussions = selectedCategory === 'all' 

@@ -37,6 +37,11 @@ export default function CalendarPage() {
     queryFn: () => base44.entities.LiveStream.list(),
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   const allEvents = [
     ...events.map(e => ({ ...e, type: 'event', date: new Date(e.start_date) })),
     ...liveRooms.map(r => ({ ...r, type: 'liveRoom', date: new Date(r.scheduled_start) })),
