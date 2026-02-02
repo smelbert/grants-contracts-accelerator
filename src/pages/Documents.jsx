@@ -28,14 +28,9 @@ const STATUS_CONFIG = {
 
 export default function DocumentsPage() {
   const queryClient = useQueryClient();
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isCreateFlowOpen, setIsCreateFlowOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
-  const [formData, setFormData] = useState({
-    doc_name: '',
-    doc_type: 'proposal',
-    content: ''
-  });
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -48,14 +43,7 @@ export default function DocumentsPage() {
     enabled: !!user?.email,
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Document.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['documents']);
-      setIsCreateOpen(false);
-      setFormData({ doc_name: '', doc_type: 'proposal', content: '' });
-    },
-  });
+
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Document.delete(id),
@@ -81,9 +69,7 @@ export default function DocumentsPage() {
     },
   });
 
-  const handleCreate = () => {
-    createMutation.mutate(formData);
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
@@ -106,62 +92,13 @@ export default function DocumentsPage() {
                 <p className="text-slate-500">Manage proposals, narratives, and supporting documents</p>
               </div>
             </div>
-            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Document
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create New Document</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label>Document Name</Label>
-                    <Input
-                      value={formData.doc_name}
-                      onChange={(e) => setFormData({ ...formData, doc_name: e.target.value })}
-                      placeholder="My Grant Proposal"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Document Type</Label>
-                    <Select value={formData.doc_type} onValueChange={(v) => setFormData({ ...formData, doc_type: v })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="proposal">Proposal</SelectItem>
-                        <SelectItem value="narrative">Narrative</SelectItem>
-                        <SelectItem value="budget">Budget</SelectItem>
-                        <SelectItem value="governance">Governance</SelectItem>
-                        <SelectItem value="finance">Finance</SelectItem>
-                        <SelectItem value="contract">Contract</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Content (Optional)</Label>
-                    <Textarea
-                      value={formData.content}
-                      onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                      placeholder="Start writing or paste content..."
-                      className="min-h-[150px]"
-                    />
-                  </div>
-                  <Button 
-                    onClick={handleCreate} 
-                    disabled={!formData.doc_name || createMutation.isPending}
-                    className="w-full"
-                  >
-                    {createMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create Document'}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Button 
+              onClick={() => setIsCreateFlowOpen(true)}
+              className="bg-[#143A50] hover:bg-[#1E4F58]"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Document
+            </Button>
           </div>
         </motion.div>
 
@@ -282,6 +219,12 @@ export default function DocumentsPage() {
             />
           </DialogContent>
         </Dialog>
+
+        {/* Create Document Flow */}
+        <CreateDocumentFlow 
+          open={isCreateFlowOpen}
+          onClose={() => setIsCreateFlowOpen(false)}
+        />
       </div>
     </div>
   );
