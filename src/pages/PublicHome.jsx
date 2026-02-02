@@ -21,17 +21,19 @@ export default function PublicHomePage() {
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">E</span>
-              </div>
-              <span className="text-xl font-bold text-slate-900">EIS</span>
+            <div className="flex items-center gap-3">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+                alt="Elbert Innovative Solutions" 
+                className="h-12 w-auto"
+              />
             </div>
             <div className="hidden md:flex items-center gap-8">
-              <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-emerald-600 font-medium">Home</Link>
-              <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-emerald-600 font-medium">About</Link>
+              <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-[#143A50] font-medium">Home</Link>
+              <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-[#143A50] font-medium">About</Link>
+              <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">Website</a>
               <Link to={createPageUrl('Register')}>
-                <Button className="bg-emerald-600 hover:bg-emerald-700">Get Started</Button>
+                <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -39,11 +41,11 @@ export default function PublicHomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-emerald-50 via-teal-50 to-white py-20 md:py-32">
+      <section className="relative bg-gradient-to-br from-[#E5C089]/10 via-[#B5A698]/10 to-white py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-[#E5C089]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
                 <Award className="w-4 h-4" />
                 Expert Guidance for Nonprofit Success
               </div>
@@ -55,7 +57,7 @@ export default function PublicHomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to={createPageUrl('Register')}>
-                  <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-lg px-8">
+                  <Button size="lg" className="bg-[#143A50] hover:bg-[#1E4F58] text-lg px-8">
                     Start Your Journey
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
@@ -71,8 +73,8 @@ export default function PublicHomePage() {
               <div className="bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                      <Target className="w-6 h-6 text-emerald-600" />
+                    <div className="w-12 h-12 rounded-full bg-[#E5C089]/30 flex items-center justify-center">
+                      <Target className="w-6 h-6 text-[#143A50]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-slate-900">Strategic Planning</h3>
@@ -80,8 +82,8 @@ export default function PublicHomePage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                      <BookOpen className="w-6 h-6 text-blue-600" />
+                    <div className="w-12 h-12 rounded-full bg-[#AC1A5B]/20 flex items-center justify-center">
+                      <BookOpen className="w-6 h-6 text-[#AC1A5B]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-slate-900">Expert Training</h3>
@@ -89,8 +91,8 @@ export default function PublicHomePage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
-                      <TrendingUp className="w-6 h-6 text-purple-600" />
+                    <div className="w-12 h-12 rounded-full bg-[#A65D40]/20 flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 text-[#A65D40]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-slate-900">Proven Results</h3>
@@ -105,19 +107,19 @@ export default function PublicHomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-slate-900 text-white">
+      <section className="py-16 bg-[#143A50] text-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
-              <p className="text-5xl font-bold text-emerald-400 mb-2">$50M+</p>
+              <p className="text-5xl font-bold text-[#E5C089] mb-2">$50M+</p>
               <p className="text-slate-300">In Funding Secured</p>
             </div>
             <div>
-              <p className="text-5xl font-bold text-emerald-400 mb-2">500+</p>
+              <p className="text-5xl font-bold text-[#E5C089] mb-2">500+</p>
               <p className="text-slate-300">Organizations Served</p>
             </div>
             <div>
-              <p className="text-5xl font-bold text-emerald-400 mb-2">95%</p>
+              <p className="text-5xl font-bold text-[#E5C089] mb-2">95%</p>
               <p className="text-slate-300">Client Success Rate</p>
             </div>
           </div>
@@ -223,21 +225,21 @@ export default function PublicHomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-emerald-600 to-teal-600 text-white">
+      <section className="py-20 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Funding Future?</h2>
-          <p className="text-xl text-emerald-50 mb-8">
+          <p className="text-xl text-[#E5C089]/80 mb-8">
             Join hundreds of nonprofits who have successfully secured sustainable funding with EIS
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Register')}>
-              <Button size="lg" className="bg-white text-emerald-600 hover:bg-slate-50 text-lg px-8">
+              <Button size="lg" className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 text-lg px-8">
                 Get Started Today
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
             <Link to={createPageUrl('AboutEIS')}>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-700 text-lg px-8">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-[#1E4F58] text-lg px-8">
                 Meet Dr. Elbert
               </Button>
             </Link>
@@ -246,16 +248,15 @@ export default function PublicHomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12">
+      <footer className="bg-[#143A50] text-slate-400 py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                  <span className="text-white font-bold">E</span>
-                </div>
-                <span className="text-white font-bold text-lg">EIS</span>
-              </div>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+                alt="EIS" 
+                className="h-10 w-auto mb-4"
+              />
               <p className="text-sm">
                 Empowering nonprofits to achieve sustainable growth through strategic funding and capacity building.
               </p>
@@ -263,21 +264,21 @@ export default function PublicHomePage() {
             <div>
               <h4 className="text-white font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link to={createPageUrl('PublicHome')} className="hover:text-white">Home</Link></li>
-                <li><Link to={createPageUrl('AboutEIS')} className="hover:text-white">About EIS</Link></li>
-                <li><Link to={createPageUrl('Register')} className="hover:text-white">Get Started</Link></li>
+                <li><Link to={createPageUrl('PublicHome')} className="hover:text-[#E5C089]">Home</Link></li>
+                <li><Link to={createPageUrl('AboutEIS')} className="hover:text-[#E5C089]">About EIS</Link></li>
+                <li><a href="https://www.elbertinnovativesolutions.org/" className="hover:text-[#E5C089]" target="_blank" rel="noopener noreferrer">Website</a></li>
+                <li><Link to={createPageUrl('Register')} className="hover:text-[#E5C089]">Get Started</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-semibold mb-4">Contact</h4>
               <p className="text-sm">
-                Email: info@eis.org<br />
-                Phone: (555) 123-4567
+                Visit: <a href="https://www.elbertinnovativesolutions.org/" className="hover:text-[#E5C089]" target="_blank" rel="noopener noreferrer">elbertinnovativesolutions.org</a>
               </p>
             </div>
           </div>
-          <div className="border-t border-slate-800 mt-8 pt-8 text-center text-sm">
-            <p>&copy; 2026 EIS. All rights reserved.</p>
+          <div className="border-t border-[#1E4F58] mt-8 pt-8 text-center text-sm">
+            <p>&copy; 2026 Elbert Innovative Solutions. All rights reserved.</p>
           </div>
         </div>
       </footer>
