@@ -161,13 +161,21 @@ export default function AboutEISPage() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <div className="relative">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/db3464ad4_Dreamwave-Photo9.png"
-                  alt="Dr. Shawnté Elbert"
-                  className="aspect-[3/4] object-cover rounded-2xl shadow-lg"
-                />
-                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl border border-[#E5C089] max-w-xs">
+              <div className="relative flex items-center justify-center">
+                {/* Layered 3D backdrop */}
+                <div className="absolute w-80 h-96 bg-[#B5A698]/40 rounded-2xl -rotate-6 translate-x-4 translate-y-4"></div>
+                <div className="absolute w-80 h-96 bg-[#E5C089]/50 rounded-2xl -rotate-3 translate-x-2 translate-y-2"></div>
+                
+                {/* Main photo */}
+                <div className="relative z-10">
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/db3464ad4_Dreamwave-Photo9.png"
+                    alt="Dr. Shawnté Elbert"
+                    className="w-72 h-96 object-cover rounded-2xl shadow-2xl"
+                  />
+                </div>
+                
+                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl border border-[#E5C089] max-w-xs z-20">
                   <p className="text-sm font-medium text-slate-900 mb-2">
                     "Perfectly Positioned to Empower, Lead, and Thrive."
                   </p>
