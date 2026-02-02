@@ -10,12 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Sparkles, Copy, Eye, Trash2, Edit } from 'lucide-react';
+import { Plus, Sparkles, Copy, Eye, Trash2, Edit, Wand2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export default function RegistrationBuilder() {
   const [isCreating, setIsCreating] = useState(false);
   const [editingPage, setEditingPage] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState({
     page_name: '',
     slug: '',
@@ -116,6 +117,54 @@ export default function RegistrationBuilder() {
     toast.success('Link copied to clipboard!');
   };
 
+  const generateWithAI = async () => {
+    if (!formData.page_name || !formData.registration_type) {
+      toast.error('Please enter a page name and select registration type first');
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Create compelling registration page content for "${formData.page_name}" which is a ${formData.registration_type} offering by Elbert Innovative Solutions (EIS), a nonprofit consulting firm specializing in grant writing, capacity building, and funding strategy.
+
+Generate:
+1. A compelling title (10 words max)
+2. A description (2-3 sentences explaining value and benefits)
+3. Offering details including suggested duration, format, and what participants will gain
+
+Keep the tone professional, empowering, and focused on outcomes. Emphasize EIS's expertise in helping nonprofits and social impact organizations secure funding and build capacity.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            description: { type: "string" },
+            suggested_duration: { type: "string" },
+            suggested_format: { type: "string" },
+            key_outcomes: { type: "string" }
+          }
+        }
+      });
+
+      setFormData({
+        ...formData,
+        title: response.title,
+        description: response.description,
+        offering_details: {
+          ...formData.offering_details,
+          duration: response.suggested_duration,
+          format: response.suggested_format
+        }
+      });
+
+      toast.success('AI content generated!');
+    } catch (error) {
+      toast.error('Failed to generate content');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const typeColors = {
     workshop: 'bg-blue-100 text-blue-800',
     training: 'bg-green-100 text-green-800',
@@ -132,13 +181,23 @@ export default function RegistrationBuilder() {
             <h1 className="text-2xl font-bold text-slate-900">
               {editingPage ? 'Edit' : 'Create'} Registration Page
             </h1>
-            <Button variant="outline" onClick={() => {
-              setIsCreating(false);
-              setEditingPage(null);
-              resetForm();
-            }}>
-              Cancel
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={generateWithAI}
+                disabled={isGenerating || !formData.page_name || !formData.registration_type}
+              >
+                <Wand2 className="w-4 h-4 mr-2" />
+                {isGenerating ? 'Generating...' : 'AI Assist'}
+              </Button>
+              <Button variant="outline" onClick={() => {
+                setIsCreating(false);
+                setEditingPage(null);
+                resetForm();
+              }}>
+                Cancel
+              </Button>
+            </div>
           </div>
 
           <Card>
