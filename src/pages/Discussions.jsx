@@ -4,23 +4,27 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { MessageSquare, Plus, ThumbsUp, MessageCircle, Pin } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MessageSquare, Heart, Pin, Plus, TrendingUp, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { toast } from 'react-hot-toast';
+import CreateDiscussionForm from '@/components/discussions/CreateDiscussionForm';
+import DiscussionReplies from '@/components/discussions/DiscussionReplies';
+import { hasPermission, PERMISSIONS } from '@/components/lib/permissions';
 
 export default function DiscussionsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showNewPost, setShowNewPost] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState('all');
+  const [showNewPostForm, setShowNewPostForm] = useState(false);
+  const [sortBy, setSortBy] = useState('recent');
+  const [expandedDiscussion, setExpandedDiscussion] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: discussions = [] } = useQuery({
     queryKey: ['discussions'],
     queryFn: () => base44.entities.Discussion.list('-created_date'),
   });
 
-  const { data: spaces = [] } = useQuery({
+  const { data: communitySpaces = [] } = useQuery({
     queryKey: ['communitySpaces'],
     queryFn: () => base44.entities.CommunitySpace.filter({ space_type: 'posts', is_active: true }),
   });
@@ -41,11 +45,25 @@ export default function DiscussionsPage() {
 
   const canCreateDiscussions = hasPermission(user?.role, PERMISSIONS.CREATE_DISCUSSIONS);
 
-  const categories = ['all', 'general', 'grants', 'contracts', 'fundraising', 'questions', 'success_stories'];
+  let filteredDiscussions = discussions.filter(d => {
+    const categoryMatch = selectedCategory === 'all' || d.category === selectedCategory;
+    const spaceMatch = selectedSpace === 'all' || d.space_id === selectedSpace;
+    return categoryMatch && spaceMatch;
+  });
 
-  const filteredDiscussions = selectedCategory === 'all' 
-    ? discussions 
-    : discussions.filter(d => d.category === selectedCategory);
+  if (sortBy === 'recent') {
+    filteredDiscussions = [...filteredDiscussions].sort((a, b) => 
+      new Date(b.created_date) - new Date(a.created_date)
+    );
+  } else if (sortBy === 'popular') {
+    filteredDiscussions = [...filteredDiscussions].sort((a, b) => 
+      (b.total_likes || 0) - (a.total_likes || 0)
+    );
+  } else if (sortBy === 'active') {
+    filteredDiscussions = [...filteredDiscussions].sort((a, b) => 
+      (b.total_replies || 0) - (a.total_replies || 0)
+    );
+  }
 
   const pinnedPosts = filteredDiscussions.filter(d => d.is_pinned);
   const regularPosts = filteredDiscussions.filter(d => !d.is_pinned);
@@ -53,109 +71,142 @@ export default function DiscussionsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/30 p-6">
       <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <MessageSquare className="w-8 h-8 text-orange-600" />
-              Community Discussions
-            </h1>
-            <p className="text-slate-600 mt-2">Ask questions, share knowledge, and connect</p>
+            <h1 className="text-3xl font-bold text-slate-900">Discussions</h1>
+            <p className="text-slate-600 mt-1">Ask questions, share knowledge, and connect</p>
           </div>
-          <Button onClick={() => setShowNewPost(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            New Post
-          </Button>
+          {canCreateDiscussions && (
+            <Button onClick={() => setShowNewPostForm(true)} className="bg-emerald-600 hover:bg-emerald-700">
+              <Plus className="w-4 h-4 mr-2" />
+              New Post
+            </Button>
+          )}
         </div>
 
-        {spaces.length > 0 && (
-          <div className="mb-4">
-            <p className="text-sm text-slate-600 mb-2">Space:</p>
-            <div className="flex gap-2 flex-wrap">
-              <Button
-                variant={selectedSpace === 'all' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setSelectedSpace('all')}
-              >
-                All Spaces
-              </Button>
-              {spaces.map(space => (
-                <Button
-                  key={space.id}
-                  variant={selectedSpace === space.id ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedSpace(space.id)}
-                >
-                  {space.space_name}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {categories.map(cat => (
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex flex-wrap gap-2 flex-1">
             <Button
-              key={cat}
-              variant={selectedCategory === cat ? 'default' : 'outline'}
+              variant={selectedSpace === 'all' ? 'default' : 'outline'}
+              onClick={() => setSelectedSpace('all')}
               size="sm"
-              onClick={() => setSelectedCategory(cat)}
             >
-              {cat.replace('_', ' ')}
+              All Spaces
             </Button>
-          ))}
+            {communitySpaces.map(space => (
+              <Button
+                key={space.id}
+                variant={selectedSpace === space.id ? 'default' : 'outline'}
+                onClick={() => setSelectedSpace(space.id)}
+                size="sm"
+              >
+                {space.space_name}
+              </Button>
+            ))}
+          </div>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Recent</SelectItem>
+              <SelectItem value="popular">Popular</SelectItem>
+              <SelectItem value="active">Most Active</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="space-y-4">
-          {pinnedPosts.map(post => (
-            <DiscussionCard key={post.id} discussion={post} isPinned />
+          {pinnedPosts.map(discussion => (
+            <DiscussionCard 
+              key={discussion.id} 
+              discussion={discussion} 
+              user={user}
+              isPinned
+              isExpanded={expandedDiscussion === discussion.id}
+              onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
+              onLike={() => likeDiscussionMutation.mutate(discussion)}
+            />
           ))}
-          {regularPosts.map(post => (
-            <DiscussionCard key={post.id} discussion={post} />
+          {regularPosts.map(discussion => (
+            <DiscussionCard 
+              key={discussion.id} 
+              discussion={discussion}
+              user={user}
+              isExpanded={expandedDiscussion === discussion.id}
+              onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
+              onLike={() => likeDiscussionMutation.mutate(discussion)}
+            />
           ))}
         </div>
+
+        <CreateDiscussionForm
+          open={showNewPostForm}
+          onOpenChange={setShowNewPostForm}
+          userEmail={user?.email}
+          userName={user?.full_name}
+          spaceId={selectedSpace !== 'all' ? selectedSpace : null}
+        />
       </div>
     </div>
   );
 }
 
-function DiscussionCard({ discussion, isPinned }) {
+function DiscussionCard({ discussion, user, isPinned, isExpanded, onToggleExpand, onLike }) {
   return (
-    <Card className={isPinned ? 'border-orange-500 border-2' : ''}>
-      <CardContent className="pt-6">
-        <div className="flex gap-4">
-          <div className="flex flex-col items-center gap-2">
-            <button className="p-2 hover:bg-slate-100 rounded">
-              <ThumbsUp className="w-5 h-5 text-slate-400" />
-            </button>
-            <span className="text-sm font-medium">{discussion.total_likes}</span>
-          </div>
+    <Card className={isPinned ? 'border-emerald-500 border-2' : ''}>
+      <CardHeader>
+        <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <h3 className="font-semibold text-lg flex items-center gap-2">
-                  {isPinned && <Pin className="w-4 h-4 text-orange-600" />}
-                  {discussion.title}
-                </h3>
-                <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
-                  <span>{discussion.author_name}</span>
-                  <span>•</span>
-                  <span>{format(new Date(discussion.created_date), 'MMM d')}</span>
-                </div>
-              </div>
-              <Badge variant="outline">{discussion.category}</Badge>
+            <div className="flex items-center gap-2 mb-2">
+              {isPinned && <Pin className="w-4 h-4 text-emerald-600" />}
+              <CardTitle className="text-lg">{discussion.title}</CardTitle>
             </div>
-            <p className="text-sm text-slate-700 mb-3 line-clamp-2">{discussion.content}</p>
-            <div className="flex items-center gap-4 text-sm text-slate-600">
-              <div className="flex items-center gap-1">
-                <MessageCircle className="w-4 h-4" />
-                {discussion.total_replies} replies
-              </div>
-              {discussion.tags && discussion.tags.map(tag => (
-                <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-              ))}
+            <div className="flex items-center gap-3 text-sm text-slate-600">
+              <span>{discussion.author_name}</span>
+              <span>•</span>
+              <span>{format(new Date(discussion.created_date), 'MMM d, yyyy')}</span>
+              <Badge variant="outline">{discussion.category}</Badge>
             </div>
           </div>
         </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-slate-700">{discussion.content}</p>
+        
+        <div className="flex items-center gap-4 text-sm">
+          <button 
+            onClick={onLike}
+            className="flex items-center gap-1 hover:text-red-500 transition-colors"
+          >
+            <Heart className={`w-4 h-4 ${discussion.total_likes > 0 ? 'fill-red-500 text-red-500' : 'text-slate-600'}`} />
+            {discussion.total_likes || 0}
+          </button>
+          <button
+            onClick={onToggleExpand}
+            className="flex items-center gap-1 text-slate-600 hover:text-emerald-600 transition-colors"
+          >
+            <MessageSquare className="w-4 h-4" />
+            {discussion.total_replies || 0} replies
+          </button>
+          {discussion.tags?.length > 0 && (
+            <div className="flex gap-1 ml-auto">
+              {discussion.tags.map((tag, i) => (
+                <Badge key={i} variant="outline" className="text-xs">{tag}</Badge>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {isExpanded && user && (
+          <div className="border-t pt-4">
+            <DiscussionReplies 
+              discussionId={discussion.id}
+              userEmail={user.email}
+              userName={user.full_name}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
