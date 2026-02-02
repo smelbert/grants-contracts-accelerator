@@ -42,36 +42,36 @@ export default function CohortManagementPage() {
     queryFn: () => base44.entities.LearningContent.filter({ content_type: 'course' }),
   });
 
+  const { data: cohorts = [] } = useQuery({
+    queryKey: ['cohorts'],
+    queryFn: () => base44.entities.Cohort.list(),
+  });
+
   const { data: enrollments = [] } = useQuery({
     queryKey: ['allEnrollments'],
     queryFn: () => base44.entities.UserEnrollment.list(),
   });
 
-  // Group enrollments by cohort
-  const cohorts = enrollments.reduce((acc, enrollment) => {
-    if (enrollment.cohort_id) {
-      if (!acc[enrollment.cohort_id]) {
-        acc[enrollment.cohort_id] = {
-          id: enrollment.cohort_id,
-          members: [],
-          course_id: enrollment.content_id,
-        };
-      }
-      acc[enrollment.cohort_id].members.push(enrollment);
-    }
-    return acc;
-  }, {});
-
-  const cohortList = Object.values(cohorts);
+  // Add member counts to cohorts
+  const cohortsWithMembers = cohorts.map(cohort => ({
+    ...cohort,
+    members: enrollments.filter(e => e.cohort_id === cohort.id)
+  }));
 
   const createCohortMutation = useMutation({
     mutationFn: async (data) => {
-      // Create cohort by generating unique ID and returning metadata
-      const cohortId = `cohort_${Date.now()}`;
-      return { cohort_id: cohortId, ...data };
+      return base44.entities.Cohort.create({
+        cohort_name: data.cohort_name,
+        course_id: data.course_id,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        description: data.description,
+        max_members: data.max_members,
+        status: 'upcoming'
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['allEnrollments'] });
+      queryClient.invalidateQueries({ queryKey: ['cohorts'] });
       setDialogOpen(false);
       resetForm();
     },
@@ -109,6 +109,7 @@ export default function CohortManagementPage() {
   };
 
   const unassignedEnrollments = enrollments.filter(e => !e.cohort_id && e.status === 'active');
+  const activeCohorts = cohortsWithMembers.filter(c => c.status === 'active' || c.status === 'upcoming');
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -216,7 +217,7 @@ export default function CohortManagementPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-600">Total Cohorts</p>
-                  <p className="text-3xl font-bold text-slate-900">{cohortList.length}</p>
+                  <p className="text-3xl font-bold text-slate-900">{cohortsWithMembers.length}</p>
                 </div>
                 <Users className="w-8 h-8 text-emerald-600" />
               </div>
@@ -228,7 +229,7 @@ export default function CohortManagementPage() {
                 <div>
                   <p className="text-sm text-slate-600">Total Members</p>
                   <p className="text-3xl font-bold text-slate-900">
-                    {cohortList.reduce((sum, c) => sum + c.members.length, 0)}
+                    {cohortsWithMembers.reduce((sum, c) => sum + c.members.length, 0)}
                   </p>
                 </div>
                 <Users className="w-8 h-8 text-blue-600" />
@@ -252,8 +253,8 @@ export default function CohortManagementPage() {
                 <div>
                   <p className="text-sm text-slate-600">Avg Progress</p>
                   <p className="text-3xl font-bold text-slate-900">
-                    {cohortList.length > 0
-                      ? Math.round(cohortList.reduce((sum, c) => sum + getCohortProgress(c), 0) / cohortList.length)
+                    {cohortsWithMembers.length > 0
+                      ? Math.round(cohortsWithMembers.reduce((sum, c) => sum + getCohortProgress(c), 0) / cohortsWithMembers.length)
                       : 0}%
                   </p>
                 </div>
@@ -272,8 +273,8 @@ export default function CohortManagementPage() {
           </TabsList>
 
           <TabsContent value="cohorts" className="space-y-4">
-            {cohortList.length > 0 ? (
-              cohortList.map((cohort) => {
+            {cohortsWithMembers.length > 0 ? (
+              cohortsWithMembers.map((cohort) => {
                 const course = courses.find(c => c.id === cohort.course_id);
                 const avgProgress = getCohortProgress(cohort);
 
@@ -282,14 +283,20 @@ export default function CohortManagementPage() {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
-                          <CardTitle className="text-xl mb-2">{cohort.id}</CardTitle>
+                          <CardTitle className="text-xl mb-2">{cohort.cohort_name}</CardTitle>
                           <CardDescription>
                             {course?.title || 'Unknown Course'} • {cohort.members.length} members
+                            {cohort.start_date && ` • Starts ${format(new Date(cohort.start_date), 'MMM d, yyyy')}`}
                           </CardDescription>
                         </div>
-                        <Badge className="bg-emerald-100 text-emerald-700">
-                          {avgProgress}% Complete
-                        </Badge>
+                        <div className="flex gap-2">
+                          <Badge className="bg-emerald-100 text-emerald-700">
+                            {avgProgress}% Complete
+                          </Badge>
+                          <Badge variant="outline">
+                            {cohort.status}
+                          </Badge>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent>
@@ -360,11 +367,11 @@ export default function CohortManagementPage() {
                               <SelectValue placeholder="Assign to cohort" />
                             </SelectTrigger>
                             <SelectContent>
-                              {cohortList
+                              {cohortsWithMembers
                                 .filter(c => c.course_id === enrollment.content_id)
                                 .map((cohort) => (
                                   <SelectItem key={cohort.id} value={cohort.id}>
-                                    {cohort.id}
+                                    {cohort.cohort_name}
                                   </SelectItem>
                                 ))}
                             </SelectContent>
