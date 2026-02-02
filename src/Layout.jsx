@@ -138,8 +138,15 @@ const getAdminPortalNav = () => [
 ];
 
 const getNavItems = (portalView) => {
-  if (portalView === 'coach') return getCoachPortalNav();
-  if (portalView === 'admin') return getAdminPortalNav();
+  // Coach and Admin portals return flat arrays, User portal returns grouped arrays
+  if (portalView === 'coach') {
+    const items = getCoachPortalNav();
+    return [{ groupName: 'Menu', items }];
+  }
+  if (portalView === 'admin') {
+    const items = getAdminPortalNav();
+    return [{ groupName: 'Menu', items }];
+  }
   return getUserPortalNav();
 };
 
