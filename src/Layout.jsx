@@ -44,15 +44,6 @@ const getUserPortalNav = () => [
     groupName: 'Overview',
     items: [
       { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, dataTour: 'dashboard' },
-      { name: 'Grant Dashboard', page: 'GrantDashboard', icon: DollarSign },
-    ]
-  },
-  {
-    groupName: 'Funding',
-    items: [
-      { name: 'Opportunities', page: 'Opportunities', icon: Search, dataTour: 'opportunities' },
-      { name: 'AI Funding Matcher', page: 'AIFundingMatcher', icon: Sparkles },
-      { name: 'Application Tracker', page: 'ApplicationTracker', icon: CheckCircle2, dataTour: 'workflows' },
     ]
   },
   {
@@ -61,49 +52,27 @@ const getUserPortalNav = () => [
       { name: 'Projects', page: 'Projects', icon: FileText },
       { name: 'Documents', page: 'Documents', icon: FileText },
       { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
-      { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
-      { name: 'Budget Builder', page: 'BudgetBuilder', icon: Calculator },
-    ]
-  },
-  {
-    groupName: 'Workflows',
-    items: [
-      { name: 'Proposal Workflows', page: 'ProposalWorkflows', icon: CheckCircle2 },
-      { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
-      { name: 'Readiness Assessment', page: 'GrantReadinessAssessment', icon: BadgeIcon },
-      { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
     ]
   },
   {
     groupName: 'Learning',
     items: [
       { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
+      { name: 'Calendar', page: 'Calendar', icon: Calendar },
       { name: 'Events', page: 'Events', icon: Calendar },
-      { name: 'Live Streams', page: 'LiveStreams', icon: Video },
     ]
   },
   {
     groupName: 'Community',
     items: [
       { name: 'Discussions', page: 'Discussions', icon: MessageSquare },
-      { name: 'Chat', page: 'Chat', icon: MessageCircle },
-      { name: 'Community Groups', page: 'Community', icon: Users },
-    ]
-  },
-  {
-    groupName: 'Tools',
-    items: [
-      { name: 'Email Hub', page: 'EmailHub', icon: Mail },
-      { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
+      { name: 'Direct Messages', page: 'Chat', icon: MessageCircle },
     ]
   },
   {
     groupName: 'Settings',
     items: [
       { name: 'My Organization', page: 'Profile', icon: Building2 },
-      { name: 'Organization Settings', page: 'OrganizationSettings', icon: SettingsIcon },
-      { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
-      { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
       { name: 'Settings', page: 'Settings', icon: SettingsIcon },
     ]
   },
@@ -137,6 +106,9 @@ const getAdminPortalNav = () => [
   { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
   { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
   { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
+  { name: 'Email Hub', page: 'EmailHub', icon: Mail },
+  { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
+  { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
   { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
   { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
   { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },

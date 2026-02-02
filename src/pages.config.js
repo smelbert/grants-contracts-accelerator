@@ -106,6 +106,7 @@ import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import Register from './pages/Register';
+import Calendar from './pages/Calendar';
 import __Layout from './Layout.jsx';
 
 
@@ -169,6 +170,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "Register": Register,
+    "Calendar": Calendar,
 }
 
 export const pagesConfig = {
