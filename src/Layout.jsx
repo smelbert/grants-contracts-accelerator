@@ -263,6 +263,18 @@ export default function Layout({ children, currentPageName }) {
                   <p className="text-xs text-slate-500 truncate">{user.email}</p>
                 </div>
               </div>
+              <div className="space-y-1 mb-3">
+                <Link to={createPageUrl('PublicHome')}>
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-slate-600">
+                    Public Home
+                  </Button>
+                </Link>
+                <Link to={createPageUrl('AboutEIS')}>
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-slate-600">
+                    About EIS
+                  </Button>
+                </Link>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
