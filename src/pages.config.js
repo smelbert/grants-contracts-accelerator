@@ -107,6 +107,8 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import Register from './pages/Register';
 import Calendar from './pages/Calendar';
+import MyClassroom from './pages/MyClassroom';
+import CohortManagement from './pages/CohortManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -171,6 +173,8 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "Register": Register,
     "Calendar": Calendar,
+    "MyClassroom": MyClassroom,
+    "CohortManagement": CohortManagement,
 }
 
 export const pagesConfig = {
