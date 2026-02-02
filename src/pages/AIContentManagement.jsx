@@ -8,13 +8,22 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Loader2, Save, Plus, Tag, ExternalLink, Brain, Wand2 } from 'lucide-react';
+import { Sparkles, Loader2, Save, Plus, Tag, ExternalLink, Brain, Wand2, MessageSquare, Calendar as CalendarIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ContentWorkflowAutomation from '@/components/admin/ContentWorkflowAutomation';
 
 export default function AIContentManagementPage() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('generate');
+  
+  // Space-specific content generation
+  const [spaceContentInput, setSpaceContentInput] = useState({
+    spaceType: 'posts',
+    topic: '',
+    tone: 'professional',
+    count: 5
+  });
+  const [generatedSpaceContent, setGeneratedSpaceContent] = useState(null);
 
   // Generate Module State
   const [moduleInput, setModuleInput] = useState({
@@ -61,6 +70,11 @@ export default function AIContentManagementPage() {
   const { data: allContent = [] } = useQuery({
     queryKey: ['all-learning-content'],
     queryFn: () => base44.entities.LearningContent.list(),
+  });
+
+  const { data: spaces = [] } = useQuery({
+    queryKey: ['communitySpaces'],
+    queryFn: () => base44.entities.CommunitySpace.list()
   });
 
   // Generate Full Module
@@ -540,6 +554,65 @@ Ensure all information is accurate as of 2026.`;
     }
   });
 
+  // Generate Space-Specific Content
+  const generateSpaceContentMutation = useMutation({
+    mutationFn: async () => {
+      const prompts = {
+        posts: `Generate ${spaceContentInput.count} engaging discussion prompts for a community space about: ${spaceContentInput.topic}
+        
+        Tone: ${spaceContentInput.tone}
+        
+        Each prompt should:
+        - Be thought-provoking and encourage discussion
+        - Be relevant to nonprofit leaders and grant seekers
+        - Include 2-3 follow-up questions
+        
+        Return array of objects with: title, content, category (general/grants/contracts/fundraising/questions/success_stories)`,
+        
+        events: `Generate ${spaceContentInput.count} event ideas for a community focused on: ${spaceContentInput.topic}
+        
+        Tone: ${spaceContentInput.tone}
+        
+        Each event should:
+        - Have a clear learning outcome
+        - Be engaging and valuable for nonprofit professionals
+        - Include suggested duration and format (webinar/workshop/networking)
+        
+        Return array of objects with: event_name, description, event_type, duration, learning_outcomes (array)`,
+        
+        course: `Generate ${spaceContentInput.count} course outline ideas about: ${spaceContentInput.topic}
+        
+        Tone: ${spaceContentInput.tone}
+        
+        Each course should:
+        - Address a specific skill gap for nonprofit leaders
+        - Have clear learning objectives
+        - Be structured for online learning
+        
+        Return array of objects with: title, description, learning_objectives (array), target_audience, estimated_duration`
+      };
+
+      const prompt = prompts[spaceContentInput.spaceType] || prompts.posts;
+
+      return await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            items: {
+              type: "array",
+              items: { type: "object" }
+            }
+          }
+        }
+      });
+    },
+    onSuccess: (data) => {
+      setGeneratedSpaceContent(data);
+      toast.success('Space content generated!');
+    }
+  });
+
   // Save Generated Module
   const saveModuleMutation = useMutation({
     mutationFn: async () => {
@@ -602,7 +675,11 @@ Ensure all information is accurate as of 2026.`;
         <ContentWorkflowAutomation />
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="spaces">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Space Content
+            </TabsTrigger>
             <TabsTrigger value="generate">
               <Sparkles className="w-4 h-4 mr-2" />
               Generate Module
@@ -624,6 +701,97 @@ Ensure all information is accurate as of 2026.`;
               Refresh Content
             </TabsTrigger>
           </TabsList>
+
+          {/* Space-Specific Content Tab */}
+          <TabsContent value="spaces">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Generate Space Content</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Space Type *</label>
+                    <Select value={spaceContentInput.spaceType} onValueChange={(v) => setSpaceContentInput({...spaceContentInput, spaceType: v})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="posts">Discussion Posts</SelectItem>
+                        <SelectItem value="events">Event Ideas</SelectItem>
+                        <SelectItem value="course">Course Outlines</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Topic/Theme *</label>
+                    <Input
+                      placeholder="e.g., Grant proposal writing best practices"
+                      value={spaceContentInput.topic}
+                      onChange={(e) => setSpaceContentInput({...spaceContentInput, topic: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Tone</label>
+                    <Select value={spaceContentInput.tone} onValueChange={(v) => setSpaceContentInput({...spaceContentInput, tone: v})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="professional">Professional</SelectItem>
+                        <SelectItem value="casual">Casual</SelectItem>
+                        <SelectItem value="inspirational">Inspirational</SelectItem>
+                        <SelectItem value="educational">Educational</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Number of Items</label>
+                    <Input
+                      type="number"
+                      value={spaceContentInput.count}
+                      onChange={(e) => setSpaceContentInput({...spaceContentInput, count: parseInt(e.target.value)})}
+                      min="3"
+                      max="10"
+                    />
+                  </div>
+                  <Button
+                    onClick={() => generateSpaceContentMutation.mutate()}
+                    disabled={!spaceContentInput.topic || generateSpaceContentMutation.isPending}
+                    className="w-full"
+                  >
+                    {generateSpaceContentMutation.isPending ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</>
+                    ) : (
+                      <><Sparkles className="w-4 h-4 mr-2" /> Generate Content</>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {generatedSpaceContent && (
+                <Card className="border-emerald-200 bg-emerald-50">
+                  <CardHeader>
+                    <CardTitle>Generated Content ({generatedSpaceContent.items?.length})</CardTitle>
+                  </CardHeader>
+                  <CardContent className="max-h-[600px] overflow-y-auto space-y-3">
+                    {generatedSpaceContent.items?.map((item, idx) => (
+                      <div key={idx} className="bg-white p-4 rounded-lg">
+                        <p className="font-semibold text-sm mb-2">{item.title || item.event_name}</p>
+                        <p className="text-xs text-slate-600 mb-2">{item.content || item.description}</p>
+                        {item.category && (
+                          <Badge variant="outline" className="text-xs">{item.category}</Badge>
+                        )}
+                        {item.event_type && (
+                          <Badge variant="outline" className="text-xs">{item.event_type}</Badge>
+                        )}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
 
           {/* Generate Module Tab */}
           <TabsContent value="generate">
