@@ -36,35 +36,75 @@ import {
   MessageCircle
 } from 'lucide-react';
 
-// User Portal Navigation
+// User Portal Navigation with Groups
 const getUserPortalNav = () => [
-  { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, dataTour: 'dashboard' },
-  { name: 'My Organization', page: 'Profile', icon: Building2 },
-  { name: 'Projects', page: 'Projects', icon: CheckCircle2 },
-  { name: 'AI Funding Matcher', page: 'AIFundingMatcher', icon: Sparkles },
-  { name: 'Application Tracker', page: 'ApplicationTracker', icon: CheckCircle2, dataTour: 'workflows' },
-  { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
-  { name: 'Proposal Workflows', page: 'ProposalWorkflows', icon: CheckCircle2 },
-  { name: 'Readiness Assessment', page: 'GrantReadinessAssessment', icon: CheckCircle2 },
-  { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
-  { name: 'Documents', page: 'Documents', icon: FileText },
-  { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
-        { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
-        { name: 'Budget Builder', page: 'BudgetBuilder', icon: Calculator },
-        { name: 'Grant Dashboard', page: 'GrantDashboard', icon: Sparkles },
-        { name: 'Opportunities', page: 'Opportunities', icon: Search, dataTour: 'opportunities' },
-  { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
-  { name: 'Email Hub', page: 'EmailHub', icon: Mail },
-  { name: 'Events', page: 'Events', icon: Calendar },
-  { name: 'Live Streams', page: 'LiveStreams', icon: Video },
-  { name: 'Discussions', page: 'Discussions', icon: MessageSquare },
-  { name: 'Chat', page: 'Chat', icon: MessageCircle },
-  { name: 'Community', page: 'Community', icon: Users },
-  { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
-  { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
-  { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
-  { name: 'Organization Settings', page: 'OrganizationSettings', icon: SettingsIcon },
-  { name: 'Settings', page: 'Settings', icon: SettingsIcon },
+  {
+    groupName: 'Overview',
+    items: [
+      { name: 'Dashboard', page: 'Home', icon: LayoutDashboard, dataTour: 'dashboard' },
+      { name: 'Grant Dashboard', page: 'GrantDashboard', icon: DollarSign },
+    ]
+  },
+  {
+    groupName: 'Funding',
+    items: [
+      { name: 'Opportunities', page: 'Opportunities', icon: Search, dataTour: 'opportunities' },
+      { name: 'AI Funding Matcher', page: 'AIFundingMatcher', icon: Sparkles },
+      { name: 'Application Tracker', page: 'ApplicationTracker', icon: CheckCircle2, dataTour: 'workflows' },
+    ]
+  },
+  {
+    groupName: 'Workspace',
+    items: [
+      { name: 'Projects', page: 'Projects', icon: FileText },
+      { name: 'Documents', page: 'Documents', icon: FileText },
+      { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
+      { name: 'AI Drafting Tools', page: 'BoilerplateBuilder', icon: Sparkles },
+      { name: 'Budget Builder', page: 'BudgetBuilder', icon: Calculator },
+    ]
+  },
+  {
+    groupName: 'Workflows',
+    items: [
+      { name: 'Proposal Workflows', page: 'ProposalWorkflows', icon: CheckCircle2 },
+      { name: 'Team Collaboration', page: 'TeamCollaboration', icon: Users },
+      { name: 'Readiness Assessment', page: 'GrantReadinessAssessment', icon: BadgeIcon },
+      { name: 'Readiness Checklists', page: 'ReadinessChecklists', icon: CheckCircle2 },
+    ]
+  },
+  {
+    groupName: 'Learning',
+    items: [
+      { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
+      { name: 'Events', page: 'Events', icon: Calendar },
+      { name: 'Live Streams', page: 'LiveStreams', icon: Video },
+    ]
+  },
+  {
+    groupName: 'Community',
+    items: [
+      { name: 'Discussions', page: 'Discussions', icon: MessageSquare },
+      { name: 'Chat', page: 'Chat', icon: MessageCircle },
+      { name: 'Community Groups', page: 'Community', icon: Users },
+    ]
+  },
+  {
+    groupName: 'Tools',
+    items: [
+      { name: 'Email Hub', page: 'EmailHub', icon: Mail },
+      { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
+    ]
+  },
+  {
+    groupName: 'Settings',
+    items: [
+      { name: 'My Organization', page: 'Profile', icon: Building2 },
+      { name: 'Organization Settings', page: 'OrganizationSettings', icon: SettingsIcon },
+      { name: 'Readiness Status', page: 'ReadinessStatus', icon: BadgeIcon },
+      { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
+      { name: 'Settings', page: 'Settings', icon: SettingsIcon },
+    ]
+  },
 ];
 
 // Coach Portal Navigation
@@ -185,30 +225,39 @@ export default function Layout({ children, currentPageName }) {
           )}
 
           {/* Navigation */}
-          <nav className="flex flex-1 flex-col mt-6">
-            <ul className="flex flex-1 flex-col gap-1">
-              {navItems.map((item) => {
-                const isActive = currentPageName === item.page;
-                return (
-                  <li key={item.name}>
-                    <Link
-                      to={createPageUrl(item.page)}
-                      data-tour={item.dataTour}
-                      className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
-                        isActive
-                          ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
-                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                      }`}
-                    >
-                      <item.icon className={`w-5 h-5 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400 group-hover:text-slate-600'}`} />
-                      {item.name}
-                      {isActive && (
-                        <ChevronRight className={`w-4 h-4 ml-auto ${currentPortalColors.accent.replace('bg-', 'text-').replace('600', '400')}`} />
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
+          <nav className="flex flex-1 flex-col mt-6 overflow-y-auto">
+            <ul className="flex flex-1 flex-col gap-6">
+              {navItems.map((group, groupIdx) => (
+                <li key={groupIdx}>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">
+                    {group.groupName}
+                  </p>
+                  <ul className="space-y-1">
+                    {group.items.map((item) => {
+                      const isActive = currentPageName === item.page;
+                      return (
+                        <li key={item.name}>
+                          <Link
+                            to={createPageUrl(item.page)}
+                            data-tour={item.dataTour}
+                            className={`group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
+                              isActive
+                                ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
+                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                            }`}
+                          >
+                            <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400 group-hover:text-slate-600'}`} />
+                            <span className="truncate">{item.name}</span>
+                            {isActive && (
+                              <ChevronRight className={`w-3 h-3 ml-auto flex-shrink-0 ${currentPortalColors.accent.replace('bg-', 'text-').replace('600', '400')}`} />
+                            )}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              ))}
             </ul>
           </nav>
 
@@ -308,7 +357,7 @@ export default function Layout({ children, currentPageName }) {
                   <X className="w-5 h-5" />
                 </Button>
               </div>
-              <nav className="p-4">
+              <nav className="p-4 overflow-y-auto">
                 {canSwitchPortals && (
                   <div className="mb-4 px-3">
                     <p className="text-xs text-slate-500 mb-2">Portal View</p>
@@ -334,26 +383,35 @@ export default function Layout({ children, currentPageName }) {
                     </select>
                   </div>
                 )}
-                <ul className="space-y-1">
-                  {navItems.map((item) => {
-                    const isActive = currentPageName === item.page;
-                    return (
-                      <li key={item.name}>
-                        <Link
-                          to={createPageUrl(item.page)}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium ${
-                            isActive
-                              ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
-                              : 'text-slate-600 hover:bg-slate-50'
-                          }`}
-                        >
-                          <item.icon className={`w-5 h-5 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400'}`} />
-                          {item.name}
-                        </Link>
-                      </li>
-                    );
-                  })}
+                <ul className="space-y-6">
+                  {navItems.map((group, groupIdx) => (
+                    <li key={groupIdx}>
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">
+                        {group.groupName}
+                      </p>
+                      <ul className="space-y-1">
+                        {group.items.map((item) => {
+                          const isActive = currentPageName === item.page;
+                          return (
+                            <li key={item.name}>
+                              <Link
+                                to={createPageUrl(item.page)}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium ${
+                                  isActive
+                                    ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
+                                    : 'text-slate-600 hover:bg-slate-50'
+                                }`}
+                              >
+                                <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400'}`} />
+                                <span className="truncate">{item.name}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </li>
+                  ))}
                 </ul>
                 {user && (
                   <div className="mt-6 pt-6 border-t border-slate-200">

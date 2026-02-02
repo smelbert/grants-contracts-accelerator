@@ -55,14 +55,19 @@ import ApplicationTracker from './pages/ApplicationTracker';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import BudgetBuilder from './pages/BudgetBuilder';
+import Chat from './pages/Chat';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachProfile from './pages/CoachProfile';
 import CoachProfileManager from './pages/CoachProfileManager';
 import CoachProfileSetup from './pages/CoachProfileSetup';
 import CoachesStaff from './pages/CoachesStaff';
 import Community from './pages/Community';
+import DeveloperTools from './pages/DeveloperTools';
+import Discussions from './pages/Discussions';
 import Documents from './pages/Documents';
+import EmailHub from './pages/EmailHub';
 import EthicsCompliance from './pages/EthicsCompliance';
+import Events from './pages/Events';
 import FlagsNotes from './pages/FlagsNotes';
 import FunderProfile from './pages/FunderProfile';
 import FundingLane from './pages/FundingLane';
@@ -74,6 +79,7 @@ import Landing from './pages/Landing';
 import Learning from './pages/Learning';
 import LearningModule from './pages/LearningModule';
 import LearningProgress from './pages/LearningProgress';
+import LiveStreams from './pages/LiveStreams';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -94,13 +100,7 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
-import EmailHub from './pages/EmailHub';
-import Events from './pages/Events';
-import LiveStreams from './pages/LiveStreams';
-import Discussions from './pages/Discussions';
-import Chat from './pages/Chat';
 import WebsiteBuilder from './pages/WebsiteBuilder';
-import DeveloperTools from './pages/DeveloperTools';
 import __Layout from './Layout.jsx';
 
 
@@ -113,14 +113,19 @@ export const PAGES = {
     "AssignedOrganizations": AssignedOrganizations,
     "BoilerplateBuilder": BoilerplateBuilder,
     "BudgetBuilder": BudgetBuilder,
+    "Chat": Chat,
     "CoachDashboard": CoachDashboard,
     "CoachProfile": CoachProfile,
     "CoachProfileManager": CoachProfileManager,
     "CoachProfileSetup": CoachProfileSetup,
     "CoachesStaff": CoachesStaff,
     "Community": Community,
+    "DeveloperTools": DeveloperTools,
+    "Discussions": Discussions,
     "Documents": Documents,
+    "EmailHub": EmailHub,
     "EthicsCompliance": EthicsCompliance,
+    "Events": Events,
     "FlagsNotes": FlagsNotes,
     "FunderProfile": FunderProfile,
     "FundingLane": FundingLane,
@@ -132,6 +137,7 @@ export const PAGES = {
     "Learning": Learning,
     "LearningModule": LearningModule,
     "LearningProgress": LearningProgress,
+    "LiveStreams": LiveStreams,
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -152,13 +158,7 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "VideoFeedback": VideoFeedback,
-    "EmailHub": EmailHub,
-    "Events": Events,
-    "LiveStreams": LiveStreams,
-    "Discussions": Discussions,
-    "Chat": Chat,
     "WebsiteBuilder": WebsiteBuilder,
-    "DeveloperTools": DeveloperTools,
 }
 
 export const pagesConfig = {
