@@ -124,6 +124,7 @@ const getCoachPortalNav = () => [
 // Admin Portal Navigation
 const getAdminPortalNav = () => [
   { name: 'Admin Dashboard', page: 'AdminDashboard', icon: Shield },
+  { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
   { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
   { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
   { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
