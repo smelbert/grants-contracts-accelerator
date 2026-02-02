@@ -22,6 +22,8 @@ export default function ProfilePage() {
     queryFn: () => base44.auth.me(),
   });
 
+  const [userFormData, setUserFormData] = useState(null);
+
   const { data: organizations, isLoading: orgsLoading } = useQuery({
     queryKey: ['organizations', user?.email],
     queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),
@@ -35,12 +37,24 @@ export default function ProfilePage() {
     if (organization && !formData) {
       setFormData(organization);
     }
-  }, [organization]);
+    if (user && !userFormData) {
+      setUserFormData(user);
+    }
+  }, [organization, user]);
 
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.Organization.update(organization.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['organizations']);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    },
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: (data) => base44.auth.updateMe(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['currentUser']);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     },
@@ -53,6 +67,14 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     await updateMutation.mutateAsync(formData);
+    if (userFormData) {
+      await updateUserMutation.mutateAsync(userFormData);
+    }
+  };
+
+  const handleUserChange = (field, value) => {
+    setUserFormData(prev => ({ ...prev, [field]: value }));
+    setSaved(false);
   };
 
   if (userLoading || orgsLoading) {
@@ -110,6 +132,72 @@ export default function ProfilePage() {
           transition={{ delay: 0.2 }}
           className="space-y-6"
         >
+          {/* Personal Info */}
+          {userFormData && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Personal Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Bio</Label>
+                    <Textarea
+                      value={userFormData.bio || ''}
+                      onChange={(e) => handleUserChange('bio', e.target.value)}
+                      placeholder="Tell us about yourself..."
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Location</Label>
+                    <Input
+                      value={userFormData.location || ''}
+                      onChange={(e) => handleUserChange('location', e.target.value)}
+                      placeholder="City, State"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Job Title</Label>
+                    <Input
+                      value={userFormData.job_title || ''}
+                      onChange={(e) => handleUserChange('job_title', e.target.value)}
+                      placeholder="Your role"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Phone Number</Label>
+                    <Input
+                      value={userFormData.phone_number || ''}
+                      onChange={(e) => handleUserChange('phone_number', e.target.value)}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>LinkedIn URL</Label>
+                    <Input
+                      value={userFormData.linkedin_url || ''}
+                      onChange={(e) => handleUserChange('linkedin_url', e.target.value)}
+                      placeholder="https://linkedin.com/in/..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Website</Label>
+                    <Input
+                      value={userFormData.website || ''}
+                      onChange={(e) => handleUserChange('website', e.target.value)}
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Basic Info */}
           <Card>
             <CardHeader>

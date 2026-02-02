@@ -13,10 +13,16 @@ import { toast } from 'react-hot-toast';
 export default function DiscussionsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showNewPost, setShowNewPost] = useState(false);
+  const [selectedSpace, setSelectedSpace] = useState('all');
 
   const { data: discussions = [] } = useQuery({
     queryKey: ['discussions'],
     queryFn: () => base44.entities.Discussion.list('-created_date'),
+  });
+
+  const { data: spaces = [] } = useQuery({
+    queryKey: ['communitySpaces'],
+    queryFn: () => base44.entities.CommunitySpace.filter({ space_type: 'posts', is_active: true }),
   });
 
   const { data: user } = useQuery({
@@ -49,6 +55,31 @@ export default function DiscussionsPage() {
             New Post
           </Button>
         </div>
+
+        {spaces.length > 0 && (
+          <div className="mb-4">
+            <p className="text-sm text-slate-600 mb-2">Space:</p>
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                variant={selectedSpace === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setSelectedSpace('all')}
+              >
+                All Spaces
+              </Button>
+              {spaces.map(space => (
+                <Button
+                  key={space.id}
+                  variant={selectedSpace === space.id ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedSpace(space.id)}
+                >
+                  {space.space_name}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-2 mb-6 flex-wrap">
           {categories.map(cat => (

@@ -102,6 +102,7 @@ import Templates from './pages/Templates';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import SpaceManagement from './pages/SpaceManagement';
+import MemberManagement from './pages/MemberManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -161,6 +162,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "SpaceManagement": SpaceManagement,
+    "MemberManagement": MemberManagement,
 }
 
 export const pagesConfig = {
