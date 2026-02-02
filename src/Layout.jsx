@@ -153,11 +153,11 @@ export default function Layout({ children, currentPageName }) {
     base44.auth.logout();
   };
 
-  // Portal color schemes
+  // Portal color schemes - EIS Brand Colors
   const portalColors = {
-    user: { bg: 'bg-emerald-50', border: 'border-emerald-200', accent: 'bg-emerald-600', accentHover: 'hover:bg-emerald-700' },
-    coach: { bg: 'bg-green-50', border: 'border-green-200', accent: 'bg-green-600', accentHover: 'hover:bg-green-700' },
-    admin: { bg: 'bg-red-50', border: 'border-red-200', accent: 'bg-red-600', accentHover: 'hover:bg-red-700' }
+    user: { bg: 'bg-[#E5C089]/10', border: 'border-[#E5C089]', accent: 'bg-[#143A50]', accentHover: 'hover:bg-[#1E4F58]', text: 'text-[#143A50]' },
+    coach: { bg: 'bg-[#1E4F58]/10', border: 'border-[#1E4F58]', accent: 'bg-[#1E4F58]', accentHover: 'hover:bg-[#143A50]', text: 'text-[#1E4F58]' },
+    admin: { bg: 'bg-[#AC1A5B]/10', border: 'border-[#AC1A5B]', accent: 'bg-[#AC1A5B]', accentHover: 'hover:bg-[#A65D40]', text: 'text-[#AC1A5B]' }
   };
 
   const currentPortalColors = portalColors[effectiveRole] || portalColors.user;
@@ -175,14 +175,12 @@ export default function Layout({ children, currentPageName }) {
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border-r border-slate-200 px-6 py-8">
           {/* Logo */}
-          <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <span className="text-white font-bold text-lg">G</span>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-900 text-sm leading-tight">Grants + Contracts</p>
-              <p className="text-xs text-slate-500">Accelerator</p>
-            </div>
+          <Link to={createPageUrl('Home')} className="flex items-center gap-3">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+              alt="Elbert Innovative Solutions" 
+              className="h-12 w-auto"
+            />
           </Link>
 
           {/* Portal Switcher */}
@@ -230,14 +228,14 @@ export default function Layout({ children, currentPageName }) {
                             data-tour={item.dataTour}
                             className={`group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
                               isActive
-                                ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
+                                ? `${currentPortalColors.bg} ${currentPortalColors.text} border-l-4 ${currentPortalColors.border}`
                                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                             }`}
                           >
-                            <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400 group-hover:text-slate-600'}`} />
+                            <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.text : 'text-slate-400 group-hover:text-slate-600'}`} />
                             <span className="truncate">{item.name}</span>
                             {isActive && (
-                              <ChevronRight className={`w-3 h-3 ml-auto flex-shrink-0 ${currentPortalColors.accent.replace('bg-', 'text-').replace('600', '400')}`} />
+                              <ChevronRight className={`w-3 h-3 ml-auto flex-shrink-0 ${currentPortalColors.text}`} />
                             )}
                           </Link>
                         </li>
@@ -264,6 +262,11 @@ export default function Layout({ children, currentPageName }) {
                 </div>
               </div>
               <div className="space-y-1 mb-3">
+                <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-[#143A50] hover:bg-[#E5C089]/20">
+                    Visit EIS Website
+                  </Button>
+                </a>
                 <Link to={createPageUrl('PublicHome')}>
                   <Button variant="ghost" size="sm" className="w-full justify-start text-slate-600">
                     Public Home
@@ -293,10 +296,11 @@ export default function Layout({ children, currentPageName }) {
       <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-slate-200">
         <div className="flex items-center justify-between px-4 py-3">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">G</span>
-            </div>
-            <span className="font-semibold text-slate-900 text-sm">GC Accelerator</span>
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+              alt="EIS" 
+              className="h-8 w-auto"
+            />
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="relative">
@@ -399,11 +403,11 @@ export default function Layout({ children, currentPageName }) {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium ${
                                   isActive
-                                    ? `${currentPortalColors.bg} ${currentPortalColors.border.replace('border-', 'text-')}`
+                                    ? `${currentPortalColors.bg} ${currentPortalColors.text} border-l-4 ${currentPortalColors.border}`
                                     : 'text-slate-600 hover:bg-slate-50'
                                 }`}
                               >
-                                <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.accent.replace('bg-', 'text-') : 'text-slate-400'}`} />
+                                <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.text : 'text-slate-400'}`} />
                                 <span className="truncate">{item.name}</span>
                               </Link>
                             </li>

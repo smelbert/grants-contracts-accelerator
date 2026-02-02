@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* EIS Brand Colors */
+    --color-eis-navy: #143A50;
+    --color-eis-magenta: #AC1A5B;
+    --color-eis-gold: #E5C089;
+    --color-eis-rust: #A65D40;
+    --color-eis-teal: #1E4F58;
+    --color-eis-taupe: #B5A698;
+    
+    --background: 0 0% 100%;
+    --foreground: 202 75% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 202 75% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 202 75% 20%;
+
+    --primary: 202 75% 20%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 36 40% 72%;
+    --secondary-foreground: 202 75% 20%;
+
+    --muted: 29 16% 91%;
+    --muted-foreground: 202 75% 35%;
+
+    --accent: 333 85% 39%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 29 16% 85%;
+    --input: 29 16% 85%;
+    --ring: 202 75% 31%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
