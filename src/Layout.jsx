@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import { 
   LayoutDashboard, 
   Search, 
