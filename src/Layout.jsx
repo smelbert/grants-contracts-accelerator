@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
+import AIOnboardingAssistant from '@/components/onboarding/AIOnboardingAssistant';
 import { 
   LayoutDashboard, 
   Search, 
@@ -477,10 +478,17 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Onboarding Flow */}
       {showOnboardingFlow && (
-        <OnboardingFlow 
-          userEmail={user.email} 
-          userRole={effectiveRole} 
-        />
+        <>
+          <OnboardingFlow 
+            userEmail={user.email} 
+            userRole={effectiveRole} 
+          />
+          <AIOnboardingAssistant
+            userRole={effectiveRole}
+            currentPage={currentPageName}
+            userProgress="In Progress"
+          />
+        </>
       )}
     </div>
   );
