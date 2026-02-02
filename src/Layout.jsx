@@ -137,6 +137,7 @@ const getAdminPortalNav = () => [
     groupName: 'Platform Management',
     items: [
       { name: 'Registration Pages', page: 'RegistrationBuilder', icon: Plus },
+      { name: 'Subscription Plans', page: 'SubscriptionPlans', icon: DollarSign },
       { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
       { name: 'Email Hub', page: 'EmailHub', icon: Mail },
       { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },

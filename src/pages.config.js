@@ -118,6 +118,9 @@ import DynamicRegistration from './pages/DynamicRegistration';
 import RegistrationFlow from './pages/RegistrationFlow';
 import RegistrationManagement from './pages/RegistrationManagement';
 import RoleManagement from './pages/RoleManagement';
+import SubscriptionPlans from './pages/SubscriptionPlans';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancelled from './pages/PaymentCancelled';
 import __Layout from './Layout.jsx';
 
 
@@ -193,6 +196,9 @@ export const PAGES = {
     "RegistrationFlow": RegistrationFlow,
     "RegistrationManagement": RegistrationManagement,
     "RoleManagement": RoleManagement,
+    "SubscriptionPlans": SubscriptionPlans,
+    "PaymentSuccess": PaymentSuccess,
+    "PaymentCancelled": PaymentCancelled,
 }
 
 export const pagesConfig = {
