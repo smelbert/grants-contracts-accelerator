@@ -1,158 +1,303 @@
 import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { 
+  Users, 
+  MessageSquare, 
+  TrendingUp, 
+  Building2, 
+  Briefcase, 
+  Rocket, 
+  GraduationCap, 
+  MessageCircle,
+  Plus,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Users, Calendar, MessageSquare, Info } from 'lucide-react';
-import CommunityGroupCard from '@/components/community/CommunityGroupCard';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import AIMemberConnections from '@/components/community/AIMemberConnections';
+import AIDiscussionPrompts from '@/components/community/AIDiscussionPrompts';
+import SuggestSpaceButton from '@/components/community/SuggestSpaceButton';
+
+const iconMap = {
+  Building2,
+  Briefcase,
+  Rocket,
+  GraduationCap,
+  MessageCircle,
+  Users
+};
 
 export default function CommunityPage() {
-  const [selectedStage, setSelectedStage] = useState('all');
+  const [selectedSpace, setSelectedSpace] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: organizations } = useQuery({
-    queryKey: ['organizations', user?.email],
-    queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),
-    enabled: !!user?.email,
+  const { data: spaces = [], isLoading } = useQuery({
+    queryKey: ['communitySpaces'],
+    queryFn: () => base44.entities.CommunitySpace.filter({ is_active: true }, 'display_order'),
   });
 
-  const { data: groups, isLoading } = useQuery({
-    queryKey: ['communityGroups'],
-    queryFn: () => base44.entities.CommunityGroup.filter({ is_active: true }),
+  const { data: recentDiscussions = [] } = useQuery({
+    queryKey: ['recentDiscussions', selectedSpace?.id],
+    queryFn: () => base44.entities.Discussion.filter(
+      selectedSpace ? { space_id: selectedSpace.id } : {},
+      '-created_date',
+      5
+    ),
+    enabled: !!selectedSpace,
   });
 
-  const organization = organizations?.[0];
-
-  const filteredGroups = (groups || []).filter(group => {
-    if (selectedStage === 'all') return true;
-    return group.target_stage === selectedStage;
+  const { data: userActivity = [] } = useQuery({
+    queryKey: ['userActivity', user?.email],
+    queryFn: () => base44.entities.UserActivity.filter(
+      { user_email: user.email },
+      '-created_date',
+      10
+    ),
+    enabled: !!user,
   });
 
-  const handleJoinGroup = (group) => {
-    // In a real app, this would handle group joining logic
-    console.log('Joining group:', group.name);
-  };
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#143A50]"></div>
+      </div>
+    );
+  }
+
+  const organizationSpaces = spaces.filter(s => 
+    ['Building2', 'Briefcase', 'Rocket'].includes(s.icon)
+  );
+  
+  const engagementSpaces = spaces.filter(s => 
+    ['GraduationCap', 'MessageCircle'].includes(s.icon)
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
-      <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <Users className="w-6 h-6 text-amber-600" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[#E5C089]/5">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Users className="w-8 h-8 text-[#E5C089]" />
+                <h1 className="text-4xl font-bold">Community Spaces</h1>
+              </div>
+              <p className="text-lg text-[#E5C089]/80 max-w-2xl">
+                Connect with peers, share insights, and grow together in spaces designed for your organization type and learning goals
+              </p>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-              Community & Coaching
-            </h1>
+            <SuggestSpaceButton />
           </div>
-          <p className="text-slate-500">
-            Connect with peers and coaches at your stage
-          </p>
-        </motion.div>
 
-        {/* Purpose Notice */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
-          <Alert className="bg-amber-50 border-amber-200">
-            <Info className="w-4 h-4 text-amber-600" />
-            <AlertDescription className="text-amber-700">
-              Our community spaces are purpose-driven—focused on funding readiness, peer review, 
-              and skill-building. Every session connects back to your goals.
-            </AlertDescription>
-          </Alert>
-        </motion.div>
+          {/* Quick Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <Users className="w-5 h-5 text-[#E5C089]" />
+                <div>
+                  <p className="text-2xl font-bold">{spaces.reduce((acc, s) => acc + (s.member_count || 0), 0)}</p>
+                  <p className="text-sm text-[#E5C089]/70">Active Members</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-5 h-5 text-[#E5C089]" />
+                <div>
+                  <p className="text-2xl font-bold">{spaces.reduce((acc, s) => acc + (s.content_count || 0), 0)}</p>
+                  <p className="text-sm text-[#E5C089]/70">Discussions</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+              <div className="flex items-center gap-3">
+                <Sparkles className="w-5 h-5 text-[#E5C089]" />
+                <div>
+                  <p className="text-2xl font-bold">AI-Powered</p>
+                  <p className="text-sm text-[#E5C089]/70">Smart Insights</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        {/* Stage Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
-        >
-          <Tabs value={selectedStage} onValueChange={setSelectedStage}>
-            <TabsList className="bg-white border border-slate-200 p-1">
-              <TabsTrigger value="all" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white">
-                All Stages
-              </TabsTrigger>
-              <TabsTrigger value="idea" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white">
-                Idea Stage
-              </TabsTrigger>
-              <TabsTrigger value="early" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white">
-                Early Stage
-              </TabsTrigger>
-              <TabsTrigger value="operating" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white">
-                Operating
-              </TabsTrigger>
-              <TabsTrigger value="scaling" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white">
-                Scaling
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </motion.div>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <Tabs defaultValue="organization" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="organization">Organization Types</TabsTrigger>
+            <TabsTrigger value="engagement">Learning & Coaching</TabsTrigger>
+            <TabsTrigger value="all">All Spaces</TabsTrigger>
+          </TabsList>
 
-        {/* Groups Grid */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
-          </div>
-        ) : filteredGroups.length === 0 ? (
-          <div className="text-center py-12">
-            <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500">No groups available for this stage yet.</p>
-            <p className="text-sm text-slate-400 mt-1">Check back soon!</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredGroups.map((group, index) => (
-              <motion.div
-                key={group.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <CommunityGroupCard
-                  group={group}
-                  isEligible={!organization || organization.stage === group.target_stage}
-                  onJoin={handleJoinGroup}
-                />
-              </motion.div>
-            ))}
-          </div>
-        )}
+          {/* Organization Types Tab */}
+          <TabsContent value="organization">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              {organizationSpaces.map((space, idx) => {
+                const Icon = iconMap[space.icon] || Users;
+                return (
+                  <motion.div
+                    key={space.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <Card 
+                      className="h-full hover:shadow-xl transition-all cursor-pointer border-2 hover:border-[#143A50]/30"
+                      onClick={() => setSelectedSpace(space)}
+                    >
+                      <CardHeader>
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#143A50] to-[#1E4F58] flex items-center justify-center">
+                            <Icon className="w-6 h-6 text-white" />
+                          </div>
+                          <Badge variant="outline" className="text-[#143A50]">
+                            {space.member_count || 0} members
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-xl">{space.space_name}</CardTitle>
+                        <CardDescription className="text-sm leading-relaxed">
+                          {space.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                          <Button className="w-full bg-[#143A50] hover:bg-[#1E4F58]">
+                            Enter Space
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </Button>
+                        </Link>
+                        <div className="flex items-center justify-between mt-3 text-sm text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <MessageSquare className="w-4 h-4" />
+                            {space.content_count || 0} posts
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <TrendingUp className="w-4 h-4" />
+                            Active
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
 
-        {/* Upcoming Events Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-12"
-        >
-          <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-slate-600" />
-            Upcoming Sessions
-          </h2>
-          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
-            <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500">No upcoming sessions scheduled.</p>
-            <p className="text-sm text-slate-400 mt-1">
-              Join a group to see scheduled sessions.
-            </p>
-          </div>
-        </motion.div>
+            {/* AI Suggestions for Organization Spaces */}
+            {user && organizationSpaces.length > 0 && (
+              <AIMemberConnections 
+                spaceId={organizationSpaces[0].id}
+                currentUserEmail={user.email}
+              />
+            )}
+          </TabsContent>
+
+          {/* Learning & Coaching Tab */}
+          <TabsContent value="engagement">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {engagementSpaces.map((space, idx) => {
+                const Icon = iconMap[space.icon] || Users;
+                return (
+                  <motion.div
+                    key={space.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <Card className="h-full hover:shadow-xl transition-all border-2 hover:border-[#AC1A5B]/30">
+                      <CardHeader>
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#AC1A5B] to-[#A65D40] flex items-center justify-center">
+                            <Icon className="w-6 h-6 text-white" />
+                          </div>
+                          <Badge className="bg-[#E5C089] text-[#143A50]">
+                            {space.visibility === 'members_only' ? 'Members Only' : 'Open'}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-xl">{space.space_name}</CardTitle>
+                        <CardDescription className="text-sm leading-relaxed">
+                          {space.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                          <Button className="w-full bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90">
+                            Join Conversation
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* AI Discussion Prompts for Learning/Coaching Spaces */}
+            {engagementSpaces.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {engagementSpaces.map(space => (
+                  <AIDiscussionPrompts 
+                    key={space.id}
+                    spaceType={space.space_type}
+                    spaceName={space.space_name}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* All Spaces Tab */}
+          <TabsContent value="all">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {spaces.map((space, idx) => {
+                const Icon = iconMap[space.icon] || Users;
+                return (
+                  <motion.div
+                    key={space.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: idx * 0.05 }}
+                  >
+                    <Card className="h-full hover:shadow-lg transition-all">
+                      <CardHeader>
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                            <Icon className="w-5 h-5 text-[#143A50]" />
+                          </div>
+                          <CardTitle className="text-lg">{space.space_name}</CardTitle>
+                        </div>
+                        <CardDescription className="text-sm line-clamp-2">
+                          {space.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                          <Button variant="outline" className="w-full">
+                            View Space
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
