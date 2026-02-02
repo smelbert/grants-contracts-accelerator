@@ -115,46 +115,46 @@ export default function AboutEISPage() {
                 <Sparkles className="w-4 h-4" />
                 Founder & Lead Consultant
               </div>
-              <h2 className="text-4xl font-bold text-slate-900 mb-6">Meet Dr. Elbert</h2>
+              <h2 className="text-4xl font-bold text-slate-900 mb-6">Meet Dr. Shawnté Elbert</h2>
               
               <div className="space-y-4 text-lg text-slate-600 leading-relaxed">
                 <p>
-                  Dr. Elbert brings over 20 years of expertise in nonprofit management, grant writing, and organizational development. With a Ph.D. in Nonprofit Leadership and Organizational Psychology, she has dedicated her career to helping organizations transform their funding strategies and build sustainable capacity.
+                  Dr. Shawnté Elbert is a dynamic leader with a distinctive mix of experience in public health, higher education, and leadership development. Through Elbert Innovative Solutions (EIS) and Dr. E Speaks!, she believes that everyone is perfectly positioned for transformation.
                 </p>
                 <p>
-                  Her journey began in the trenches of grassroots organizing, where she witnessed firsthand the challenges nonprofits face in securing resources. This experience ignited her passion for democratizing access to funding expertise and creating systems that work for organizations at every stage of development.
+                  With a personalized, evidence-based approach, Dr. Elbert delivers comprehensive solutions that place your goals and well-being at the core of every interaction. Her strategies are grounded in research and data, ensuring that the guidance provided is both reliable and impactful.
                 </p>
                 <p>
-                  As a former program officer for major foundations and a grant writing consultant for Fortune 500 corporate giving programs, Dr. Elbert understands funding from both sides of the table. This unique perspective enables her to guide organizations in crafting compelling narratives that resonate with funders while staying true to their mission.
+                  From strategic consulting and grant writing to executive wellness programs and powerful speaking engagements, Dr. Elbert uses words to heal and inspire, helping individuals and organizations thrive. Her work spans higher education, public health, DEIB initiatives, and organizational development—empowering leaders to create lasting impact.
                 </p>
               </div>
 
               <div className="mt-8 space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#E5C089]/30 flex items-center justify-center flex-shrink-0">
-                    <GraduationCap className="w-5 h-5 text-[#143A50]" />
+                    <Users className="w-5 h-5 text-[#143A50]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900">Education</h4>
-                    <p className="text-sm text-slate-600">Ph.D. in Nonprofit Leadership and Organizational Psychology</p>
+                    <h4 className="font-semibold text-slate-900">Multifaceted Expertise</h4>
+                    <p className="text-sm text-slate-600">Distinctive mix of experience in public health, higher education, and leadership</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#AC1A5B]/20 flex items-center justify-center flex-shrink-0">
-                    <Award className="w-5 h-5 text-[#AC1A5B]" />
+                    <Target className="w-5 h-5 text-[#AC1A5B]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900">Recognition</h4>
-                    <p className="text-sm text-slate-600">Named "Top 50 Nonprofit Consultants" by Nonprofit Times</p>
+                    <h4 className="font-semibold text-slate-900">Evidence-Based Approach</h4>
+                    <p className="text-sm text-slate-600">Strategies grounded in research and data for reliable, impactful results</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#1E4F58]/20 flex items-center justify-center flex-shrink-0">
-                    <BookOpen className="w-5 h-5 text-[#1E4F58]" />
+                    <Heart className="w-5 h-5 text-[#1E4F58]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-slate-900">Author</h4>
-                    <p className="text-sm text-slate-600">Published author of "Strategic Funding for Social Impact"</p>
+                    <h4 className="font-semibold text-slate-900">Personalized Experience</h4>
+                    <p className="text-sm text-slate-600">Deeply personalized approach with your goals and well-being at the core</p>
                   </div>
                 </div>
               </div>
@@ -162,12 +162,16 @@ export default function AboutEISPage() {
 
             <div className="order-1 lg:order-2">
               <div className="relative">
-                <div className="aspect-[3/4] bg-gradient-to-br from-[#E5C089]/30 to-[#B5A698]/30 rounded-2xl"></div>
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/db3464ad4_Dreamwave-Photo9.png"
+                  alt="Dr. Shawnté Elbert"
+                  className="aspect-[3/4] object-cover rounded-2xl shadow-lg"
+                />
                 <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl border border-[#E5C089] max-w-xs">
                   <p className="text-sm font-medium text-slate-900 mb-2">
-                    "Every nonprofit deserves the tools and support to secure the funding that fuels their mission."
+                    "Perfectly Positioned to Empower, Lead, and Thrive."
                   </p>
-                  <p className="text-xs text-[#143A50]">- Dr. Elbert</p>
+                  <p className="text-xs text-[#143A50]">- Dr. Shawnté Elbert</p>
                 </div>
               </div>
             </div>
