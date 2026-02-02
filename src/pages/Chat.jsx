@@ -28,13 +28,25 @@ export default function ChatPage() {
   });
 
   return (
-    <div className="h-screen bg-slate-50 flex">
-      {/* Channels Sidebar */}
-      <div className="w-64 bg-slate-800 text-white p-4">
-        <h2 className="font-bold mb-4 flex items-center gap-2">
-          <MessageCircle className="w-5 h-5" />
-          Channels
-        </h2>
+    <div className="h-screen bg-slate-50 flex flex-col">
+      {/* Header */}
+      <div className="bg-white border-b px-6 py-4">
+        <div className="flex items-center gap-3">
+          <MessageCircle className="w-6 h-6 text-emerald-600" />
+          <div>
+            <h1 className="text-xl font-bold text-slate-900">Direct Messages</h1>
+            <p className="text-sm text-slate-600">Private conversations with other members</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex overflow-hidden">
+        {/* Channels Sidebar */}
+        <div className="w-64 bg-slate-800 text-white p-4 overflow-y-auto">
+          <h2 className="font-bold mb-4 flex items-center gap-2">
+            <MessageCircle className="w-5 h-5" />
+            Conversations
+          </h2>
         <div className="space-y-1">
           {channels.map(channel => (
             <button
@@ -51,15 +63,18 @@ export default function ChatPage() {
         </div>
       </div>
 
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {selectedChannel ? (
-          <>
-            <div className="border-b bg-white p-4">
-              <h2 className="font-bold">
-                {channels.find(c => c.id === selectedChannel)?.channel_name}
-              </h2>
-            </div>
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col bg-white">
+          {selectedChannel ? (
+            <>
+              <div className="border-b bg-white p-4">
+                <h2 className="font-bold">
+                  {channels.find(c => c.id === selectedChannel)?.channel_name}
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  {channels.find(c => c.id === selectedChannel)?.channel_type === 'direct_message' ? 'Direct Message' : 'Group Chat'}
+                </p>
+              </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map(msg => (
                 <div key={msg.id} className="flex gap-3">
@@ -89,11 +104,16 @@ export default function ChatPage() {
               </div>
             </div>
           </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-slate-500">
-            Select a channel to start chatting
-          </div>
-        )}
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <MessageCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">Your Direct Messages</h3>
+                <p className="text-slate-500">Select a conversation to start messaging</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
