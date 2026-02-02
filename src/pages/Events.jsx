@@ -9,7 +9,7 @@ import { Calendar, MapPin, Users, Video, Clock, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import RSVPButton from '@/components/events/RSVPButton';
-import { hasPermission, PERMISSIONS } from '@/lib/permissions';
+import { hasPermission, PERMISSIONS } from '@/components/lib/permissions';
 
 export default function EventsPage() {
   const { data: events = [] } = useQuery({
