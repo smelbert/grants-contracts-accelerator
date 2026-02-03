@@ -129,6 +129,8 @@ import IncubateHerOverview from './pages/IncubateHerOverview';
 import IncubateHerSchedule from './pages/IncubateHerSchedule';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
 import IncubateHerParticipants from './pages/IncubateHerParticipants';
+import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
+import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import __Layout from './Layout.jsx';
 
 
@@ -215,6 +217,8 @@ export const PAGES = {
     "IncubateHerSchedule": IncubateHerSchedule,
     "IncubateHerAdmin": IncubateHerAdmin,
     "IncubateHerParticipants": IncubateHerParticipants,
+    "IncubateHerPreAssessment": IncubateHerPreAssessment,
+    "IncubateHerPostAssessment": IncubateHerPostAssessment,
 }
 
 export const pagesConfig = {
