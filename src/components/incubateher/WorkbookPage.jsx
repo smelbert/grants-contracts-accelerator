@@ -5,7 +5,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Lightbulb, Target, CheckSquare } from 'lucide-react';
+import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp } from 'lucide-react';
+import PersonalizedGuidance from './PersonalizedGuidance';
 
 const PageTypeIcon = ({ type }) => {
   const icons = {
@@ -32,7 +33,7 @@ const PageTypeBadge = ({ type }) => {
   );
 };
 
-export default function WorkbookPage({ page, responses, onResponseChange }) {
+export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults }) {
   const handleFieldChange = (fieldId, value) => {
     onResponseChange(page.id, fieldId, value);
   };
@@ -88,6 +89,58 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
 
       {/* Content Area with Full-Page Layout */}
       <div className="px-12 py-8 space-y-8" style={{ minHeight: '900px' }}>
+
+        {/* Personalized Guidance Based on Assessment */}
+        <PersonalizedGuidance 
+          assessmentResults={assessmentResults}
+          currentSection={page.section}
+        />
+
+        {/* Key Takeaways Callout */}
+        {page.takeaways && (
+          <div className="relative">
+            <div className="absolute -left-4 top-0 w-1 h-full bg-[#143A50]" />
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-300 rounded-xl p-6 shadow-md">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                  <Lightbulb className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-blue-900">Key Takeaways</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-blue-900 ml-13">
+                {page.takeaways.map((takeaway, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <CheckSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <span>{takeaway}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* Action Items Callout */}
+        {page.actionItems && (
+          <div className="relative">
+            <div className="absolute -left-4 top-0 w-1 h-full bg-[#E5C089]" />
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 rounded-xl p-6 shadow-md">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-amber-900">Action Items</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-amber-900 ml-13">
+                {page.actionItems.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="text-amber-600 font-bold mt-0.5">→</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         {/* Video Content with Enhanced Callout */}
         {page.video_url && (

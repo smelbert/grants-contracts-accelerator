@@ -47,6 +47,20 @@ export default function IncubateHerWorkbook() {
     enabled: !!user?.email && !!cohort?.id
   });
 
+  // Load assessment results for personalized guidance
+  const { data: assessmentResults } = useQuery({
+    queryKey: ['assessment-results', enrollment?.id],
+    queryFn: async () => {
+      if (!enrollment?.id) return null;
+      const assessments = await base44.entities.ProgramAssessment.filter({
+        enrollment_id: enrollment.id,
+        assessment_type: 'pre'
+      });
+      return assessments[0];
+    },
+    enabled: !!enrollment?.id
+  });
+
   // Load saved responses
   const { data: savedResponses } = useQuery({
     queryKey: ['workbook-responses', enrollment?.id],
@@ -313,6 +327,7 @@ export default function IncubateHerWorkbook() {
           page={currentPage}
           responses={allResponses[currentPage.id] || {}}
           onResponseChange={handleResponseChange}
+          assessmentResults={assessmentResults}
         />
 
         {/* Navigation Footer */}

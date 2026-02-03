@@ -41,16 +41,35 @@ export default function IncubateHerConsultations() {
   const allChecklistComplete = enrollment?.pre_assessment_completed && 
     Object.values(checklist).every(v => v);
 
-  const bookConsultationMutation = useMutation({
+  const saveChecklistMutation = useMutation({
     mutationFn: async () => {
-      await base44.entities.ProgramEnrollment.update(enrollment.id, {
-        consultation_completed: false,
-        documents_uploaded: !!documentLink
+      // Update or create checklist record
+      const existing = await base44.entities.ConsultationIntakeChecklist.filter({
+        enrollment_id: enrollment.id
       });
+      
+      if (existing.length > 0) {
+        await base44.entities.ConsultationIntakeChecklist.update(existing[0].id, {
+          documents_uploaded: checklist.documents,
+          questions_prepared: checklist.questions,
+          all_items_complete: allChecklistComplete,
+          completed_date: allChecklistComplete ? new Date().toISOString() : null
+        });
+      } else {
+        await base44.entities.ConsultationIntakeChecklist.create({
+          enrollment_id: enrollment.id,
+          participant_email: user.email,
+          pre_assessment_reviewed: enrollment.pre_assessment_completed,
+          documents_uploaded: checklist.documents,
+          questions_prepared: checklist.questions,
+          all_items_complete: allChecklistComplete,
+          completed_date: allChecklistComplete ? new Date().toISOString() : null
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['enrollment']);
-      toast.success('Consultation checklist updated!');
+      toast.success('Checklist saved!');
     }
   });
 
@@ -290,14 +309,28 @@ export default function IncubateHerConsultations() {
                     </p>
                   </div>
                 ) : (
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-[#143A50]"
-                    onClick={() => window.open('https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation', '_blank')}
-                  >
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Schedule on Calendly
-                  </Button>
+                  <>
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        <p className="font-semibold text-green-900">You're Ready to Schedule!</p>
+                      </div>
+                      <p className="text-sm text-green-800">
+                        All checklist items are complete. Click below to book your consultation with Dr. Elbert.
+                      </p>
+                    </div>
+                    <Button 
+                      size="lg" 
+                      className="w-full bg-[#143A50]"
+                      onClick={async () => {
+                        await saveChecklistMutation.mutateAsync();
+                        window.open('https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation', '_blank');
+                      }}
+                    >
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Schedule on Calendly
+                    </Button>
+                  </>
                 )}
               </CardContent>
             </Card>
