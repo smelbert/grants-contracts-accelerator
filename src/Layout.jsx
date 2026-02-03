@@ -67,7 +67,7 @@ const getUserPortalNav = () => [
   {
     groupName: 'Learning',
     items: [
-      { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning' },
+      { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning', requiresAccess: 'learning_hub' },
       { name: 'Live Sessions / Events', page: 'Calendar', icon: Calendar },
     ]
   },
@@ -180,7 +180,7 @@ const getAdminPortalNav = () => [
   },
 ];
 
-const getNavItems = (portalView) => {
+const getNavItems = (portalView, userAccess) => {
   // All portals now return grouped arrays
   if (portalView === 'coach') {
     const items = getCoachPortalNav();
@@ -189,7 +189,18 @@ const getNavItems = (portalView) => {
   if (portalView === 'admin') {
     return getAdminPortalNav();
   }
-  return getUserPortalNav();
+  
+  // Filter user portal items based on access
+  const userNav = getUserPortalNav();
+  if (!userAccess || userAccess.learning_hub_access) {
+    return userNav;
+  }
+  
+  // Filter out Learning Hub if access is disabled
+  return userNav.map(group => ({
+    ...group,
+    items: group.items.filter(item => item.requiresAccess !== 'learning_hub')
+  })).filter(group => group.items.length > 0);
 };
 
 export default function Layout({ children, currentPageName }) {
@@ -203,13 +214,25 @@ export default function Layout({ children, currentPageName }) {
     queryFn: () => base44.auth.me(),
   });
 
+  const { data: userAccess } = useQuery({
+    queryKey: ['userAccess', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const access = await base44.entities.UserAccessLevel.filter({
+        user_email: user.email
+      });
+      return access[0];
+    },
+    enabled: !!user?.email
+  });
+
   const handlePortalChange = (view) => {
     setPortalView(view);
     localStorage.setItem('portalView', view);
   };
 
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
-  const navItems = getNavItems(effectiveRole);
+  const navItems = getNavItems(effectiveRole, userAccess);
 
   // Show onboarding flow for all users
   const showOnboardingFlow = user && currentPageName !== 'CoachProfileSetup';

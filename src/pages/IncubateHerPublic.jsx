@@ -38,6 +38,24 @@ export default function IncubateHerPublic() {
         });
       }
 
+      // Get or create IncubateHer community space
+      const spaces = await base44.entities.CommunitySpace.filter({
+        slug: 'incubateher'
+      });
+      
+      let communitySpace = spaces[0];
+      if (!communitySpace) {
+        communitySpace = await base44.entities.CommunitySpace.create({
+          space_name: 'IncubateHer Program',
+          slug: 'incubateher',
+          description: 'Exclusive community for IncubateHer – Funding Readiness participants',
+          space_type: 'posts',
+          visibility: 'private',
+          icon: 'Target',
+          is_active: true
+        });
+      }
+
       // Create enrollment
       await base44.entities.ProgramEnrollment.create({
         cohort_id: cohort.id,
@@ -46,11 +64,31 @@ export default function IncubateHerPublic() {
         role: 'participant'
       });
 
+      // Set up user access level - full platform except Learning Hub
+      const existingAccess = await base44.entities.UserAccessLevel.filter({
+        user_email: data.email
+      });
+
+      if (existingAccess.length > 0) {
+        await base44.entities.UserAccessLevel.update(existingAccess[0].id, {
+          access_level: 'full_platform',
+          entry_point: 'incubateher_program',
+          allowed_community_spaces: [communitySpace.id]
+        });
+      } else {
+        await base44.entities.UserAccessLevel.create({
+          user_email: data.email,
+          access_level: 'full_platform',
+          entry_point: 'incubateher_program',
+          allowed_community_spaces: [communitySpace.id]
+        });
+      }
+
       // Send welcome email
       await base44.integrations.Core.SendEmail({
         to: data.email,
         subject: 'Welcome to IncubateHer Funding Readiness Program',
-        body: `Hi ${data.name},\n\nWelcome to the IncubateHer Funding Readiness Program!\n\nYou're now enrolled in this transformative program funded by Columbus Urban League and delivered by Elbert Innovative Solutions.\n\nNext Steps:\n1. Log in to the platform to complete your pre-assessment\n2. Choose your schedule option\n3. Access your program materials\n\nWe're excited to support your funding readiness journey!\n\nBest regards,\nElbert Innovative Solutions Team`
+        body: `Hi ${data.name},\n\nWelcome to the IncubateHer Funding Readiness Program!\n\nYou're now enrolled in this transformative program funded by Columbus Urban League and delivered by Elbert Innovative Solutions.\n\nNext Steps:\n1. Log in to the platform to complete your pre-assessment\n2. Choose your schedule option\n3. Access your program materials\n\nYou now have full access to:\n- IncubateHer community space\n- Projects and documents workspace\n- Templates and resources\n- Funding opportunities library\n- Direct messaging\n\nWe're excited to support your funding readiness journey!\n\nBest regards,\nElbert Innovative Solutions Team`
       });
 
       return { success: true };
