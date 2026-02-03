@@ -161,10 +161,10 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
                 Complete each field below. Your responses are automatically saved as you type.
               </p>
               <div className="space-y-6">
-            {page.fields.map((field) => {
-              const fieldValue = responses?.[field.id] || '';
+                {page.fields.map((field) => {
+                  const fieldValue = responses?.[field.id] || '';
 
-              switch (field.type) {
+                  switch (field.type) {
                 case 'textarea':
                   return (
                     <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
@@ -306,10 +306,11 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
                     </div>
                   );
 
-                default:
-                  return null;
-              }
-            })}
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
             </div>
           </div>
         )}
