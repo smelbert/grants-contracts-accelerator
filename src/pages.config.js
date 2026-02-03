@@ -69,6 +69,7 @@ import Community from './pages/Community';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
 import Documents from './pages/Documents';
+import DynamicRegistration from './pages/DynamicRegistration';
 import EmailHub from './pages/EmailHub';
 import EthicsCompliance from './pages/EthicsCompliance';
 import Events from './pages/Events';
@@ -90,6 +91,8 @@ import MyClassroom from './pages/MyClassroom';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
+import PaymentCancelled from './pages/PaymentCancelled';
+import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformSettings from './pages/PlatformSettings';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
@@ -102,25 +105,22 @@ import ReadinessChecklists from './pages/ReadinessChecklists';
 import ReadinessLogic from './pages/ReadinessLogic';
 import ReadinessStatus from './pages/ReadinessStatus';
 import Register from './pages/Register';
+import RegistrationBuilder from './pages/RegistrationBuilder';
+import RegistrationFlow from './pages/RegistrationFlow';
+import RegistrationManagement from './pages/RegistrationManagement';
 import ReviewQueue from './pages/ReviewQueue';
+import RoleManagement from './pages/RoleManagement';
 import Settings from './pages/Settings';
 import SpaceManagement from './pages/SpaceManagement';
+import SubscriptionPlans from './pages/SubscriptionPlans';
 import TeachingContent from './pages/TeachingContent';
 import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
+import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import UserProfile from './pages/UserProfile';
-import RegistrationBuilder from './pages/RegistrationBuilder';
-import DynamicRegistration from './pages/DynamicRegistration';
-import RegistrationFlow from './pages/RegistrationFlow';
-import RegistrationManagement from './pages/RegistrationManagement';
-import RoleManagement from './pages/RoleManagement';
-import SubscriptionPlans from './pages/SubscriptionPlans';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentCancelled from './pages/PaymentCancelled';
 import __Layout from './Layout.jsx';
 
 
@@ -147,6 +147,7 @@ export const PAGES = {
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
     "Documents": Documents,
+    "DynamicRegistration": DynamicRegistration,
     "EmailHub": EmailHub,
     "EthicsCompliance": EthicsCompliance,
     "Events": Events,
@@ -168,6 +169,8 @@ export const PAGES = {
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
+    "PaymentCancelled": PaymentCancelled,
+    "PaymentSuccess": PaymentSuccess,
     "PlatformSettings": PlatformSettings,
     "Pricing": Pricing,
     "Profile": Profile,
@@ -180,25 +183,22 @@ export const PAGES = {
     "ReadinessLogic": ReadinessLogic,
     "ReadinessStatus": ReadinessStatus,
     "Register": Register,
+    "RegistrationBuilder": RegistrationBuilder,
+    "RegistrationFlow": RegistrationFlow,
+    "RegistrationManagement": RegistrationManagement,
     "ReviewQueue": ReviewQueue,
+    "RoleManagement": RoleManagement,
     "Settings": Settings,
     "SpaceManagement": SpaceManagement,
+    "SubscriptionPlans": SubscriptionPlans,
     "TeachingContent": TeachingContent,
     "TeamCollaboration": TeamCollaboration,
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
+    "UserProfile": UserProfile,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "UserProfile": UserProfile,
-    "RegistrationBuilder": RegistrationBuilder,
-    "DynamicRegistration": DynamicRegistration,
-    "RegistrationFlow": RegistrationFlow,
-    "RegistrationManagement": RegistrationManagement,
-    "RoleManagement": RoleManagement,
-    "SubscriptionPlans": SubscriptionPlans,
-    "PaymentSuccess": PaymentSuccess,
-    "PaymentCancelled": PaymentCancelled,
 }
 
 export const pagesConfig = {
