@@ -59,79 +59,108 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-      {/* Professional Header with Branding */}
-      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-8 py-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
+    <div className="bg-white shadow-2xl mx-auto" style={{ width: '816px', minHeight: '1056px' }}>
+      {/* Professional Header with Full Branding */}
+      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-12 py-6 border-b-4 border-[#E5C089]">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-6">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/54239c095_image.png" 
+              alt="Columbus Urban League - IncubateHer" 
+              className="h-16"
+            />
+            <div className="h-12 w-px bg-white/30" />
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
               alt="EIS Logo" 
-              className="h-10 bg-white rounded px-2 py-1"
-            />
-            <div className="h-8 w-px bg-white/30" />
-            <img 
-              src="https://columbusfoundation.org/getmedia/41f05a72-5e52-4f0c-920b-6ed7b1a7e25f/ColumbusUrbanLeague-min.jpg" 
-              alt="CUL Logo" 
-              className="h-10 bg-white rounded px-2 py-1"
+              className="h-14 bg-white/10 rounded px-3 py-1"
             />
           </div>
           <PageTypeBadge type={page.type} />
         </div>
-        <div>
+        <div className="border-t border-white/20 pt-3">
           <h2 className="text-2xl font-bold text-white mb-1">{page.title}</h2>
           {page.subtitle && (
-            <p className="text-[#E5C089] text-sm">{page.subtitle}</p>
+            <p className="text-[#E5C089] text-sm font-medium">{page.subtitle}</p>
           )}
         </div>
       </div>
 
-      {/* Content Area with Professional Spacing */}
-      <div className="px-8 py-6 space-y-6">
+      {/* Content Area with Full-Page Layout */}
+      <div className="px-12 py-8 space-y-8" style={{ minHeight: '900px' }}>
 
-        {/* Video Content */}
+        {/* Video Content with Enhanced Callout */}
         {page.video_url && (
-          <div className="bg-slate-50 rounded-lg p-6 border-2 border-[#E5C089]">
-            <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 shadow-lg">
-              {getVideoEmbedUrl(page.video_url)?.startsWith('http') ? (
-                <iframe
-                  src={getVideoEmbedUrl(page.video_url)}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ) : (
-                <video
-                  src={page.video_url}
-                  controls
-                  className="w-full h-full"
-                />
+          <div className="relative">
+            <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
+            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 rounded-xl p-8 border-2 border-[#E5C089] shadow-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#AC1A5B] flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-[#143A50]">📹 Watch & Learn</h3>
+              </div>
+              <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 shadow-xl border-2 border-slate-300">
+                {getVideoEmbedUrl(page.video_url)?.startsWith('http') ? (
+                  <iframe
+                    src={getVideoEmbedUrl(page.video_url)}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <video
+                    src={page.video_url}
+                    controls
+                    className="w-full h-full"
+                  />
+                )}
+              </div>
+              {page.video_description && (
+                <p className="text-sm text-slate-700 mt-4 italic">{page.video_description}</p>
               )}
             </div>
-            {page.video_description && (
-              <p className="text-sm text-slate-600 mt-4">{page.video_description}</p>
-            )}
           </div>
         )}
 
-        {/* Page Content */}
+        {/* Page Content with Educational Styling */}
         {page.content && (
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
+          <div className="bg-white rounded-xl p-8 border-2 border-slate-200 shadow-sm">
             <div 
-              className="prose prose-slate max-w-none prose-headings:text-[#143A50] prose-a:text-[#AC1A5B] prose-strong:text-[#143A50]"
+              className="prose prose-slate max-w-none 
+                prose-headings:text-[#143A50] prose-headings:font-bold prose-headings:mb-4
+                prose-h3:text-xl prose-h3:mt-6 prose-h3:border-b-2 prose-h3:border-[#E5C089] prose-h3:pb-2
+                prose-a:text-[#AC1A5B] prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-[#143A50] prose-strong:font-bold
+                prose-ul:space-y-2 prose-ul:my-4
+                prose-li:text-slate-700 prose-li:leading-relaxed
+                prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-4
+                prose-table:border-collapse prose-table:w-full
+                prose-th:bg-[#143A50] prose-th:text-white prose-th:p-3 prose-th:text-left prose-th:font-semibold
+                prose-td:border prose-td:border-slate-300 prose-td:p-3
+                prose-blockquote:border-l-4 prose-blockquote:border-[#E5C089] prose-blockquote:bg-[#E5C089]/5 prose-blockquote:pl-4 prose-blockquote:py-2"
               dangerouslySetInnerHTML={{ __html: page.content }}
             />
           </div>
         )}
 
-        {/* Interactive Fields */}
+        {/* Interactive Fields with Educational Callout */}
         {page.fields && page.fields.length > 0 && (
-          <div className="bg-[#E5C089]/10 border-2 border-[#E5C089] rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#E5C089]">
-              <CheckSquare className="w-6 h-6 text-[#143A50]" />
-              <h3 className="text-xl font-bold text-[#143A50]">Your Responses</h3>
-            </div>
-            <div className="space-y-6">
+          <div className="relative">
+            <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
+            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 border-2 border-[#E5C089] rounded-xl p-8 shadow-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-[#143A50] flex items-center justify-center">
+                  <CheckSquare className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-[#143A50]">Fill In Your Responses</h3>
+              </div>
+              <p className="text-sm text-slate-600 italic mb-6 pl-13">
+                Complete each field below. Your responses are automatically saved as you type.
+              </p>
+              <div className="space-y-6">
             {page.fields.map((field) => {
               const fieldValue = responses?.[field.id] || '';
 
@@ -286,11 +315,13 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
         )}
       </div>
 
-      {/* Professional Footer */}
-      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-8 py-4">
+      {/* Professional Footer with Page Info */}
+      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-12 py-4 border-t-4 border-[#E5C089] mt-auto">
         <div className="flex items-center justify-between text-sm">
-          <div className="text-white/80">
-            <span className="font-semibold text-white">IncubateHer</span> | Funding Readiness: Preparing for Grants & Contracts
+          <div className="text-white/90">
+            <span className="font-bold text-white">IncubateHer</span>
+            <span className="text-white/60 mx-2">|</span>
+            <span className="text-[#E5C089]">Funding Readiness: Preparing for Grants & Contracts</span>
           </div>
           <div className="text-white/60 text-xs">
             Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions
