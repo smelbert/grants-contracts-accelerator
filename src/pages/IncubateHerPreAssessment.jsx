@@ -151,6 +151,16 @@ export default function IncubateHerPreAssessment() {
           pre_assessment_date: new Date().toISOString(),
           pre_assessment_score: data.total_score
         });
+
+        // Automatically send consultation invitation email
+        try {
+          await base44.functions.invoke('sendConsultationInvite', {
+            enrollment_id: enrollment.id
+          });
+        } catch (emailError) {
+          console.error('Failed to send consultation invite email:', emailError);
+          // Continue even if email fails
+        }
       }
       
       return assessment;

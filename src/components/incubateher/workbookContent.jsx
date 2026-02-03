@@ -82,6 +82,15 @@ export const WORKBOOK_PAGES = [
     type: 'handout',
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     video_description: 'Expert explanation: Understanding the key differences between grants and contracts',
+    takeaways: [
+      'Grants fund your mission and provide more flexibility',
+      'Contracts pay for specific deliverables with strict requirements',
+      'Understanding the difference helps you choose the right pathway'
+    ],
+    actionItems: [
+      'Review your business structure and determine which pathway aligns best',
+      'Assess your current capacity for each type of funding'
+    ],
     content: `
       <table class="w-full border-collapse mb-4 text-sm">
         <thead>
@@ -162,6 +171,15 @@ export const WORKBOOK_PAGES = [
     section: 'readiness',
     title: 'What "Funding Ready" Actually Means',
     type: 'handout',
+    takeaways: [
+      'Funding readiness requires systems, documentation, and capacity—not just passion',
+      'Legal, financial, and organizational foundations are all critical',
+      'Build these systems before pursuing major funding opportunities'
+    ],
+    actionItems: [
+      'Complete the readiness self-assessment honestly',
+      'Identify your top 2-3 readiness gaps to address first'
+    ],
     content: `
       <p class="mb-4 text-sm">Funding readiness = <strong>systems, documentation, capacity</strong> (not passion or need)</p>
       
