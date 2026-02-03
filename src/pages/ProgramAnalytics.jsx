@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { 
   TrendingUp, Users, Award, FileText, Download, 
-  CheckCircle2, Clock, Target, BookOpen, MessageSquare
+  CheckCircle2, Clock, Target, BookOpen, MessageSquare, Sparkles
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -19,6 +19,8 @@ const COLORS = ['#143A50', '#AC1A5B', '#E5C089', '#A65D40', '#1E4F58', '#B5A698'
 
 export default function ProgramAnalyticsPage() {
   const [dateRange, setDateRange] = useState('all');
+  const [aiNarrative, setAiNarrative] = useState(null);
+  const [generatingNarrative, setGeneratingNarrative] = useState(false);
 
   const { data: enrollments } = useQuery({
     queryKey: ['all-enrollments'],
@@ -130,9 +132,49 @@ export default function ProgramAnalyticsPage() {
     };
   }) || [];
 
+  const generateAINarrative = async () => {
+    setGeneratingNarrative(true);
+    try {
+      const prompt = `You are a program evaluation expert. Analyze this program data and create a compelling narrative report for administrators and funders.
+
+DATA:
+- Total Enrollments: ${totalEnrollments}
+- Completion Rate: ${completionRate}%
+- Average Score Improvement: +${averageImprovement} points
+- Pre-Assessment Average: ${avgPreScore}
+- Post-Assessment Average: ${avgPostScore}
+- Active Projects: ${activeProjects}
+- Documents Created: ${totalDocuments}
+- Community Posts: ${communityPosts}
+- Participants with complete data: ${assessmentPairs.length}
+
+Create a narrative report with:
+1. Executive Summary (2-3 sentences)
+2. Key Findings (3-4 bullet points)
+3. Impact Analysis (explain what the numbers mean)
+4. Trends & Insights (what patterns emerge)
+5. Recommendations (next steps based on data)
+
+Write professionally but accessibly. Focus on the story the data tells about participant transformation and program effectiveness.`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: prompt,
+        add_context_from_internet: false
+      });
+
+      setAiNarrative(response);
+      toast.success('AI narrative generated successfully');
+    } catch (error) {
+      toast.error('Failed to generate narrative');
+    } finally {
+      setGeneratingNarrative(false);
+    }
+  };
+
   const handleExportReport = () => {
     const report = {
       generated_at: new Date().toISOString(),
+      ai_narrative: aiNarrative,
       summary: {
         total_enrollments: totalEnrollments,
         completion_rate: completionRate + '%',
@@ -175,10 +217,20 @@ export default function ProgramAnalyticsPage() {
               Comprehensive insights into program performance, engagement, and impact
             </p>
           </div>
-          <Button onClick={handleExportReport} className="bg-[#143A50]">
-            <Download className="w-4 h-4 mr-2" />
-            Export Report
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={generateAINarrative} 
+              disabled={generatingNarrative}
+              className="bg-[#AC1A5B]"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              {generatingNarrative ? 'Generating...' : 'AI Narrative'}
+            </Button>
+            <Button onClick={handleExportReport} className="bg-[#143A50]">
+              <Download className="w-4 h-4 mr-2" />
+              Export Report
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -240,6 +292,23 @@ export default function ProgramAnalyticsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI Narrative Report */}
+      {aiNarrative && (
+        <Card className="bg-gradient-to-br from-[#AC1A5B]/10 to-[#E5C089]/10 border-[#AC1A5B]">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-[#AC1A5B]" />
+              <CardTitle>AI-Generated Impact Narrative</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="prose prose-slate max-w-none">
+              <div className="whitespace-pre-wrap text-slate-700">{aiNarrative}</div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Tabs defaultValue="performance" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">

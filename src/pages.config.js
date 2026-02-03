@@ -134,6 +134,7 @@ import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPublic from './pages/IncubateHerPublic';
 import LearningHubAccess from './pages/LearningHubAccess';
 import ProgramAnalytics from './pages/ProgramAnalytics';
+import ProgramManagement from './pages/ProgramManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -225,6 +226,7 @@ export const PAGES = {
     "IncubateHerPublic": IncubateHerPublic,
     "LearningHubAccess": LearningHubAccess,
     "ProgramAnalytics": ProgramAnalytics,
+    "ProgramManagement": ProgramManagement,
 }
 
 export const pagesConfig = {
