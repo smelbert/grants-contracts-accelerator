@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CheckCircle2, Calendar, MapPin, Clock, DollarSign } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import WorkshopCheckout from '@/components/payments/WorkshopCheckout';
+import CoachingCheckout from '@/components/payments/CoachingCheckout';
 
 export default function DynamicRegistration() {
   const [registrationData, setRegistrationData] = useState({
@@ -19,6 +21,7 @@ export default function DynamicRegistration() {
     answers: {}
   });
   const [submitted, setSubmitted] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
   
   const slug = window.location.pathname.split('/register/')[1];
 
@@ -64,7 +67,14 @@ export default function DynamicRegistration() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    submitRegistration.mutate(registrationData);
+    
+    // If payment required, show payment component
+    if (registrationPage.pricing?.type !== 'free') {
+      setShowPayment(true);
+    } else {
+      // Free registration - submit directly
+      submitRegistration.mutate(registrationData);
+    }
   };
 
   if (isLoading) {
@@ -177,14 +187,43 @@ export default function DynamicRegistration() {
           </Card>
         )}
 
+        {/* Payment Section */}
+        {showPayment && (
+          <div className="mb-8">
+            {registrationPage.registration_type === 'workshop' && (
+              <WorkshopCheckout
+                registrationPage={registrationPage}
+                registrationData={registrationData}
+                onSuccess={() => setSubmitted(true)}
+              />
+            )}
+            {registrationPage.registration_type === 'coaching' && (
+              <CoachingCheckout
+                coachingType={registrationPage.registration_type}
+                userEmail={registrationData.user_email}
+                userName={registrationData.user_name}
+                onSuccess={() => setSubmitted(true)}
+              />
+            )}
+            <Button
+              variant="outline"
+              onClick={() => setShowPayment(false)}
+              className="w-full mt-4"
+            >
+              Back to Form
+            </Button>
+          </div>
+        )}
+
         {/* Registration Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Register Now</CardTitle>
-            <CardDescription>Complete the form below to secure your spot</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        {!showPayment && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Register Now</CardTitle>
+              <CardDescription>Complete the form below to secure your spot</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>Full Name *</Label>
@@ -272,12 +311,18 @@ export default function DynamicRegistration() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={submitRegistration.isPending}>
-                {submitRegistration.isPending ? 'Processing...' : 'Complete Registration'}
+              <Button 
+                type="submit" 
+                className="w-full bg-[#143A50] hover:bg-[#1E4F58]" 
+                disabled={submitRegistration.isPending}
+              >
+                {submitRegistration.isPending ? 'Processing...' : 
+                 registrationPage.pricing?.type === 'free' ? 'Complete Registration' : 'Proceed to Payment'}
               </Button>
             </form>
           </CardContent>
         </Card>
+        )}
       </div>
     </div>
   );
