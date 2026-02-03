@@ -139,6 +139,11 @@ import IncubateHerReport from './pages/IncubateHerReport';
 import MentorManagement from './pages/MentorManagement';
 import MentorDashboard from './pages/MentorDashboard';
 import MyMentorship from './pages/MyMentorship';
+import IncubateHerAgenda from './pages/IncubateHerAgenda';
+import IncubateHerWorkbook from './pages/IncubateHerWorkbook';
+import IncubateHerConsultations from './pages/IncubateHerConsultations';
+import IncubateHerCompletion from './pages/IncubateHerCompletion';
+import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
 import __Layout from './Layout.jsx';
 
 
@@ -235,6 +240,11 @@ export const PAGES = {
     "MentorManagement": MentorManagement,
     "MentorDashboard": MentorDashboard,
     "MyMentorship": MyMentorship,
+    "IncubateHerAgenda": IncubateHerAgenda,
+    "IncubateHerWorkbook": IncubateHerWorkbook,
+    "IncubateHerConsultations": IncubateHerConsultations,
+    "IncubateHerCompletion": IncubateHerCompletion,
+    "IncubateHerGiveaway": IncubateHerGiveaway,
 }
 
 export const pagesConfig = {
