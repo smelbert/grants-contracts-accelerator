@@ -121,6 +121,9 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import RFPRapidResponse from './pages/RFPRapidResponse';
+import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
+import StrategyReset from './pages/StrategyReset';
 import __Layout from './Layout.jsx';
 
 
@@ -199,6 +202,9 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "RFPRapidResponse": RFPRapidResponse,
+    "GrantReadinessIntensive": GrantReadinessIntensive,
+    "StrategyReset": StrategyReset,
 }
 
 export const pagesConfig = {

@@ -36,7 +36,9 @@ import {
   Calendar,
   MessageSquare,
   MessageCircle,
-  Palette
+  Palette,
+  Target,
+  TrendingUp
 } from 'lucide-react';
 
 // User Portal Navigation with Groups
@@ -131,6 +133,14 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
       { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
+    ]
+  },
+  {
+    groupName: 'Boutique Services',
+    items: [
+      { name: 'RFP Rapid Response', page: 'RFPRapidResponse', icon: Sparkles },
+      { name: 'Grant Readiness Intensive', page: 'GrantReadinessIntensive', icon: Target },
+      { name: 'Strategy Reset', page: 'StrategyReset', icon: TrendingUp },
     ]
   },
   {
