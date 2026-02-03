@@ -211,16 +211,16 @@ export default function IncubateHerWorkbook() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-100">
       <CoBrandedHeader 
-        title="Program Workbook"
-        subtitle="Interactive, fillable, and downloadable"
+        title="Interactive Workbook"
+        subtitle="Your comprehensive funding readiness guide"
       />
 
-      <div className="max-w-5xl mx-auto p-6">
+      <div className="max-w-[900px] mx-auto py-8 space-y-6">
         {/* Controls */}
-        <Card className="mb-6 sticky top-0 z-10 shadow-lg">
-          <CardContent className="pt-6">
+        <Card className="sticky top-0 z-10 shadow-xl border-2 border-[#E5C089]">
+          <CardContent className="py-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Button
@@ -308,16 +308,12 @@ export default function IncubateHerWorkbook() {
           </CardContent>
         </Card>
 
-        {/* Page Content */}
-        <Card>
-          <CardContent className="pt-8">
-            <WorkbookPage
-              page={currentPage}
-              responses={allResponses[currentPage.id] || {}}
-              onResponseChange={handleResponseChange}
-            />
-          </CardContent>
-        </Card>
+        {/* Page Content - No Card Wrapper */}
+        <WorkbookPage
+          page={currentPage}
+          responses={allResponses[currentPage.id] || {}}
+          onResponseChange={handleResponseChange}
+        />
 
         {/* Navigation Footer */}
         <div className="flex justify-between items-center mt-6">
