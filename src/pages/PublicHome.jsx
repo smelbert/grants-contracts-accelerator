@@ -32,6 +32,9 @@ export default function PublicHomePage() {
               <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-[#143A50] font-medium">Home</Link>
               <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-[#143A50] font-medium">About</Link>
               <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">Website</a>
+              <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] hover:text-[#9A1826] font-semibold">
+                IncubateHer
+              </Link>
               <Link to={createPageUrl('Register')}>
                 <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
               </Link>
@@ -241,6 +244,11 @@ export default function PublicHomePage() {
             <Link to={createPageUrl('BoutiqueServices')}>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-[#1E4F58] text-lg px-8">
                 Premium Services
+              </Button>
+            </Link>
+            <Link to={createPageUrl('IncubateHerPublic')}>
+              <Button size="lg" variant="outline" className="border-[#B21F2D] bg-[#B21F2D] text-white hover:bg-[#9A1826] text-lg px-8">
+                IncubateHer Program
               </Button>
             </Link>
             <Link to={createPageUrl('AboutEIS')}>
