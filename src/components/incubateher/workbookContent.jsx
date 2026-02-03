@@ -8,22 +8,10 @@ export const WORKBOOK_PAGES = [
     subtitle: 'Preparing for Grants & Contracts',
     type: 'handout',
     content: `
-      <div class="text-center space-y-6 py-12">
-        <div class="flex justify-center gap-8 mb-8">
-          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" alt="Elbert Innovative Solutions" class="h-16" />
-          <img src="https://columbusfoundation.org/getmedia/41f05a72-5e52-4f0c-920b-6ed7b1a7e25f/ColumbusUrbanLeague-min.jpg" alt="Columbus Urban League" class="h-16" />
-        </div>
-        <h1 class="text-4xl font-bold text-[#143A50]">IncubateHer Funding Readiness Workbook</h1>
-        <h2 class="text-2xl text-[#AC1A5B]">Preparing for Grants & Contracts</h2>
-        <p class="text-lg text-slate-600">Co-branded: Elbert Innovative Solutions × Columbus Urban League</p>
-        <div class="mt-8 space-y-2">
-          <p class="text-slate-700"><strong>Cohort:</strong> <span id="cohort-name">[Cohort Name]</span></p>
-          <p class="text-slate-700"><strong>Program Dates:</strong> <span id="cohort-dates">[Start Date - End Date]</span></p>
-          <p class="text-slate-700"><strong>Lead Facilitator:</strong> <span id="facilitator-name">[Facilitator Name]</span></p>
-        </div>
-        <div class="mt-12 pt-8 border-t text-sm text-slate-500">
-          <p>Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions</p>
-        </div>
+      <div class="text-center space-y-4 py-8">
+        <h1 class="text-3xl font-bold text-[#143A50]">IncubateHer Funding Readiness</h1>
+        <h2 class="text-xl text-[#AC1A5B]">Preparing for Grants & Contracts</h2>
+        <p class="text-sm text-slate-500 mt-6">Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions</p>
       </div>
     `
   },
@@ -35,36 +23,28 @@ export const WORKBOOK_PAGES = [
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     video_description: 'Welcome message from Dr. Shawnté Elbert on how to get the most from this workbook',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Purpose</h3>
-      <p class="mb-4">This workbook is your companion guide for building funding readiness. It connects directly to your group sessions, assessments, and one-on-one consultation.</p>
+      <p class="mb-4">Your companion guide for building funding readiness. Connects to sessions, assessments, and consultation.</p>
       
-      <h3 class="font-semibold text-lg mb-3">What This Workbook IS</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>A self-assessment tool to identify your readiness gaps</li>
-        <li>A preparation guide for grants and contracts</li>
-        <li>A planning framework for your funding journey</li>
+      <h3 class="font-semibold mb-2">What This IS</h3>
+      <ul class="list-disc ml-6 mb-4 text-sm">
+        <li>Self-assessment tool</li>
+        <li>Preparation guide</li>
+        <li>Planning framework</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">What This Workbook IS NOT</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>A grant writing service or proposal template</li>
-        <li>A grant search or funding database</li>
-        <li>A guarantee of funding success</li>
+      <h3 class="font-semibold mb-2">What This IS NOT</h3>
+      <ul class="list-disc ml-6 mb-4 text-sm">
+        <li>Grant writing service</li>
+        <li>Funding database</li>
+        <li>Success guarantee</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">How It Connects</h3>
-      <ul class="list-disc ml-6 mb-6 space-y-2">
-        <li><strong>Group Sessions:</strong> Use this workbook during and after each session to reinforce learning</li>
-        <li><strong>Pre/Post Assessments:</strong> Your assessment results inform which workbook sections to prioritize</li>
-        <li><strong>One-on-One Consultation:</strong> Bring completed worksheets to maximize your consultation time</li>
-      </ul>
-      
-      <h3 class="font-semibold text-lg mb-3">Icon Guide</h3>
-      <div class="space-y-2">
-        <p><strong>📝 Worksheet</strong> - Fill in your responses and save your progress</p>
-        <p><strong>📄 Handout</strong> - Reference material for your learning</p>
-        <p><strong>💡 Tips-Only</strong> - Guidance and orientation (no templates)</p>
-        <p><strong>🎯 Consultation Tool</strong> - Preparation for your 1:1 session</p>
+      <h3 class="font-semibold mb-2">Icon Guide</h3>
+      <div class="text-sm space-y-1">
+        <p>📝 <strong>Worksheet</strong> - Fill in responses</p>
+        <p>📄 <strong>Handout</strong> - Reference material</p>
+        <p>💡 <strong>Tips</strong> - Guidance only</p>
+        <p>🎯 <strong>Consultation</strong> - Prep for 1:1</p>
       </div>
     `
   },
@@ -74,23 +54,22 @@ export const WORKBOOK_PAGES = [
     title: 'Learning Outcomes & Completion Criteria',
     type: 'handout',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Learning Outcomes</h3>
-      <ul class="list-disc ml-6 mb-6 space-y-2">
-        <li>Understand the real difference between grants and contracts</li>
-        <li>Assess your funding readiness honestly and strategically</li>
-        <li>Identify what documents and systems funders expect to see</li>
-        <li>Align your business story for funding opportunities</li>
-        <li>Recognize common pitfalls that cost time and reputation</li>
-        <li>Read and respond to RFPs and contract solicitations</li>
+      <h3 class="font-semibold mb-2">You Will Learn To</h3>
+      <ul class="list-disc ml-6 mb-4 text-sm space-y-1">
+        <li>Understand grants vs. contracts</li>
+        <li>Assess your funding readiness</li>
+        <li>Identify required documents and systems</li>
+        <li>Align your business story</li>
+        <li>Avoid common pitfalls</li>
+        <li>Read and respond to RFPs</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">Completion Checklist</h3>
-      <div class="space-y-2">
-        <p>✅ Attend all program sessions</p>
-        <p>✅ Complete pre-assessment</p>
-        <p>✅ Complete one-on-one consultation</p>
+      <h3 class="font-semibold mb-2">To Complete</h3>
+      <div class="text-sm space-y-1">
+        <p>✅ Attend all sessions</p>
+        <p>✅ Complete pre & post assessments</p>
+        <p>✅ Complete 1:1 consultation</p>
         <p>✅ Submit required documents</p>
-        <p>✅ Complete post-assessment</p>
       </div>
     `
   },
@@ -104,45 +83,43 @@ export const WORKBOOK_PAGES = [
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     video_description: 'Expert explanation: Understanding the key differences between grants and contracts',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Grants vs. Contracts</h3>
-      
-      <table class="w-full border-collapse mb-6">
+      <table class="w-full border-collapse mb-4 text-sm">
         <thead>
           <tr class="bg-slate-100">
-            <th class="border p-3 text-left">Aspect</th>
-            <th class="border p-3 text-left">Grants</th>
-            <th class="border p-3 text-left">Contracts</th>
+            <th class="border p-2 text-left">Aspect</th>
+            <th class="border p-2 text-left">Grants</th>
+            <th class="border p-2 text-left">Contracts</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="border p-3"><strong>Purpose</strong></td>
-            <td class="border p-3">Fund your mission and programs</td>
-            <td class="border p-3">Pay for specific deliverables</td>
+            <td class="border p-2"><strong>Purpose</strong></td>
+            <td class="border p-2">Fund mission</td>
+            <td class="border p-2">Pay for deliverables</td>
           </tr>
           <tr>
-            <td class="border p-3"><strong>Who Reviews</strong></td>
-            <td class="border p-3">Program officers, review committees</td>
-            <td class="border p-3">Procurement officers, program managers</td>
+            <td class="border p-2"><strong>Who Reviews</strong></td>
+            <td class="border p-2">Program officers</td>
+            <td class="border p-2">Procurement staff</td>
           </tr>
           <tr>
-            <td class="border p-3"><strong>Flexibility</strong></td>
-            <td class="border p-3">Some flexibility in execution</td>
-            <td class="border p-3">Strict deliverables and timelines</td>
+            <td class="border p-2"><strong>Flexibility</strong></td>
+            <td class="border p-2">Some</td>
+            <td class="border p-2">Strict timelines</td>
           </tr>
           <tr>
-            <td class="border p-3"><strong>Reporting</strong></td>
-            <td class="border p-3">Narrative progress reports</td>
-            <td class="border p-3">Detailed performance metrics</td>
+            <td class="border p-2"><strong>Reporting</strong></td>
+            <td class="border p-2">Narrative</td>
+            <td class="border p-2">Performance metrics</td>
           </tr>
         </tbody>
       </table>
       
-      <h3 class="font-semibold text-lg mb-3">Common Myths</h3>
-      <ul class="list-disc ml-6 space-y-2">
-        <li><strong>Myth:</strong> "Grants are free money" → Reality: Grants require significant work and accountability</li>
-        <li><strong>Myth:</strong> "Contracts are only for big organizations" → Reality: Many contracts are sized for small providers</li>
-        <li><strong>Myth:</strong> "Nonprofits can't do contracts" → Reality: Many nonprofits successfully execute contracts</li>
+      <h3 class="font-semibold mb-2 text-sm">Common Myths</h3>
+      <ul class="list-disc ml-6 text-sm space-y-1">
+        <li>"Grants are free money" → They require work</li>
+        <li>"Only big orgs do contracts" → False</li>
+        <li>"Nonprofits can't contract" → Many do</li>
       </ul>
     `
   },
@@ -186,34 +163,23 @@ export const WORKBOOK_PAGES = [
     title: 'What "Funding Ready" Actually Means',
     type: 'handout',
     content: `
-      <p class="mb-4">Funding readiness is about <strong>systems, documentation, and capacity</strong> — not passion or need.</p>
+      <p class="mb-4 text-sm">Funding readiness = <strong>systems, documentation, capacity</strong> (not passion or need)</p>
       
-      <h3 class="font-semibold text-lg mb-3">Core Readiness Areas</h3>
-      
-      <div class="space-y-4">
-        <div class="p-4 bg-blue-50 rounded-lg">
-          <h4 class="font-semibold mb-2">Legal Structure</h4>
-          <p>Formal business entity (LLC, Corp, 501c3) with EIN, bank account, and governing documents</p>
+      <div class="space-y-3 text-sm">
+        <div class="p-3 bg-blue-50 rounded">
+          <strong>Legal:</strong> Formal entity, EIN, bank account
         </div>
-        
-        <div class="p-4 bg-green-50 rounded-lg">
-          <h4 class="font-semibold mb-2">Financial Systems</h4>
-          <p>Budget, financial statements, expense tracking by program/project</p>
+        <div class="p-3 bg-green-50 rounded">
+          <strong>Financial:</strong> Budget, statements, expense tracking
         </div>
-        
-        <div class="p-4 bg-purple-50 rounded-lg">
-          <h4 class="font-semibold mb-2">Documentation</h4>
-          <p>Mission statement, program descriptions, outcomes data, policies</p>
+        <div class="p-3 bg-purple-50 rounded">
+          <strong>Documentation:</strong> Mission, programs, outcomes
         </div>
-        
-        <div class="p-4 bg-amber-50 rounded-lg">
-          <h4 class="font-semibold mb-2">Capacity & Operations</h4>
-          <p>Staff/volunteer time, ability to deliver services, reporting capacity</p>
+        <div class="p-3 bg-amber-50 rounded">
+          <strong>Capacity:</strong> Staff time, delivery ability
         </div>
-        
-        <div class="p-4 bg-red-50 rounded-lg">
-          <h4 class="font-semibold mb-2">Compliance & Reporting</h4>
-          <p>Ability to track outcomes, submit reports, meet deadlines</p>
+        <div class="p-3 bg-red-50 rounded">
+          <strong>Compliance:</strong> Reporting, tracking, deadlines
         </div>
       </div>
     `
@@ -306,38 +272,26 @@ export const WORKBOOK_PAGES = [
     title: 'Core Documents Overview',
     type: 'handout',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Essential Documents</h3>
-      
-      <div class="space-y-3">
-        <div class="p-3 border-l-4 border-blue-500 bg-slate-50">
-          <h4 class="font-semibold">Business/Organization Overview</h4>
-          <p class="text-sm text-slate-600">Mission, history, who you serve, impact to date</p>
+      <div class="space-y-2 text-sm">
+        <div class="p-2 border-l-4 border-blue-500 bg-slate-50">
+          <strong>Business Overview:</strong> Mission, history, impact
         </div>
-        
-        <div class="p-3 border-l-4 border-green-500 bg-slate-50">
-          <h4 class="font-semibold">Program/Service Description</h4>
-          <p class="text-sm text-slate-600">What you do, how you do it, who benefits</p>
+        <div class="p-2 border-l-4 border-green-500 bg-slate-50">
+          <strong>Program Description:</strong> What, how, who benefits
         </div>
-        
-        <div class="p-3 border-l-4 border-purple-500 bg-slate-50">
-          <h4 class="font-semibold">Budget</h4>
-          <p class="text-sm text-slate-600">Annual operating budget, program-specific budgets</p>
+        <div class="p-2 border-l-4 border-purple-500 bg-slate-50">
+          <strong>Budget:</strong> Operating + program-specific
         </div>
-        
-        <div class="p-3 border-l-4 border-amber-500 bg-slate-50">
-          <h4 class="font-semibold">Outcomes/Deliverables</h4>
-          <p class="text-sm text-slate-600">What results you've achieved, what you can deliver</p>
+        <div class="p-2 border-l-4 border-amber-500 bg-slate-50">
+          <strong>Outcomes:</strong> Results achieved, deliverables
         </div>
-        
-        <div class="p-3 border-l-4 border-red-500 bg-slate-50">
-          <h4 class="font-semibold">Policies/Processes</h4>
-          <p class="text-sm text-slate-600">Governance, financial management, HR (as applicable)</p>
+        <div class="p-2 border-l-4 border-red-500 bg-slate-50">
+          <strong>Policies:</strong> Governance, financial, HR
         </div>
       </div>
       
-      <div class="mt-6 p-4 bg-amber-50 rounded-lg">
-        <p class="font-semibold mb-2">Note:</p>
-        <p class="text-sm">Grant applications emphasize <strong>mission and impact</strong>. Contract proposals emphasize <strong>capacity and deliverables</strong>.</p>
+      <div class="mt-4 p-3 bg-amber-50 rounded text-sm">
+        <strong>Key:</strong> Grants emphasize <em>mission</em>. Contracts emphasize <em>capacity</em>.
       </div>
     `
   },
@@ -367,33 +321,26 @@ export const WORKBOOK_PAGES = [
     title: 'Budget Basics for Readiness',
     type: 'handout',
     content: `
-      <h3 class="font-semibold text-lg mb-3">What Budgets Communicate to Funders</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>You understand the true cost of your work</li>
-        <li>You can manage money responsibly</li>
-        <li>You've thought through realistic needs</li>
-        <li>You can track expenses by program</li>
+      <h3 class="font-semibold mb-2 text-sm">Budgets Show:</h3>
+      <ul class="list-disc ml-6 mb-4 text-sm space-y-1">
+        <li>You know true costs</li>
+        <li>You manage money responsibly</li>
+        <li>You've planned realistically</li>
+        <li>You track by program</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">Common Budget Mistakes</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>Underestimating indirect costs (admin, overhead)</li>
-        <li>Forgetting evaluation or reporting costs</li>
-        <li>Not including key personnel time realistically</li>
-        <li>Copying someone else's budget without understanding it</li>
+      <h3 class="font-semibold mb-2 text-sm">Common Mistakes:</h3>
+      <ul class="list-disc ml-6 mb-4 text-sm space-y-1">
+        <li>Underestimate indirect costs</li>
+        <li>Forget evaluation costs</li>
+        <li>Unrealistic personnel time</li>
+        <li>Copy without understanding</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">Grants vs. Contracts Budget Differences</h3>
-      <table class="w-full border-collapse">
-        <tr>
-          <td class="border p-3"><strong>Grants</strong></td>
-          <td class="border p-3">May allow flexible line items, often fund general operating costs</td>
-        </tr>
-        <tr>
-          <td class="border p-3"><strong>Contracts</strong></td>
-          <td class="border p-3">Fixed price for specific deliverables, less flexibility</td>
-        </tr>
-      </table>
+      <div class="text-sm">
+        <p><strong>Grants:</strong> Flexible, fund operations</p>
+        <p><strong>Contracts:</strong> Fixed price, strict deliverables</p>
+      </div>
     `
   },
 
@@ -406,32 +353,30 @@ export const WORKBOOK_PAGES = [
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     video_description: 'Deep dive: How to read and respond to RFPs strategically',
     content: `
-      <h3 class="font-semibold text-lg mb-3">What is an RFP?</h3>
-      <p class="mb-4">A <strong>Request for Proposals (RFP)</strong> is how government agencies and large organizations solicit bids for contracted services. It's a formal process with strict requirements.</p>
+      <p class="mb-3 text-sm"><strong>RFP =</strong> Formal bid process for contracted services (government, large orgs)</p>
       
-      <h3 class="font-semibold text-lg mb-3">How Contracts Differ from Grants</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>Contracts are <strong>payment for services delivered</strong>, not support for your mission</li>
-        <li>You must meet specific deliverables and deadlines</li>
-        <li>Performance is monitored closely</li>
-        <li>Non-performance can result in penalties</li>
+      <h3 class="font-semibold mb-2 text-sm">Contracts vs. Grants:</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>Payment for delivery (not mission support)</li>
+        <li>Strict deliverables & deadlines</li>
+        <li>Close monitoring</li>
+        <li>Penalties for non-performance</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">Why RFPs Are Capacity Tests</h3>
-      <p class="mb-4">RFPs test whether you:</p>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>Can read complex requirements carefully</li>
-        <li>Have the systems to deliver what's asked</li>
-        <li>Can meet strict deadlines</li>
-        <li>Understand pricing and budgeting</li>
+      <h3 class="font-semibold mb-2 text-sm">RFPs Test Your:</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>Ability to read complex requirements</li>
+        <li>Systems to deliver</li>
+        <li>Deadline management</li>
+        <li>Pricing knowledge</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">Red Flags to Watch For</h3>
-      <ul class="list-disc ml-6 space-y-2">
-        <li>Unrealistic timelines or budgets</li>
-        <li>Vague deliverables or expectations</li>
+      <h3 class="font-semibold mb-2 text-sm">Red Flags:</h3>
+      <ul class="list-disc ml-6 text-sm space-y-1">
+        <li>Unrealistic timelines/budgets</li>
+        <li>Vague deliverables</li>
         <li>Requirements you can't meet</li>
-        <li>No clear payment terms</li>
+        <li>Unclear payment terms</li>
       </ul>
     `
   },
@@ -479,34 +424,24 @@ export const WORKBOOK_PAGES = [
     title: 'Business Story Alignment',
     type: 'handout',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Mission vs. Execution</h3>
-      <p class="mb-4">Funders care about <strong>both</strong>. Your mission drives why you exist. Your execution proves you can deliver.</p>
+      <p class="mb-3 text-sm"><strong>Mission</strong> = why you exist. <strong>Execution</strong> = proof you can deliver. Funders need both.</p>
       
-      <h3 class="font-semibold text-lg mb-3">Outcomes vs. Deliverables</h3>
-      <table class="w-full border-collapse mb-4">
-        <tr>
-          <td class="border p-3"><strong>Outcomes</strong></td>
-          <td class="border p-3">The change you create (grants focus)</td>
-        </tr>
-        <tr>
-          <td class="border p-3"><strong>Deliverables</strong></td>
-          <td class="border p-3">The specific products/services you provide (contracts focus)</td>
-        </tr>
-      </table>
+      <div class="mb-3 text-sm">
+        <p><strong>Outcomes:</strong> Change you create (grants)</p>
+        <p><strong>Deliverables:</strong> Products/services (contracts)</p>
+      </div>
       
-      <h3 class="font-semibold text-lg mb-3">Grant Language vs. Contract Language</h3>
-      <div class="space-y-3">
-        <div class="p-3 bg-blue-50 rounded">
-          <p><strong>Grant Language:</strong> "We will reduce food insecurity by serving 500 families..."</p>
+      <div class="space-y-2 text-sm">
+        <div class="p-2 bg-blue-50 rounded">
+          <strong>Grant:</strong> "Reduce food insecurity for 500 families"
         </div>
-        <div class="p-3 bg-green-50 rounded">
-          <p><strong>Contract Language:</strong> "We will provide 10,000 meals per month to eligible participants..."</p>
+        <div class="p-2 bg-green-50 rounded">
+          <strong>Contract:</strong> "Provide 10,000 meals/month"
         </div>
       </div>
       
-      <div class="mt-4 p-4 bg-amber-50 rounded-lg">
-        <p class="font-semibold mb-2">Why Clarity Matters More Than Passion</p>
-        <p class="text-sm">Funders respect passion, but they fund <strong>clarity, capacity, and consistency</strong>.</p>
+      <div class="mt-3 p-2 bg-amber-50 rounded text-sm">
+        <strong>Remember:</strong> Clarity, capacity, consistency > passion
       </div>
     `
   },
@@ -550,34 +485,22 @@ export const WORKBOOK_PAGES = [
     title: 'Common Funding Pitfalls',
     type: 'handout',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Pitfalls to Avoid</h3>
-      
-      <div class="space-y-4">
-        <div class="p-4 border-l-4 border-red-500 bg-red-50">
-          <h4 class="font-semibold mb-2">Applying Too Early</h4>
-          <p class="text-sm">Submitting proposals before you have the legal structure, systems, or capacity in place wastes time and damages credibility.</p>
+      <div class="space-y-2 text-sm">
+        <div class="p-2 border-l-4 border-red-500 bg-red-50">
+          <strong>Too Early:</strong> Applying before systems are ready damages credibility
         </div>
-        
-        <div class="p-4 border-l-4 border-orange-500 bg-orange-50">
-          <h4 class="font-semibold mb-2">Overpromising</h4>
-          <p class="text-sm">Promising what you can't deliver leads to stress, burnout, and relationship damage with funders.</p>
+        <div class="p-2 border-l-4 border-orange-500 bg-orange-50">
+          <strong>Overpromise:</strong> Leads to burnout and funder mistrust
         </div>
-        
-        <div class="p-4 border-l-4 border-yellow-500 bg-yellow-50">
-          <h4 class="font-semibold mb-2">Underestimating Reporting</h4>
-          <p class="text-sm">Grants and contracts require regular reporting. If you can't track and report outcomes, don't apply.</p>
+        <div class="p-2 border-l-4 border-yellow-500 bg-yellow-50">
+          <strong>Ignore Reporting:</strong> Can't track = don't apply
         </div>
-        
-        <div class="p-4 border-l-4 border-blue-500 bg-blue-50">
-          <h4 class="font-semibold mb-2">Chasing Misaligned Dollars</h4>
-          <p class="text-sm">Applying for funding that doesn't align with your mission or capacity dilutes your focus and wastes resources.</p>
+        <div class="p-2 border-l-4 border-blue-500 bg-blue-50">
+          <strong>Misaligned $:</strong> Dilutes focus, wastes resources
         </div>
       </div>
       
-      <div class="mt-6 p-4 bg-green-50 rounded-lg">
-        <p class="font-semibold mb-2">Remember:</p>
-        <p class="text-sm">Everyone makes mistakes when learning. The goal is to recognize pitfalls early and adjust before they become costly.</p>
-      </div>
+      <p class="mt-3 text-sm italic">Learning curve is normal. Recognize pitfalls early.</p>
     `
   },
 
@@ -588,40 +511,30 @@ export const WORKBOOK_PAGES = [
     title: 'Tools Orientation',
     type: 'tips',
     content: `
-      <div class="p-4 bg-red-50 border-2 border-red-500 rounded-lg mb-6">
-        <h3 class="font-semibold text-lg mb-3 text-red-900">🚫 What This Section Does NOT Include</h3>
-        <ul class="list-disc ml-6 space-y-2 text-red-800">
-          <li>Grant proposal templates</li>
-          <li>Application outlines or samples</li>
-          <li>Grant search databases or lists</li>
-          <li>Advanced project tracking systems</li>
-          <li>AI writing walkthroughs</li>
-        </ul>
+      <div class="p-3 bg-red-50 border-2 border-red-500 rounded mb-4 text-sm">
+        <strong>🚫 NOT Included:</strong> Templates, samples, databases, AI walkthroughs
       </div>
       
-      <h3 class="font-semibold text-lg mb-3">What This Section IS</h3>
-      <p class="mb-4">An <strong>orientation</strong> to the types of tools that exist for funding work, when to explore them, and when NOT to.</p>
-      
-      <h3 class="font-semibold text-lg mb-3">Types of Tools You'll Encounter</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li><strong>Grant databases</strong> (Foundation Directory, Grants.gov)</li>
-        <li><strong>Proposal software</strong> (project management, collaboration tools)</li>
-        <li><strong>Budget templates</strong> (Excel, accounting software)</li>
-        <li><strong>AI writing assistants</strong> (use with caution and fact-checking)</li>
+      <h3 class="font-semibold mb-2 text-sm">Tool Types:</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>Grant databases (Grants.gov)</li>
+        <li>Proposal software</li>
+        <li>Budget templates</li>
+        <li>AI assistants (use cautiously)</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">When to Explore Tools</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>After you've built readiness foundations</li>
-        <li>When you have a specific need and know what you're looking for</li>
-        <li>When you have capacity to learn and implement</li>
+      <h3 class="font-semibold mb-2 text-sm">Explore When:</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>Readiness is built</li>
+        <li>You have specific need</li>
+        <li>You have capacity to learn</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">When NOT to Explore Tools</h3>
-      <ul class="list-disc ml-6 space-y-2">
-        <li>Before you have basic readiness in place</li>
-        <li>As a substitute for strategy and planning</li>
-        <li>When you're hoping the tool will "do it for you"</li>
+      <h3 class="font-semibold mb-2 text-sm">Don't Explore When:</h3>
+      <ul class="list-disc ml-6 text-sm space-y-1">
+        <li>Before basic readiness</li>
+        <li>As strategy substitute</li>
+        <li>Hoping tool does it for you</li>
       </ul>
     `
   },
@@ -635,27 +548,26 @@ export const WORKBOOK_PAGES = [
     video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     video_description: 'Facilitator guide: Making the most of your one-on-one consultation session',
     content: `
-      <h3 class="font-semibold text-lg mb-3">What to Bring</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>1-2 core documents (mission statement, program description, budget)</li>
-        <li>Your completed pre-assessment</li>
-        <li>Your top questions or concerns about funding readiness</li>
+      <h3 class="font-semibold mb-2 text-sm">Bring:</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>1-2 core docs</li>
+        <li>Pre-assessment</li>
+        <li>Top questions</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">What the Session Will Focus On</h3>
-      <ul class="list-disc ml-6 mb-4 space-y-2">
-        <li>Honest assessment of your readiness level</li>
-        <li>Identification of strengths and gaps</li>
-        <li>Specific next steps and timeline recommendations</li>
-        <li>Answering your strategic questions</li>
+      <h3 class="font-semibold mb-2 text-sm">We'll Cover:</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>Honest readiness assessment</li>
+        <li>Strengths & gaps</li>
+        <li>Next steps & timeline</li>
+        <li>Your strategic questions</li>
       </ul>
       
-      <h3 class="font-semibold text-lg mb-3">What the Session Will NOT Include</h3>
-      <ul class="list-disc ml-6 space-y-2">
-        <li>Writing your grant proposal for you</li>
-        <li>Searching for funding opportunities</li>
-        <li>Legal or financial advisory services</li>
-        <li>Advanced technical training</li>
+      <h3 class="font-semibold mb-2 text-sm">NOT Included:</h3>
+      <ul class="list-disc ml-6 text-sm space-y-1">
+        <li>Proposal writing</li>
+        <li>Funding searches</li>
+        <li>Legal/financial advice</li>
       </ul>
     `
   },
@@ -742,23 +654,20 @@ export const WORKBOOK_PAGES = [
     title: 'Program Completion & What\'s Next',
     type: 'handout',
     content: `
-      <h3 class="font-semibold text-lg mb-3">Completion Requirements Recap</h3>
-      <div class="space-y-2 mb-6">
-        <p>✅ Attended all required sessions</p>
-        <p>✅ Completed pre-assessment and post-assessment</p>
-        <p>✅ Participated in one-on-one consultation</p>
-        <p>✅ Submitted required organizational documents</p>
+      <h3 class="font-semibold mb-2 text-sm">You Completed:</h3>
+      <div class="space-y-1 mb-4 text-sm">
+        <p>✅ All sessions</p>
+        <p>✅ Pre & post assessments</p>
+        <p>✅ One-on-one consultation</p>
+        <p>✅ Document submission</p>
       </div>
       
-      <h3 class="font-semibold text-lg mb-3">Certificate of Completion</h3>
-      <p class="mb-4">Upon completing all requirements, you'll receive a certificate recognizing your participation in the IncubateHer Funding Readiness program.</p>
+      <p class="mb-3 text-sm">You'll receive a certificate of completion.</p>
       
-      <h3 class="font-semibold text-lg mb-3">Moving Forward</h3>
-      <p class="mb-4">Remember: Funding readiness is a <strong>journey, not a destination</strong>. Continue building your systems, refining your documents, and pursuing opportunities that align with your capacity.</p>
+      <p class="mb-3 text-sm"><strong>Remember:</strong> Funding readiness is a journey. Keep building systems and pursuing aligned opportunities.</p>
       
-      <div class="p-4 bg-green-50 rounded-lg">
-        <p class="font-semibold mb-2">You've Got This!</p>
-        <p class="text-sm">The work you've done in this program positions you to pursue funding strategically and confidently. Keep going!</p>
+      <div class="p-3 bg-green-50 rounded text-sm">
+        <strong>You've Got This!</strong> You're positioned to pursue funding strategically.
       </div>
     `
   },
@@ -768,38 +677,21 @@ export const WORKBOOK_PAGES = [
     title: 'Completion Incentive',
     type: 'handout',
     content: `
-      <div class="p-6 bg-amber-50 border-2 border-amber-200 rounded-lg mb-6">
-        <p class="text-center text-sm text-amber-900 font-semibold mb-2">⚠️ ADMIN-CONTROLLED REVEAL</p>
-        <p class="text-center text-xs text-amber-800">This page is revealed to participants only after all completion requirements are met</p>
+      <div class="p-3 bg-amber-50 border border-amber-200 rounded mb-4 text-xs text-center">
+        ⚠️ <strong>ADMIN-CONTROLLED</strong> - Revealed after completion
       </div>
       
-      <div class="text-center py-8">
-        <h3 class="text-2xl font-bold text-[#E5C089] mb-4">🎁 Completion Giveaway</h3>
+      <div class="text-center">
+        <h3 class="text-xl font-bold text-[#E5C089] mb-3">🎁 Completion Giveaway</h3>
+        <p class="text-sm mb-4">You're eligible for a randomized drawing!</p>
         
-        <p class="text-lg mb-6">Congratulations on completing all program requirements! You are now eligible for our randomized drawing.</p>
+        <p class="text-sm mb-3"><strong>Prize:</strong> Complimentary grant-writing consultation with EIS</p>
         
-        <h4 class="font-semibold text-lg mb-3">Prize Details</h4>
-        <p class="mb-6">One randomly selected winner will receive a <strong>complimentary grant-writing consultation session</strong> with Elbert Innovative Solutions.</p>
-        
-        <h4 class="font-semibold text-lg mb-3">Eligibility Requirements</h4>
-        <ul class="text-left max-w-md mx-auto list-disc ml-6 space-y-2 mb-6">
-          <li>✅ Attended all required program sessions</li>
-          <li>✅ Completed pre-assessment and post-assessment</li>
-          <li>✅ Completed one-on-one consultation</li>
-          <li>✅ Submitted all required documents</li>
-        </ul>
-        
-        <div class="p-4 bg-red-50 border-2 border-red-200 rounded-lg max-w-md mx-auto mb-6">
-          <p class="text-sm text-red-900"><strong>Important Restrictions:</strong></p>
-          <ul class="text-sm text-red-800 mt-2 space-y-1">
-            <li>• Non-federal grants only</li>
-            <li>• Winner selection is randomized</li>
-            <li>• No guarantee of funding success</li>
-            <li>• Prize has no cash value</li>
-          </ul>
+        <div class="p-3 bg-red-50 border border-red-200 rounded text-xs mb-3">
+          <strong>Restrictions:</strong> Non-federal only • Random selection • No guarantee • No cash value
         </div>
         
-        <p class="text-slate-600">Winner will be announced at the program completion ceremony. Good luck!</p>
+        <p class="text-xs text-slate-600">Winner announced at completion ceremony</p>
       </div>
     `
   },
