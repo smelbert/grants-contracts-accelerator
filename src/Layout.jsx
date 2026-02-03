@@ -84,6 +84,9 @@ const getUserPortalNav = () => [
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
+      { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users, requiresRole: 'admin' },
+      { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings, requiresRole: 'admin' },
+      { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp, requiresRole: 'admin' },
     ]
   },
   {
@@ -205,7 +208,7 @@ const getAdminPortalNav = () => [
   },
 ];
 
-const getNavItems = (portalView, userAccess) => {
+const getNavItems = (portalView, userAccess, userRole) => {
   // All portals now return grouped arrays
   if (portalView === 'coach') {
     const items = getCoachPortalNav();
@@ -215,17 +218,24 @@ const getNavItems = (portalView, userAccess) => {
     return getAdminPortalNav();
   }
   
-  // Filter user portal items based on access
+  // Filter user portal items based on access and role
   const userNav = getUserPortalNav();
-  if (!userAccess || userAccess.learning_hub_access) {
-    return userNav;
-  }
-  
-  // Filter out Learning Hub if access is disabled
-  return userNav.map(group => ({
+  const filteredNav = userNav.map(group => ({
     ...group,
-    items: group.items.filter(item => item.requiresAccess !== 'learning_hub')
+    items: group.items.filter(item => {
+      // Filter out Learning Hub if access is disabled
+      if (item.requiresAccess === 'learning_hub' && userAccess && !userAccess.learning_hub_access) {
+        return false;
+      }
+      // Filter out admin-only items
+      if (item.requiresRole === 'admin' && userRole !== 'admin') {
+        return false;
+      }
+      return true;
+    })
   })).filter(group => group.items.length > 0);
+  
+  return filteredNav;
 };
 
 export default function Layout({ children, currentPageName }) {
@@ -270,7 +280,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
-  const navItems = getNavItems(effectiveRole, userAccess);
+  const navItems = getNavItems(effectiveRole, userAccess, user?.role);
 
   // Show onboarding flow for all users
   const showOnboardingFlow = user && currentPageName !== 'CoachProfileSetup';

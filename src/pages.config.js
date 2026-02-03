@@ -144,6 +144,9 @@ import IncubateHerWorkbook from './pages/IncubateHerWorkbook';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
 import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
+import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
+import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
+import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -245,6 +248,9 @@ export const PAGES = {
     "IncubateHerConsultations": IncubateHerConsultations,
     "IncubateHerCompletion": IncubateHerCompletion,
     "IncubateHerGiveaway": IncubateHerGiveaway,
+    "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
+    "IncubateHerAdminConsole": IncubateHerAdminConsole,
+    "IncubateHerCULDashboard": IncubateHerCULDashboard,
 }
 
 export const pagesConfig = {
