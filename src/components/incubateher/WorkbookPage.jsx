@@ -62,7 +62,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
   return (
     <div className="bg-white shadow-2xl mx-auto" style={{ width: '816px', minHeight: '1056px' }}>
       {/* Professional Header with Full Branding */}
-      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-12 py-6 border-b-4 border-[#E5C089]">
+      <div className="bg-gradient-to-b from-slate-200 via-[#143A50] to-[#1E4F58] px-12 py-6 border-b-4 border-[#E5C089]">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-6">
             <div className="bg-white rounded-lg p-3 shadow-md">
