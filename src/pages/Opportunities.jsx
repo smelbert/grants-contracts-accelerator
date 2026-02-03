@@ -197,7 +197,7 @@ export default function OpportunitiesPage() {
                     Showing <span className="font-semibold text-slate-900">{filteredOpportunities.length}</span> {filteredOpportunities.length === 1 ? 'opportunity' : 'opportunities'}
                   </p>
                 </div>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {filteredOpportunities.map((opp) => (
                     <OpportunityCard
                       key={opp.id}
@@ -233,7 +233,7 @@ export default function OpportunitiesPage() {
                     <span className="font-semibold text-slate-900">{savedOpps.length}</span> saved {savedOpps.length === 1 ? 'opportunity' : 'opportunities'}
                   </p>
                 </div>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {savedOpps.map((opp) => (
                     <OpportunityCard
                       key={opp.id}
