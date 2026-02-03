@@ -17,9 +17,9 @@ export default function CoBrandedHeader({ title, subtitle }) {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <img 
-              src="https://www.cul.org/wp-content/uploads/2022/03/logo.png"
-              alt="Columbus Urban League"
-              className="h-12 object-contain"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/5bda1b14c_image.png"
+              alt="Columbus Urban League - IncubateHer"
+              className="h-16 object-contain"
             />
           </div>
           <div className="flex items-center gap-3">
