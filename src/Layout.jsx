@@ -85,8 +85,6 @@ const getUserPortalNav = () => [
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
       { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users, requiresRole: 'admin' },
-      { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings, requiresRole: 'admin' },
-      { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp, requiresRole: 'admin' },
     ]
   },
   {
@@ -176,6 +174,8 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
       { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
+      { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings },
+      { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
       { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
     ]
   },
