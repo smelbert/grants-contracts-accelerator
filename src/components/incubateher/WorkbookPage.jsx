@@ -33,7 +33,9 @@ const PageTypeBadge = ({ type }) => {
   );
 };
 
-export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults }) {
+export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null }) {
+  // Use custom content if available, otherwise use default
+  const displayPage = customContent ? { ...page, ...customContent } : page;
   const handleFieldChange = (fieldId, value) => {
     onResponseChange(page.id, fieldId, value);
   };
@@ -84,9 +86,9 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
           <PageTypeBadge type={page.type} />
         </div>
         <div className="border-t border-white/20 pt-3">
-          <h2 className="text-2xl font-bold text-white mb-1">{page.title}</h2>
-          {page.subtitle && (
-            <p className="text-[#E5C089] text-sm font-medium">{page.subtitle}</p>
+          <h2 className="text-2xl font-bold text-white mb-1">{displayPage.title}</h2>
+          {displayPage.subtitle && (
+            <p className="text-[#E5C089] text-sm font-medium">{displayPage.subtitle}</p>
           )}
         </div>
       </div>
@@ -101,7 +103,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         />
 
         {/* Key Takeaways Callout */}
-        {page.takeaways && (
+        {displayPage.takeaways && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#143A50]" />
             <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-300 rounded-xl p-6 shadow-md">
@@ -124,7 +126,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         )}
 
         {/* Action Items Callout */}
-        {page.actionItems && (
+        {(displayPage.actionItems || displayPage.action_items) && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#E5C089]" />
             <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 rounded-xl p-6 shadow-md">
@@ -147,7 +149,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         )}
 
         {/* Video Content with Enhanced Callout */}
-        {page.video_url && (
+        {displayPage.video_url && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
             <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 rounded-xl p-8 border-2 border-[#E5C089] shadow-lg">
@@ -160,30 +162,30 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                 <h3 className="text-lg font-bold text-[#143A50]">📹 Watch & Learn</h3>
               </div>
               <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 shadow-xl border-2 border-slate-300">
-                {getVideoEmbedUrl(page.video_url)?.startsWith('http') ? (
+                {getVideoEmbedUrl(displayPage.video_url)?.startsWith('http') ? (
                   <iframe
-                    src={getVideoEmbedUrl(page.video_url)}
+                    src={getVideoEmbedUrl(displayPage.video_url)}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                 ) : (
                   <video
-                    src={page.video_url}
+                    src={displayPage.video_url}
                     controls
                     className="w-full h-full"
                   />
                 )}
               </div>
-              {page.video_description && (
-                <p className="text-sm text-slate-700 mt-4 italic">{page.video_description}</p>
+              {displayPage.video_description && (
+                <p className="text-sm text-slate-700 mt-4 italic">{displayPage.video_description}</p>
               )}
             </div>
           </div>
         )}
 
         {/* Page Content with Educational Styling */}
-        {page.content && (
+        {displayPage.content && (
           <div className="bg-white rounded-xl p-8 border-2 border-slate-200 shadow-sm">
             <div 
               className="prose prose-slate max-w-none 
@@ -198,7 +200,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                 prose-th:bg-[#143A50] prose-th:text-white prose-th:p-3 prose-th:text-left prose-th:font-semibold
                 prose-td:border prose-td:border-slate-300 prose-td:p-3
                 prose-blockquote:border-l-4 prose-blockquote:border-[#E5C089] prose-blockquote:bg-[#E5C089]/5 prose-blockquote:pl-4 prose-blockquote:py-2"
-              dangerouslySetInnerHTML={{ __html: page.content }}
+              dangerouslySetInnerHTML={{ __html: displayPage.content }}
             />
           </div>
         )}
