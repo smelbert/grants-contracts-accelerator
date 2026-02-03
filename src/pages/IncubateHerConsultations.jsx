@@ -100,6 +100,76 @@ export default function IncubateHerConsultations() {
           </CardContent>
         </Card>
 
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader>
+            <CardTitle>Required: Pre-Consultation Checklist</CardTitle>
+            <CardDescription>
+              Complete these items before scheduling your consultation
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <h4 className="font-semibold text-slate-700">Business & Structure</h4>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Legal structure identified (LLC, nonprofit, sole proprietor, etc.)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Business or organization is registered and in good standing</span>
+                </li>
+              </ul>
+
+              <h4 className="font-semibold text-slate-700 mt-4">Funding Readiness</h4>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Clear understanding of funding goals (grants, contracts, or both)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Basic financial records available (budget, revenue/expense summary, or projections)</span>
+                </li>
+              </ul>
+
+              <h4 className="font-semibold text-slate-700 mt-4">Documents for Review</h4>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Business or organizational overview (1–2 pages preferred)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Draft project description, scope of work, or service summary</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Budget outline or budget narrative (if available)</span>
+                </li>
+              </ul>
+
+              <h4 className="font-semibold text-slate-700 mt-4">Preparation</h4>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>2–3 specific questions identified for the session</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">☐</span>
+                  <span>Understanding that the session focuses on strategy and readiness, not application writing</span>
+                </li>
+              </ul>
+
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-900 font-medium">
+                  ⚠️ Participants who have not completed this checklist may be asked to reschedule.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {!enrollment?.pre_assessment_completed && (
           <Card className="border-l-4 border-l-amber-500">
             <CardHeader>
@@ -123,9 +193,9 @@ export default function IncubateHerConsultations() {
           <>
             <Card>
               <CardHeader>
-                <CardTitle>Pre-Consultation Checklist</CardTitle>
+                <CardTitle>Ready to Schedule? Confirm Your Preparation</CardTitle>
                 <CardDescription>
-                  Please complete these items before your scheduled consultation
+                  Check off these items to unlock booking
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -152,8 +222,8 @@ export default function IncubateHerConsultations() {
                       className="mt-1"
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-slate-700">Upload Key Documents</p>
-                      <p className="text-sm text-slate-500">Mission statement, budget, board list (if available)</p>
+                      <p className="font-medium text-slate-700">Documents Prepared</p>
+                      <p className="text-sm text-slate-500">Business overview, project description, and budget outline ready</p>
                     </div>
                   </div>
 
@@ -164,8 +234,8 @@ export default function IncubateHerConsultations() {
                       className="mt-1"
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-slate-700">Prepare Your Questions</p>
-                      <p className="text-sm text-slate-500">Think about specific challenges or goals</p>
+                      <p className="font-medium text-slate-700">Questions Prepared</p>
+                      <p className="text-sm text-slate-500">2-3 specific questions identified for your session</p>
                     </div>
                   </div>
                 </div>

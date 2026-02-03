@@ -1,0 +1,224 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const { notification_type, recipient_email, data } = await req.json();
+
+    // Get participant and cohort details
+    const enrollments = await base44.entities.ProgramEnrollment.filter({
+      participant_email: recipient_email
+    });
+    const enrollment = enrollments[0];
+
+    if (!enrollment) {
+      return Response.json({ error: 'Enrollment not found' }, { status: 404 });
+    }
+
+    const cohorts = await base44.entities.ProgramCohort.filter({
+      id: enrollment.cohort_id
+    });
+    const cohort = cohorts[0];
+
+    // Build email based on notification type
+    let subject = '';
+    let body = '';
+
+    switch (notification_type) {
+      case 'session_reminder':
+        subject = `Reminder: IncubateHer Session Tomorrow - ${data.session_title}`;
+        body = `
+          <p>Hello ${enrollment.participant_name},</p>
+          
+          <p>This is a friendly reminder about your upcoming IncubateHer session:</p>
+          
+          <p><strong>Session:</strong> ${data.session_title}<br>
+          <strong>Date:</strong> ${new Date(data.session_date).toLocaleDateString()}<br>
+          <strong>Time:</strong> ${data.start_time}<br>
+          <strong>Location/Link:</strong> ${data.location_or_link || 'TBD'}</p>
+          
+          <p><strong>Before the session:</strong></p>
+          <ul>
+            <li>Review any materials shared in advance</li>
+            <li>Bring questions or challenges you'd like to discuss</li>
+            <li>Have your workbook ready for exercises</li>
+          </ul>
+          
+          <p>See you soon!</p>
+          
+          <p>Warm regards,<br>
+          Dr. Shawnte Elbert<br>
+          Elbert Innovative Solutions</p>
+        `;
+        break;
+
+      case 'consultation_reminder':
+        subject = `Reminder: Your IncubateHer Consultation is Tomorrow`;
+        body = `
+          <p>Hello ${enrollment.participant_name},</p>
+          
+          <p>Your one-on-one funding readiness consultation is scheduled for tomorrow:</p>
+          
+          <p><strong>Date:</strong> ${new Date(data.scheduled_date).toLocaleDateString()}<br>
+          <strong>Time:</strong> ${new Date(data.scheduled_date).toLocaleTimeString()}<br>
+          <strong>Meeting Link:</strong> <a href="${data.meeting_link}">${data.meeting_link}</a></p>
+          
+          <p><strong>Please bring:</strong></p>
+          <ul>
+            <li>1-2 key documents for review</li>
+            <li>Your pre-assessment results</li>
+            <li>2-3 specific questions prepared</li>
+          </ul>
+          
+          <p><strong>Remember:</strong> This session focuses on readiness and strategy, not application writing.</p>
+          
+          <p>Looking forward to our conversation!</p>
+          
+          <p>Best,<br>
+          Dr. Shawnte Elbert</p>
+        `;
+        break;
+
+      case 'consultation_followup':
+        subject = `Your IncubateHer Consultation Summary & Next Steps`;
+        body = `
+          <p>Hello ${enrollment.participant_name},</p>
+          
+          <p>Thank you for your time during our consultation session. Here's a summary of what we discussed:</p>
+          
+          <p><strong>Key Strengths Identified:</strong></p>
+          ${data.strengths_identified ? `<p>${data.strengths_identified}</p>` : '<p>To be added</p>'}
+          
+          <p><strong>Areas for Development:</strong></p>
+          ${data.gaps_identified ? `<p>${data.gaps_identified}</p>` : '<p>To be added</p>'}
+          
+          <p><strong>Your Readiness Level:</strong> ${data.readiness_level || 'Assessment in progress'}</p>
+          
+          <p><strong>Recommended Next Steps:</strong></p>
+          ${data.recommended_next_steps ? `<p>${data.recommended_next_steps}</p>` : '<p>To be added</p>'}
+          
+          <p><strong>Action Items:</strong></p>
+          <ul>
+            <li>Complete any remaining workbook sections</li>
+            <li>Finalize your post-assessment</li>
+            <li>Begin implementing the recommendations we discussed</li>
+          </ul>
+          
+          <p>Remember: Funding readiness is a journey. Focus on building your systems and documentation step by step.</p>
+          
+          <p>If you have questions as you move forward, don't hesitate to reach out.</p>
+          
+          <p>Warm regards,<br>
+          Dr. Shawnte Elbert<br>
+          Elbert Innovative Solutions</p>
+        `;
+        break;
+
+      case 'workbook_reminder':
+        subject = `IncubateHer: Complete Your Workbook`;
+        body = `
+          <p>Hello ${enrollment.participant_name},</p>
+          
+          <p>We noticed you haven't completed all sections of your IncubateHer workbook yet. Completing the workbook is essential for:</p>
+          
+          <ul>
+            <li>Maximizing your consultation session</li>
+            <li>Meeting program completion requirements</li>
+            <li>Eligibility for the completion giveaway</li>
+          </ul>
+          
+          <p><strong>Incomplete Sections:</strong></p>
+          ${data.incomplete_sections ? `<ul>${data.incomplete_sections.map(s => `<li>${s}</li>`).join('')}</ul>` : '<p>Please review your workbook</p>'}
+          
+          <p><a href="${data.workbook_link || '#'}">Access Your Workbook</a></p>
+          
+          <p>Need help? Reach out anytime.</p>
+          
+          <p>Best,<br>
+          The IncubateHer Team</p>
+        `;
+        break;
+
+      case 'assessment_reminder':
+        subject = `IncubateHer: Complete Your ${data.assessment_type === 'pre' ? 'Pre' : 'Post'}-Assessment`;
+        body = `
+          <p>Hello ${enrollment.participant_name},</p>
+          
+          <p>Your ${data.assessment_type === 'pre' ? 'pre' : 'post'}-assessment is still pending. This assessment is required to:</p>
+          
+          <ul>
+            ${data.assessment_type === 'pre' ? 
+              '<li>Schedule your one-on-one consultation</li>' : 
+              '<li>Complete the program requirements</li>'}
+            <li>Track your learning progress</li>
+            <li>Help us improve the program</li>
+          </ul>
+          
+          <p><a href="${data.assessment_link || '#'}">Complete Your Assessment</a></p>
+          
+          <p>It only takes 10-15 minutes.</p>
+          
+          <p>Thank you,<br>
+          The IncubateHer Team</p>
+        `;
+        break;
+
+      case 'consultation_invitation':
+        subject = `Next Steps: Schedule Your IncubateHer Funding Readiness Consultation`;
+        body = `
+          <p>Hello ${enrollment.participant_name},</p>
+          
+          <p>Thank you for attending the Funding Readiness: Preparing for Grants and Contracts workshop as part of IncubateHer.</p>
+          
+          <p>As a next step, you are invited to schedule one individual funding readiness consultation to receive targeted feedback and guidance tailored to your business or organization.</p>
+          
+          <p><strong>Before booking your session, please:</strong></p>
+          <ul>
+            <li>Review the consultation expectations listed on the scheduling page</li>
+            <li>Complete the required pre-session intake checklist</li>
+            <li>Prepare 1–2 documents you would like reviewed during your session</li>
+          </ul>
+          
+          <p><strong>👉 Schedule your consultation here:</strong><br>
+          <a href="https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation">https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation</a></p>
+          
+          <p><strong>Please note:</strong> These consultations focus on readiness and strategic guidance and do not include application writing or funding searches.</p>
+          
+          <p>If you have any questions or need assistance scheduling, feel free to reach out.</p>
+          
+          <p>We look forward to supporting your continued growth.</p>
+          
+          <p>Warm regards,<br>
+          DR. E</p>
+        `;
+        break;
+
+      default:
+        return Response.json({ error: 'Invalid notification type' }, { status: 400 });
+    }
+
+    // Send email via Core integration
+    await base44.integrations.Core.SendEmail({
+      from_name: 'IncubateHer Program',
+      to: recipient_email,
+      subject: subject,
+      body: body
+    });
+
+    // Log the notification
+    console.log(`Sent ${notification_type} email to ${recipient_email}`);
+
+    return Response.json({ 
+      success: true, 
+      notification_type,
+      recipient: recipient_email 
+    });
+
+  } catch (error) {
+    console.error('Email notification error:', error);
+    return Response.json({ 
+      error: error.message,
+      stack: error.stack 
+    }, { status: 500 });
+  }
+});
