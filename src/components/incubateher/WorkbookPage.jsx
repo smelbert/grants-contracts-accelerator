@@ -65,17 +65,21 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-12 py-6 border-b-4 border-[#E5C089]">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-6">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/54239c095_image.png" 
-              alt="Columbus Urban League - IncubateHer" 
-              className="h-16"
-            />
-            <div className="h-12 w-px bg-white/30" />
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
-              alt="EIS Logo" 
-              className="h-14 bg-white/10 rounded px-3 py-1"
-            />
+            <div className="bg-white rounded-lg p-3 shadow-md">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/54239c095_image.png" 
+                alt="Columbus Urban League - IncubateHer" 
+                className="h-20"
+              />
+            </div>
+            <div className="h-16 w-px bg-white/30" />
+            <div className="bg-white rounded-lg p-3 shadow-md">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+                alt="EIS Logo" 
+                className="h-16"
+              />
+            </div>
           </div>
           <PageTypeBadge type={page.type} />
         </div>
