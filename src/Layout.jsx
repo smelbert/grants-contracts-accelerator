@@ -86,6 +86,7 @@ const getUserPortalNav = () => [
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
       { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users, requiresRole: 'admin' },
+      { name: 'Workbook Editor', page: 'IncubateHerWorkbookEditor', icon: FileText, requiresRole: 'admin' },
     ]
   },
   {
@@ -177,6 +178,7 @@ const getAdminPortalNav = () => [
       { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
       { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users },
       { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings },
+      { name: 'Workbook Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
       { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
       { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
       { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },

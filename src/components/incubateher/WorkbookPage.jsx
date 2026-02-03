@@ -112,7 +112,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                 <h3 className="text-lg font-bold text-blue-900">Key Takeaways</h3>
               </div>
               <ul className="space-y-2 text-sm text-blue-900 ml-13">
-                {page.takeaways.map((takeaway, idx) => (
+                {displayPage.takeaways.map((takeaway, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <CheckSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                     <span>{takeaway}</span>
@@ -135,7 +135,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                 <h3 className="text-lg font-bold text-amber-900">Action Items</h3>
               </div>
               <ul className="space-y-2 text-sm text-amber-900 ml-13">
-                {page.actionItems.map((item, idx) => (
+                {(displayPage.actionItems || displayPage.action_items || []).map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-amber-600 font-bold mt-0.5">→</span>
                     <span>{item}</span>

@@ -88,6 +88,7 @@ import IncubateHerAgenda from './pages/IncubateHerAgenda';
 import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
+import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
 import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
 import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
 import IncubateHerOverview from './pages/IncubateHerOverview';
@@ -148,7 +149,7 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
+import IncubateHerWorkbookEditor from './pages/IncubateHerWorkbookEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -194,6 +195,7 @@ export const PAGES = {
     "IncubateHerCULDashboard": IncubateHerCULDashboard,
     "IncubateHerCompletion": IncubateHerCompletion,
     "IncubateHerConsultations": IncubateHerConsultations,
+    "IncubateHerEmailTemplates": IncubateHerEmailTemplates,
     "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
     "IncubateHerGiveaway": IncubateHerGiveaway,
     "IncubateHerOverview": IncubateHerOverview,
@@ -254,7 +256,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerEmailTemplates": IncubateHerEmailTemplates,
+    "IncubateHerWorkbookEditor": IncubateHerWorkbookEditor,
 }
 
 export const pagesConfig = {
