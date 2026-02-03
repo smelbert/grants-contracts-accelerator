@@ -244,12 +244,19 @@ export default function AboutEISPage() {
           <p className="text-xl text-[#E5C089]/80 mb-8">
             Join the EIS community and start building your sustainable funding future today
           </p>
-          <Link to={createPageUrl('Register')}>
-            <Button size="lg" className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 text-lg px-8">
-              Get Started
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to={createPageUrl('Register')}>
+              <Button size="lg" className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 text-lg px-8">
+                Get Started
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </Link>
+            <Link to={createPageUrl('BoutiqueServices')}>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8">
+                Explore Premium Services
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 

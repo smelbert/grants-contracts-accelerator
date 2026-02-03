@@ -238,6 +238,11 @@ export default function PublicHomePage() {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>
+            <Link to={createPageUrl('BoutiqueServices')}>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-[#1E4F58] text-lg px-8">
+                Premium Services
+              </Button>
+            </Link>
             <Link to={createPageUrl('AboutEIS')}>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-[#1E4F58] text-lg px-8">
                 Meet Dr. Elbert
