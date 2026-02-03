@@ -147,6 +147,7 @@ import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
 import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
 import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
 import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
+import IncubateHerVideoLibrary from './pages/IncubateHerVideoLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -251,6 +252,7 @@ export const PAGES = {
     "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
     "IncubateHerAdminConsole": IncubateHerAdminConsole,
     "IncubateHerCULDashboard": IncubateHerCULDashboard,
+    "IncubateHerVideoLibrary": IncubateHerVideoLibrary,
 }
 
 export const pagesConfig = {

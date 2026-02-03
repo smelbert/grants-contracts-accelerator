@@ -80,6 +80,7 @@ const getUserPortalNav = () => [
       { name: 'Schedule Options', page: 'IncubateHerSchedule', icon: Calendar },
       { name: 'Agenda', page: 'IncubateHerAgenda', icon: FileText },
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
+      { name: 'Video Library', page: 'IncubateHerVideoLibrary', icon: Video },
       { name: 'Assessments', page: 'IncubateHerPreAssessment', icon: CheckCircle2 },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },

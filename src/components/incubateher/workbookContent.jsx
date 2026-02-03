@@ -23,6 +23,8 @@ export const WORKBOOK_PAGES = [
     section: 'front_matter',
     title: 'How to Use This Workbook',
     type: 'handout',
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    video_description: 'Welcome message from Dr. Shawnté Elbert on how to get the most from this workbook',
     content: `
       <h3 class="font-semibold text-lg mb-3">Purpose</h3>
       <p class="mb-4">This workbook is your companion guide for building funding readiness. It connects directly to your group sessions, assessments, and one-on-one consultation.</p>
@@ -83,6 +85,8 @@ export const WORKBOOK_PAGES = [
     section: 'funding_foundations',
     title: 'Funding Pathways Overview',
     type: 'handout',
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    video_description: 'Expert explanation: Understanding the key differences between grants and contracts',
     content: `
       <h3 class="font-semibold text-lg mb-3">Grants vs. Contracts</h3>
       
@@ -383,6 +387,8 @@ export const WORKBOOK_PAGES = [
     section: 'rfps',
     title: 'Understanding RFPs & Solicitations',
     type: 'handout',
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    video_description: 'Deep dive: How to read and respond to RFPs strategically',
     content: `
       <h3 class="font-semibold text-lg mb-3">What is an RFP?</h3>
       <p class="mb-4">A <strong>Request for Proposals (RFP)</strong> is how government agencies and large organizations solicit bids for contracted services. It's a formal process with strict requirements.</p>
@@ -610,6 +616,8 @@ export const WORKBOOK_PAGES = [
     section: 'consultation',
     title: 'Preparing for Your Consultation',
     type: 'consultation',
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    video_description: 'Facilitator guide: Making the most of your one-on-one consultation session',
     content: `
       <h3 class="font-semibold text-lg mb-3">What to Bring</h3>
       <ul class="list-disc ml-6 mb-4 space-y-2">

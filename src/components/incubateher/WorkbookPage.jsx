@@ -37,6 +37,27 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
     onResponseChange(page.id, fieldId, value);
   };
 
+  const getVideoEmbedUrl = (url) => {
+    if (!url) return null;
+    
+    // YouTube
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const videoId = url.includes('youtu.be') 
+        ? url.split('youtu.be/')[1]?.split('?')[0]
+        : url.split('v=')[1]?.split('&')[0];
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    // Vimeo
+    if (url.includes('vimeo.com')) {
+      const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
+      return `https://player.vimeo.com/video/${videoId}`;
+    }
+    
+    // Direct video URL
+    return url;
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -49,6 +70,33 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
         </div>
         <PageTypeBadge type={page.type} />
       </div>
+
+      {/* Video Content */}
+      {page.video_url && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="aspect-video rounded-lg overflow-hidden bg-slate-900">
+              {getVideoEmbedUrl(page.video_url)?.startsWith('http') ? (
+                <iframe
+                  src={getVideoEmbedUrl(page.video_url)}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <video
+                  src={page.video_url}
+                  controls
+                  className="w-full h-full"
+                />
+              )}
+            </div>
+            {page.video_description && (
+              <p className="text-sm text-slate-600 mt-4">{page.video_description}</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Page Content */}
       {page.content && (
