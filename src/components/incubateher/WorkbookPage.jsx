@@ -59,23 +59,40 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex items-start justify-between">
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+      {/* Professional Header with Branding */}
+      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-8 py-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+              alt="EIS Logo" 
+              className="h-10 bg-white rounded px-2 py-1"
+            />
+            <div className="h-8 w-px bg-white/30" />
+            <img 
+              src="https://columbusfoundation.org/getmedia/41f05a72-5e52-4f0c-920b-6ed7b1a7e25f/ColumbusUrbanLeague-min.jpg" 
+              alt="CUL Logo" 
+              className="h-10 bg-white rounded px-2 py-1"
+            />
+          </div>
+          <PageTypeBadge type={page.type} />
+        </div>
         <div>
-          <h2 className="text-2xl font-bold text-[#143A50] mb-2">{page.title}</h2>
+          <h2 className="text-2xl font-bold text-white mb-1">{page.title}</h2>
           {page.subtitle && (
-            <p className="text-slate-600">{page.subtitle}</p>
+            <p className="text-[#E5C089] text-sm">{page.subtitle}</p>
           )}
         </div>
-        <PageTypeBadge type={page.type} />
       </div>
 
-      {/* Video Content */}
-      {page.video_url && (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="aspect-video rounded-lg overflow-hidden bg-slate-900">
+      {/* Content Area with Professional Spacing */}
+      <div className="px-8 py-6 space-y-6">
+
+        {/* Video Content */}
+        {page.video_url && (
+          <div className="bg-slate-50 rounded-lg p-6 border-2 border-[#E5C089]">
+            <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 shadow-lg">
               {getVideoEmbedUrl(page.video_url)?.startsWith('http') ? (
                 <iframe
                   src={getVideoEmbedUrl(page.video_url)}
@@ -94,84 +111,82 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
             {page.video_description && (
               <p className="text-sm text-slate-600 mt-4">{page.video_description}</p>
             )}
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        )}
 
-      {/* Page Content */}
-      {page.content && (
-        <Card>
-          <CardContent className="pt-6">
+        {/* Page Content */}
+        {page.content && (
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
             <div 
-              className="prose prose-slate max-w-none"
+              className="prose prose-slate max-w-none prose-headings:text-[#143A50] prose-a:text-[#AC1A5B] prose-strong:text-[#143A50]"
               dangerouslySetInnerHTML={{ __html: page.content }}
             />
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        )}
 
-      {/* Interactive Fields */}
-      {page.fields && page.fields.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Your Responses</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
+        {/* Interactive Fields */}
+        {page.fields && page.fields.length > 0 && (
+          <div className="bg-[#E5C089]/10 border-2 border-[#E5C089] rounded-lg p-6">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[#E5C089]">
+              <CheckSquare className="w-6 h-6 text-[#143A50]" />
+              <h3 className="text-xl font-bold text-[#143A50]">Your Responses</h3>
+            </div>
+            <div className="space-y-6">
             {page.fields.map((field) => {
               const fieldValue = responses?.[field.id] || '';
 
               switch (field.type) {
                 case 'textarea':
                   return (
-                    <div key={field.id}>
-                      <Label className="text-base mb-2 block font-medium text-slate-900">
+                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
+                      <Label className="text-base mb-2 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
-                        <p className="text-sm text-slate-600 mb-2">{field.description}</p>
+                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
                       )}
                       <Textarea
                         value={fieldValue}
                         onChange={(e) => handleFieldChange(field.id, e.target.value)}
                         placeholder={field.placeholder}
                         rows={field.rows || 4}
-                        className="w-full"
+                        className="w-full border-2 border-slate-300 focus:border-[#E5C089] focus:ring-2 focus:ring-[#E5C089]/20"
                       />
                     </div>
                   );
 
                 case 'input':
                   return (
-                    <div key={field.id}>
-                      <Label className="text-base mb-2 block font-medium text-slate-900">
+                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
+                      <Label className="text-base mb-2 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
-                        <p className="text-sm text-slate-600 mb-2">{field.description}</p>
+                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
                       )}
                       <Input
                         value={fieldValue}
                         onChange={(e) => handleFieldChange(field.id, e.target.value)}
                         placeholder={field.placeholder}
-                        className="w-full"
+                        className="w-full border-2 border-slate-300 focus:border-[#E5C089] focus:ring-2 focus:ring-[#E5C089]/20"
                       />
                     </div>
                   );
 
                 case 'radio':
                   return (
-                    <div key={field.id}>
-                      <Label className="text-base mb-3 block font-medium text-slate-900">
+                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
+                      <Label className="text-base mb-3 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
-                        <p className="text-sm text-slate-600 mb-3">{field.description}</p>
+                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
                       )}
                       <RadioGroup value={fieldValue} onValueChange={(val) => handleFieldChange(field.id, val)}>
                         {field.options.map((option) => (
-                          <div key={option.value} className="flex items-center space-x-2 mb-2">
+                          <div key={option.value} className="flex items-center space-x-3 mb-3 p-2 hover:bg-slate-50 rounded">
                             <RadioGroupItem value={option.value} id={`${field.id}-${option.value}`} />
-                            <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer">
+                            <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer flex-1">
                               {option.label}
                             </Label>
                           </div>
@@ -182,18 +197,18 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
 
                 case 'checkbox':
                   return (
-                    <div key={field.id}>
-                      <Label className="text-base mb-3 block font-medium text-slate-900">
+                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
+                      <Label className="text-base mb-3 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
-                        <p className="text-sm text-slate-600 mb-3">{field.description}</p>
+                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
                       )}
                       <div className="space-y-2">
                         {field.options.map((option) => {
                           const isChecked = Array.isArray(fieldValue) && fieldValue.includes(option.value);
                           return (
-                            <div key={option.value} className="flex items-center space-x-2">
+                            <div key={option.value} className="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded">
                               <Checkbox
                                 id={`${field.id}-${option.value}`}
                                 checked={isChecked}
@@ -205,7 +220,7 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
                                   handleFieldChange(field.id, newValues);
                                 }}
                               />
-                              <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer">
+                              <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer flex-1">
                                 {option.label}
                               </Label>
                             </div>
@@ -217,31 +232,31 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
 
                 case 'table':
                   return (
-                    <div key={field.id}>
-                      <Label className="text-base mb-3 block font-medium text-slate-900">
+                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
+                      <Label className="text-base mb-3 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
-                        <p className="text-sm text-slate-600 mb-3">{field.description}</p>
+                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
                       )}
                       <div className="overflow-x-auto">
                         <table className="w-full border-collapse">
                           <thead>
-                            <tr className="bg-slate-50">
+                            <tr className="bg-[#143A50]">
                               {field.columns.map((col) => (
-                                <th key={col.id} className="border p-2 text-left font-medium text-sm">
+                                <th key={col.id} className="border border-slate-300 p-3 text-left font-semibold text-sm text-white">
                                   {col.label}
                                 </th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
-                            {(field.rows || 3).times((_, rowIdx) => {
+                            {Array.from({ length: field.rows || 3 }).map((_, rowIdx) => {
                               const rowData = (Array.isArray(fieldValue) ? fieldValue[rowIdx] : {}) || {};
                               return (
-                                <tr key={rowIdx}>
+                                <tr key={rowIdx} className="hover:bg-slate-50">
                                   {field.columns.map((col) => (
-                                    <td key={col.id} className="border p-2">
+                                    <td key={col.id} className="border border-slate-300 p-2">
                                       <Input
                                         value={rowData[col.id] || ''}
                                         onChange={(e) => {
@@ -249,7 +264,7 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
                                           newRows[rowIdx] = { ...rowData, [col.id]: e.target.value };
                                           handleFieldChange(field.id, newRows);
                                         }}
-                                        className="w-full"
+                                        className="w-full border-slate-300 focus:border-[#E5C089]"
                                       />
                                     </td>
                                   ))}
@@ -266,9 +281,22 @@ export default function WorkbookPage({ page, responses, onResponseChange }) {
                   return null;
               }
             })}
-          </CardContent>
-        </Card>
-      )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Professional Footer */}
+      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-8 py-4">
+        <div className="flex items-center justify-between text-sm">
+          <div className="text-white/80">
+            <span className="font-semibold text-white">IncubateHer</span> | Funding Readiness: Preparing for Grants & Contracts
+          </div>
+          <div className="text-white/60 text-xs">
+            Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
