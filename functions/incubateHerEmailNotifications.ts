@@ -170,19 +170,33 @@ Deno.serve(async (req) => {
           
           <p>Thank you for attending the Funding Readiness: Preparing for Grants and Contracts workshop as part of IncubateHer.</p>
           
-          <p>As a next step, you are invited to schedule one individual funding readiness consultation to receive targeted feedback and guidance tailored to your business or organization.</p>
+          <p>Following the group workshop, you have the opportunity to schedule one individual consultation with the facilitator.</p>
           
-          <p><strong>Before booking your session, please:</strong></p>
+          <h3 style="margin-top: 20px; margin-bottom: 10px;">What the One-on-One Includes:</h3>
           <ul>
-            <li>Review the consultation expectations listed on the scheduling page</li>
-            <li>Complete the required pre-session intake checklist</li>
-            <li>Prepare 1–2 documents you would like reviewed during your session</li>
+            <li>Review of existing documents (e.g., business overview, draft project description, budget outline, or capability statement)</li>
+            <li>Strategic feedback on funding readiness and alignment (grants vs. contracts)</li>
+            <li>Clarification of next steps and recommended areas for strengthening</li>
           </ul>
           
-          <p><strong>👉 Schedule your consultation here:</strong><br>
-          <a href="https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation">https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation</a></p>
+          <h3 style="margin-top: 20px; margin-bottom: 10px;">What the One-on-One Does NOT Include:</h3>
+          <ul>
+            <li>Writing or rewriting grant applications or contracts</li>
+            <li>Conducting grant searches or identifying specific funding opportunities</li>
+            <li>Ongoing consulting beyond the scheduled session</li>
+          </ul>
           
-          <p><strong>Please note:</strong> These consultations focus on readiness and strategic guidance and do not include application writing or funding searches.</p>
+          <h3 style="margin-top: 20px; margin-bottom: 10px;">How to Prepare:</h3>
+          <ul>
+            <li>Bring 1–2 documents you would like reviewed (drafts are acceptable)</li>
+            <li>Be prepared to discuss your business structure, current capacity, and funding goals</li>
+            <li>Come with specific questions you want to prioritize during the session</li>
+          </ul>
+          
+          <p style="margin-top: 15px;"><em>Participants who arrive prepared will get the most value from their consultation.</em></p>
+          
+          <p style="margin-top: 20px;"><strong>👉 Schedule your consultation here:</strong><br>
+          <a href="https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation">https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation</a></p>
           
           <p>If you have any questions or need assistance scheduling, feel free to reach out.</p>
           

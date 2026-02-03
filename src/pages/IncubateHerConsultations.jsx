@@ -64,38 +64,43 @@ export default function IncubateHerConsultations() {
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         <Card className="border-l-4 border-l-[#143A50]">
           <CardHeader>
-            <CardTitle>What to Expect</CardTitle>
+            <CardTitle>What the One-on-One Includes</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <h4 className="font-semibold text-slate-700 mb-2">Your consultation will include:</h4>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-slate-600">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                  <span>Review of your pre-assessment results and readiness profile</span>
-                </li>
-                <li className="flex items-start gap-2 text-slate-600">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                  <span>Document review and feedback on key organizational materials</span>
-                </li>
-                <li className="flex items-start gap-2 text-slate-600">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                  <span>Personalized action plan with specific next steps</span>
-                </li>
-                <li className="flex items-start gap-2 text-slate-600">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
-                  <span>Q&A time for your specific organizational needs</span>
-                </li>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2 text-slate-600">
+                <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
+                <span>Review of existing documents (e.g., business overview, draft project description, budget outline, or capability statement)</span>
+              </li>
+              <li className="flex items-start gap-2 text-slate-600">
+                <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
+                <span>Strategic feedback on funding readiness and alignment (grants vs. contracts)</span>
+              </li>
+              <li className="flex items-start gap-2 text-slate-600">
+                <CheckCircle2 className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
+                <span>Clarification of next steps and recommended areas for strengthening</span>
+              </li>
+            </ul>
+
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <h4 className="font-semibold text-amber-900 mb-2">What the One-on-One Does NOT Include:</h4>
+              <ul className="space-y-1 text-amber-800 text-sm">
+                <li>• Writing or rewriting grant applications or contracts</li>
+                <li>• Conducting grant searches or identifying specific funding opportunities</li>
+                <li>• Ongoing consulting beyond the scheduled session</li>
               </ul>
             </div>
 
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <h4 className="font-semibold text-amber-900 mb-2">What This is NOT:</h4>
-              <ul className="space-y-1 text-amber-800 text-sm">
-                <li>• Not a grant writing session</li>
-                <li>• Not a guarantee of funding</li>
-                <li>• Not a replacement for professional legal or financial advice</li>
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h4 className="font-semibold text-blue-900 mb-2">How to Prepare:</h4>
+              <ul className="space-y-1 text-blue-800 text-sm">
+                <li>• Bring 1–2 documents you would like reviewed (drafts are acceptable)</li>
+                <li>• Be prepared to discuss your business structure, current capacity, and funding goals</li>
+                <li>• Come with specific questions you want to prioritize during the session</li>
               </ul>
+              <p className="text-sm text-blue-900 font-medium mt-3">
+                Participants who arrive prepared will get the most value from their consultation.
+              </p>
             </div>
           </CardContent>
         </Card>

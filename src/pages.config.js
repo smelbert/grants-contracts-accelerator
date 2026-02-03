@@ -83,12 +83,22 @@ import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
 import Home from './pages/Home';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
+import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
+import IncubateHerAgenda from './pages/IncubateHerAgenda';
+import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
+import IncubateHerCompletion from './pages/IncubateHerCompletion';
+import IncubateHerConsultations from './pages/IncubateHerConsultations';
+import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
+import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
 import IncubateHerOverview from './pages/IncubateHerOverview';
 import IncubateHerParticipants from './pages/IncubateHerParticipants';
 import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
 import IncubateHerPublic from './pages/IncubateHerPublic';
+import IncubateHerReport from './pages/IncubateHerReport';
 import IncubateHerSchedule from './pages/IncubateHerSchedule';
+import IncubateHerVideoLibrary from './pages/IncubateHerVideoLibrary';
+import IncubateHerWorkbook from './pages/IncubateHerWorkbook';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
 import LearningHubAccess from './pages/LearningHubAccess';
@@ -97,7 +107,10 @@ import LearningProgress from './pages/LearningProgress';
 import LiveRoomManagement from './pages/LiveRoomManagement';
 import LiveStreams from './pages/LiveStreams';
 import MemberManagement from './pages/MemberManagement';
+import MentorDashboard from './pages/MentorDashboard';
+import MentorManagement from './pages/MentorManagement';
 import MyClassroom from './pages/MyClassroom';
+import MyMentorship from './pages/MyMentorship';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -135,19 +148,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerReport from './pages/IncubateHerReport';
-import MentorManagement from './pages/MentorManagement';
-import MentorDashboard from './pages/MentorDashboard';
-import MyMentorship from './pages/MyMentorship';
-import IncubateHerAgenda from './pages/IncubateHerAgenda';
-import IncubateHerWorkbook from './pages/IncubateHerWorkbook';
-import IncubateHerConsultations from './pages/IncubateHerConsultations';
-import IncubateHerCompletion from './pages/IncubateHerCompletion';
-import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
-import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
-import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
-import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
-import IncubateHerVideoLibrary from './pages/IncubateHerVideoLibrary';
 import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
 import __Layout from './Layout.jsx';
 
@@ -189,12 +189,22 @@ export const PAGES = {
     "GrantSubmission": GrantSubmission,
     "Home": Home,
     "IncubateHerAdmin": IncubateHerAdmin,
+    "IncubateHerAdminConsole": IncubateHerAdminConsole,
+    "IncubateHerAgenda": IncubateHerAgenda,
+    "IncubateHerCULDashboard": IncubateHerCULDashboard,
+    "IncubateHerCompletion": IncubateHerCompletion,
+    "IncubateHerConsultations": IncubateHerConsultations,
+    "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
+    "IncubateHerGiveaway": IncubateHerGiveaway,
     "IncubateHerOverview": IncubateHerOverview,
     "IncubateHerParticipants": IncubateHerParticipants,
     "IncubateHerPostAssessment": IncubateHerPostAssessment,
     "IncubateHerPreAssessment": IncubateHerPreAssessment,
     "IncubateHerPublic": IncubateHerPublic,
+    "IncubateHerReport": IncubateHerReport,
     "IncubateHerSchedule": IncubateHerSchedule,
+    "IncubateHerVideoLibrary": IncubateHerVideoLibrary,
+    "IncubateHerWorkbook": IncubateHerWorkbook,
     "Landing": Landing,
     "Learning": Learning,
     "LearningHubAccess": LearningHubAccess,
@@ -203,7 +213,10 @@ export const PAGES = {
     "LiveRoomManagement": LiveRoomManagement,
     "LiveStreams": LiveStreams,
     "MemberManagement": MemberManagement,
+    "MentorDashboard": MentorDashboard,
+    "MentorManagement": MentorManagement,
     "MyClassroom": MyClassroom,
+    "MyMentorship": MyMentorship,
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -241,19 +254,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerReport": IncubateHerReport,
-    "MentorManagement": MentorManagement,
-    "MentorDashboard": MentorDashboard,
-    "MyMentorship": MyMentorship,
-    "IncubateHerAgenda": IncubateHerAgenda,
-    "IncubateHerWorkbook": IncubateHerWorkbook,
-    "IncubateHerConsultations": IncubateHerConsultations,
-    "IncubateHerCompletion": IncubateHerCompletion,
-    "IncubateHerGiveaway": IncubateHerGiveaway,
-    "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
-    "IncubateHerAdminConsole": IncubateHerAdminConsole,
-    "IncubateHerCULDashboard": IncubateHerCULDashboard,
-    "IncubateHerVideoLibrary": IncubateHerVideoLibrary,
     "IncubateHerEmailTemplates": IncubateHerEmailTemplates,
 }
 
