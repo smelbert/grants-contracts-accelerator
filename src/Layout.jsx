@@ -72,6 +72,13 @@ const getUserPortalNav = () => [
     ]
   },
   {
+    groupName: 'IncubateHer Program',
+    items: [
+      { name: 'Program Overview', page: 'IncubateHerOverview', icon: Target },
+      { name: 'Schedule', page: 'IncubateHerSchedule', icon: Calendar },
+    ]
+  },
+  {
     groupName: 'Community',
     items: [
       { name: 'Community Spaces', page: 'Community', icon: Users },
@@ -148,6 +155,13 @@ const getAdminPortalNav = () => [
       { name: 'RFP Rapid Response', page: 'RFPRapidResponse', icon: Sparkles },
       { name: 'Grant Readiness Intensive', page: 'GrantReadinessIntensive', icon: Target },
       { name: 'Strategy Reset', page: 'StrategyReset', icon: TrendingUp },
+    ]
+  },
+  {
+    groupName: 'IncubateHer Program',
+    items: [
+      { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
+      { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
     ]
   },
   {

@@ -127,6 +127,8 @@ import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import IncubateHerOverview from './pages/IncubateHerOverview';
 import IncubateHerSchedule from './pages/IncubateHerSchedule';
+import IncubateHerAdmin from './pages/IncubateHerAdmin';
+import IncubateHerParticipants from './pages/IncubateHerParticipants';
 import __Layout from './Layout.jsx';
 
 
@@ -211,6 +213,8 @@ export const PAGES = {
     "WorkflowsAutomation": WorkflowsAutomation,
     "IncubateHerOverview": IncubateHerOverview,
     "IncubateHerSchedule": IncubateHerSchedule,
+    "IncubateHerAdmin": IncubateHerAdmin,
+    "IncubateHerParticipants": IncubateHerParticipants,
 }
 
 export const pagesConfig = {
