@@ -55,6 +55,13 @@ const getUserPortalNav = () => [
       { name: 'Projects', page: 'Projects', icon: FileText },
       { name: 'Documents', page: 'Documents', icon: FileText },
       { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
+      { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
+    ]
+  },
+  {
+    groupName: 'Premium Services',
+    items: [
+      { name: 'Boutique Services', page: 'BoutiqueServices', icon: Sparkles },
     ]
   },
   {

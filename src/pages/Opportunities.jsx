@@ -1,378 +1,388 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Search, Loader2, Info, SlidersHorizontal, Sparkles } from 'lucide-react';
-import OpportunityCard from '@/components/opportunities/OpportunityCard';
-import AIMatchScore from '@/components/opportunities/AIMatchScore';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Search, 
+  DollarSign, 
+  Calendar, 
+  Bookmark, 
+  BookmarkCheck,
+  ExternalLink,
+  MapPin,
+  TrendingUp,
+  Filter
+} from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
 
-function determineReadinessMatch(opportunity, organization) {
-  if (!organization) return 'not_ready';
-  
-  if (opportunity.required_org_types?.length > 0) {
-    if (!opportunity.required_org_types.includes(organization.type)) {
-      return 'not_ready';
-    }
-  }
-  
-  if (opportunity.required_stages?.length > 0) {
-    if (!opportunity.required_stages.includes(organization.stage)) {
-      return 'partial';
-    }
-  }
-  
-  if (organization.readiness_status === 'pre_funding') {
-    return 'not_ready';
-  }
-  
-  return 'ready';
-}
-
-async function calculateAIMatch(opportunity, organization) {
-  if (!organization) return null;
-  
-  try {
-    const prompt = `You are a funding readiness expert. Analyze how well this organization matches this funding opportunity.
-
-ORGANIZATION PROFILE:
-- Type: ${organization.type}
-- Stage: ${organization.stage}
-- Annual Budget: ${organization.annual_budget}
-- Staff Structure: ${organization.staff_structure}
-- Governance: ${organization.governance_status}
-- Funding Experience: ${organization.funding_experience}
-- Readiness Status: ${organization.readiness_status}
-- Mission: ${organization.mission_statement || 'Not provided'}
-- Location: ${organization.city}, ${organization.state}
-
-OPPORTUNITY:
-- Title: ${opportunity.title}
-- Type: ${opportunity.type}
-- Funder: ${opportunity.funder_name}
-- Amount: $${opportunity.amount_min}-$${opportunity.amount_max}
-- Eligibility: ${opportunity.eligibility_summary}
-- Required Org Types: ${opportunity.required_org_types?.join(', ') || 'Any'}
-- Required Stages: ${opportunity.required_stages?.join(', ') || 'Any'}
-- Focus Areas: ${opportunity.sector_focus?.join(', ') || 'General'}
-
-Provide a detailed match analysis with scores for: eligibility (0-100), alignment (0-100), readiness (0-100), and capacity (0-100). Calculate overall_score as average. Include 2-3 specific concerns if score < 80.`;
-
-    const response = await base44.integrations.Core.InvokeLLM({
-      prompt,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          overall_score: { type: 'number' },
-          category_scores: {
-            type: 'object',
-            properties: {
-              eligibility: { type: 'number' },
-              alignment: { type: 'number' },
-              readiness: { type: 'number' },
-              capacity: { type: 'number' }
-            }
-          },
-          recommendation: { type: 'string' },
-          concerns: {
-            type: 'array',
-            items: { type: 'string' }
-          }
-        }
-      }
-    });
-
-    return response;
-  } catch (error) {
-    console.error('AI match calculation failed:', error);
-    return null;
-  }
-}
-
 export default function OpportunitiesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLane, setSelectedLane] = useState('all');
-  const [amountFilter, setAmountFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedType, setSelectedType] = useState('all');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
-  const [aiMatches, setAiMatches] = useState({});
-  const [calculatingMatches, setCalculatingMatches] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: organizations } = useQuery({
-    queryKey: ['organizations', user?.email],
-    queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),
+  const { data: opportunities = [], isLoading } = useQuery({
+    queryKey: ['opportunities'],
+    queryFn: () => base44.entities.FundingOpportunity.list('-posted_date', 100),
+  });
+
+  const { data: savedOpportunities = [] } = useQuery({
+    queryKey: ['saved-opportunities', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return await base44.entities.OpportunityComment.filter({
+        user_email: user.email,
+        is_saved: true
+      });
+    },
     enabled: !!user?.email,
   });
 
-  const { data: opportunities, isLoading } = useQuery({
-    queryKey: ['opportunities'],
-    queryFn: () => base44.entities.FundingOpportunity.filter({ is_active: true }),
+  const saveOpportunityMutation = useMutation({
+    mutationFn: async (opportunity) => {
+      return await base44.entities.OpportunityComment.create({
+        opportunity_id: opportunity.id,
+        user_email: user.email,
+        user_name: user.full_name,
+        is_saved: true,
+        comment_text: ''
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['saved-opportunities']);
+      toast.success('Opportunity saved!');
+    },
   });
 
-  const organization = organizations?.[0];
-
-  // Calculate AI matches when opportunities and organization are loaded
-  useEffect(() => {
-    if (opportunities && organization && opportunities.length > 0) {
-      const calculateMatches = async () => {
-        setCalculatingMatches(true);
-        const matches = {};
-        
-        // Calculate for first 5 opportunities to avoid rate limits
-        const oppsToAnalyze = opportunities.slice(0, 5);
-        
-        for (const opp of oppsToAnalyze) {
-          const match = await calculateAIMatch(opp, organization);
-          if (match) {
-            matches[opp.id] = match;
-          }
-        }
-        
-        setAiMatches(matches);
-        setCalculatingMatches(false);
-      };
-      
-      calculateMatches();
-    }
-  }, [opportunities, organization]);
-
-  const filteredOpportunities = (opportunities || []).filter(opp => {
-    const matchesSearch = !searchQuery || 
-      opp.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      opp.funder_name?.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesLane = selectedLane === 'all' || opp.funding_lane === selectedLane;
-    
-    let matchesAmount = true;
-    if (amountFilter !== 'all') {
-      const maxAmount = opp.amount_max || opp.amount_min || 0;
-      switch (amountFilter) {
-        case 'under_25k': matchesAmount = maxAmount < 25000; break;
-        case '25k_100k': matchesAmount = maxAmount >= 25000 && maxAmount <= 100000; break;
-        case '100k_500k': matchesAmount = maxAmount >= 100000 && maxAmount <= 500000; break;
-        case 'over_500k': matchesAmount = maxAmount > 500000; break;
+  const unsaveOpportunityMutation = useMutation({
+    mutationFn: async (opportunityId) => {
+      const saved = savedOpportunities.find(s => s.opportunity_id === opportunityId);
+      if (saved) {
+        await base44.entities.OpportunityComment.delete(saved.id);
       }
-    }
-    
-    return matchesSearch && matchesLane && matchesAmount;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['saved-opportunities']);
+      toast.success('Removed from saved');
+    },
   });
+
+  const isSaved = (opportunityId) => {
+    return savedOpportunities.some(s => s.opportunity_id === opportunityId);
+  };
+
+  const filteredOpportunities = opportunities.filter(opp => {
+    const matchesSearch = !searchTerm || 
+      opp.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      opp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      opp.funder_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesType = selectedType === 'all' || opp.opportunity_type === selectedType;
+    
+    return matchesSearch && matchesType;
+  });
+
+  const savedOpps = filteredOpportunities.filter(opp => isSaved(opp.id));
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#143A50] mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading opportunities...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
-      <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-green-50/20 p-6">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-            Funding Opportunities
-          </h1>
-          <p className="text-slate-500 mt-1">
-            Curated opportunities matched to your readiness level
-          </p>
-        </motion.div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Funding Opportunities</h1>
+          <p className="text-slate-600">Browse and save opportunities that match your organization</p>
+        </div>
 
-        {/* Readiness Notice */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <Alert className="bg-violet-50 border-violet-200">
-            <Sparkles className="w-4 h-4 text-violet-600" />
-            <AlertDescription className="text-violet-700">
-              <strong>AI-Powered Matching:</strong> Each opportunity is analyzed by AI to provide detailed match scores based on your organization's profile, readiness, and capacity.
-              {calculatingMatches && <span className="ml-2 text-violet-600">Calculating matches...</span>}
-            </AlertDescription>
-          </Alert>
-        </motion.div>
-
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6 space-y-4"
-        >
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <Input
-              placeholder="Search opportunities..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12"
-            />
-          </div>
-
-          {/* Lane tabs */}
-          <Tabs value={selectedLane} onValueChange={setSelectedLane}>
-            <TabsList className="bg-white border border-slate-200 p-1 h-auto flex-wrap">
-              <TabsTrigger value="all" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white">
-                All
-              </TabsTrigger>
-              <TabsTrigger value="grants" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
-                Grants
-              </TabsTrigger>
-              <TabsTrigger value="contracts" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
-                Contracts
-              </TabsTrigger>
-              <TabsTrigger value="donors" className="data-[state=active]:bg-violet-600 data-[state=active]:text-white">
-                Donors
-              </TabsTrigger>
-              <TabsTrigger value="public_funds" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white">
-                Public Funds
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {/* Amount filter */}
-          <div className="flex items-center gap-4">
-            <Select value={amountFilter} onValueChange={setAmountFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Amount range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All amounts</SelectItem>
-                <SelectItem value="under_25k">Under $25K</SelectItem>
-                <SelectItem value="25k_100k">$25K - $100K</SelectItem>
-                <SelectItem value="100k_500k">$100K - $500K</SelectItem>
-                <SelectItem value="over_500k">Over $500K</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-sm text-slate-500">
-              {filteredOpportunities.length} opportunities found
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Results */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
-          </div>
-        ) : filteredOpportunities.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-slate-500">No opportunities match your filters.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredOpportunities.map((opp, index) => (
-              <motion.div
-                key={opp.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <OpportunityCard
-                  opportunity={opp}
-                  readinessStatus={determineReadinessMatch(opp, organization)}
-                  aiMatchData={aiMatches[opp.id]}
-                  onViewDetails={setSelectedOpportunity}
+        {/* Search & Filter */}
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  placeholder="Search opportunities..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
                 />
-              </motion.div>
-            ))}
-          </div>
-        )}
+              </div>
+              <div className="flex gap-2">
+                <select
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  className="px-4 py-2 border rounded-lg bg-white"
+                >
+                  <option value="all">All Types</option>
+                  <option value="grant">Grants</option>
+                  <option value="contract">Contracts</option>
+                  <option value="rfp">RFPs</option>
+                  <option value="fellowship">Fellowships</option>
+                </select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Detail Sheet */}
-        <Sheet open={!!selectedOpportunity} onOpenChange={() => setSelectedOpportunity(null)}>
-          <SheetContent className="sm:max-w-lg overflow-y-auto">
-            {selectedOpportunity && (
-              <>
-                <SheetHeader>
-                  <SheetTitle>{selectedOpportunity.title}</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6 space-y-6">
-                  <div>
-                    <p className="text-sm text-slate-500">Funder</p>
-                    <p className="font-medium">{selectedOpportunity.funder_name}</p>
-                  </div>
-                  
-                  {selectedOpportunity.description && (
-                    <div>
-                      <p className="text-sm text-slate-500 mb-2">Description</p>
-                      <p className="text-slate-700">{selectedOpportunity.description}</p>
-                    </div>
-                  )}
+        {/* Tabs */}
+        <Tabs defaultValue="all" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="all">
+              All Opportunities ({filteredOpportunities.length})
+            </TabsTrigger>
+            <TabsTrigger value="saved">
+              <BookmarkCheck className="w-4 h-4 mr-2" />
+              Saved ({savedOpps.length})
+            </TabsTrigger>
+          </TabsList>
 
-                  {selectedOpportunity.eligibility_summary && (
-                    <div>
-                      <p className="text-sm text-slate-500 mb-2">Eligibility</p>
-                      <p className="text-slate-700">{selectedOpportunity.eligibility_summary}</p>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-4">
-                    {selectedOpportunity.amount_max && (
-                      <div>
-                        <p className="text-sm text-slate-500">Amount</p>
-                        <p className="font-medium">
-                          {selectedOpportunity.amount_min && `$${selectedOpportunity.amount_min.toLocaleString()} - `}
-                          ${selectedOpportunity.amount_max.toLocaleString()}
-                        </p>
-                      </div>
-                    )}
-                    {selectedOpportunity.deadline && (
-                      <div>
-                        <p className="text-sm text-slate-500">Deadline</p>
-                        <p className="font-medium">{format(new Date(selectedOpportunity.deadline), 'MMMM d, yyyy')}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {selectedOpportunity.sector_focus?.length > 0 && (
-                    <div>
-                      <p className="text-sm text-slate-500 mb-2">Focus Areas</p>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedOpportunity.sector_focus.map((sector, i) => (
-                          <Badge key={i} variant="secondary">{sector}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {aiMatches[selectedOpportunity.id] && (
-                    <div>
-                      <p className="text-sm text-slate-500 mb-3">AI Match Analysis</p>
-                      <AIMatchScore matchData={aiMatches[selectedOpportunity.id]} />
-                    </div>
-                  )}
-
-                  {selectedOpportunity.application_url && (
-                    <Button
-                      className="w-full bg-emerald-600 hover:bg-emerald-700"
-                      onClick={() => window.open(selectedOpportunity.application_url, '_blank')}
-                    >
-                      View Application
-                    </Button>
-                  )}
-                </div>
-              </>
+          <TabsContent value="all" className="space-y-4">
+            {filteredOpportunities.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <p className="text-slate-600">No opportunities found</p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredOpportunities.map((opp) => (
+                <OpportunityCard
+                  key={opp.id}
+                  opportunity={opp}
+                  isSaved={isSaved(opp.id)}
+                  onSave={() => saveOpportunityMutation.mutate(opp)}
+                  onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
+                  onClick={() => setSelectedOpportunity(opp)}
+                />
+              ))
             )}
-          </SheetContent>
-        </Sheet>
+          </TabsContent>
+
+          <TabsContent value="saved" className="space-y-4">
+            {savedOpps.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <Bookmark className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                  <p className="text-slate-600">No saved opportunities yet</p>
+                  <p className="text-sm text-slate-500 mt-2">
+                    Click the bookmark icon on any opportunity to save it
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              savedOpps.map((opp) => (
+                <OpportunityCard
+                  key={opp.id}
+                  opportunity={opp}
+                  isSaved={true}
+                  onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
+                  onClick={() => setSelectedOpportunity(opp)}
+                />
+              ))
+            )}
+          </TabsContent>
+        </Tabs>
+
+        {/* Detail Modal */}
+        {selectedOpportunity && (
+          <OpportunityDetailModal
+            opportunity={selectedOpportunity}
+            isSaved={isSaved(selectedOpportunity.id)}
+            onClose={() => setSelectedOpportunity(null)}
+            onSave={() => {
+              saveOpportunityMutation.mutate(selectedOpportunity);
+              setSelectedOpportunity(null);
+            }}
+            onUnsave={() => {
+              unsaveOpportunityMutation.mutate(selectedOpportunity.id);
+              setSelectedOpportunity(null);
+            }}
+          />
+        )}
       </div>
+    </div>
+  );
+}
+
+function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
+  const typeColors = {
+    grant: 'bg-green-100 text-green-700',
+    contract: 'bg-blue-100 text-blue-700',
+    rfp: 'bg-purple-100 text-purple-700',
+    fellowship: 'bg-amber-100 text-amber-700'
+  };
+
+  return (
+    <Card className="hover:shadow-lg transition-all cursor-pointer">
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div className="flex-1" onClick={onClick}>
+            <div className="flex items-center gap-2 mb-2">
+              <Badge className={typeColors[opportunity.opportunity_type] || 'bg-slate-100'}>
+                {opportunity.opportunity_type}
+              </Badge>
+              {opportunity.amount_min && (
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <DollarSign className="w-3 h-3" />
+                  {opportunity.amount_min.toLocaleString()} - {opportunity.amount_max?.toLocaleString() || 'varies'}
+                </Badge>
+              )}
+            </div>
+            <CardTitle className="mb-2">{opportunity.title}</CardTitle>
+            <CardDescription className="line-clamp-2">
+              {opportunity.description}
+            </CardDescription>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              isSaved ? onUnsave() : onSave();
+            }}
+          >
+            {isSaved ? (
+              <BookmarkCheck className="w-5 h-5 text-[#143A50]" />
+            ) : (
+              <Bookmark className="w-5 h-5 text-slate-400" />
+            )}
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent onClick={onClick}>
+        <div className="flex items-center gap-4 text-sm text-slate-600">
+          {opportunity.funder_name && (
+            <div className="flex items-center gap-1">
+              <TrendingUp className="w-4 h-4" />
+              {opportunity.funder_name}
+            </div>
+          )}
+          {opportunity.deadline && (
+            <div className="flex items-center gap-1">
+              <Calendar className="w-4 h-4" />
+              Due: {format(new Date(opportunity.deadline), 'MMM d, yyyy')}
+            </div>
+          )}
+          {opportunity.location && (
+            <div className="flex items-center gap-1">
+              <MapPin className="w-4 h-4" />
+              {opportunity.location}
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsave }) {
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6" onClick={onClose}>
+      <Card className="max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <CardTitle className="text-2xl mb-4">{opportunity.title}</CardTitle>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <Badge>{opportunity.opportunity_type}</Badge>
+                {opportunity.amount_min && (
+                  <Badge variant="outline">
+                    ${opportunity.amount_min.toLocaleString()} - ${opportunity.amount_max?.toLocaleString() || 'varies'}
+                  </Badge>
+                )}
+                {opportunity.deadline && (
+                  <Badge variant="outline">
+                    Due: {format(new Date(opportunity.deadline), 'MMM d, yyyy')}
+                  </Badge>
+                )}
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>×</Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            <h3 className="font-semibold text-slate-900 mb-2">Description</h3>
+            <p className="text-slate-700 whitespace-pre-wrap">{opportunity.description}</p>
+          </div>
+
+          {opportunity.eligibility_criteria && (
+            <div>
+              <h3 className="font-semibold text-slate-900 mb-2">Eligibility</h3>
+              <p className="text-slate-700 whitespace-pre-wrap">{opportunity.eligibility_criteria}</p>
+            </div>
+          )}
+
+          {opportunity.funder_name && (
+            <div>
+              <h3 className="font-semibold text-slate-900 mb-2">Funder</h3>
+              <p className="text-slate-700">{opportunity.funder_name}</p>
+            </div>
+          )}
+
+          {opportunity.application_url && (
+            <div>
+              <h3 className="font-semibold text-slate-900 mb-2">Application Link</h3>
+              <a 
+                href={opportunity.application_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#143A50] hover:underline flex items-center gap-2"
+              >
+                Visit Application Page
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          )}
+
+          <div className="flex gap-3 pt-4 border-t">
+            <Button
+              onClick={isSaved ? onUnsave : onSave}
+              variant={isSaved ? "outline" : "default"}
+              className={isSaved ? "" : "bg-[#143A50] hover:bg-[#1E4F58]"}
+            >
+              {isSaved ? (
+                <>
+                  <BookmarkCheck className="w-4 h-4 mr-2" />
+                  Saved
+                </>
+              ) : (
+                <>
+                  <Bookmark className="w-4 h-4 mr-2" />
+                  Save Opportunity
+                </>
+              )}
+            </Button>
+            {opportunity.application_url && (
+              <Button variant="outline" asChild>
+                <a href={opportunity.application_url} target="_blank" rel="noopener noreferrer">
+                  Apply Now
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

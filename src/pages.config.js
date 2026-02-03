@@ -124,6 +124,7 @@ import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import RFPRapidResponse from './pages/RFPRapidResponse';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import StrategyReset from './pages/StrategyReset';
+import BoutiqueServices from './pages/BoutiqueServices';
 import __Layout from './Layout.jsx';
 
 
@@ -205,6 +206,7 @@ export const PAGES = {
     "RFPRapidResponse": RFPRapidResponse,
     "GrantReadinessIntensive": GrantReadinessIntensive,
     "StrategyReset": StrategyReset,
+    "BoutiqueServices": BoutiqueServices,
 }
 
 export const pagesConfig = {
