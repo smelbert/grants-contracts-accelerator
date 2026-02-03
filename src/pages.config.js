@@ -82,8 +82,16 @@ import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
 import Home from './pages/Home';
+import IncubateHerAdmin from './pages/IncubateHerAdmin';
+import IncubateHerOverview from './pages/IncubateHerOverview';
+import IncubateHerParticipants from './pages/IncubateHerParticipants';
+import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
+import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
+import IncubateHerPublic from './pages/IncubateHerPublic';
+import IncubateHerSchedule from './pages/IncubateHerSchedule';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
+import LearningHubAccess from './pages/LearningHubAccess';
 import LearningModule from './pages/LearningModule';
 import LearningProgress from './pages/LearningProgress';
 import LiveRoomManagement from './pages/LiveRoomManagement';
@@ -98,6 +106,8 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformSettings from './pages/PlatformSettings';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
+import ProgramAnalytics from './pages/ProgramAnalytics';
+import ProgramManagement from './pages/ProgramManagement';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
@@ -125,16 +135,7 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerOverview from './pages/IncubateHerOverview';
-import IncubateHerSchedule from './pages/IncubateHerSchedule';
-import IncubateHerAdmin from './pages/IncubateHerAdmin';
-import IncubateHerParticipants from './pages/IncubateHerParticipants';
-import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
-import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
-import IncubateHerPublic from './pages/IncubateHerPublic';
-import LearningHubAccess from './pages/LearningHubAccess';
-import ProgramAnalytics from './pages/ProgramAnalytics';
-import ProgramManagement from './pages/ProgramManagement';
+import IncubateHerReport from './pages/IncubateHerReport';
 import __Layout from './Layout.jsx';
 
 
@@ -174,8 +175,16 @@ export const PAGES = {
     "GrantReadinessIntensive": GrantReadinessIntensive,
     "GrantSubmission": GrantSubmission,
     "Home": Home,
+    "IncubateHerAdmin": IncubateHerAdmin,
+    "IncubateHerOverview": IncubateHerOverview,
+    "IncubateHerParticipants": IncubateHerParticipants,
+    "IncubateHerPostAssessment": IncubateHerPostAssessment,
+    "IncubateHerPreAssessment": IncubateHerPreAssessment,
+    "IncubateHerPublic": IncubateHerPublic,
+    "IncubateHerSchedule": IncubateHerSchedule,
     "Landing": Landing,
     "Learning": Learning,
+    "LearningHubAccess": LearningHubAccess,
     "LearningModule": LearningModule,
     "LearningProgress": LearningProgress,
     "LiveRoomManagement": LiveRoomManagement,
@@ -190,6 +199,8 @@ export const PAGES = {
     "PlatformSettings": PlatformSettings,
     "Pricing": Pricing,
     "Profile": Profile,
+    "ProgramAnalytics": ProgramAnalytics,
+    "ProgramManagement": ProgramManagement,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
@@ -217,16 +228,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerOverview": IncubateHerOverview,
-    "IncubateHerSchedule": IncubateHerSchedule,
-    "IncubateHerAdmin": IncubateHerAdmin,
-    "IncubateHerParticipants": IncubateHerParticipants,
-    "IncubateHerPreAssessment": IncubateHerPreAssessment,
-    "IncubateHerPostAssessment": IncubateHerPostAssessment,
-    "IncubateHerPublic": IncubateHerPublic,
-    "LearningHubAccess": LearningHubAccess,
-    "ProgramAnalytics": ProgramAnalytics,
-    "ProgramManagement": ProgramManagement,
+    "IncubateHerReport": IncubateHerReport,
 }
 
 export const pagesConfig = {
