@@ -15,7 +15,8 @@ import {
   ExternalLink,
   MapPin,
   TrendingUp,
-  Filter
+  Filter,
+  X
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -23,6 +24,7 @@ import { format } from 'date-fns';
 export default function OpportunitiesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedFundingLane, setSelectedFundingLane] = useState('all');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const queryClient = useQueryClient();
 
@@ -87,9 +89,10 @@ export default function OpportunitiesPage() {
       opp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       opp.funder_name?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesType = selectedType === 'all' || opp.opportunity_type === selectedType;
+    const matchesType = selectedType === 'all' || opp.type === selectedType;
+    const matchesLane = selectedFundingLane === 'all' || opp.funding_lane === selectedFundingLane;
     
-    return matchesSearch && matchesType;
+    return matchesSearch && matchesType && matchesLane;
   });
 
   const savedOpps = filteredOpportunities.filter(opp => isSaved(opp.id));
@@ -106,38 +109,58 @@ export default function OpportunitiesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-green-50/20 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Funding Opportunities</h1>
-          <p className="text-slate-600">Browse and save opportunities that match your organization</p>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">Funding Opportunities</h1>
+              <p className="text-slate-600">Discover and track funding that matches your mission</p>
+            </div>
+          </div>
         </div>
 
         {/* Search & Filter */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-emerald-100 shadow-sm">
           <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
+            <div className="space-y-4">
+              <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <Input
-                  placeholder="Search opportunities..."
+                  placeholder="Search by title, funder, or keywords..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-12 text-base"
                 />
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-3">
+                <select
+                  value={selectedFundingLane}
+                  onChange={(e) => setSelectedFundingLane(e.target.value)}
+                  className="px-4 py-2 border border-slate-200 rounded-lg bg-white text-sm font-medium"
+                >
+                  <option value="all">All Funding Lanes</option>
+                  <option value="grants">Grants</option>
+                  <option value="contracts">Contracts</option>
+                  <option value="donors">Donors</option>
+                  <option value="public_funds">Public Funds</option>
+                </select>
                 <select
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
-                  className="px-4 py-2 border rounded-lg bg-white"
+                  className="px-4 py-2 border border-slate-200 rounded-lg bg-white text-sm font-medium"
                 >
                   <option value="all">All Types</option>
-                  <option value="grant">Grants</option>
-                  <option value="contract">Contracts</option>
-                  <option value="rfp">RFPs</option>
-                  <option value="fellowship">Fellowships</option>
+                  <option value="grant">Grant</option>
+                  <option value="contract">Contract</option>
+                  <option value="rfp">RFP</option>
+                  <option value="rfq">RFQ</option>
+                  <option value="donor_program">Donor Program</option>
+                  <option value="public_fund">Public Fund</option>
                 </select>
               </div>
             </div>
@@ -156,48 +179,72 @@ export default function OpportunitiesPage() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="all" className="space-y-4">
+          <TabsContent value="all" className="space-y-3">
             {filteredOpportunities.length === 0 ? (
-              <Card>
-                <CardContent className="py-12 text-center">
-                  <p className="text-slate-600">No opportunities found</p>
+              <Card className="border-dashed">
+                <CardContent className="py-16 text-center">
+                  <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <p className="text-lg font-medium text-slate-900 mb-1">No opportunities found</p>
+                  <p className="text-sm text-slate-500">Try adjusting your search or filters</p>
                 </CardContent>
               </Card>
             ) : (
-              filteredOpportunities.map((opp) => (
-                <OpportunityCard
-                  key={opp.id}
-                  opportunity={opp}
-                  isSaved={isSaved(opp.id)}
-                  onSave={() => saveOpportunityMutation.mutate(opp)}
-                  onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
-                  onClick={() => setSelectedOpportunity(opp)}
-                />
-              ))
+              <>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-slate-600">
+                    Showing <span className="font-semibold text-slate-900">{filteredOpportunities.length}</span> {filteredOpportunities.length === 1 ? 'opportunity' : 'opportunities'}
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  {filteredOpportunities.map((opp) => (
+                    <OpportunityCard
+                      key={opp.id}
+                      opportunity={opp}
+                      isSaved={isSaved(opp.id)}
+                      onSave={() => saveOpportunityMutation.mutate(opp)}
+                      onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
+                      onClick={() => setSelectedOpportunity(opp)}
+                    />
+                  ))}
+                </div>
+              </>
             )}
           </TabsContent>
 
-          <TabsContent value="saved" className="space-y-4">
+          <TabsContent value="saved" className="space-y-3">
             {savedOpps.length === 0 ? (
-              <Card>
-                <CardContent className="py-12 text-center">
-                  <Bookmark className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-600">No saved opportunities yet</p>
+              <Card className="border-dashed">
+                <CardContent className="py-16 text-center">
+                  <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
+                    <Bookmark className="w-8 h-8 text-emerald-300" />
+                  </div>
+                  <p className="text-lg font-medium text-slate-900 mb-1">No saved opportunities yet</p>
                   <p className="text-sm text-slate-500 mt-2">
-                    Click the bookmark icon on any opportunity to save it
+                    Click the bookmark icon on any opportunity to save it for later
                   </p>
                 </CardContent>
               </Card>
             ) : (
-              savedOpps.map((opp) => (
-                <OpportunityCard
-                  key={opp.id}
-                  opportunity={opp}
-                  isSaved={true}
-                  onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
-                  onClick={() => setSelectedOpportunity(opp)}
-                />
-              ))
+              <>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-slate-600">
+                    <span className="font-semibold text-slate-900">{savedOpps.length}</span> saved {savedOpps.length === 1 ? 'opportunity' : 'opportunities'}
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  {savedOpps.map((opp) => (
+                    <OpportunityCard
+                      key={opp.id}
+                      opportunity={opp}
+                      isSaved={true}
+                      onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
+                      onClick={() => setSelectedOpportunity(opp)}
+                    />
+                  ))}
+                </div>
+              </>
             )}
           </TabsContent>
         </Tabs>
@@ -224,30 +271,48 @@ export default function OpportunitiesPage() {
 }
 
 function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
-  const typeColors = {
-    grant: 'bg-green-100 text-green-700',
-    contract: 'bg-blue-100 text-blue-700',
-    rfp: 'bg-purple-100 text-purple-700',
-    fellowship: 'bg-amber-100 text-amber-700'
+  const laneColors = {
+    grants: 'from-emerald-500 to-green-600',
+    contracts: 'from-blue-500 to-indigo-600',
+    donors: 'from-purple-500 to-pink-600',
+    public_funds: 'from-amber-500 to-orange-600'
+  };
+
+  const typeIcons = {
+    grant: '🎯',
+    contract: '📋',
+    rfp: '📄',
+    rfq: '📝',
+    donor_program: '💝',
+    public_fund: '🏛️'
   };
 
   return (
-    <Card className="hover:shadow-lg transition-all cursor-pointer">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1" onClick={onClick}>
-            <div className="flex items-center gap-2 mb-2">
-              <Badge className={typeColors[opportunity.opportunity_type] || 'bg-slate-100'}>
-                {opportunity.opportunity_type}
+    <Card className="group hover:shadow-xl hover:border-emerald-200 transition-all duration-300 cursor-pointer overflow-hidden">
+      {/* Color accent bar */}
+      <div className={`h-1.5 bg-gradient-to-r ${laneColors[opportunity.funding_lane] || 'from-slate-400 to-slate-500'}`} />
+      
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0" onClick={onClick}>
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
+              <Badge className="bg-white border-2 border-emerald-100 text-emerald-700 font-medium">
+                {typeIcons[opportunity.type]} {opportunity.type?.replace('_', ' ')}
               </Badge>
-              {opportunity.amount_min && (
-                <Badge variant="outline" className="flex items-center gap-1">
-                  <DollarSign className="w-3 h-3" />
-                  {opportunity.amount_min.toLocaleString()} - {opportunity.amount_max?.toLocaleString() || 'varies'}
+              {opportunity.funding_lane && (
+                <Badge variant="outline" className="border-slate-200 text-slate-600">
+                  {opportunity.funding_lane}
                 </Badge>
               )}
             </div>
-            <CardTitle className="mb-2">{opportunity.title}</CardTitle>
+            <CardTitle className="mb-2 text-xl group-hover:text-emerald-700 transition-colors line-clamp-2">
+              {opportunity.title}
+            </CardTitle>
+            {opportunity.funder_name && (
+              <p className="text-sm font-medium text-slate-600 mb-2">
+                {opportunity.funder_name}
+              </p>
+            )}
             <CardDescription className="line-clamp-2">
               {opportunity.description}
             </CardDescription>
@@ -255,37 +320,38 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
           <Button
             variant="ghost"
             size="icon"
+            className="shrink-0 hover:bg-emerald-50"
             onClick={(e) => {
               e.stopPropagation();
               isSaved ? onUnsave() : onSave();
             }}
           >
             {isSaved ? (
-              <BookmarkCheck className="w-5 h-5 text-[#143A50]" />
+              <BookmarkCheck className="w-5 h-5 text-emerald-600" />
             ) : (
-              <Bookmark className="w-5 h-5 text-slate-400" />
+              <Bookmark className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
             )}
           </Button>
         </div>
       </CardHeader>
-      <CardContent onClick={onClick}>
-        <div className="flex items-center gap-4 text-sm text-slate-600">
-          {opportunity.funder_name && (
-            <div className="flex items-center gap-1">
-              <TrendingUp className="w-4 h-4" />
-              {opportunity.funder_name}
+      <CardContent onClick={onClick} className="pt-0">
+        <div className="flex flex-wrap items-center gap-4 text-sm">
+          {opportunity.amount_min && (
+            <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
+              <DollarSign className="w-4 h-4" />
+              ${opportunity.amount_min.toLocaleString()} {opportunity.amount_max && `- $${opportunity.amount_max.toLocaleString()}`}
             </div>
           )}
-          {opportunity.deadline && (
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              Due: {format(new Date(opportunity.deadline), 'MMM d, yyyy')}
+          {(opportunity.deadline || opportunity.deadline_full) && (
+            <div className="flex items-center gap-1.5 text-slate-600">
+              <Calendar className="w-4 h-4 text-slate-400" />
+              <span>Due: {format(new Date(opportunity.deadline || opportunity.deadline_full), 'MMM d, yyyy')}</span>
             </div>
           )}
-          {opportunity.location && (
-            <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              {opportunity.location}
+          {opportunity.geographic_focus && (
+            <div className="flex items-center gap-1.5 text-slate-600">
+              <MapPin className="w-4 h-4 text-slate-400" />
+              <span>{opportunity.geographic_focus}</span>
             </div>
           )}
         </div>
@@ -295,88 +361,136 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
 }
 
 function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsave }) {
+  const laneColors = {
+    grants: 'from-emerald-500 to-green-600',
+    contracts: 'from-blue-500 to-indigo-600',
+    donors: 'from-purple-500 to-pink-600',
+    public_funds: 'from-amber-500 to-orange-600'
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-6" onClick={onClose}>
-      <Card className="max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <CardTitle className="text-2xl mb-4">{opportunity.title}</CardTitle>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <Badge>{opportunity.opportunity_type}</Badge>
-                {opportunity.amount_min && (
-                  <Badge variant="outline">
-                    ${opportunity.amount_min.toLocaleString()} - ${opportunity.amount_max?.toLocaleString() || 'varies'}
-                  </Badge>
-                )}
-                {opportunity.deadline && (
-                  <Badge variant="outline">
-                    Due: {format(new Date(opportunity.deadline), 'MMM d, yyyy')}
-                  </Badge>
-                )}
-              </div>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={onClose}>
+      <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        {/* Header with gradient */}
+        <div className={`h-32 bg-gradient-to-r ${laneColors[opportunity.funding_lane] || 'from-slate-400 to-slate-500'} relative`}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose}
+            className="absolute top-4 right-4 text-white hover:bg-white/20"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+
+        <CardHeader className="-mt-12">
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Badge className="bg-white border-2 border-emerald-100 text-emerald-700">
+                {opportunity.type?.replace('_', ' ')}
+              </Badge>
+              {opportunity.funding_lane && (
+                <Badge variant="outline">{opportunity.funding_lane}</Badge>
+              )}
+              {opportunity.amount_min && (
+                <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">
+                  ${opportunity.amount_min.toLocaleString()} {opportunity.amount_max && `- $${opportunity.amount_max.toLocaleString()}`}
+                </Badge>
+              )}
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>×</Button>
+            <CardTitle className="text-3xl mb-3">{opportunity.title}</CardTitle>
+            {opportunity.funder_name && (
+              <p className="text-lg text-slate-600 font-medium">{opportunity.funder_name}</p>
+            )}
           </div>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-2">Description</h3>
-            <p className="text-slate-700 whitespace-pre-wrap">{opportunity.description}</p>
+
+        <CardContent className="space-y-6 px-8 pb-8">
+          {/* Key Info Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {(opportunity.deadline || opportunity.deadline_full) && (
+              <div className="bg-slate-50 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-slate-600 mb-1">
+                  <Calendar className="w-4 h-4" />
+                  <span className="text-sm font-medium">Deadline</span>
+                </div>
+                <p className="text-lg font-semibold text-slate-900">
+                  {format(new Date(opportunity.deadline || opportunity.deadline_full), 'MMM d, yyyy')}
+                </p>
+              </div>
+            )}
+            {opportunity.geographic_focus && (
+              <div className="bg-slate-50 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-slate-600 mb-1">
+                  <MapPin className="w-4 h-4" />
+                  <span className="text-sm font-medium">Location</span>
+                </div>
+                <p className="text-lg font-semibold text-slate-900">{opportunity.geographic_focus}</p>
+              </div>
+            )}
+            {opportunity.rolling_deadline && (
+              <div className="bg-emerald-50 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-emerald-700 mb-1">
+                  <Calendar className="w-4 h-4" />
+                  <span className="text-sm font-medium">Rolling Deadline</span>
+                </div>
+                <p className="text-lg font-semibold text-emerald-700">Apply Anytime</p>
+              </div>
+            )}
           </div>
 
-          {opportunity.eligibility_criteria && (
+          {opportunity.description && (
             <div>
-              <h3 className="font-semibold text-slate-900 mb-2">Eligibility</h3>
-              <p className="text-slate-700 whitespace-pre-wrap">{opportunity.eligibility_criteria}</p>
+              <h3 className="font-semibold text-slate-900 mb-3 text-lg">About This Opportunity</h3>
+              <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{opportunity.description}</p>
             </div>
           )}
 
-          {opportunity.funder_name && (
+          {opportunity.eligibility_summary && (
             <div>
-              <h3 className="font-semibold text-slate-900 mb-2">Funder</h3>
-              <p className="text-slate-700">{opportunity.funder_name}</p>
+              <h3 className="font-semibold text-slate-900 mb-3 text-lg">Eligibility</h3>
+              <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{opportunity.eligibility_summary}</p>
             </div>
           )}
 
-          {opportunity.application_url && (
+          {(opportunity.sector_focus?.length > 0 || opportunity.required_org_types?.length > 0) && (
             <div>
-              <h3 className="font-semibold text-slate-900 mb-2">Application Link</h3>
-              <a 
-                href={opportunity.application_url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-[#143A50] hover:underline flex items-center gap-2"
-              >
-                Visit Application Page
-                <ExternalLink className="w-4 h-4" />
-              </a>
+              <h3 className="font-semibold text-slate-900 mb-3 text-lg">Focus Areas</h3>
+              <div className="flex flex-wrap gap-2">
+                {opportunity.sector_focus?.map((sector, idx) => (
+                  <Badge key={idx} variant="outline">{sector}</Badge>
+                ))}
+                {opportunity.required_org_types?.map((type, idx) => (
+                  <Badge key={idx} variant="outline">{type}</Badge>
+                ))}
+              </div>
             </div>
           )}
 
-          <div className="flex gap-3 pt-4 border-t">
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t">
             <Button
               onClick={isSaved ? onUnsave : onSave}
-              variant={isSaved ? "outline" : "default"}
-              className={isSaved ? "" : "bg-[#143A50] hover:bg-[#1E4F58]"}
+              size="lg"
+              className={isSaved ? "bg-emerald-600 hover:bg-emerald-700" : "bg-[#143A50] hover:bg-[#1E4F58]"}
             >
               {isSaved ? (
                 <>
-                  <BookmarkCheck className="w-4 h-4 mr-2" />
-                  Saved
+                  <BookmarkCheck className="w-5 h-5 mr-2" />
+                  Saved to My Opportunities
                 </>
               ) : (
                 <>
-                  <Bookmark className="w-4 h-4 mr-2" />
+                  <Bookmark className="w-5 h-5 mr-2" />
                   Save Opportunity
                 </>
               )}
             </Button>
             {opportunity.application_url && (
-              <Button variant="outline" asChild>
+              <Button variant="outline" size="lg" asChild>
                 <a href={opportunity.application_url} target="_blank" rel="noopener noreferrer">
-                  Apply Now
-                  <ExternalLink className="w-4 h-4 ml-2" />
+                  Visit Application Page
+                  <ExternalLink className="w-5 h-5 ml-2" />
                 </a>
               </Button>
             )}

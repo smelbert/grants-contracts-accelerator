@@ -55,6 +55,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
+import BoutiqueServices from './pages/BoutiqueServices';
 import BrandingSettings from './pages/BrandingSettings';
 import BudgetBuilder from './pages/BudgetBuilder';
 import Calendar from './pages/Calendar';
@@ -78,6 +79,7 @@ import FunderProfile from './pages/FunderProfile';
 import FundingLane from './pages/FundingLane';
 import GrantDashboard from './pages/GrantDashboard';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
+import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
@@ -101,6 +103,7 @@ import Projects from './pages/Projects';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
 import ProposalWorkflows from './pages/ProposalWorkflows';
 import PublicHome from './pages/PublicHome';
+import RFPRapidResponse from './pages/RFPRapidResponse';
 import ReadinessChecklists from './pages/ReadinessChecklists';
 import ReadinessLogic from './pages/ReadinessLogic';
 import ReadinessStatus from './pages/ReadinessStatus';
@@ -112,6 +115,7 @@ import ReviewQueue from './pages/ReviewQueue';
 import RoleManagement from './pages/RoleManagement';
 import Settings from './pages/Settings';
 import SpaceManagement from './pages/SpaceManagement';
+import StrategyReset from './pages/StrategyReset';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import TeachingContent from './pages/TeachingContent';
 import TeamCollaboration from './pages/TeamCollaboration';
@@ -121,10 +125,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import RFPRapidResponse from './pages/RFPRapidResponse';
-import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
-import StrategyReset from './pages/StrategyReset';
-import BoutiqueServices from './pages/BoutiqueServices';
 import __Layout from './Layout.jsx';
 
 
@@ -137,6 +137,7 @@ export const PAGES = {
     "ApplicationTracker": ApplicationTracker,
     "AssignedOrganizations": AssignedOrganizations,
     "BoilerplateBuilder": BoilerplateBuilder,
+    "BoutiqueServices": BoutiqueServices,
     "BrandingSettings": BrandingSettings,
     "BudgetBuilder": BudgetBuilder,
     "Calendar": Calendar,
@@ -160,6 +161,7 @@ export const PAGES = {
     "FundingLane": FundingLane,
     "GrantDashboard": GrantDashboard,
     "GrantReadinessAssessment": GrantReadinessAssessment,
+    "GrantReadinessIntensive": GrantReadinessIntensive,
     "GrantSubmission": GrantSubmission,
     "Home": Home,
     "Landing": Landing,
@@ -183,6 +185,7 @@ export const PAGES = {
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
     "ProposalWorkflows": ProposalWorkflows,
     "PublicHome": PublicHome,
+    "RFPRapidResponse": RFPRapidResponse,
     "ReadinessChecklists": ReadinessChecklists,
     "ReadinessLogic": ReadinessLogic,
     "ReadinessStatus": ReadinessStatus,
@@ -194,6 +197,7 @@ export const PAGES = {
     "RoleManagement": RoleManagement,
     "Settings": Settings,
     "SpaceManagement": SpaceManagement,
+    "StrategyReset": StrategyReset,
     "SubscriptionPlans": SubscriptionPlans,
     "TeachingContent": TeachingContent,
     "TeamCollaboration": TeamCollaboration,
@@ -203,10 +207,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "RFPRapidResponse": RFPRapidResponse,
-    "GrantReadinessIntensive": GrantReadinessIntensive,
-    "StrategyReset": StrategyReset,
-    "BoutiqueServices": BoutiqueServices,
 }
 
 export const pagesConfig = {
