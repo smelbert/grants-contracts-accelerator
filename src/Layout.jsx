@@ -166,6 +166,12 @@ const getAdminPortalNav = () => [
     ]
   },
   {
+    groupName: 'Analytics & Reporting',
+    items: [
+      { name: 'Program Analytics', page: 'ProgramAnalytics', icon: TrendingUp },
+    ]
+  },
+  {
     groupName: 'Platform Management',
     items: [
       { name: 'Registration Pages', page: 'RegistrationBuilder', icon: Plus },
