@@ -14,9 +14,9 @@ const SCHEDULE_OPTIONS = [
     id: 'option_a',
     title: 'Option A – 3 Evenings',
     sessions: [
-      { day: 'Monday', time: '17:30–19:30' },
-      { day: 'Tuesday', time: '17:30–19:30' },
-      { day: 'Thursday', time: '17:30–19:30' }
+      { day: 'Monday', time: '5:30 PM – 7:30 PM' },
+      { day: 'Tuesday', time: '5:30 PM – 7:30 PM' },
+      { day: 'Thursday', time: '5:30 PM – 7:30 PM' }
     ],
     bestFor: 'Those who prefer shorter, more frequent sessions',
     totalHours: 6,
@@ -26,8 +26,8 @@ const SCHEDULE_OPTIONS = [
     id: 'option_b',
     title: 'Option B – 2 Extended Evenings',
     sessions: [
-      { day: 'Monday', time: '17:30–20:00' },
-      { day: 'Thursday', time: '17:30–20:00' }
+      { day: 'Monday', time: '5:30 PM – 8:00 PM' },
+      { day: 'Thursday', time: '5:30 PM – 8:00 PM' }
     ],
     bestFor: 'Busy schedules needing fewer meeting days',
     totalHours: 5,
@@ -37,9 +37,9 @@ const SCHEDULE_OPTIONS = [
     id: 'option_c',
     title: 'Option C – 2 Evenings + Saturday (In-Person)',
     sessions: [
-      { day: 'Monday', time: '17:30–19:30' },
-      { day: 'Thursday', time: '17:30–19:30' },
-      { day: 'Saturday', time: '09:30–12:30', inPerson: true }
+      { day: 'Monday', time: '5:30 PM – 7:30 PM' },
+      { day: 'Thursday', time: '5:30 PM – 7:30 PM' },
+      { day: 'Saturday', time: '9:30 AM – 12:30 PM', inPerson: true }
     ],
     bestFor: 'Those who want in-person collaboration',
     totalHours: 7,
