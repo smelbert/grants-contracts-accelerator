@@ -136,6 +136,9 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import IncubateHerReport from './pages/IncubateHerReport';
+import MentorManagement from './pages/MentorManagement';
+import MentorDashboard from './pages/MentorDashboard';
+import MyMentorship from './pages/MyMentorship';
 import __Layout from './Layout.jsx';
 
 
@@ -229,6 +232,9 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
     "IncubateHerReport": IncubateHerReport,
+    "MentorManagement": MentorManagement,
+    "MentorDashboard": MentorDashboard,
+    "MyMentorship": MyMentorship,
 }
 
 export const pagesConfig = {

@@ -85,6 +85,7 @@ const getUserPortalNav = () => [
     items: [
       { name: 'Community Spaces', page: 'Community', icon: Users },
       { name: 'Direct Messages', page: 'Chat', icon: MessageCircle },
+      { name: 'My Mentorship', page: 'MyMentorship', icon: Target },
     ]
   },
   {
@@ -100,6 +101,7 @@ const getUserPortalNav = () => [
 const getCoachPortalNav = () => [
   { name: 'Coach Dashboard', page: 'CoachDashboard', icon: LayoutDashboard },
   { name: 'My Profile', page: 'CoachProfile', icon: User },
+  { name: 'Mentor Dashboard', page: 'MentorDashboard', icon: Target },
   { name: 'Assigned Organizations', page: 'AssignedOrganizations', icon: Building2 },
   { name: 'Review Queue', page: 'ReviewQueue', icon: FileText },
   { name: 'Video Feedback', page: 'VideoFeedback', icon: Video },
@@ -149,6 +151,7 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Coaches & Staff', page: 'CoachesStaff', icon: Users },
       { name: 'Profile Manager', page: 'CoachProfileManager', icon: Users },
+      { name: 'Mentor Management', page: 'MentorManagement', icon: Users },
     ]
   },
   {
