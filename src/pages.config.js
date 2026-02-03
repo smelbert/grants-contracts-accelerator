@@ -132,6 +132,7 @@ import IncubateHerParticipants from './pages/IncubateHerParticipants';
 import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
 import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPublic from './pages/IncubateHerPublic';
+import LearningHubAccess from './pages/LearningHubAccess';
 import __Layout from './Layout.jsx';
 
 
@@ -221,6 +222,7 @@ export const PAGES = {
     "IncubateHerPreAssessment": IncubateHerPreAssessment,
     "IncubateHerPostAssessment": IncubateHerPostAssessment,
     "IncubateHerPublic": IncubateHerPublic,
+    "LearningHubAccess": LearningHubAccess,
 }
 
 export const pagesConfig = {
