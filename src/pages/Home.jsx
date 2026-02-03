@@ -6,6 +6,7 @@ import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import PersonalizedDashboard from '@/components/dashboard/PersonalizedDashboard';
 import { 
   TrendingUp, 
   Calendar, 
@@ -28,6 +29,18 @@ export default function HomePage() {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+  });
+
+  const { data: userAccess } = useQuery({
+    queryKey: ['userAccess', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const access = await base44.entities.UserAccessLevel.filter({
+        user_email: user.email
+      });
+      return access[0];
+    },
+    enabled: !!user?.email
   });
 
   const { data: savedOpportunities = [] } = useQuery({
@@ -115,6 +128,17 @@ export default function HomePage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#143A50] mx-auto mb-4"></div>
           <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show personalized dashboard for IncubateHer and other special entry points
+  if (userAccess?.entry_point === 'incubateher_program') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/20 p-6">
+        <div className="max-w-7xl mx-auto">
+          <PersonalizedDashboard user={user} userAccess={userAccess} />
         </div>
       </div>
     );

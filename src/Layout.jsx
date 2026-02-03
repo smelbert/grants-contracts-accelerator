@@ -39,7 +39,8 @@ import {
   MessageCircle,
   Palette,
   Target,
-  TrendingUp
+  TrendingUp,
+  Settings
 } from 'lucide-react';
 
 // User Portal Navigation with Groups
@@ -169,6 +170,12 @@ const getAdminPortalNav = () => [
     groupName: 'Analytics & Reporting',
     items: [
       { name: 'Program Analytics', page: 'ProgramAnalytics', icon: TrendingUp },
+    ]
+  },
+  {
+    groupName: 'Program Setup',
+    items: [
+      { name: 'Program Management', page: 'ProgramManagement', icon: Settings },
     ]
   },
   {
