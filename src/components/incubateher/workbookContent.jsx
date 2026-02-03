@@ -8,11 +8,20 @@ export const WORKBOOK_PAGES = [
     subtitle: 'Preparing for Grants & Contracts',
     type: 'handout',
     content: `
-      <div class="text-center space-y-6 py-8">
+      <div class="text-center space-y-6 py-12">
+        <div class="flex justify-center gap-8 mb-8">
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" alt="Elbert Innovative Solutions" class="h-16" />
+          <img src="https://columbusfoundation.org/getmedia/41f05a72-5e52-4f0c-920b-6ed7b1a7e25f/ColumbusUrbanLeague-min.jpg" alt="Columbus Urban League" class="h-16" />
+        </div>
         <h1 class="text-4xl font-bold text-[#143A50]">IncubateHer Funding Readiness Workbook</h1>
         <h2 class="text-2xl text-[#AC1A5B]">Preparing for Grants & Contracts</h2>
         <p class="text-lg text-slate-600">Co-branded: Elbert Innovative Solutions × Columbus Urban League</p>
-        <div class="mt-8 text-sm text-slate-500">
+        <div class="mt-8 space-y-2">
+          <p class="text-slate-700"><strong>Cohort:</strong> <span id="cohort-name">[Cohort Name]</span></p>
+          <p class="text-slate-700"><strong>Program Dates:</strong> <span id="cohort-dates">[Start Date - End Date]</span></p>
+          <p class="text-slate-700"><strong>Lead Facilitator:</strong> <span id="facilitator-name">[Facilitator Name]</span></p>
+        </div>
+        <div class="mt-12 pt-8 border-t text-sm text-slate-500">
           <p>Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions</p>
         </div>
       </div>
@@ -43,11 +52,18 @@ export const WORKBOOK_PAGES = [
         <li>A guarantee of funding success</li>
       </ul>
       
+      <h3 class="font-semibold text-lg mb-3">How It Connects</h3>
+      <ul class="list-disc ml-6 mb-6 space-y-2">
+        <li><strong>Group Sessions:</strong> Use this workbook during and after each session to reinforce learning</li>
+        <li><strong>Pre/Post Assessments:</strong> Your assessment results inform which workbook sections to prioritize</li>
+        <li><strong>One-on-One Consultation:</strong> Bring completed worksheets to maximize your consultation time</li>
+      </ul>
+      
       <h3 class="font-semibold text-lg mb-3">Icon Guide</h3>
       <div class="space-y-2">
-        <p><strong>📝 Worksheet</strong> - Fill in your responses</p>
-        <p><strong>📄 Handout</strong> - Reference material</p>
-        <p><strong>💡 Tips-Only</strong> - Guidance and orientation</p>
+        <p><strong>📝 Worksheet</strong> - Fill in your responses and save your progress</p>
+        <p><strong>📄 Handout</strong> - Reference material for your learning</p>
+        <p><strong>💡 Tips-Only</strong> - Guidance and orientation (no templates)</p>
         <p><strong>🎯 Consultation Tool</strong> - Preparation for your 1:1 session</p>
       </div>
     `
@@ -752,25 +768,38 @@ export const WORKBOOK_PAGES = [
     title: 'Completion Incentive',
     type: 'handout',
     content: `
+      <div class="p-6 bg-amber-50 border-2 border-amber-200 rounded-lg mb-6">
+        <p class="text-center text-sm text-amber-900 font-semibold mb-2">⚠️ ADMIN-CONTROLLED REVEAL</p>
+        <p class="text-center text-xs text-amber-800">This page is revealed to participants only after all completion requirements are met</p>
+      </div>
+      
       <div class="text-center py-8">
         <h3 class="text-2xl font-bold text-[#E5C089] mb-4">🎁 Completion Giveaway</h3>
         
-        <p class="text-lg mb-6">All participants who complete program requirements are eligible for a randomized drawing!</p>
+        <p class="text-lg mb-6">Congratulations on completing all program requirements! You are now eligible for our randomized drawing.</p>
         
         <h4 class="font-semibold text-lg mb-3">Prize Details</h4>
-        <p class="mb-6">Winner receives a complimentary grant-writing consultation session with EIS.</p>
+        <p class="mb-6">One randomly selected winner will receive a <strong>complimentary grant-writing consultation session</strong> with Elbert Innovative Solutions.</p>
         
         <h4 class="font-semibold text-lg mb-3">Eligibility Requirements</h4>
         <ul class="text-left max-w-md mx-auto list-disc ml-6 space-y-2 mb-6">
-          <li>Complete all program sessions</li>
-          <li>Complete pre and post assessments</li>
-          <li>Complete one-on-one consultation</li>
-          <li>Submit required documents</li>
+          <li>✅ Attended all required program sessions</li>
+          <li>✅ Completed pre-assessment and post-assessment</li>
+          <li>✅ Completed one-on-one consultation</li>
+          <li>✅ Submitted all required documents</li>
         </ul>
         
-        <div class="p-4 bg-amber-50 rounded-lg max-w-md mx-auto">
-          <p class="text-sm"><strong>Important:</strong> Federal grants are excluded from this giveaway. Winner selection is random. No funding is guaranteed.</p>
+        <div class="p-4 bg-red-50 border-2 border-red-200 rounded-lg max-w-md mx-auto mb-6">
+          <p class="text-sm text-red-900"><strong>Important Restrictions:</strong></p>
+          <ul class="text-sm text-red-800 mt-2 space-y-1">
+            <li>• Non-federal grants only</li>
+            <li>• Winner selection is randomized</li>
+            <li>• No guarantee of funding success</li>
+            <li>• Prize has no cash value</li>
+          </ul>
         </div>
+        
+        <p class="text-slate-600">Winner will be announced at the program completion ceremony. Good luck!</p>
       </div>
     `
   },
