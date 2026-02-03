@@ -218,7 +218,7 @@ export default function IncubateHerConsultations() {
                   <Button 
                     size="lg" 
                     className="w-full bg-[#143A50]"
-                    onClick={() => window.open('https://calendly.com/your-link', '_blank')}
+                    onClick={() => window.open('https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation', '_blank')}
                   >
                     <Calendar className="w-5 h-5 mr-2" />
                     Schedule on Calendly
