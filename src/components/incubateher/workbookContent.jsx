@@ -711,7 +711,7 @@ export const WORKBOOK_PAGES = [
       {
         id: 'donor_research',
         type: 'textarea',
-        label: 'What have you learned about this donor's giving priorities?',
+        label: "What have you learned about this donor's giving priorities?",
         rows: 3
       },
       {
