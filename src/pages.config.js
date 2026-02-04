@@ -154,6 +154,7 @@ import SaaSAdminDashboard from './pages/SaaSAdminDashboard';
 import TestimonialManagement from './pages/TestimonialManagement';
 import SupportTickets from './pages/SupportTickets';
 import FAQManagement from './pages/FAQManagement';
+import AuditLogs from './pages/AuditLogs';
 import __Layout from './Layout.jsx';
 
 
@@ -265,6 +266,7 @@ export const PAGES = {
     "TestimonialManagement": TestimonialManagement,
     "SupportTickets": SupportTickets,
     "FAQManagement": FAQManagement,
+    "AuditLogs": AuditLogs,
 }
 
 export const pagesConfig = {
