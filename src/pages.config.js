@@ -54,6 +54,7 @@ import AboutEIS from './pages/AboutEIS';
 import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssignedOrganizations from './pages/AssignedOrganizations';
+import AuditLogs from './pages/AuditLogs';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import BoutiqueServices from './pages/BoutiqueServices';
 import BrandingSettings from './pages/BrandingSettings';
@@ -74,8 +75,10 @@ import DynamicRegistration from './pages/DynamicRegistration';
 import EmailHub from './pages/EmailHub';
 import EthicsCompliance from './pages/EthicsCompliance';
 import Events from './pages/Events';
+import FAQManagement from './pages/FAQManagement';
 import FlagsNotes from './pages/FlagsNotes';
 import FunderProfile from './pages/FunderProfile';
+import FunderResearch from './pages/FunderResearch';
 import FundingLane from './pages/FundingLane';
 import GrantDashboard from './pages/GrantDashboard';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
@@ -118,6 +121,7 @@ import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
 import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentSuccess from './pages/PaymentSuccess';
+import PlatformManagement from './pages/PlatformManagement';
 import PlatformSettings from './pages/PlatformSettings';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
@@ -138,25 +142,21 @@ import RegistrationFlow from './pages/RegistrationFlow';
 import RegistrationManagement from './pages/RegistrationManagement';
 import ReviewQueue from './pages/ReviewQueue';
 import RoleManagement from './pages/RoleManagement';
+import SaaSAdminDashboard from './pages/SaaSAdminDashboard';
 import Settings from './pages/Settings';
 import SpaceManagement from './pages/SpaceManagement';
 import StrategyReset from './pages/StrategyReset';
 import SubscriptionPlans from './pages/SubscriptionPlans';
+import SupportTickets from './pages/SupportTickets';
 import TeachingContent from './pages/TeachingContent';
 import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
+import TestimonialManagement from './pages/TestimonialManagement';
 import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import SaaSAdminDashboard from './pages/SaaSAdminDashboard';
-import TestimonialManagement from './pages/TestimonialManagement';
-import SupportTickets from './pages/SupportTickets';
-import FAQManagement from './pages/FAQManagement';
-import AuditLogs from './pages/AuditLogs';
-import PlatformManagement from './pages/PlatformManagement';
-import FunderResearch from './pages/FunderResearch';
 import __Layout from './Layout.jsx';
 
 
@@ -168,6 +168,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "ApplicationTracker": ApplicationTracker,
     "AssignedOrganizations": AssignedOrganizations,
+    "AuditLogs": AuditLogs,
     "BoilerplateBuilder": BoilerplateBuilder,
     "BoutiqueServices": BoutiqueServices,
     "BrandingSettings": BrandingSettings,
@@ -188,8 +189,10 @@ export const PAGES = {
     "EmailHub": EmailHub,
     "EthicsCompliance": EthicsCompliance,
     "Events": Events,
+    "FAQManagement": FAQManagement,
     "FlagsNotes": FlagsNotes,
     "FunderProfile": FunderProfile,
+    "FunderResearch": FunderResearch,
     "FundingLane": FundingLane,
     "GrantDashboard": GrantDashboard,
     "GrantReadinessAssessment": GrantReadinessAssessment,
@@ -232,6 +235,7 @@ export const PAGES = {
     "OrganizationsOverview": OrganizationsOverview,
     "PaymentCancelled": PaymentCancelled,
     "PaymentSuccess": PaymentSuccess,
+    "PlatformManagement": PlatformManagement,
     "PlatformSettings": PlatformSettings,
     "Pricing": Pricing,
     "Profile": Profile,
@@ -252,25 +256,21 @@ export const PAGES = {
     "RegistrationManagement": RegistrationManagement,
     "ReviewQueue": ReviewQueue,
     "RoleManagement": RoleManagement,
+    "SaaSAdminDashboard": SaaSAdminDashboard,
     "Settings": Settings,
     "SpaceManagement": SpaceManagement,
     "StrategyReset": StrategyReset,
     "SubscriptionPlans": SubscriptionPlans,
+    "SupportTickets": SupportTickets,
     "TeachingContent": TeachingContent,
     "TeamCollaboration": TeamCollaboration,
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
+    "TestimonialManagement": TestimonialManagement,
     "UserProfile": UserProfile,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "SaaSAdminDashboard": SaaSAdminDashboard,
-    "TestimonialManagement": TestimonialManagement,
-    "SupportTickets": SupportTickets,
-    "FAQManagement": FAQManagement,
-    "AuditLogs": AuditLogs,
-    "PlatformManagement": PlatformManagement,
-    "FunderResearch": FunderResearch,
 }
 
 export const pagesConfig = {
