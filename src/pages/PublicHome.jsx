@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { 
   Award, 
   BookOpen, 
@@ -11,8 +13,61 @@ import {
   ArrowRight,
   CheckCircle2,
   Target,
-  TrendingUp
+  TrendingUp,
+  Star,
+  Quote
 } from 'lucide-react';
+
+function TestimonialsSection() {
+  const { data: testimonials = [] } = useQuery({
+    queryKey: ['featured-testimonials'],
+    queryFn: async () => {
+      const all = await base44.entities.Testimonial.filter({ 
+        is_featured: true,
+        admin_approved: true 
+      });
+      return all.slice(0, 3);
+    }
+  });
+
+  if (testimonials.length === 0) return null;
+
+  return (
+    <section className="py-20 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">What Our Clients Say</h2>
+          <p className="text-xl text-slate-600">Real results from real organizations</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="hover:shadow-xl transition-shadow">
+              <CardContent className="p-6">
+                <Quote className="w-8 h-8 text-[#E5C089] mb-4" />
+                <div className="flex mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-300'}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-slate-700 mb-6 italic">"{testimonial.testimonial_text}"</p>
+                <div className="border-t pt-4">
+                  <p className="font-semibold text-slate-900">{testimonial.user_name}</p>
+                  <p className="text-sm text-slate-500">{testimonial.organization_name}</p>
+                  {testimonial.program_type === 'incubateher' && (
+                    <p className="text-xs text-[#B21F2D] mt-1 font-medium">IncubateHer Graduate</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function PublicHomePage() {
   return (
@@ -226,6 +281,9 @@ export default function PublicHomePage() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
