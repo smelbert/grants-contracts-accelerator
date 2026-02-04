@@ -421,6 +421,82 @@ export const WORKBOOK_PAGES = [
     `
   },
   {
+    id: 'rfp_rfq_rfi_breakdown',
+    section: 'rfps',
+    title: 'RFPs, RFQs, & RFIs: Know the Difference',
+    type: 'handout',
+    takeaways: [
+      'RFPs seek comprehensive proposals with budget and approach',
+      'RFQs focus on price comparisons for standardized services',
+      'RFIs are information-gathering tools, not funding opportunities'
+    ],
+    actionItems: [
+      'Identify which type of solicitation best fits your services',
+      'Review your capacity to respond to each type effectively'
+    ],
+    content: `
+      <p class="mb-3 text-sm">Understanding solicitation types helps you prioritize where to invest your time.</p>
+      
+      <div class="space-y-3 mb-4">
+        <div class="p-3 border-l-4 border-blue-500 bg-blue-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">RFP – Request for Proposal</h4>
+          <p class="text-xs mb-2"><strong>What it is:</strong> Comprehensive submission including approach, qualifications, timeline, and budget</p>
+          <p class="text-xs mb-2"><strong>Selection criteria:</strong> Technical approach (often 60-70%), cost, qualifications, past performance</p>
+          <p class="text-xs mb-1"><strong>Best for:</strong> Complex projects, professional services, program delivery</p>
+          <p class="text-xs"><strong>Example:</strong> "Provide mentoring services to 100 youth over 12 months with measurable outcomes"</p>
+        </div>
+        
+        <div class="p-3 border-l-4 border-green-500 bg-green-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">RFQ – Request for Quotation</h4>
+          <p class="text-xs mb-2"><strong>What it is:</strong> Price quote for well-defined goods or standardized services</p>
+          <p class="text-xs mb-2"><strong>Selection criteria:</strong> Price is primary factor (70-90%), with basic qualifications</p>
+          <p class="text-xs mb-1"><strong>Best for:</strong> Standardized services, equipment, bulk orders, routine contracts</p>
+          <p class="text-xs"><strong>Example:</strong> "Provide 50 laptops meeting specific technical specifications"</p>
+        </div>
+        
+        <div class="p-3 border-l-4 border-amber-500 bg-amber-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">RFI – Request for Information</h4>
+          <p class="text-xs mb-2"><strong>What it is:</strong> Exploratory research to understand market capabilities</p>
+          <p class="text-xs mb-2"><strong>Selection criteria:</strong> None—this is NOT a funding opportunity</p>
+          <p class="text-xs mb-1"><strong>Best for:</strong> Market research, vendor discovery, future planning</p>
+          <p class="text-xs"><strong>Example:</strong> "Tell us about available training programs for small business owners"</p>
+        </div>
+      </div>
+      
+      <h3 class="font-semibold mb-2 text-sm">How to Respond Strategically:</h3>
+      <table class="w-full border-collapse mb-3 text-xs">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="border p-2 text-left">Type</th>
+            <th class="border p-2 text-left">Time Investment</th>
+            <th class="border p-2 text-left">Win Strategy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border p-2"><strong>RFP</strong></td>
+            <td class="border p-2">High (40-80 hours)</td>
+            <td class="border p-2">Demonstrate innovative approach + proven results</td>
+          </tr>
+          <tr>
+            <td class="border p-2"><strong>RFQ</strong></td>
+            <td class="border p-2">Low (2-10 hours)</td>
+            <td class="border p-2">Competitive pricing + meet specifications</td>
+          </tr>
+          <tr>
+            <td class="border p-2"><strong>RFI</strong></td>
+            <td class="border p-2">Minimal (1-3 hours)</td>
+            <td class="border p-2">Build relationship for future opportunities</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="p-2 bg-red-50 border border-red-200 rounded text-xs">
+        <strong>Critical:</strong> Don't confuse RFIs with RFPs. Responding to an RFI won't result in immediate funding—but may position you for future contracts.
+      </div>
+    `
+  },
+  {
     id: 'reading_opportunities',
     section: 'rfps',
     title: 'Reading Opportunities Strategically',
@@ -457,7 +533,209 @@ export const WORKBOOK_PAGES = [
     ]
   },
 
-  // SECTION 5: BUSINESS STORY
+  // SECTION 5: FUNDRAISING FUNDAMENTALS
+  {
+    id: 'making_the_ask',
+    section: 'fundraising',
+    title: 'Making the Ask: Fundraising 101',
+    type: 'handout',
+    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    video_description: 'Expert walkthrough: How to make effective fundraising asks',
+    takeaways: [
+      'The ask is relationship-based, not transactional',
+      'Preparation includes research, cultivation, and timing',
+      'Asking is about inviting partnership, not begging for money'
+    ],
+    actionItems: [
+      'Identify 3 potential donors and research their giving priorities',
+      'Practice your elevator pitch for different giving levels'
+    ],
+    content: `
+      <p class="mb-3 text-sm"><strong>"Making the ask"</strong> is the moment you invite someone to financially support your mission. It requires preparation, confidence, and clarity.</p>
+      
+      <h3 class="font-semibold mb-2 text-sm">The Fundraising Ask Framework:</h3>
+      <div class="space-y-2 mb-3 text-sm">
+        <div class="p-2 bg-blue-50 rounded">
+          <strong>1. Research:</strong> Understand donor interests, capacity, and giving history
+        </div>
+        <div class="p-2 bg-green-50 rounded">
+          <strong>2. Cultivation:</strong> Build authentic relationship before asking
+        </div>
+        <div class="p-2 bg-purple-50 rounded">
+          <strong>3. The Ask:</strong> Make specific request tied to impact
+        </div>
+        <div class="p-2 bg-amber-50 rounded">
+          <strong>4. Follow-Up:</strong> Thank, report impact, and steward relationship
+        </div>
+      </div>
+      
+      <h3 class="font-semibold mb-2 text-sm">Anatomy of a Strong Ask:</h3>
+      <ul class="list-disc ml-6 mb-3 text-xs space-y-1">
+        <li><strong>Specific:</strong> "We're seeking $5,000" not "Would you consider supporting us?"</li>
+        <li><strong>Tied to Impact:</strong> "$5,000 will provide job training for 25 women entrepreneurs"</li>
+        <li><strong>Invitational:</strong> "Would you partner with us?" not "Can you help?"</li>
+        <li><strong>Time-Bound:</strong> "For our summer cohort launching June 1st"</li>
+        <li><strong>Gratitude-Centered:</strong> Thank them for considering, regardless of response</li>
+      </ul>
+      
+      <h3 class="font-semibold mb-2 text-sm">Common Ask Mistakes to Avoid:</h3>
+      <ul class="list-disc ml-6 mb-3 text-xs space-y-1">
+        <li>Asking too early before relationship is built</li>
+        <li>Being vague about amount or purpose</li>
+        <li>Apologizing or appearing desperate</li>
+        <li>Failing to listen to donor questions/concerns</li>
+        <li>Not following up after the ask</li>
+      </ul>
+      
+      <div class="p-2 bg-slate-100 rounded text-xs mb-2">
+        <p class="mb-1"><strong>Sample Ask Script:</strong></p>
+        <p class="italic">"Thank you for meeting with me today. As you know, [Organization] is addressing [problem] for [community]. We're launching a new program to [specific outcome]. Would you consider a leadership gift of $10,000 to help us serve 50 families this year? Your investment would directly fund [specific deliverable]."</p>
+      </div>
+      
+      <p class="text-xs text-slate-600"><em>Confidence comes from clarity: know your mission, know your ask, know your donor.</em></p>
+    `
+  },
+  {
+    id: 'donor_demographics',
+    section: 'fundraising',
+    title: 'Fundraising Across Age Groups & Demographics',
+    type: 'handout',
+    takeaways: [
+      'Different generations give differently—tailor your approach',
+      'Younger donors prefer digital engagement and social impact',
+      'Older donors value relationships and legacy giving',
+      'Corporate and foundation donors have formal processes'
+    ],
+    actionItems: [
+      'Segment your donor list by age/demographic',
+      'Create tailored messaging for each donor segment'
+    ],
+    content: `
+      <p class="mb-3 text-sm">One-size-fits-all fundraising doesn't work. Understanding donor demographics helps you meet them where they are.</p>
+      
+      <h3 class="font-semibold mb-2 text-sm">Generational Giving Patterns:</h3>
+      
+      <div class="space-y-3 mb-4">
+        <div class="p-3 border-l-4 border-purple-500 bg-purple-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">Gen Z & Millennials (Ages 18-43)</h4>
+          <p class="text-xs mb-2"><strong>Giving Behavior:</strong> Digital-first, cause-driven, peer-influenced, recurring small gifts</p>
+          <p class="text-xs mb-1"><strong>Best Channels:</strong> Social media campaigns, mobile giving, crowdfunding, recurring donations</p>
+          <p class="text-xs mb-1"><strong>Values:</strong> Transparency, social justice, measurable impact, authenticity</p>
+          <p class="text-xs"><strong>Example Ask:</strong> "Join our monthly giving circle—$25/month provides job training for 1 woman per quarter"</p>
+        </div>
+        
+        <div class="p-3 border-l-4 border-blue-500 bg-blue-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">Gen X (Ages 44-59)</h4>
+          <p class="text-xs mb-2"><strong>Giving Behavior:</strong> Research-driven, values efficiency, gives to multiple causes</p>
+          <p class="text-xs mb-1"><strong>Best Channels:</strong> Email campaigns, personal outreach, workplace giving, online donations</p>
+          <p class="text-xs mb-1"><strong>Values:</strong> Fiscal responsibility, proven results, local impact</p>
+          <p class="text-xs"><strong>Example Ask:</strong> "Your $500 investment creates measurable outcomes—see our impact dashboard"</p>
+        </div>
+        
+        <div class="p-3 border-l-4 border-green-500 bg-green-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">Baby Boomers (Ages 60-78)</h4>
+          <p class="text-xs mb-2"><strong>Giving Behavior:</strong> Relationship-focused, larger gifts, legacy giving, board service</p>
+          <p class="text-xs mb-1"><strong>Best Channels:</strong> In-person meetings, direct mail, phone calls, planned giving</p>
+          <p class="text-xs mb-1"><strong>Values:</strong> Personal connection, mission alignment, community roots</p>
+          <p class="text-xs"><strong>Example Ask:</strong> "Would you consider a leadership gift of $5,000 to establish the [Name] Scholarship Fund?"</p>
+        </div>
+        
+        <div class="p-3 border-l-4 border-amber-500 bg-amber-50 rounded">
+          <h4 class="font-semibold text-sm mb-1">Silent Generation (Ages 79+)</h4>
+          <p class="text-xs mb-2"><strong>Giving Behavior:</strong> Loyal givers, planned giving, estate bequests, memorial gifts</p>
+          <p class="text-xs mb-1"><strong>Best Channels:</strong> Personal visits, phone calls, direct mail, legacy society invitations</p>
+          <p class="text-xs mb-1"><strong>Values:</strong> Tradition, stewardship, leaving a legacy</p>
+          <p class="text-xs"><strong>Example Ask:</strong> "Have you considered including [Organization] in your estate planning?"</p>
+        </div>
+      </div>
+      
+      <h3 class="font-semibold mb-2 text-sm">Demographic & Cultural Considerations:</h3>
+      <ul class="list-disc ml-6 mb-3 text-xs space-y-1">
+        <li><strong>BIPOC Communities:</strong> Often prefer grassroots giving circles, community-based asks, authentic cultural representation</li>
+        <li><strong>Women Donors:</strong> Increasingly powerful giving force; seek collaborative approaches, relationship-building, and clear impact</li>
+        <li><strong>LGBTQ+ Donors:</strong> Value authentic allyship, inclusive language, and support for intersectional issues</li>
+        <li><strong>Religious Communities:</strong> Faith-based giving through congregations, tithing practices, mission alignment</li>
+        <li><strong>Corporate Donors:</strong> Follow formal processes, employee engagement programs, matching gifts, sponsorship opportunities</li>
+      </ul>
+      
+      <h3 class="font-semibold mb-2 text-sm">Tailoring Your Approach:</h3>
+      <table class="w-full border-collapse mb-3 text-xs">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="border p-2 text-left">Demographic</th>
+            <th class="border p-2 text-left">Communication Style</th>
+            <th class="border p-2 text-left">Gift Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border p-2">Young Professionals</td>
+            <td class="border p-2">Text, social media, video</td>
+            <td class="border p-2">$10-$100 recurring</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Established Professionals</td>
+            <td class="border p-2">Email, phone, in-person</td>
+            <td class="border p-2">$500-$5,000</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Major Donors</td>
+            <td class="border p-2">Personal meetings, events</td>
+            <td class="border p-2">$5,000-$50,000+</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Foundations</td>
+            <td class="border p-2">Formal proposals, reports</td>
+            <td class="border p-2">$10,000-$500,000+</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="p-2 bg-blue-50 rounded text-xs">
+        <strong>Remember:</strong> These are patterns, not rules. Each donor is an individual—get to know their personal preferences and motivations.
+      </div>
+    `
+  },
+  {
+    id: 'fundraising_ask_practice',
+    section: 'fundraising',
+    title: 'Crafting Your Ask',
+    type: 'worksheet',
+    fields: [
+      {
+        id: 'target_donor_profile',
+        type: 'textarea',
+        label: 'Describe your target donor (age, interests, capacity):',
+        rows: 3
+      },
+      {
+        id: 'donor_research',
+        type: 'textarea',
+        label: 'What have you learned about this donor's giving priorities?',
+        rows: 3
+      },
+      {
+        id: 'specific_ask_amount',
+        type: 'input',
+        label: 'Specific amount you will request:'
+      },
+      {
+        id: 'impact_statement',
+        type: 'textarea',
+        label: 'What will this gift accomplish? (Be specific)',
+        rows: 3
+      },
+      {
+        id: 'ask_script',
+        type: 'textarea',
+        label: 'Write your complete ask script:',
+        rows: 6,
+        placeholder: 'Thank you for meeting with me today. As you know, [Organization name]...'
+      }
+    ]
+  },
+
+  // SECTION 6: BUSINESS STORY
   {
     id: 'business_story_alignment',
     section: 'story',
