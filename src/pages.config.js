@@ -156,6 +156,7 @@ import SupportTickets from './pages/SupportTickets';
 import FAQManagement from './pages/FAQManagement';
 import AuditLogs from './pages/AuditLogs';
 import PlatformManagement from './pages/PlatformManagement';
+import FunderResearch from './pages/FunderResearch';
 import __Layout from './Layout.jsx';
 
 
@@ -269,6 +270,7 @@ export const PAGES = {
     "FAQManagement": FAQManagement,
     "AuditLogs": AuditLogs,
     "PlatformManagement": PlatformManagement,
+    "FunderResearch": FunderResearch,
 }
 
 export const pagesConfig = {
