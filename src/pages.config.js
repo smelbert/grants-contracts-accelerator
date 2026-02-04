@@ -155,6 +155,7 @@ import TestimonialManagement from './pages/TestimonialManagement';
 import SupportTickets from './pages/SupportTickets';
 import FAQManagement from './pages/FAQManagement';
 import AuditLogs from './pages/AuditLogs';
+import PlatformManagement from './pages/PlatformManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -267,6 +268,7 @@ export const PAGES = {
     "SupportTickets": SupportTickets,
     "FAQManagement": FAQManagement,
     "AuditLogs": AuditLogs,
+    "PlatformManagement": PlatformManagement,
 }
 
 export const pagesConfig = {

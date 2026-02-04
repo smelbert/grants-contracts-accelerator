@@ -197,7 +197,18 @@ const getAdminPortalNav = () => [
     ]
   },
   {
-    groupName: 'Platform Management',
+    groupName: 'SaaS Management',
+    items: [
+      { name: 'Platform Hub', page: 'PlatformManagement', icon: LayoutDashboard },
+      { name: 'SaaS Dashboard', page: 'SaaSAdminDashboard', icon: TrendingUp },
+      { name: 'Support Tickets', page: 'SupportTickets', icon: MessageSquare },
+      { name: 'Testimonials', page: 'TestimonialManagement', icon: Target },
+      { name: 'FAQ Management', page: 'FAQManagement', icon: HelpCircle },
+      { name: 'Audit Logs', page: 'AuditLogs', icon: Shield },
+    ]
+  },
+  {
+    groupName: 'Platform Configuration',
     items: [
       { name: 'Registration Pages', page: 'RegistrationBuilder', icon: Plus },
       { name: 'Subscription Plans', page: 'SubscriptionPlans', icon: DollarSign },
@@ -205,8 +216,6 @@ const getAdminPortalNav = () => [
       { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
       { name: 'Email Hub', page: 'EmailHub', icon: Mail },
       { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
-      { name: 'Pricing & Monetization', page: 'Pricing', icon: DollarSign },
-      { name: 'Ethics & Compliance', page: 'EthicsCompliance', icon: Shield },
       { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },
       { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
     ]
