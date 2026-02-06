@@ -68,6 +68,10 @@ export default function SettingsPage() {
     queryFn: () => base44.auth.me(),
   });
 
+  // Determine if user is viewing from coach portal
+  const portalView = localStorage.getItem('portalView') || 'auto';
+  const isCoachView = portalView === 'coach' || (portalView === 'auto' && user?.role === 'coach');
+
   const { data: subscriptions, isLoading: subsLoading } = useQuery({
     queryKey: ['subscriptions', user?.email],
     queryFn: () => base44.entities.Subscription.filter({ created_by: user?.email }),
@@ -136,13 +140,47 @@ export default function SettingsPage() {
         </motion.div>
 
         {/* Tabs */}
-        <Tabs defaultValue="billing" className="space-y-6">
+        <Tabs defaultValue={isCoachView ? "profile" : "billing"} className="space-y-6">
           <TabsList>
-            <TabsTrigger value="billing">Billing & Subscription</TabsTrigger>
-            <TabsTrigger value="team">Team Management</TabsTrigger>
+            {isCoachView && <TabsTrigger value="profile">Profile Settings</TabsTrigger>}
+            {!isCoachView && (
+              <>
+                <TabsTrigger value="billing">Billing & Subscription</TabsTrigger>
+                <TabsTrigger value="team">Team Management</TabsTrigger>
+              </>
+            )}
           </TabsList>
 
-          <TabsContent value="billing" className="space-y-6">
+          {isCoachView && (
+            <TabsContent value="profile" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Personal Information</CardTitle>
+                  <CardDescription>Manage your coach profile and contact details</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-slate-700 block mb-2">Full Name</label>
+                      <p className="text-slate-900">{user?.full_name}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-700 block mb-2">Email</label>
+                      <p className="text-slate-900">{user?.email}</p>
+                    </div>
+                  </div>
+                  <Alert className="bg-blue-50 border-blue-200">
+                    <AlertCircle className="w-4 h-4 text-blue-600" />
+                    <AlertDescription className="text-blue-900">
+                      To update your professional profile, expertise, and availability, visit <strong>My Profile</strong> from the coach menu.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
+
+          {!isCoachView && <TabsContent value="billing" className="space-y-6">
         {/* Current Subscription */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -337,11 +375,13 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </motion.div>
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="team">
-            <TeamManagement currentUser={user} />
-          </TabsContent>
+          {!isCoachView && (
+            <TabsContent value="team">
+              <TeamManagement currentUser={user} />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>
