@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Loader2, Plus, Edit, Save, X, Trash2, BookOpen, 
-  Target, Award, FileText, Settings, AlertTriangle
+  Target, Award, FileText, Settings, AlertTriangle, Sparkles
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -19,6 +19,8 @@ export default function TrainingFrameworkEditorPage() {
   const [editingSection, setEditingSection] = useState(null);
   const [formData, setFormData] = useState({});
   const [activeTab, setActiveTab] = useState('philosophy');
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiGenerating, setAiGenerating] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -117,6 +119,80 @@ export default function TrainingFrameworkEditorPage() {
     });
   };
 
+  const handleAIGenerate = async () => {
+    if (!aiPrompt.trim()) {
+      toast.error('Please provide a description for AI generation');
+      return;
+    }
+
+    setAiGenerating(true);
+    try {
+      const prompt = `You are creating training content for EIS (Elbert Innovative Solutions) consultant training framework.
+
+Context: EIS trains consultants in grant writing, proposals, and contracts. Consultants progress through 3 levels:
+- Level 1: Foundation (shadowing, templates only)
+- Level 2: Intermediate (independent drafting with review)
+- Level 3: Senior (strategy leadership, QA, mentoring)
+
+Current section type: ${formData.section_type}
+Current level: ${formData.level}
+Module title: ${formData.title || 'Not set'}
+
+User description: ${aiPrompt}
+
+Generate structured training content including:
+1. Main content (HTML formatted, professional tone)
+2. 4-6 key bullet points (actionable takeaways)
+3. 2-3 practical exercises with titles and descriptions
+${formData.section_type === 'level_definition' ? '4. 2-3 promotion gate requirements' : ''}
+
+Return JSON format with: content, key_points (array), exercises (array of {title, description}), promotion_gates (array if applicable)`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            content: { type: 'string' },
+            key_points: { 
+              type: 'array',
+              items: { type: 'string' }
+            },
+            exercises: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  title: { type: 'string' },
+                  description: { type: 'string' }
+                }
+              }
+            },
+            promotion_gates: {
+              type: 'array',
+              items: { type: 'string' }
+            }
+          }
+        }
+      });
+
+      setFormData({
+        ...formData,
+        content: result.content,
+        key_points: result.key_points?.join('\n') || '',
+        exercises_json: result.exercises ? JSON.stringify(result.exercises, null, 2) : '',
+        promotion_gates: result.promotion_gates?.join('\n') || ''
+      });
+
+      toast.success('AI content generated! Review and edit as needed.');
+      setAiPrompt('');
+    } catch (error) {
+      toast.error('Failed to generate content: ' + error.message);
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
   const philosophyContent = frameworkContent.filter(c => c.section_type === 'philosophy').sort((a, b) => a.display_order - b.display_order);
   const modules = frameworkContent.filter(c => c.section_type === 'module').sort((a, b) => (a.module_number || 0) - (b.module_number || 0));
   const levelDefinitions = frameworkContent.filter(c => c.section_type === 'level_definition').sort((a, b) => a.display_order - b.display_order);
@@ -190,7 +266,50 @@ export default function TrainingFrameworkEditorPage() {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="pt-6 space-y-4">
+      <CardContent className="pt-6 space-y-6">
+        {/* AI Generation Section */}
+        <Card className="border-2 border-[#AC1A5B] bg-gradient-to-br from-[#AC1A5B]/5 to-[#E5C089]/5">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#AC1A5B]" />
+              <CardTitle className="text-lg">AI Content Generator</CardTitle>
+            </div>
+            <CardDescription>
+              Describe what you want to teach and let AI draft the content
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Textarea
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="Example: Create a module about understanding the difference between grants and contracts, focusing on compliance requirements and payment structures. Include exercises for reviewing RFP documents."
+              rows={4}
+            />
+            <Button 
+              onClick={handleAIGenerate} 
+              disabled={aiGenerating || !aiPrompt.trim()}
+              className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
+            >
+              {aiGenerating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Generate Content with AI
+                </>
+              )}
+            </Button>
+            <p className="text-xs text-slate-500">
+              AI will generate content, key points, and exercises based on your description. You can edit everything after generation.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Manual Form Fields */}
+        <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label>Section ID</Label>
@@ -332,6 +451,7 @@ export default function TrainingFrameworkEditorPage() {
           <Button variant="outline" onClick={() => setEditingSection(null)}>
             Cancel
           </Button>
+        </div>
         </div>
       </CardContent>
     </Card>
