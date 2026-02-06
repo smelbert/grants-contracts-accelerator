@@ -160,6 +160,8 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import ConsultantOnboarding from './pages/ConsultantOnboarding';
+import TrainingFramework from './pages/TrainingFramework';
+import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -277,6 +279,8 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
     "ConsultantOnboarding": ConsultantOnboarding,
+    "TrainingFramework": TrainingFramework,
+    "TrainingFrameworkEditor": TrainingFrameworkEditor,
 }
 
 export const pagesConfig = {
