@@ -70,6 +70,7 @@ import CoachTrainingLibrary from './pages/CoachTrainingLibrary';
 import CoachesStaff from './pages/CoachesStaff';
 import CohortManagement from './pages/CohortManagement';
 import Community from './pages/Community';
+import ConsultantOnboarding from './pages/ConsultantOnboarding';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
 import Documents from './pages/Documents';
@@ -155,13 +156,12 @@ import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
 import TestimonialManagement from './pages/TestimonialManagement';
+import TrainingFramework from './pages/TrainingFramework';
+import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
 import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import ConsultantOnboarding from './pages/ConsultantOnboarding';
-import TrainingFramework from './pages/TrainingFramework';
-import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -189,6 +189,7 @@ export const PAGES = {
     "CoachesStaff": CoachesStaff,
     "CohortManagement": CohortManagement,
     "Community": Community,
+    "ConsultantOnboarding": ConsultantOnboarding,
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
     "Documents": Documents,
@@ -274,13 +275,12 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
     "TestimonialManagement": TestimonialManagement,
+    "TrainingFramework": TrainingFramework,
+    "TrainingFrameworkEditor": TrainingFrameworkEditor,
     "UserProfile": UserProfile,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "ConsultantOnboarding": ConsultantOnboarding,
-    "TrainingFramework": TrainingFramework,
-    "TrainingFrameworkEditor": TrainingFrameworkEditor,
 }
 
 export const pagesConfig = {

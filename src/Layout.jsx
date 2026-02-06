@@ -110,6 +110,7 @@ const getUserPortalNav = () => [
 const getCoachPortalNav = () => [
   { name: 'Coach Dashboard', page: 'CoachDashboard', icon: LayoutDashboard },
   { name: 'My Profile', page: 'CoachProfile', icon: User },
+  { name: 'Training Framework', page: 'TrainingFramework', icon: BookOpen },
   { name: 'Mentor Dashboard', page: 'MentorDashboard', icon: Target },
   { name: 'Assigned Organizations', page: 'AssignedOrganizations', icon: Building2 },
   { name: 'Review Queue', page: 'ReviewQueue', icon: FileText },
