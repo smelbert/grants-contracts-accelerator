@@ -15,6 +15,7 @@ import {
 import ReviewQueue from '@/components/coach/ReviewQueue';
 import AssignedOrganizations from '@/components/coach/AssignedOrganizations';
 import OrganizationReviewView from '@/components/coach/OrganizationReviewView';
+import AITrainingRecommendations from '@/components/training/AITrainingRecommendations';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -371,6 +372,11 @@ export default function CoachDashboard() {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* AI Training Recommendations */}
+        <div className="mb-8">
+          <AITrainingRecommendations consultantEmail={user?.email} />
         </div>
 
         {/* Main Content */}
