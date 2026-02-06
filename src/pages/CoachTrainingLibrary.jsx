@@ -38,6 +38,7 @@ export default function CoachTrainingLibrary() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState('all');
+  const [selectedTier, setSelectedTier] = useState('all');
 
   const { data: trainings = [], isLoading } = useQuery({
     queryKey: ['coach-trainings'],
@@ -49,7 +50,13 @@ export default function CoachTrainingLibrary() {
                          training.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || training.category === selectedCategory;
     const matchesLevel = selectedLevel === 'all' || training.difficulty_level === selectedLevel;
-    return matchesSearch && matchesCategory && matchesLevel;
+    const matchesTier = selectedTier === 'all' || 
+                       training.tags?.some(tag => 
+                         (selectedTier === 'level-1' && tag === 'level-1') ||
+                         (selectedTier === 'level-2' && tag === 'level-2') ||
+                         (selectedTier === 'level-3' && tag === 'level-3')
+                       );
+    return matchesSearch && matchesCategory && matchesLevel && matchesTier;
   });
 
   const requiredTrainings = filteredTrainings.filter(t => t.is_required);
@@ -159,6 +166,57 @@ export default function CoachTrainingLibrary() {
           <h1 className="text-4xl font-bold text-[#143A50] mb-2">Coach Training Library</h1>
           <p className="text-slate-600">Enhance your skills with our comprehensive training resources</p>
         </div>
+
+        {/* Tiered Pathway Banner */}
+        <Card className="mb-6 shadow-lg border-l-4 border-[#1E4F58] bg-gradient-to-r from-[#143A50]/5 to-white">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold text-[#143A50] mb-4">EIS Consultant Learning Pathway</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button
+                onClick={() => setSelectedTier(selectedTier === 'level-1' ? 'all' : 'level-1')}
+                className={`p-4 rounded-lg border-2 text-left transition-all ${
+                  selectedTier === 'level-1'
+                    ? 'border-green-600 bg-green-50'
+                    : 'border-slate-200 hover:border-green-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm font-bold">1</div>
+                  <h3 className="font-bold text-slate-900">Foundation</h3>
+                </div>
+                <p className="text-xs text-slate-600">Understanding ecosystem, structure & EIS standards. Shadow & draft sections.</p>
+              </button>
+              <button
+                onClick={() => setSelectedTier(selectedTier === 'level-2' ? 'all' : 'level-2')}
+                className={`p-4 rounded-lg border-2 text-left transition-all ${
+                  selectedTier === 'level-2'
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-200 hover:border-blue-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">2</div>
+                  <h3 className="font-bold text-slate-900">Intermediate</h3>
+                </div>
+                <p className="text-xs text-slate-600">Strategy, alignment, independent drafting. Lead with guidance, mentor Level 1.</p>
+              </button>
+              <button
+                onClick={() => setSelectedTier(selectedTier === 'level-3' ? 'all' : 'level-3')}
+                className={`p-4 rounded-lg border-2 text-left transition-all ${
+                  selectedTier === 'level-3'
+                    ? 'border-purple-600 bg-purple-50'
+                    : 'border-slate-200 hover:border-purple-300'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm font-bold">3</div>
+                  <h3 className="font-bold text-slate-900">Senior/Lead</h3>
+                </div>
+                <p className="text-xs text-slate-600">Strategy leadership, QA, coaching others, final polish & client-facing work.</p>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Search & Filters */}
         <Card className="mb-6 shadow-md">

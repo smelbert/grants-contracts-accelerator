@@ -62,9 +62,11 @@ import BudgetBuilder from './pages/BudgetBuilder';
 import Calendar from './pages/Calendar';
 import Chat from './pages/Chat';
 import CoachDashboard from './pages/CoachDashboard';
+import CoachIntakeAssessment from './pages/CoachIntakeAssessment';
 import CoachProfile from './pages/CoachProfile';
 import CoachProfileManager from './pages/CoachProfileManager';
 import CoachProfileSetup from './pages/CoachProfileSetup';
+import CoachTrainingLibrary from './pages/CoachTrainingLibrary';
 import CoachesStaff from './pages/CoachesStaff';
 import CohortManagement from './pages/CohortManagement';
 import Community from './pages/Community';
@@ -157,8 +159,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import CoachTrainingLibrary from './pages/CoachTrainingLibrary';
-import CoachIntakeAssessment from './pages/CoachIntakeAssessment';
 import __Layout from './Layout.jsx';
 
 
@@ -178,9 +178,11 @@ export const PAGES = {
     "Calendar": Calendar,
     "Chat": Chat,
     "CoachDashboard": CoachDashboard,
+    "CoachIntakeAssessment": CoachIntakeAssessment,
     "CoachProfile": CoachProfile,
     "CoachProfileManager": CoachProfileManager,
     "CoachProfileSetup": CoachProfileSetup,
+    "CoachTrainingLibrary": CoachTrainingLibrary,
     "CoachesStaff": CoachesStaff,
     "CohortManagement": CohortManagement,
     "Community": Community,
@@ -273,8 +275,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "CoachTrainingLibrary": CoachTrainingLibrary,
-    "CoachIntakeAssessment": CoachIntakeAssessment,
 }
 
 export const pagesConfig = {
