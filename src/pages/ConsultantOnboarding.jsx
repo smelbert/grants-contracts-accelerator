@@ -8,8 +8,9 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   CheckCircle2, Circle, Clock, Award, BookOpen, 
-  Users, TrendingUp, Calendar, Loader2, Star
+  Users, TrendingUp, Calendar, Loader2, Star, Target
 } from 'lucide-react';
+import ConsultantSkillsSection from '@/components/skills/ConsultantSkillsSection';
 
 const ONBOARDING_PHASES = {
   days_0_30: {
@@ -181,6 +182,7 @@ export default function ConsultantOnboardingPage() {
         <Tabs defaultValue="roadmap" className="space-y-6">
           <TabsList>
             <TabsTrigger value="roadmap">Onboarding Roadmap</TabsTrigger>
+            <TabsTrigger value="skills">Skills</TabsTrigger>
             <TabsTrigger value="permissions">Level Permissions</TabsTrigger>
             <TabsTrigger value="stats">My Stats</TabsTrigger>
           </TabsList>
@@ -228,6 +230,10 @@ export default function ConsultantOnboardingPage() {
                 </Card>
               );
             })}
+          </TabsContent>
+
+          <TabsContent value="skills">
+            <ConsultantSkillsSection consultantEmail={user?.email} />
           </TabsContent>
 
           <TabsContent value="permissions">
