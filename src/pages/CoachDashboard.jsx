@@ -16,6 +16,7 @@ import ReviewQueue from '@/components/coach/ReviewQueue';
 import AssignedOrganizations from '@/components/coach/AssignedOrganizations';
 import OrganizationReviewView from '@/components/coach/OrganizationReviewView';
 import AITrainingRecommendations from '@/components/training/AITrainingRecommendations';
+import CoachSkillValidation from '@/components/skills/CoachSkillValidation';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -384,6 +385,7 @@ export default function CoachDashboard() {
           <TabsList>
             <TabsTrigger value="reviews">Review Queue</TabsTrigger>
             <TabsTrigger value="organizations">My Organizations</TabsTrigger>
+            <TabsTrigger value="skills">Skill Validation</TabsTrigger>
           </TabsList>
 
           <TabsContent value="reviews">
@@ -399,6 +401,18 @@ export default function CoachDashboard() {
               isLoading={orgsLoading}
               onSelectOrg={setSelectedOrg}
             />
+          </TabsContent>
+
+          <TabsContent value="skills">
+            {onboarding ? (
+              <CoachSkillValidation consultantEmail={user?.email} />
+            ) : (
+              <Card>
+                <CardContent className="pt-6 text-center py-12">
+                  <p className="text-slate-600">Complete onboarding to access skill validation</p>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
