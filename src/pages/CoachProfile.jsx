@@ -367,7 +367,7 @@ export default function CoachProfilePage() {
             <Card className="overflow-hidden border-[#1E4F58] shadow-xl">
               <div className="h-32 bg-gradient-to-r from-[#143A50] via-[#1E4F58] to-[#AC1A5B]"></div>
               <CardContent className="pt-0 px-6 pb-6">
-                <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6 -mt-16">
+                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 -mt-16">
                   {profile?.headshot_url ? (
                     <img
                       src={profile.headshot_url}
@@ -379,17 +379,17 @@ export default function CoachProfilePage() {
                       <User className="w-16 h-16 text-slate-400" />
                     </div>
                   )}
-                  <div className="flex-1 sm:mt-4">
+                  <div className="flex-1 text-center sm:text-left sm:mt-4">
                     <h2 className="text-3xl font-bold text-[#143A50]">{profile?.full_name}</h2>
                     <p className="text-xl text-slate-600 mt-1">{profile?.title}</p>
-                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3">
                       <Badge className="bg-[#1E4F58]">
                         <Briefcase className="w-3 h-3 mr-1" />
                         {profile?.role}
                       </Badge>
                       <Badge variant="outline" className="border-[#143A50] text-[#143A50]">
                         <Award className="w-3 h-3 mr-1" />
-                        {profile?.years_experience} years experience
+                        {profile?.years_experience}+ years experience
                       </Badge>
                       <Badge 
                         className={
@@ -399,7 +399,9 @@ export default function CoachProfilePage() {
                         }
                       >
                         <Clock className="w-3 h-3 mr-1" />
-                        {profile?.availability_status}
+                        {profile?.availability_status === 'available' && '✓ Accepting New Clients'}
+                        {profile?.availability_status === 'limited' && 'Limited Availability'}
+                        {profile?.availability_status === 'unavailable' && 'Unavailable'}
                       </Badge>
                     </div>
                   </div>
