@@ -38,6 +38,16 @@ export default function AssessmentCenter({ consultantEmail, currentLevel }) {
     enabled: !!consultantEmail
   });
 
+  // Real-time subscription for live updates
+  React.useEffect(() => {
+    const unsubscribe = base44.entities.CompetencyAssessment.subscribe((event) => {
+      if (event.data?.consultant_email === consultantEmail) {
+        queryClient.invalidateQueries(['assessments', consultantEmail]);
+      }
+    });
+    return unsubscribe;
+  }, [consultantEmail]);
+
   const { data: availableAssessments = [] } = useQuery({
     queryKey: ['availableAssessments', currentLevel],
     queryFn: () => base44.entities.CompetencyAssessment.filter({ 

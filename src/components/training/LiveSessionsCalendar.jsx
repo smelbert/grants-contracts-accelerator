@@ -32,6 +32,15 @@ export default function LiveSessionsCalendar({ consultantEmail, currentLevel }) 
     enabled: !!currentLevel
   });
 
+  // Real-time subscription for live updates
+  React.useEffect(() => {
+    const unsubscribe = base44.entities.LiveTrainingSession.subscribe((event) => {
+      queryClient.invalidateQueries(['liveSessions']);
+      queryClient.invalidateQueries(['pastSessions']);
+    });
+    return unsubscribe;
+  }, []);
+
   const { data: pastSessions = [] } = useQuery({
     queryKey: ['pastSessions', consultantEmail],
     queryFn: async () => {
