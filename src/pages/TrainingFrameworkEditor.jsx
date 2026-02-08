@@ -10,8 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Plus, Edit, Trash2, Save } from 'lucide-react';
+import { BookOpen, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const sectionTypes = {
   philosophy: 'Philosophy',
@@ -26,6 +28,20 @@ export default function TrainingFrameworkEditorPage() {
   const [editingContent, setEditingContent] = useState(null);
   const [activeTab, setActiveTab] = useState('modules');
   const queryClient = useQueryClient();
+  
+  // Rich text editors state
+  const [content, setContent] = useState('');
+  const [purpose, setPurpose] = useState('');
+  const [rationale, setRationale] = useState('');
+  
+  // Dynamic lists state
+  const [exercises, setExercises] = useState([]);
+  const [requiredOutputs, setRequiredOutputs] = useState([]);
+  const [levelExpectations, setLevelExpectations] = useState({
+    level1: '',
+    level2: '',
+    level3: ''
+  });
 
   const { data: frameworkContent = [] } = useQuery({
     queryKey: ['training-framework-all'],
@@ -60,6 +76,21 @@ export default function TrainingFrameworkEditorPage() {
     }
   });
 
+  const handleOpenDialog = (content = null) => {
+    setEditingContent(content);
+    setContent(content?.content || '');
+    setPurpose(content?.purpose || '');
+    setRationale(content?.rationale || '');
+    setExercises(content?.exercises || []);
+    setRequiredOutputs(content?.required_outputs || []);
+    setLevelExpectations({
+      level1: content?.level_expectations?.level1 || '',
+      level2: content?.level_expectations?.level2 || '',
+      level3: content?.level_expectations?.level3 || ''
+    });
+    setShowDialog(true);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -73,8 +104,15 @@ export default function TrainingFrameworkEditorPage() {
       subtitle: formData.get('subtitle') || undefined,
       level: formData.get('level') || 'all',
       module_number: formData.get('moduleNumber') ? parseInt(formData.get('moduleNumber')) : undefined,
-      content: formData.get('content'),
+      content: content,
+      purpose: purpose || undefined,
+      rationale: rationale || undefined,
       key_points: keyPoints,
+      exercises: exercises.filter(ex => ex.title || ex.description),
+      required_outputs: requiredOutputs.filter(o => o.trim()),
+      level_expectations: (levelExpectations.level1 || levelExpectations.level2 || levelExpectations.level3) 
+        ? levelExpectations 
+        : undefined,
       display_order: parseInt(formData.get('displayOrder')),
       is_published: formData.get('published') === 'on'
     };
@@ -100,7 +138,7 @@ export default function TrainingFrameworkEditorPage() {
             <h1 className="text-3xl font-bold text-slate-900">Training Framework Editor</h1>
             <p className="text-slate-600">Manage training modules and content</p>
           </div>
-          <Button onClick={() => { setEditingContent(null); setShowDialog(true); }}>
+          <Button onClick={() => handleOpenDialog(null)}>
             <Plus className="w-4 h-4 mr-2" />
             Add Content
           </Button>
@@ -244,11 +282,11 @@ export default function TrainingFrameworkEditorPage() {
         </Tabs>
 
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingContent ? 'Edit' : 'Add'} Training Content</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Section Type</Label>
@@ -305,8 +343,24 @@ export default function TrainingFrameworkEditorPage() {
               </div>
 
               <div>
-                <Label>Content</Label>
-                <Textarea name="content" rows={6} defaultValue={editingContent?.content} required />
+                <Label>Content (Rich Text)</Label>
+                <div className="border rounded-lg overflow-hidden">
+                  <ReactQuill theme="snow" value={content} onChange={setContent} />
+                </div>
+              </div>
+
+              <div>
+                <Label>Purpose (Optional - for modules)</Label>
+                <div className="border rounded-lg overflow-hidden">
+                  <ReactQuill theme="snow" value={purpose} onChange={setPurpose} />
+                </div>
+              </div>
+
+              <div>
+                <Label>Rationale (Optional - for modules)</Label>
+                <div className="border rounded-lg overflow-hidden">
+                  <ReactQuill theme="snow" value={rationale} onChange={setRationale} />
+                </div>
               </div>
 
               <div>
@@ -317,6 +371,125 @@ export default function TrainingFrameworkEditorPage() {
                   defaultValue={editingContent?.key_points?.join('\n')} 
                   placeholder="Enter each key point on a new line"
                 />
+              </div>
+
+              {/* Exercises Section */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>Exercises</Label>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => setExercises([...exercises, { title: '', description: '' }])}
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Exercise
+                  </Button>
+                </div>
+                {exercises.map((exercise, idx) => (
+                  <Card key={idx} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 space-y-3">
+                          <Input
+                            placeholder="Exercise Title"
+                            value={exercise.title}
+                            onChange={(e) => {
+                              const updated = [...exercises];
+                              updated[idx].title = e.target.value;
+                              setExercises(updated);
+                            }}
+                          />
+                          <Textarea
+                            placeholder="Exercise Description"
+                            rows={2}
+                            value={exercise.description}
+                            onChange={(e) => {
+                              const updated = [...exercises];
+                              updated[idx].description = e.target.value;
+                              setExercises(updated);
+                            }}
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setExercises(exercises.filter((_, i) => i !== idx))}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Level-Based Expectations */}
+              <div className="space-y-3">
+                <Label>Level-Based Expectations (for modules)</Label>
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-sm text-green-700">Level 1 Expectation</Label>
+                    <Input
+                      placeholder="What Level 1 consultants should achieve"
+                      value={levelExpectations.level1}
+                      onChange={(e) => setLevelExpectations({ ...levelExpectations, level1: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm text-blue-700">Level 2 Expectation</Label>
+                    <Input
+                      placeholder="What Level 2 consultants should achieve"
+                      value={levelExpectations.level2}
+                      onChange={(e) => setLevelExpectations({ ...levelExpectations, level2: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm text-purple-700">Level 3 Expectation</Label>
+                    <Input
+                      placeholder="What Level 3 consultants should achieve"
+                      value={levelExpectations.level3}
+                      onChange={(e) => setLevelExpectations({ ...levelExpectations, level3: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Required Outputs */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>Required Outputs (for modules)</Label>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => setRequiredOutputs([...requiredOutputs, ''])}
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Output
+                  </Button>
+                </div>
+                {requiredOutputs.map((output, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <Input
+                      placeholder="Required output or deliverable"
+                      value={output}
+                      onChange={(e) => {
+                        const updated = [...requiredOutputs];
+                        updated[idx] = e.target.value;
+                        setRequiredOutputs(updated);
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setRequiredOutputs(requiredOutputs.filter((_, i) => i !== idx))}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
 
               <div className="flex items-center gap-2">
