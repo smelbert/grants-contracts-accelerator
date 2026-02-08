@@ -8,6 +8,8 @@ import {
   BookOpen, Target, Award, Sparkles, CheckCircle2, 
   TrendingUp, Users, Loader2, Lightbulb, FileText
 } from 'lucide-react';
+import VisualCurriculumMap from '@/components/training/VisualCurriculumMap';
+import ModuleDetailView, { MODULES_DATA } from '@/components/training/ModuleDetailView';
 
 const LEVEL_COLORS = {
   'level-1': { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', badge: 'bg-green-600' },
