@@ -54,6 +54,7 @@ const getUserPortalNav = () => [
   {
     groupName: 'Workspace',
     items: [
+      { name: 'Funding Readiness', page: 'FundingReadinessAssessment', icon: CheckCircle2 },
       { name: 'Projects', page: 'Projects', icon: FileText },
       { name: 'Documents', page: 'Documents', icon: FileText },
       { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
@@ -82,6 +83,7 @@ const getUserPortalNav = () => [
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
       { name: 'Video Library', page: 'IncubateHerVideoLibrary', icon: Video },
       { name: 'Assessments', page: 'IncubateHerPreAssessment', icon: CheckCircle2 },
+      { name: 'Readiness Assessment', page: 'FundingReadinessAssessment', icon: Target },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
