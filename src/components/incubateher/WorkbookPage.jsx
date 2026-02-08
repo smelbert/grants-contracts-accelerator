@@ -35,7 +35,19 @@ const PageTypeBadge = ({ type }) => {
 
 export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null }) {
   // Use custom content if available, otherwise use default
-  const displayPage = customContent ? { ...page, ...customContent } : page;
+  // For content field, prefer customContent over default to ensure admin edits show
+  const displayPage = customContent 
+    ? { 
+        ...page, 
+        title: customContent.title || page.title,
+        subtitle: customContent.subtitle || page.subtitle,
+        content: customContent.content || page.content,
+        video_url: customContent.video_url || page.video_url,
+        video_description: customContent.video_description || page.video_description,
+        takeaways: customContent.takeaways || page.takeaways,
+        action_items: customContent.action_items || page.action_items
+      }
+    : page;
   const handleFieldChange = (fieldId, value) => {
     onResponseChange(page.id, fieldId, value);
   };
