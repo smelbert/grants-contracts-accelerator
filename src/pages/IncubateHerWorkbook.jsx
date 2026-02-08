@@ -342,6 +342,7 @@ export default function IncubateHerWorkbook() {
           responses={allResponses[currentPage.id] || {}}
           onResponseChange={handleResponseChange}
           assessmentResults={assessmentResults}
+          customContent={customPages.find(p => p.page_id === currentPage.id)}
         />
 
         {/* Navigation Footer */}
