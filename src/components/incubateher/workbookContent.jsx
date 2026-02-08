@@ -8,9 +8,31 @@ export const WORKBOOK_PAGES = [
     subtitle: 'Preparing for Grants & Contracts',
     type: 'handout',
     content: `
-      <div class="text-center space-y-4 py-8">
-        <h1 class="text-3xl font-bold text-[#143A50]">IncubateHer Funding Readiness</h1>
-        <h2 class="text-xl text-[#AC1A5B]">Your Guide to Grants & Contracts</h2>
+      <div class="relative w-full bg-white">
+        <!-- Hero Image -->
+        <div class="w-full">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/7031b08e4_workbookcover.png" 
+            alt="IncubateHer Program - Women in Business" 
+            class="w-full h-auto"
+          />
+        </div>
+        
+        <!-- Footer with Logos -->
+        <div class="w-full bg-[#1E4F58] py-8 px-6">
+          <div class="max-w-4xl mx-auto flex items-center justify-center gap-12">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+              alt="Elbert Innovative Solutions" 
+              class="h-20 w-auto"
+            />
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/a6e61c9e5_AccelerateHerLogoPNGTransparent.png" 
+              alt="AccelerateHer" 
+              class="h-20 w-auto"
+            />
+          </div>
+        </div>
       </div>
     `
   },
