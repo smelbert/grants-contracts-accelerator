@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,6 +17,7 @@ const LEVEL_COLORS = {
 
 export default function TrainingFrameworkPage() {
   const [activeTab, setActiveTab] = useState('philosophy');
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -27,6 +28,14 @@ export default function TrainingFrameworkPage() {
     queryKey: ['training-framework'],
     queryFn: () => base44.entities.TrainingFrameworkContent.filter({ is_published: true }),
   });
+
+  // Real-time subscription for live updates
+  React.useEffect(() => {
+    const unsubscribe = base44.entities.TrainingFrameworkContent.subscribe((event) => {
+      queryClient.invalidateQueries(['training-framework']);
+    });
+    return unsubscribe;
+  }, []);
 
   const { data: onboarding } = useQuery({
     queryKey: ['consultant-onboarding', user?.email],
