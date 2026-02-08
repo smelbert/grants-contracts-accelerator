@@ -73,6 +73,20 @@ export default function IncubateHerWorkbook() {
     enabled: !!enrollment?.id
   });
 
+  // Load custom page content from admin editor
+  const { data: customPages = [] } = useQuery({
+    queryKey: ['workbook-custom-pages'],
+    queryFn: () => base44.entities.WorkbookPageContent.list(),
+  });
+
+  // Real-time subscription for custom content updates
+  useEffect(() => {
+    const unsubscribe = base44.entities.WorkbookPageContent.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ['workbook-custom-pages'] });
+    });
+    return unsubscribe;
+  }, [queryClient]);
+
   // Initialize responses from saved data
   useEffect(() => {
     if (savedResponses) {

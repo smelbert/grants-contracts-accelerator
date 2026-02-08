@@ -53,6 +53,7 @@ import AIGuardrails from './pages/AIGuardrails';
 import AboutEIS from './pages/AboutEIS';
 import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
+import AssessmentManagement from './pages/AssessmentManagement';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import AuditLogs from './pages/AuditLogs';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
@@ -113,6 +114,7 @@ import LearningHubAccess from './pages/LearningHubAccess';
 import LearningModule from './pages/LearningModule';
 import LearningProgress from './pages/LearningProgress';
 import LiveRoomManagement from './pages/LiveRoomManagement';
+import LiveSessionManagement from './pages/LiveSessionManagement';
 import LiveStreams from './pages/LiveStreams';
 import MemberManagement from './pages/MemberManagement';
 import MentorDashboard from './pages/MentorDashboard';
@@ -132,6 +134,7 @@ import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramManagement from './pages/ProgramManagement';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
+import PromotionGateConfig from './pages/PromotionGateConfig';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
 import ProposalWorkflows from './pages/ProposalWorkflows';
 import PublicHome from './pages/PublicHome';
@@ -162,9 +165,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import LiveSessionManagement from './pages/LiveSessionManagement';
-import AssessmentManagement from './pages/AssessmentManagement';
-import PromotionGateConfig from './pages/PromotionGateConfig';
 import __Layout from './Layout.jsx';
 
 
@@ -175,6 +175,7 @@ export const PAGES = {
     "AboutEIS": AboutEIS,
     "AdminDashboard": AdminDashboard,
     "ApplicationTracker": ApplicationTracker,
+    "AssessmentManagement": AssessmentManagement,
     "AssignedOrganizations": AssignedOrganizations,
     "AuditLogs": AuditLogs,
     "BoilerplateBuilder": BoilerplateBuilder,
@@ -235,6 +236,7 @@ export const PAGES = {
     "LearningModule": LearningModule,
     "LearningProgress": LearningProgress,
     "LiveRoomManagement": LiveRoomManagement,
+    "LiveSessionManagement": LiveSessionManagement,
     "LiveStreams": LiveStreams,
     "MemberManagement": MemberManagement,
     "MentorDashboard": MentorDashboard,
@@ -254,6 +256,7 @@ export const PAGES = {
     "ProgramManagement": ProgramManagement,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
+    "PromotionGateConfig": PromotionGateConfig,
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
     "ProposalWorkflows": ProposalWorkflows,
     "PublicHome": PublicHome,
@@ -284,9 +287,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "LiveSessionManagement": LiveSessionManagement,
-    "AssessmentManagement": AssessmentManagement,
-    "PromotionGateConfig": PromotionGateConfig,
 }
 
 export const pagesConfig = {
