@@ -87,8 +87,6 @@ const getUserPortalNav = () => [
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
-      { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users, requiresRole: 'admin' },
-      { name: 'Workbook Editor', page: 'IncubateHerWorkbookEditor', icon: FileText, requiresRole: 'admin' },
     ]
   },
   {
