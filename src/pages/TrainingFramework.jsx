@@ -87,13 +87,19 @@ export default function TrainingFrameworkPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="curriculum-map">Curriculum Map</TabsTrigger>
             <TabsTrigger value="philosophy">Philosophy</TabsTrigger>
             <TabsTrigger value="levels">Levels</TabsTrigger>
             <TabsTrigger value="modules">Modules</TabsTrigger>
             <TabsTrigger value="expectations">Expectations</TabsTrigger>
             <TabsTrigger value="format">Format</TabsTrigger>
           </TabsList>
+
+          {/* Curriculum Map Tab */}
+          <TabsContent value="curriculum-map" className="space-y-6">
+            <VisualCurriculumMap currentLevel={currentLevel} />
+          </TabsContent>
 
           {/* Philosophy Tab */}
           <TabsContent value="philosophy" className="space-y-6">
