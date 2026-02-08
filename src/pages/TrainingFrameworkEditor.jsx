@@ -195,7 +195,7 @@ export default function TrainingFrameworkEditorPage() {
                       <p className="text-sm text-slate-500 mt-2 line-clamp-2">{content.content}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => { setEditingContent(content); setShowDialog(true); }}>
+                      <Button size="sm" variant="outline" onClick={() => handleOpenDialog(content)}>
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => deleteMutation.mutate(content.id)}>
@@ -221,7 +221,7 @@ export default function TrainingFrameworkEditorPage() {
                       <p className="text-sm text-slate-500 mt-2 line-clamp-2">{content.content}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => { setEditingContent(content); setShowDialog(true); }}>
+                      <Button size="sm" variant="outline" onClick={() => handleOpenDialog(content)}>
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => deleteMutation.mutate(content.id)}>
@@ -244,7 +244,7 @@ export default function TrainingFrameworkEditorPage() {
                       <p className="text-sm text-slate-500 mt-2 line-clamp-2">{content.content}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => { setEditingContent(content); setShowDialog(true); }}>
+                      <Button size="sm" variant="outline" onClick={() => handleOpenDialog(content)}>
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => deleteMutation.mutate(content.id)}>
@@ -267,7 +267,7 @@ export default function TrainingFrameworkEditorPage() {
                       <p className="text-sm text-slate-500 mt-2 line-clamp-2">{content.content}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => { setEditingContent(content); setShowDialog(true); }}>
+                      <Button size="sm" variant="outline" onClick={() => handleOpenDialog(content)}>
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => deleteMutation.mutate(content.id)}>
