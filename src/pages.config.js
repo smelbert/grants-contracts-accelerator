@@ -162,6 +162,9 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import LiveSessionManagement from './pages/LiveSessionManagement';
+import AssessmentManagement from './pages/AssessmentManagement';
+import PromotionGateConfig from './pages/PromotionGateConfig';
 import __Layout from './Layout.jsx';
 
 
@@ -281,6 +284,9 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "LiveSessionManagement": LiveSessionManagement,
+    "AssessmentManagement": AssessmentManagement,
+    "PromotionGateConfig": PromotionGateConfig,
 }
 
 export const pagesConfig = {

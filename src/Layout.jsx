@@ -165,6 +165,15 @@ const getAdminPortalNav = () => [
     ]
   },
   {
+    groupName: 'Training System',
+    items: [
+      { name: 'Training Framework', page: 'TrainingFramework', icon: BookOpen },
+      { name: 'Live Sessions', page: 'LiveSessionManagement', icon: Video },
+      { name: 'Assessments', page: 'AssessmentManagement', icon: FileText },
+      { name: 'Promotion Gates', page: 'PromotionGateConfig', icon: Target },
+    ]
+  },
+  {
     groupName: 'Boutique Services',
     items: [
       { name: 'RFP Rapid Response', page: 'RFPRapidResponse', icon: Sparkles },
