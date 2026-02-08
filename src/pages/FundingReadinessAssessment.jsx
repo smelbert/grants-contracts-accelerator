@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FundingReadinessAssessmentForm from '@/components/assessment/FundingReadinessAssessmentForm';
+import AssessmentProgressChart from '@/components/assessment/AssessmentProgressChart';
 import { FileText, History, TrendingUp } from 'lucide-react';
 
 export default function FundingReadinessAssessmentPage() {
@@ -105,6 +106,29 @@ export default function FundingReadinessAssessmentPage() {
                       </div>
                     </div>
 
+                    {latestAssessment.score_breakdown && (
+                      <div className="space-y-3 mb-6">
+                        <h4 className="font-semibold text-[#143A50]">Score Breakdown</h4>
+                        {Object.entries(latestAssessment.score_breakdown).map(([key, value]) => {
+                          const label = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                          return (
+                            <div key={key}>
+                              <div className="flex justify-between text-sm mb-1">
+                                <span className="font-medium">{label}</span>
+                                <span className="text-slate-600">{value.score}/{value.max} points</span>
+                              </div>
+                              <div className="w-full bg-slate-200 rounded-full h-2">
+                                <div 
+                                  className="bg-[#143A50] h-2 rounded-full transition-all" 
+                                  style={{ width: `${value.percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
                     <div className="space-y-3">
                       <div className="bg-white rounded-lg p-4 border">
                         <div className="flex justify-between mb-1">
@@ -140,6 +164,10 @@ export default function FundingReadinessAssessmentPage() {
                     )}
                   </CardContent>
                 </Card>
+
+                {assessments.length > 0 && (
+                  <AssessmentProgressChart assessments={assessments} />
+                )}
               </div>
             ) : (
               <Card>
