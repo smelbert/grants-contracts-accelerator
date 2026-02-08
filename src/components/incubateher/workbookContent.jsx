@@ -8,28 +8,26 @@ export const WORKBOOK_PAGES = [
     subtitle: 'Preparing for Grants & Contracts',
     type: 'handout',
     content: `
-      <div class="relative w-full bg-white">
+      <div style="margin: -2rem -3rem;">
         <!-- Hero Image -->
-        <div class="w-full">
-          <img 
-            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/7031b08e4_workbookcover.png" 
-            alt="IncubateHer Program - Women in Business" 
-            class="w-full h-auto"
-          />
-        </div>
+        <img 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/7031b08e4_workbookcover.png" 
+          alt="IncubateHer Program - Women in Business" 
+          style="width: 100%; height: auto; display: block;"
+        />
         
         <!-- Footer with Logos -->
-        <div class="w-full bg-[#1E4F58] py-8 px-6">
-          <div class="max-w-4xl mx-auto flex items-center justify-center gap-12">
+        <div style="width: 100%; background-color: #1E4F58; padding: 2rem 1.5rem;">
+          <div style="max-width: 64rem; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 3rem;">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
               alt="Elbert Innovative Solutions" 
-              class="h-20 w-auto"
+              style="height: 5rem; width: auto;"
             />
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/a6e61c9e5_AccelerateHerLogoPNGTransparent.png" 
               alt="AccelerateHer" 
-              class="h-20 w-auto"
+              style="height: 5rem; width: auto;"
             />
           </div>
         </div>
