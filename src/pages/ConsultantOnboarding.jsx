@@ -11,6 +11,9 @@ import {
   Users, TrendingUp, Calendar, Loader2, Star, Target
 } from 'lucide-react';
 import ConsultantSkillsSection from '@/components/skills/ConsultantSkillsSection';
+import CompetencyGateTracker from '@/components/training/CompetencyGateTracker';
+import LiveSessionsCalendar from '@/components/training/LiveSessionsCalendar';
+import AssessmentCenter from '@/components/training/AssessmentCenter';
 
 const ONBOARDING_PHASES = {
   days_0_30: {
@@ -182,7 +185,10 @@ export default function ConsultantOnboardingPage() {
         <Tabs defaultValue="roadmap" className="space-y-6">
           <TabsList>
             <TabsTrigger value="roadmap">Onboarding Roadmap</TabsTrigger>
+            <TabsTrigger value="promotion">Promotion Requirements</TabsTrigger>
             <TabsTrigger value="skills">Skills</TabsTrigger>
+            <TabsTrigger value="assessments">Assessments</TabsTrigger>
+            <TabsTrigger value="sessions">Live Sessions</TabsTrigger>
             <TabsTrigger value="permissions">Level Permissions</TabsTrigger>
             <TabsTrigger value="stats">My Stats</TabsTrigger>
           </TabsList>
@@ -232,8 +238,29 @@ export default function ConsultantOnboardingPage() {
             })}
           </TabsContent>
 
+          <TabsContent value="promotion">
+            <CompetencyGateTracker 
+              consultantEmail={user?.email} 
+              currentLevel={currentLevel}
+            />
+          </TabsContent>
+
           <TabsContent value="skills">
             <ConsultantSkillsSection consultantEmail={user?.email} />
+          </TabsContent>
+
+          <TabsContent value="assessments">
+            <AssessmentCenter 
+              consultantEmail={user?.email}
+              currentLevel={currentLevel}
+            />
+          </TabsContent>
+
+          <TabsContent value="sessions">
+            <LiveSessionsCalendar 
+              consultantEmail={user?.email}
+              currentLevel={currentLevel}
+            />
           </TabsContent>
 
           <TabsContent value="permissions">
