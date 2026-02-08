@@ -9,28 +9,11 @@ export const WORKBOOK_PAGES = [
     type: 'handout',
     content: `
       <div style="margin: -2rem -3rem;">
-        <!-- Hero Image -->
         <img 
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/7031b08e4_workbookcover.png" 
-          alt="IncubateHer Program - Women in Business" 
+          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/eef30a064_INCUBATEHER2.png" 
+          alt="IncubateHer Funding Readiness Workbook - Columbus Urban League & Elbert Innovative Solutions" 
           style="width: 100%; height: auto; display: block;"
         />
-        
-        <!-- Footer with Logos -->
-        <div style="width: 100%; background-color: #1E4F58; padding: 2rem 1.5rem;">
-          <div style="max-width: 64rem; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 3rem;">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
-              alt="Elbert Innovative Solutions" 
-              style="height: 5rem; width: auto;"
-            />
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/a6e61c9e5_AccelerateHerLogoPNGTransparent.png" 
-              alt="AccelerateHer" 
-              style="height: 5rem; width: auto;"
-            />
-          </div>
-        </div>
       </div>
     `
   },
