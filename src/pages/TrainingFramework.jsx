@@ -208,62 +208,18 @@ export default function TrainingFrameworkPage() {
                 <div className="flex items-center gap-3">
                   <Lightbulb className="w-6 h-6 text-[#AC1A5B]" />
                   <p className="text-slate-700">
-                    <strong>Core Training Modules</strong> — All consultants complete these 7 modules during their onboarding journey.
+                    <strong>19 Core Training Modules</strong> — Comprehensive curriculum covering all competencies across levels.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            {modules.map((module) => (
-              <Card key={module.id} className="shadow-lg">
-                <CardHeader className="bg-slate-50">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#1E4F58] text-white flex items-center justify-center font-bold">
-                      {module.module_number}
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl text-[#143A50]">{module.title}</CardTitle>
-                      {module.subtitle && (
-                        <CardDescription className="text-base mt-1">{module.subtitle}</CardDescription>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-6 space-y-4">
-                  <div className="prose prose-slate max-w-none" dangerouslySetInnerHTML={{ __html: module.content }} />
-                  
-                  {module.key_points?.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-[#143A50] mb-2">Key Concepts:</h4>
-                      <ul className="space-y-2">
-                        {module.key_points.map((point, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <CheckCircle2 className="w-5 h-5 text-[#1E4F58] mt-0.5 flex-shrink-0" />
-                            <span className="text-slate-700">{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {module.exercises?.length > 0 && (
-                    <div className="mt-4 p-4 bg-[#E5C089]/10 rounded-lg border border-[#E5C089]">
-                      <h4 className="font-semibold text-[#143A50] mb-3 flex items-center gap-2">
-                        <FileText className="w-4 h-4" />
-                        Exercises:
-                      </h4>
-                      <ul className="space-y-2">
-                        {module.exercises.map((exercise, idx) => (
-                          <li key={idx} className="text-sm">
-                            <strong className="text-slate-900">{exercise.title}:</strong>
-                            <span className="text-slate-700 ml-1">{exercise.description}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+            {MODULES_DATA.map((module) => (
+              <ModuleDetailView 
+                key={module.number} 
+                moduleNumber={module.number}
+                currentLevel={currentLevel}
+              />
             ))}
           </TabsContent>
 
