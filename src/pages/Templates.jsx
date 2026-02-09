@@ -322,18 +322,97 @@ export default function TemplatesPage() {
                     </Button>
                   </div>
                   
-                  <div className="rounded-xl border-2 border-slate-200 shadow-lg">
-                    <BrandedTemplateWrapper>
+                  <div className="rounded-xl border-2 border-slate-200 shadow-lg overflow-visible">
+                    <div className="bg-white w-full">
+                      {/* Branded Header */}
                       <div 
-                        className="prose prose-slate max-w-none"
-                        style={{
-                          fontFamily: 'Georgia, "Times New Roman", serif',
-                          lineHeight: '1.8'
+                        className="px-8 py-6 border-b-4 flex items-center justify-between"
+                        style={{ 
+                          backgroundColor: '#FFFFFF',
+                          borderBottomColor: '#E5C089'
                         }}
                       >
-                        <div dangerouslySetInnerHTML={{ __html: selectedTemplate.template_content?.replace(/\n/g, '<br/>') }} />
+                        <div className="flex items-center gap-6">
+                          <img 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/45aaceb53_EISLogotransparent.png" 
+                            alt="Elbert Innovative Solutions" 
+                            className="h-16 w-auto"
+                          />
+                          <div className="border-l-2 pl-6" style={{ borderColor: '#A65D40' }}>
+                            <p 
+                              className="text-sm font-semibold tracking-wide uppercase"
+                              style={{ color: '#143A50' }}
+                            >
+                              Excellence in Every Endeavor
+                            </p>
+                            <p 
+                              className="text-xs mt-1"
+                              style={{ color: '#B5A698' }}
+                            >
+                              Grant & Contract Accelerator
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p 
+                            className="text-xs font-medium"
+                            style={{ color: '#1E4F58' }}
+                          >
+                            Professional Template Library
+                          </p>
+                        </div>
                       </div>
-                    </BrandedTemplateWrapper>
+
+                      {/* Template Content */}
+                      <div className="px-8 py-8">
+                        <div 
+                          className="prose prose-slate max-w-none"
+                          style={{
+                            fontFamily: 'Georgia, "Times New Roman", serif',
+                            lineHeight: '1.8'
+                          }}
+                        >
+                          <div dangerouslySetInnerHTML={{ __html: selectedTemplate.template_content?.replace(/\n/g, '<br/>') }} />
+                        </div>
+                      </div>
+
+                      {/* Branded Footer */}
+                      <div 
+                        className="px-8 py-6 border-t-4 mt-8"
+                        style={{ 
+                          backgroundColor: '#143A50',
+                          borderTopColor: '#E5C089'
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-white text-sm font-semibold mb-1">
+                              Elbert Innovative Solutions
+                            </p>
+                            <p 
+                              className="text-xs"
+                              style={{ color: '#E5C089' }}
+                            >
+                              Empowering organizations to secure funding and achieve their missions
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p 
+                              className="text-xs"
+                              style={{ color: '#B5A698' }}
+                            >
+                              www.elbertinnovative.com
+                            </p>
+                            <p 
+                              className="text-xs mt-1"
+                              style={{ color: '#B5A698' }}
+                            >
+                              © {new Date().getFullYear()} All Rights Reserved
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
