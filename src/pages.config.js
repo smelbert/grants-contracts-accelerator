@@ -166,6 +166,7 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import DonorStewardshipPlanner from './pages/DonorStewardshipPlanner';
 import __Layout from './Layout.jsx';
 
 
@@ -289,6 +290,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "DonorStewardshipPlanner": DonorStewardshipPlanner,
 }
 
 export const pagesConfig = {
