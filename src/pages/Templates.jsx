@@ -246,8 +246,8 @@ export default function TemplatesPage() {
 
       {/* Template View Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="max-w-5xl h-[90vh] overflow-hidden flex flex-col">
-          <DialogHeader className="border-b pb-4">
+        <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col">
+          <DialogHeader className="border-b pb-4 flex-shrink-0">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <DialogTitle className="text-2xl text-indigo-900 mb-2">{selectedTemplate?.template_name}</DialogTitle>
@@ -261,8 +261,8 @@ export default function TemplatesPage() {
           </DialogHeader>
           
           {selectedTemplate && (
-            <div className="flex-1 overflow-y-auto overflow-x-hidden">
-              <div className="space-y-4 py-4 pb-8">
+            <div className="flex-1 overflow-y-auto pr-2">
+              <div className="space-y-4 py-4">
                 {/* Educational Guidance Cards */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl border-2 border-emerald-200 shadow-sm">
