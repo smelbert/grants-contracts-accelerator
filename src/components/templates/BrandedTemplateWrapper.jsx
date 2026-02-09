@@ -12,7 +12,7 @@ const EIS_COLORS = {
 
 export default function BrandedTemplateWrapper({ children }) {
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-full">
       {/* Branded Header */}
       <div 
         className="px-8 py-6 border-b-4 flex items-center justify-between"
@@ -53,7 +53,7 @@ export default function BrandedTemplateWrapper({ children }) {
       </div>
 
       {/* Template Content */}
-      <div className="px-8 py-8">
+      <div className="px-8 py-8 min-h-[500px]">
         {children}
       </div>
 

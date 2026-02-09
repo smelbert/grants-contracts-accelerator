@@ -246,7 +246,7 @@ export default function TemplatesPage() {
 
       {/* Template View Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-5xl h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader className="border-b pb-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
