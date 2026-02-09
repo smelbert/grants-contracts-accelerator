@@ -261,8 +261,8 @@ export default function TemplatesPage() {
           </DialogHeader>
           
           {selectedTemplate && (
-            <div className="flex-1 overflow-y-auto">
-              <div className="space-y-4 py-4">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden">
+              <div className="space-y-4 py-4 pb-8">
                 {/* Educational Guidance Cards */}
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl border-2 border-emerald-200 shadow-sm">
@@ -322,7 +322,7 @@ export default function TemplatesPage() {
                     </Button>
                   </div>
                   
-                  <div className="rounded-xl border-2 border-slate-200 shadow-lg overflow-hidden">
+                  <div className="rounded-xl border-2 border-slate-200 shadow-lg">
                     <BrandedTemplateWrapper>
                       <div 
                         className="prose prose-slate max-w-none"
