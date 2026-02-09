@@ -74,7 +74,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
   };
 
   return (
-    <div className="bg-white shadow-2xl mx-auto" style={{ width: '816px', minHeight: '1056px' }}>
+    <div className="bg-white shadow-2xl mx-auto overflow-visible" style={{ width: '816px' }}>
       {/* Professional Header with Full Branding */}
       <div className="bg-gradient-to-b from-slate-200 via-[#143A50] to-[#1E4F58] px-12 py-6 border-b-4 border-[#E5C089]">
         <div className="flex items-center justify-between mb-3">
@@ -106,7 +106,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
       </div>
 
       {/* Content Area with Full-Page Layout */}
-      <div className="px-12 py-8 space-y-8" style={{ minHeight: '900px' }}>
+      <div className="px-12 py-8 space-y-8">
 
         {/* Personalized Guidance Based on Assessment */}
         <PersonalizedGuidance 
