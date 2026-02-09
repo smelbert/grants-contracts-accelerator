@@ -14,6 +14,7 @@ import { BookOpen, Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { toast } from 'sonner';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import AITrainingContentAssistant from '@/components/training/AITrainingContentAssistant';
 
 const sectionTypes = {
   philosophy: 'Philosophy',
@@ -89,6 +90,43 @@ export default function TrainingFrameworkEditorPage() {
       level3: content?.level_expectations?.level3 || ''
     });
     setShowDialog(true);
+  };
+
+  const handleAIContentGenerated = (aiContent) => {
+    if (aiContent.title) {
+      // Set form values via DOM (for controlled inputs)
+      const titleInput = document.querySelector('input[name="title"]');
+      if (titleInput) titleInput.value = aiContent.title;
+    }
+    if (aiContent.subtitle) {
+      const subtitleInput = document.querySelector('input[name="subtitle"]');
+      if (subtitleInput) subtitleInput.value = aiContent.subtitle;
+    }
+    if (aiContent.content) setContent(aiContent.content);
+    if (aiContent.purpose) setPurpose(aiContent.purpose);
+    if (aiContent.rationale) setRationale(aiContent.rationale);
+    if (aiContent.competencies) {
+      const keyPointsTextarea = document.querySelector('textarea[name="keyPoints"]');
+      if (keyPointsTextarea) keyPointsTextarea.value = aiContent.competencies.join('\n');
+    }
+    if (aiContent.level_expectations) {
+      setLevelExpectations({
+        level1: aiContent.level_expectations.level1 || '',
+        level2: aiContent.level_expectations.level2 || '',
+        level3: aiContent.level_expectations.level3 || ''
+      });
+    }
+    if (aiContent.required_outputs) {
+      setRequiredOutputs(aiContent.required_outputs);
+    }
+    if (aiContent.exercises) {
+      setExercises(aiContent.exercises.map(ex => ({
+        title: ex.title,
+        description: ex.description
+      })));
+    }
+    
+    toast.success('AI content applied to form');
   };
 
   const handleSubmit = (e) => {
@@ -282,10 +320,17 @@ export default function TrainingFrameworkEditorPage() {
         </Tabs>
 
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingContent ? 'Edit' : 'Add'} Training Content</DialogTitle>
             </DialogHeader>
+            
+            <AITrainingContentAssistant 
+              onContentGenerated={handleAIContentGenerated}
+              existingContent={editingContent}
+              moduleNumber={editingContent?.module_number}
+            />
+            
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
