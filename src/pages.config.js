@@ -97,9 +97,12 @@ import IncubateHerAgenda from './pages/IncubateHerAgenda';
 import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
+import IncubateHerCourse from './pages/IncubateHerCourse';
 import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
+import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
 import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
 import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
+import IncubateHerLearning from './pages/IncubateHerLearning';
 import IncubateHerOverview from './pages/IncubateHerOverview';
 import IncubateHerParticipantWorkbooks from './pages/IncubateHerParticipantWorkbooks';
 import IncubateHerParticipants from './pages/IncubateHerParticipants';
@@ -168,9 +171,7 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
-import IncubateHerCourse from './pages/IncubateHerCourse';
-import IncubateHerLearning from './pages/IncubateHerLearning';
+import LearningContentManagement from './pages/LearningContentManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -225,9 +226,12 @@ export const PAGES = {
     "IncubateHerCULDashboard": IncubateHerCULDashboard,
     "IncubateHerCompletion": IncubateHerCompletion,
     "IncubateHerConsultations": IncubateHerConsultations,
+    "IncubateHerCourse": IncubateHerCourse,
     "IncubateHerEmailTemplates": IncubateHerEmailTemplates,
+    "IncubateHerEvaluation": IncubateHerEvaluation,
     "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
     "IncubateHerGiveaway": IncubateHerGiveaway,
+    "IncubateHerLearning": IncubateHerLearning,
     "IncubateHerOverview": IncubateHerOverview,
     "IncubateHerParticipantWorkbooks": IncubateHerParticipantWorkbooks,
     "IncubateHerParticipants": IncubateHerParticipants,
@@ -296,9 +300,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerEvaluation": IncubateHerEvaluation,
-    "IncubateHerCourse": IncubateHerCourse,
-    "IncubateHerLearning": IncubateHerLearning,
+    "LearningContentManagement": LearningContentManagement,
 }
 
 export const pagesConfig = {

@@ -227,6 +227,7 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Registration Pages', page: 'RegistrationBuilder', icon: Plus },
       { name: 'Subscription Plans', page: 'SubscriptionPlans', icon: DollarSign },
+      { name: 'Learning Hub Content', page: 'LearningContentManagement', icon: BookOpen },
       { name: 'Learning Hub Access', page: 'LearningHubAccess', icon: BookOpen },
       { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
       { name: 'Email Hub', page: 'EmailHub', icon: Mail },
