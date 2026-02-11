@@ -11,39 +11,32 @@ import { toast } from 'react-hot-toast';
 
 const SCHEDULE_OPTIONS = [
   {
-    id: 'option_a',
-    title: 'Option A – 3 Evenings',
-    sessions: [
-      { day: 'Monday', time: '5:30 PM – 7:30 PM' },
-      { day: 'Tuesday', time: '5:30 PM – 7:30 PM' },
-      { day: 'Thursday', time: '5:30 PM – 7:30 PM' }
-    ],
-    bestFor: 'Those who prefer shorter, more frequent sessions',
-    totalHours: 6,
-    topics: ['Funding basics', 'Readiness assessment', 'Document preparation', 'RFP/contract overview']
-  },
-  {
-    id: 'option_b',
-    title: 'Option B – 2 Extended Evenings',
-    sessions: [
-      { day: 'Monday', time: '5:30 PM – 8:00 PM' },
-      { day: 'Thursday', time: '5:30 PM – 8:00 PM' }
-    ],
-    bestFor: 'Busy schedules needing fewer meeting days',
-    totalHours: 5,
-    topics: ['Intensive funding readiness', 'Deep-dive document work', 'Advanced contract strategies']
-  },
-  {
     id: 'option_c',
-    title: 'Option C – 2 Evenings + Saturday (In-Person)',
+    title: 'Two Evenings + Saturday Half-Day (Face-to-Face Option)',
     sessions: [
-      { day: 'Monday', time: '5:30 PM – 7:30 PM' },
-      { day: 'Thursday', time: '5:30 PM – 7:30 PM' },
-      { day: 'Saturday', time: '9:30 AM – 12:30 PM', inPerson: true }
+      { 
+        day: 'Monday Evening', 
+        time: '5:30 PM – 7:30 PM',
+        topic: 'Funding Foundations',
+        description: 'Grants vs. contracts; Funding mindset and readiness overview'
+      },
+      { 
+        day: 'Thursday Evening', 
+        time: '5:30 PM – 7:30 PM',
+        topic: 'Documents & RFP Orientation',
+        description: 'Core documents and systems; Budget basics; Preparing to evaluate opportunities'
+      },
+      { 
+        day: 'Saturday (In-Person)', 
+        time: '9:30 AM – 12:30 PM', 
+        inPerson: true,
+        topic: 'Integration & Application',
+        description: 'Case examples and discussion; Small-group exercises; "Is this fundable yet?" readiness mapping; Q&A and next-step planning'
+      }
     ],
-    bestFor: 'Those who want in-person collaboration',
+    bestFor: 'Participants who want interactive in-person collaboration',
     totalHours: 7,
-    topics: ['Virtual kickoff', 'Midweek check-in', 'In-person workshop & networking']
+    topics: ['Funding Foundations', 'Documents & RFP Orientation', 'Integration & Application Workshop']
   }
 ];
 
@@ -113,23 +106,23 @@ export default function IncubateHerSchedule() {
         subtitle="Select the option that works best for you"
       />
 
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className="flex justify-center">
           {SCHEDULE_OPTIONS.map((option) => {
             const isSelected = enrollment?.selected_schedule_option === option.id || selectedOption === option.id;
             
             return (
               <Card 
                 key={option.id}
-                className={`transition-all hover:shadow-lg ${isSelected ? 'ring-2' : ''}`}
+                className={`transition-all hover:shadow-lg max-w-2xl w-full ${isSelected ? 'ring-2' : ''}`}
                 style={{ 
                   borderColor: isSelected ? BRAND_COLORS.eisGold : BRAND_COLORS.neutralGray,
                   ringColor: isSelected ? BRAND_COLORS.eisGold : 'transparent'
                 }}
               >
                 <CardContent className="pt-6">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold mb-2" style={{ color: BRAND_COLORS.culRed }}>
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold mb-3" style={{ color: BRAND_COLORS.culRed }}>
                       {option.title}
                     </h3>
                     <p className="text-sm mb-3" style={{ color: BRAND_COLORS.neutralDark }}>
@@ -142,23 +135,33 @@ export default function IncubateHerSchedule() {
                   </div>
 
                   {/* Sessions */}
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-3 mb-6">
                     {option.sessions.map((session, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: BRAND_COLORS.neutralLight }}>
-                        <div>
-                          <p className="font-medium text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
-                            {session.day}
+                      <div key={idx} className="p-4 rounded-lg border-2" style={{ backgroundColor: BRAND_COLORS.neutralLight, borderColor: BRAND_COLORS.eisGold }}>
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1">
+                            <p className="font-bold text-base" style={{ color: BRAND_COLORS.eisNavy }}>
+                              {session.day}
+                            </p>
+                            <p className="text-sm font-medium" style={{ color: BRAND_COLORS.culRed }}>
+                              {session.time}
+                            </p>
+                          </div>
+                          {session.inPerson && (
+                            <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
+                              <MapPin className="w-3 h-3 mr-1" />
+                              In-Person
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="mt-2">
+                          <p className="text-sm font-semibold mb-1" style={{ color: BRAND_COLORS.eisNavy }}>
+                            {session.topic}
                           </p>
-                          <p className="text-xs" style={{ color: BRAND_COLORS.eisNavy }}>
-                            {session.time}
+                          <p className="text-xs" style={{ color: BRAND_COLORS.neutralDark }}>
+                            {session.description}
                           </p>
                         </div>
-                        {session.inPerson && (
-                          <Badge variant="outline" className="text-xs">
-                            <MapPin className="w-3 h-3 mr-1" />
-                            In-Person
-                          </Badge>
-                        )}
                       </div>
                     ))}
                   </div>

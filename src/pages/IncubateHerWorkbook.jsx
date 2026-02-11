@@ -152,7 +152,7 @@ export default function IncubateHerWorkbook() {
   };
 
   const handleDownloadPDF = async () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF('p', 'mm', 'letter'); // Standard 8.5" x 11"
     let yPos = 20;
 
     // Cover page
