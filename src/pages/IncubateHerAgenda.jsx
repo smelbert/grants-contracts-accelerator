@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronRight, Clock, MapPin, Users, BookOpen, ExternalLink } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ChevronDown, ChevronRight, Clock, MapPin, Users, BookOpen, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import { toast } from 'sonner';
 
 export default function IncubateHerAgenda() {
+  const queryClient = useQueryClient();
   const [expandedSections, setExpandedSections] = useState({});
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [selectedSection, setSelectedSection] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -58,6 +66,65 @@ export default function IncubateHerAgenda() {
 
   const getLinkedContent = (sectionId) => {
     return learningContent?.filter(content => content.agenda_section === sectionId) || [];
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: (courseId) => base44.entities.LearningContent.delete(courseId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['incubateher-learning']);
+      toast.success('Course deleted');
+    }
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (data) => {
+      if (editingCourse) {
+        return await base44.entities.LearningContent.update(editingCourse.id, data);
+      } else {
+        return await base44.entities.LearningContent.create({
+          ...data,
+          incubateher_only: true,
+          content_type: 'course',
+          funding_lane: 'general'
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['incubateher-learning']);
+      setEditDialogOpen(false);
+      setEditingCourse(null);
+      toast.success(editingCourse ? 'Course updated' : 'Course created');
+    }
+  });
+
+  const handleAddCourse = (sectionId) => {
+    setSelectedSection(sectionId);
+    setEditingCourse(null);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditCourse = (course, sectionId) => {
+    setSelectedSection(sectionId);
+    setEditingCourse(course);
+    setEditDialogOpen(true);
+  };
+
+  const handleDeleteCourse = (courseId) => {
+    if (confirm('Are you sure you want to delete this course?')) {
+      deleteMutation.mutate(courseId);
+    }
+  };
+
+  const handleSaveCourse = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    saveMutation.mutate({
+      title: formData.get('title'),
+      description: formData.get('description'),
+      content_url: formData.get('content_url'),
+      duration_minutes: parseInt(formData.get('duration_minutes')),
+      agenda_section: selectedSection
+    });
   };
 
   const agendaSections = [
@@ -225,33 +292,71 @@ export default function IncubateHerAgenda() {
                   </ul>
                 </div>
 
-                {getLinkedContent(section.id).length > 0 && (
-                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-blue-900 flex items-center gap-2">
                       <BookOpen className="w-4 h-4" />
                       Learning Resources
                     </h4>
+                    {isFacilitator && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleAddCourse(section.id)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add Course
+                      </Button>
+                    )}
+                  </div>
+                  {getLinkedContent(section.id).length > 0 ? (
                     <div className="space-y-2">
                       {getLinkedContent(section.id).map(content => (
-                        <div key={content.id} className="flex items-center justify-between p-2 bg-white rounded border border-blue-100">
-                          <div className="flex items-center gap-3">
+                        <div key={content.id} className="flex items-center justify-between p-3 bg-white rounded border border-blue-100">
+                          <div className="flex items-center gap-3 flex-1">
                             <Badge variant="outline" className="text-xs">
-                              {content.content_type}
+                              {content.duration_minutes}min
                             </Badge>
-                            <span className="text-sm text-slate-700">{content.title}</span>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-slate-900">{content.title}</p>
+                              <p className="text-xs text-slate-600 mt-1">{content.description}</p>
+                            </div>
                           </div>
-                          <Button 
-                            size="sm" 
-                            variant="ghost"
-                            onClick={() => window.open(content.content_url, '_blank')}
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => window.open(content.content_url, '_blank')}
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Button>
+                            {isFacilitator && (
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleEditCourse(content, section.id)}
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDeleteCourse(content.id)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <p className="text-sm text-slate-600 italic">No courses linked yet</p>
+                  )}
+                </div>
 
                 {isFacilitator && section.facilitatorNotes && (
                   <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
@@ -269,6 +374,64 @@ export default function IncubateHerAgenda() {
       </div>
 
       <CoBrandedFooter />
+
+      {/* Edit/Add Course Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{editingCourse ? 'Edit Course' : 'Add New Course'}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSaveCourse} className="space-y-4 mt-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Course Title</label>
+              <Input
+                name="title"
+                defaultValue={editingCourse?.title}
+                required
+                placeholder="e.g., Financial Management & Budgeting"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Description</label>
+              <Textarea
+                name="description"
+                defaultValue={editingCourse?.description}
+                required
+                rows={3}
+                placeholder="Brief description of what participants will learn"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Course URL</label>
+              <Input
+                name="content_url"
+                type="url"
+                defaultValue={editingCourse?.content_url}
+                required
+                placeholder="https://..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Duration (minutes)</label>
+              <Input
+                name="duration_minutes"
+                type="number"
+                defaultValue={editingCourse?.duration_minutes || 60}
+                required
+                min="1"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setEditDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-[#143A50]">
+                {editingCourse ? 'Update' : 'Create'} Course
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
