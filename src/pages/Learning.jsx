@@ -44,9 +44,29 @@ export default function LearningPage() {
     enabled: !!user?.email,
   });
 
+  const { data: enrollment } = useQuery({
+    queryKey: ['incubateher-enrollment', user?.email],
+    queryFn: async () => {
+      const enrollments = await base44.entities.ProgramEnrollment.filter({
+        participant_email: user.email,
+        role: 'participant'
+      });
+      return enrollments.find(e => e.cohort_id);
+    },
+    enabled: !!user?.email
+  });
+
   const { data: learningContent, isLoading } = useQuery({
     queryKey: ['learning'],
-    queryFn: () => base44.entities.LearningContent.list(),
+    queryFn: async () => {
+      const allContent = await base44.entities.LearningContent.list();
+      // Filter out IncubateHer-only content if user is not enrolled
+      if (!enrollment) {
+        return allContent.filter(c => !c.incubateher_only);
+      }
+      return allContent;
+    },
+    enabled: !!user
   });
 
   const { data: curatedPaths = [] } = useQuery({
@@ -103,6 +123,12 @@ export default function LearningPage() {
     .filter(Boolean);
 
   const handleStartContent = (content) => {
+    // Check IncubateHer access
+    if (content.incubateher_only && !enrollment) {
+      alert('This content is only available to IncubateHer program participants.');
+      return;
+    }
+    
     if (user?.email) {
       trackViewMutation.mutate(content.id);
     }

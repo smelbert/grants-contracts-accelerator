@@ -4,9 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronRight, Clock, MapPin, Users } from 'lucide-react';
+import { ChevronDown, ChevronRight, Clock, MapPin, Users, BookOpen, ExternalLink } from 'lucide-react';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function IncubateHerAgenda() {
   const [expandedSections, setExpandedSections] = useState({});
@@ -35,6 +37,16 @@ export default function IncubateHerAgenda() {
     enabled: !!enrollment?.cohort_id
   });
 
+  const { data: learningContent } = useQuery({
+    queryKey: ['incubateher-learning'],
+    queryFn: async () => {
+      const content = await base44.entities.LearningContent.filter({
+        incubateher_only: true
+      });
+      return content;
+    }
+  });
+
   const isFacilitator = user?.role === 'admin' || user?.role === 'coach';
 
   const toggleSection = (sectionId) => {
@@ -42,6 +54,10 @@ export default function IncubateHerAgenda() {
       ...prev,
       [sectionId]: !prev[sectionId]
     }));
+  };
+
+  const getLinkedContent = (sectionId) => {
+    return learningContent?.filter(content => content.agenda_section === sectionId) || [];
   };
 
   const agendaSections = [
@@ -208,6 +224,34 @@ export default function IncubateHerAgenda() {
                     ))}
                   </ul>
                 </div>
+
+                {getLinkedContent(section.id).length > 0 && (
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4" />
+                      Learning Resources
+                    </h4>
+                    <div className="space-y-2">
+                      {getLinkedContent(section.id).map(content => (
+                        <div key={content.id} className="flex items-center justify-between p-2 bg-white rounded border border-blue-100">
+                          <div className="flex items-center gap-3">
+                            <Badge variant="outline" className="text-xs">
+                              {content.content_type}
+                            </Badge>
+                            <span className="text-sm text-slate-700">{content.title}</span>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={() => window.open(content.content_url, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {isFacilitator && section.facilitatorNotes && (
                   <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">

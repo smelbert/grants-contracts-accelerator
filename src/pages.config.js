@@ -75,6 +75,7 @@ import ConsultantOnboarding from './pages/ConsultantOnboarding';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
 import Documents from './pages/Documents';
+import DonorStewardshipPlanner from './pages/DonorStewardshipPlanner';
 import DynamicRegistration from './pages/DynamicRegistration';
 import EmailHub from './pages/EmailHub';
 import EthicsCompliance from './pages/EthicsCompliance';
@@ -166,7 +167,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import DonorStewardshipPlanner from './pages/DonorStewardshipPlanner';
 import __Layout from './Layout.jsx';
 
 
@@ -199,6 +199,7 @@ export const PAGES = {
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
     "Documents": Documents,
+    "DonorStewardshipPlanner": DonorStewardshipPlanner,
     "DynamicRegistration": DynamicRegistration,
     "EmailHub": EmailHub,
     "EthicsCompliance": EthicsCompliance,
@@ -290,7 +291,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "DonorStewardshipPlanner": DonorStewardshipPlanner,
 }
 
 export const pagesConfig = {
