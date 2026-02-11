@@ -85,6 +85,7 @@ const getUserPortalNav = () => [
       { name: 'Assessments', page: 'IncubateHerPreAssessment', icon: CheckCircle2 },
       { name: 'Readiness Assessment', page: 'FundingReadinessAssessment', icon: Target },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
+      { name: 'Program Evaluation', page: 'IncubateHerEvaluation', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
     ]

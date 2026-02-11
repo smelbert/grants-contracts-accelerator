@@ -82,6 +82,19 @@ export default function IncubateHerOverview() {
                     View Schedule Options
                   </Button>
                 </Link>
+                <Link to={createPageUrl('IncubateHerEvaluation')}>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="w-full sm:w-auto"
+                    style={{ 
+                      borderColor: BRAND_COLORS.culRed,
+                      color: BRAND_COLORS.culRed
+                    }}
+                  >
+                    {enrollment?.evaluation_completed ? 'View Evaluation' : 'Program Evaluation'}
+                  </Button>
+                </Link>
               </div>
 
               {/* Disclaimer */}
