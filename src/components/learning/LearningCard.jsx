@@ -86,14 +86,20 @@ export default function LearningCard({ content, isPremium = false, hasAccess = t
           <Button
             size="sm"
             variant={hasAccess ? "default" : "outline"}
-            onClick={() => window.location.href = createPageUrl('LearningModule') + '?id=' + content.id}
+            onClick={() => {
+              if (content.incubateher_only) {
+                window.location.href = createPageUrl('IncubateHerCourse') + '?id=' + content.id + '&from=learning';
+              } else {
+                window.location.href = createPageUrl('LearningModule') + '?id=' + content.id;
+              }
+            }}
             disabled={isPremium && !hasAccess}
             className={hasAccess ? "bg-emerald-600 hover:bg-emerald-700" : ""}
           >
             {hasAccess ? (
               <>
                 <Play className="w-4 h-4 mr-1" />
-                Start
+                {content.incubateher_only ? 'Start Module' : 'Start'}
               </>
             ) : (
               'Upgrade'
