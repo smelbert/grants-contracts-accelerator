@@ -328,7 +328,7 @@ export default function IncubateHerCourse() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar - Section Navigation */}
           <div className="lg:col-span-1">
-            <Card>
+            <Card className="lg:sticky lg:top-6 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
               <CardHeader>
                 <CardTitle className="text-lg" style={{ color: BRAND_COLORS.culRed }}>
                   Course Sections
@@ -338,7 +338,10 @@ export default function IncubateHerCourse() {
                 {sections.map((section, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setCurrentSection(idx)}
+                    onClick={() => {
+                      setCurrentSection(idx);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                     className={`w-full text-left p-3 rounded-lg transition-all ${
                       currentSection === idx ? 'shadow-md' : 'hover:bg-gray-50'
                     }`}
