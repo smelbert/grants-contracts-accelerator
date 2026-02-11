@@ -187,38 +187,30 @@ export default function IncubateHerPublic() {
           </CardContent>
         </Card>
 
-        {/* Schedule Options */}
+        {/* Schedule */}
         <Card className="mb-12">
           <CardContent className="pt-8">
             <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: BRAND_COLORS.culRed }}>
-              Choose Your Schedule
+              Program Schedule
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-6 rounded-lg" style={{ backgroundColor: BRAND_COLORS.neutralLight, border: `2px solid ${BRAND_COLORS.eisNavy}` }}>
-                <h3 className="text-xl font-bold mb-3" style={{ color: BRAND_COLORS.eisNavy }}>Option A</h3>
-                <p className="text-sm mb-4" style={{ color: BRAND_COLORS.neutralDark }}>3 Evenings</p>
-                <ul className="space-y-2 text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
-                  <li>Mon 5:30 PM – 7:30 PM</li>
-                  <li>Tue 5:30 PM – 7:30 PM</li>
-                  <li>Thu 5:30 PM – 7:30 PM</li>
-                </ul>
-              </div>
-              <div className="p-6 rounded-lg" style={{ backgroundColor: BRAND_COLORS.neutralLight, border: `2px solid ${BRAND_COLORS.eisNavy}` }}>
-                <h3 className="text-xl font-bold mb-3" style={{ color: BRAND_COLORS.eisNavy }}>Option B</h3>
-                <p className="text-sm mb-4" style={{ color: BRAND_COLORS.neutralDark }}>2 Extended Evenings</p>
-                <ul className="space-y-2 text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
-                  <li>Mon 5:30 PM – 8:00 PM</li>
-                  <li>Thu 5:30 PM – 8:00 PM</li>
-                </ul>
-              </div>
-              <div className="p-6 rounded-lg" style={{ backgroundColor: BRAND_COLORS.neutralLight, border: `2px solid ${BRAND_COLORS.eisNavy}` }}>
-                <h3 className="text-xl font-bold mb-3" style={{ color: BRAND_COLORS.eisNavy }}>Option C</h3>
-                <p className="text-sm mb-4" style={{ color: BRAND_COLORS.neutralDark }}>2 Evenings + Saturday</p>
-                <ul className="space-y-2 text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
-                  <li>Mon 5:30 PM – 7:30 PM</li>
-                  <li>Thu 5:30 PM – 7:30 PM</li>
-                  <li>Sat 9:30 AM – 12:30 PM (In-Person)</li>
-                </ul>
+            <div className="max-w-2xl mx-auto">
+              <div className="p-8 rounded-lg text-center" style={{ backgroundColor: BRAND_COLORS.neutralLight, border: `3px solid ${BRAND_COLORS.eisGold}` }}>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.eisNavy }}>Two Evenings + Saturday Half-Day</h3>
+                <p className="text-lg mb-6" style={{ color: BRAND_COLORS.neutralDark }}>In-Person & Virtual Sessions</p>
+                <div className="space-y-3 text-left max-w-md mx-auto">
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                    <Calendar className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
+                    <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>Monday 5:30 PM – 7:30 PM (Virtual)</span>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                    <Calendar className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
+                    <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>Thursday 5:30 PM – 7:30 PM (Virtual)</span>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                    <Calendar className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
+                    <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>Saturday 9:30 AM – 12:30 PM (In-Person)</span>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
