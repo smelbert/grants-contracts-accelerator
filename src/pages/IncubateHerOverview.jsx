@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
-import { CheckCircle2, Calendar, FileText, Users, Award } from 'lucide-react';
+import { CheckCircle2, Calendar, FileText, Users, Award, Trophy, TrendingUp } from 'lucide-react';
+import GamificationDashboard from '@/components/incubateher/GamificationDashboard';
+import Leaderboard from '@/components/incubateher/Leaderboard';
 
 export default function IncubateHerOverview() {
   const { data: cohort } = useQuery({
@@ -47,6 +49,18 @@ export default function IncubateHerOverview() {
       />
 
       <div className="max-w-5xl mx-auto px-6 py-12">
+        {/* Gamification Dashboard */}
+        {user && enrollment && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2">
+              <GamificationDashboard userEmail={user.email} />
+            </div>
+            <div>
+              <Leaderboard currentUserEmail={user.email} />
+            </div>
+          </div>
+        )}
+
         {/* Hero Section */}
         <Card className="mb-8 border-2" style={{ borderColor: BRAND_COLORS.culRed }}>
           <CardContent className="pt-8 pb-8">

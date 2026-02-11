@@ -20,9 +20,11 @@ import {
   ArrowLeft,
   ArrowRight,
   Clock,
-  Award
+  Award,
+  Sparkles
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import confetti from 'canvas-confetti';
 
 export default function IncubateHerCourse() {
   const queryClient = useQueryClient();
@@ -173,7 +175,7 @@ export default function IncubateHerCourse() {
     }
   });
 
-  const markSectionComplete = (sectionIndex) => {
+  const markSectionComplete = async (sectionIndex) => {
     const newCompleted = [...completedSections];
     if (!newCompleted.includes(sectionIndex)) {
       newCompleted.push(sectionIndex);
@@ -181,13 +183,78 @@ export default function IncubateHerCourse() {
       
       const totalSections = course?.curriculum_sections?.length || 1;
       const progressPercent = Math.round((newCompleted.length / totalSections) * 100);
+      const isFullyCompleted = progressPercent === 100;
+      
+      // Award points: 10 points per section, 50 bonus for completing course
+      const pointsEarned = isFullyCompleted ? 50 : 10;
+      const currentPoints = enrollment?.gamification_points || 0;
       
       saveProgressMutation.mutate({
         completed_sections: newCompleted,
         progress_percentage: progressPercent,
-        is_completed: progressPercent === 100,
+        is_completed: isFullyCompleted,
         last_accessed: new Date().toISOString()
       });
+      
+      // Update enrollment points
+      if (enrollment) {
+        await base44.entities.ProgramEnrollment.update(enrollment.id, {
+          gamification_points: currentPoints + pointsEarned,
+          courses_completed: isFullyCompleted ? (enrollment.courses_completed || 0) + 1 : enrollment.courses_completed
+        });
+        
+        // Award badges
+        if (isFullyCompleted) {
+          const completedCount = (enrollment.courses_completed || 0) + 1;
+          
+          // First course badge
+          if (completedCount === 1) {
+            await base44.entities.UserBadge.create({
+              user_email: user.email,
+              badge_type: 'first_steps',
+              badge_name: 'First Steps',
+              program: 'incubateher',
+              earned_date: new Date().toISOString()
+            });
+          }
+          
+          // 3 courses badge
+          if (completedCount === 3) {
+            await base44.entities.UserBadge.create({
+              user_email: user.email,
+              badge_type: 'knowledge_seeker',
+              badge_name: 'Knowledge Seeker',
+              program: 'incubateher',
+              earned_date: new Date().toISOString()
+            });
+          }
+          
+          // All 8 courses badge
+          if (completedCount === 8) {
+            await base44.entities.UserBadge.create({
+              user_email: user.email,
+              badge_type: 'master_learner',
+              badge_name: 'Master Learner',
+              program: 'incubateher',
+              earned_date: new Date().toISOString()
+            });
+          }
+        }
+        
+        queryClient.invalidateQueries(['enrollment']);
+        queryClient.invalidateQueries(['user-badges']);
+      }
+      
+      toast.success(`+${pointsEarned} points! ${isFullyCompleted ? '🎉 Course completed!' : 'Section completed!'}`);
+      
+      // Celebration animation
+      if (isFullyCompleted) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
     }
   };
 
@@ -247,10 +314,10 @@ export default function IncubateHerCourse() {
             </div>
 
             {progressPercent === 100 && (
-              <div className="flex items-center gap-2 p-3 rounded-lg" style={{ backgroundColor: BRAND_COLORS.eisGold + '20' }}>
+              <div className="flex items-center gap-2 p-3 rounded-lg animate-pulse" style={{ backgroundColor: BRAND_COLORS.eisGold + '20' }}>
                 <Award className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
                 <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>
-                  Course Completed! 🎉
+                  Course Completed! 🎉 +50 Bonus Points
                 </span>
               </div>
             )}
