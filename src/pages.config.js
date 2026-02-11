@@ -169,6 +169,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
+import IncubateHerCourse from './pages/IncubateHerCourse';
 import __Layout from './Layout.jsx';
 
 
@@ -295,6 +296,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
     "IncubateHerEvaluation": IncubateHerEvaluation,
+    "IncubateHerCourse": IncubateHerCourse,
 }
 
 export const pagesConfig = {
