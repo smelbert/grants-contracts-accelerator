@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles, MessageSquare, TrendingUp, Clock, Award } from 'lucide-react';
+import { Loader2, Search, BookOpen, Video, Users, FileText, Sparkles, MessageSquare, TrendingUp, Clock, Award, CheckCircle2 } from 'lucide-react';
 import LearningCard from '@/components/learning/LearningCard';
 import AILearningRecommendations from '@/components/ai/AILearningRecommendations';
 import AIContentRecommendations from '@/components/learning/AIContentRecommendations';
@@ -237,8 +237,17 @@ export default function LearningPage() {
         )}
 
         {/* Main Tabs - Recommended vs Browse */}
-        <Tabs defaultValue={organization ? "recommended" : "browse"} className="space-y-6">
+        <Tabs defaultValue={enrollment ? "incubateher" : (organization ? "recommended" : "browse")} className="space-y-6">
           <TabsList className="bg-white border border-slate-200 p-1 h-auto">
+            {enrollment && (
+              <TabsTrigger 
+                value="incubateher"
+                className="data-[state=active]:bg-[#AC1A5B] data-[state=active]:text-white"
+              >
+                <Award className="w-4 h-4 mr-2" />
+                IncubateHer Courses
+              </TabsTrigger>
+            )}
             <TabsTrigger 
               value="recommended"
               className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white"
@@ -261,6 +270,81 @@ export default function LearningPage() {
               My Requests
             </TabsTrigger>
           </TabsList>
+
+          {/* IncubateHer Courses Tab */}
+          <TabsContent value="incubateher">
+            {enrollment && learningContent ? (
+              <div className="space-y-6">
+                <Card className="border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-2xl flex items-center gap-2">
+                          <Award className="w-6 h-6 text-[#AC1A5B]" />
+                          IncubateHer Program Courses
+                        </CardTitle>
+                        <p className="text-slate-600 mt-2">
+                          Complete all 6 courses to earn your certificate and become eligible for the program giveaway
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 gap-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-[#E5C089]" />
+                        <span>Earn 10 points for completing each section</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-[#E5C089]" />
+                        <span>Earn 50 bonus points for completing a full course</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Award className="w-4 h-4 text-[#E5C089]" />
+                        <span>Unlock badges as you progress through the curriculum</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {learningContent
+                    .filter(c => c.incubateher_only)
+                    .sort((a, b) => (a.order || 0) - (b.order || 0))
+                    .map((content, index) => (
+                      <motion.div
+                        key={content.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <LearningCard
+                          content={content}
+                          isPremium={false}
+                          hasAccess={true}
+                          onStart={handleStartContent}
+                        />
+                      </motion.div>
+                    ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
+                <Award className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  IncubateHer Program Enrollment Required
+                </h3>
+                <p className="text-slate-600 mb-4">
+                  These exclusive courses are available only to IncubateHer program participants
+                </p>
+                <Button asChild className="bg-[#AC1A5B] hover:bg-[#8B1549]">
+                  <Link to={createPageUrl('IncubateHerSchedule')}>
+                    Learn More About IncubateHer
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </TabsContent>
 
           {/* Recommended Tab */}
           <TabsContent value="recommended">
