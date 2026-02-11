@@ -170,6 +170,7 @@ import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
 import IncubateHerCourse from './pages/IncubateHerCourse';
+import IncubateHerLearning from './pages/IncubateHerLearning';
 import __Layout from './Layout.jsx';
 
 
@@ -297,6 +298,7 @@ export const PAGES = {
     "WorkflowsAutomation": WorkflowsAutomation,
     "IncubateHerEvaluation": IncubateHerEvaluation,
     "IncubateHerCourse": IncubateHerCourse,
+    "IncubateHerLearning": IncubateHerLearning,
 }
 
 export const pagesConfig = {
