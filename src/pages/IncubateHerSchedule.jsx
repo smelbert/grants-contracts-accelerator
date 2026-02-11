@@ -43,6 +43,7 @@ const SCHEDULE_OPTIONS = [
 export default function IncubateHerSchedule() {
   const queryClient = useQueryClient();
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -59,7 +60,7 @@ export default function IncubateHerSchedule() {
     }
   });
 
-  const { data: enrollment } = useQuery({
+  const { data: enrollment, isLoading: enrollmentLoading } = useQuery({
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
       if (!user?.email || !cohort?.id) return null;
@@ -71,6 +72,14 @@ export default function IncubateHerSchedule() {
     },
     enabled: !!user?.email && !!cohort?.id
   });
+
+  // Redirect if already enrolled with a schedule selected
+  React.useEffect(() => {
+    if (enrollment?.selected_schedule_option && !isRedirecting) {
+      setIsRedirecting(true);
+      window.location.href = '/app/IncubateHerLearning';
+    }
+  }, [enrollment, isRedirecting]);
 
   const selectScheduleMutation = useMutation({
     mutationFn: async (optionId) => {
@@ -90,7 +99,10 @@ export default function IncubateHerSchedule() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['enrollment']);
-      toast.success('Schedule option saved!');
+      toast.success('Schedule selected! Redirecting to Learning Hub...');
+      setTimeout(() => {
+        window.location.href = '/app/IncubateHerLearning';
+      }, 1500);
     }
   });
 
@@ -98,6 +110,21 @@ export default function IncubateHerSchedule() {
     setSelectedOption(optionId);
     selectScheduleMutation.mutate(optionId);
   };
+
+  // Show loading while checking enrollment
+  if (enrollmentLoading || isRedirecting) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
+        <CoBrandedHeader title="Loading..." />
+        <div className="max-w-4xl mx-auto p-6 text-center">
+          <p className="text-slate-600">
+            {isRedirecting ? 'Redirecting to Learning Hub...' : 'Checking your enrollment status...'}
+          </p>
+        </div>
+        <CoBrandedFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
