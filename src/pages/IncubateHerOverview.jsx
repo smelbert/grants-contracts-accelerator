@@ -83,6 +83,19 @@ export default function IncubateHerOverview() {
                     {enrollment?.pre_assessment_completed ? 'View Pre-Assessment' : 'Start Pre-Assessment'}
                   </Button>
                 </Link>
+                <Link to={createPageUrl('IncubateHerPostAssessment')}>
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="w-full sm:w-auto"
+                    style={{ 
+                      borderColor: BRAND_COLORS.eisNavy,
+                      color: BRAND_COLORS.eisNavy
+                    }}
+                  >
+                    {enrollment?.post_assessment_completed ? 'View Post-Assessment' : 'Take Post-Assessment'}
+                  </Button>
+                </Link>
                 <Link to={createPageUrl('IncubateHerSchedule')}>
                   <Button 
                     size="lg" 
@@ -106,7 +119,7 @@ export default function IncubateHerOverview() {
                       color: BRAND_COLORS.culRed
                     }}
                   >
-                    {enrollment?.evaluation_completed ? 'View Evaluation' : 'Program Evaluation'}
+                    {enrollment?.evaluation_completed ? 'View Evaluation' : 'Training Evaluation'}
                   </Button>
                 </Link>
               </div>

@@ -25,6 +25,7 @@ export default function IncubateHerEvaluation() {
     consultation_experience: '',
     most_valuable: '',
     suggestions: '',
+    facilitator_feedback: '',
     would_recommend: '',
     additional_comments: ''
   });
@@ -117,7 +118,7 @@ export default function IncubateHerEvaluation() {
                 Thank You for Your Feedback!
               </h2>
               <p className="mb-6" style={{ color: BRAND_COLORS.eisNavy }}>
-                Your evaluation has been submitted. Your feedback helps us improve the IncubateHer program for future participants.
+                Your evaluation has been submitted. Your feedback helps us improve future training sessions.
               </p>
               {existingEvaluation && (
                 <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: BRAND_COLORS.neutralLight, fontSize: '1.2rem', padding: '0.5rem 1rem' }}>
@@ -140,8 +141,8 @@ export default function IncubateHerEvaluation() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
       <CoBrandedHeader 
-        title="Program Evaluation"
-        subtitle="Help us improve the IncubateHer experience"
+        title="Training Evaluation"
+        subtitle="Share your feedback on this training session"
       />
 
       <div className="max-w-4xl mx-auto px-6 py-12">
@@ -154,7 +155,7 @@ export default function IncubateHerEvaluation() {
                   Your Feedback Matters
                 </p>
                 <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                  Please take a few minutes to evaluate your IncubateHer experience. Your honest feedback helps us improve the program for future participants.
+                  Please take a few minutes to evaluate this training session. Your honest feedback helps us improve future training experiences.
                 </p>
               </div>
             </div>
@@ -164,11 +165,11 @@ export default function IncubateHerEvaluation() {
         {/* Overall Rating */}
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Overall Program Rating</CardTitle>
+            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Overall Training Rating</CardTitle>
           </CardHeader>
           <CardContent>
             <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
-              How would you rate the IncubateHer program overall?
+              How would you rate this training session overall?
             </Label>
             <div className="flex items-center gap-4">
               <span className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>Poor</span>
@@ -221,12 +222,12 @@ export default function IncubateHerEvaluation() {
 
             <div>
               <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
-                How effective was the facilitation and instruction?
+                How effective was Dr. Shawnte Elbert's facilitation?
               </Label>
               <RadioGroup value={responses.facilitation_effectiveness} onValueChange={(val) => handleChange('facilitation_effectiveness', val)}>
                 <div className="flex items-center space-x-2 mb-2">
                   <RadioGroupItem value="excellent" id="facilitation-excellent" />
-                  <Label htmlFor="facilitation-excellent" className="cursor-pointer">Excellent - Very engaging and clear</Label>
+                  <Label htmlFor="facilitation-excellent" className="cursor-pointer">Excellent - Very engaging, knowledgeable, and clear</Label>
                 </div>
                 <div className="flex items-center space-x-2 mb-2">
                   <RadioGroupItem value="good" id="facilitation-good" />
@@ -369,7 +370,7 @@ export default function IncubateHerEvaluation() {
           <CardContent className="space-y-6">
             <div>
               <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
-                What was most valuable about the program?
+                What was most valuable about this training?
               </Label>
               <Textarea
                 value={responses.most_valuable}
@@ -382,12 +383,25 @@ export default function IncubateHerEvaluation() {
 
             <div>
               <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
-                What suggestions do you have for improving the program?
+                What other training topics would you like to see?
               </Label>
               <Textarea
                 value={responses.suggestions}
                 onChange={(e) => handleChange('suggestions', e.target.value)}
-                placeholder="Share your suggestions..."
+                placeholder="Suggest future training topics you'd be interested in..."
+                rows={3}
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                Feedback for Dr. Shawnte Elbert (facilitator)
+              </Label>
+              <Textarea
+                value={responses.facilitator_feedback}
+                onChange={(e) => handleChange('facilitator_feedback', e.target.value)}
+                placeholder="Share feedback about the facilitation style, presentation, expertise, etc..."
                 rows={3}
                 className="w-full"
               />
@@ -415,7 +429,7 @@ export default function IncubateHerEvaluation() {
           </CardHeader>
           <CardContent>
             <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
-              Would you recommend this program to other entrepreneurs?
+              Would you recommend this training to other entrepreneurs?
             </Label>
             <RadioGroup value={responses.would_recommend} onValueChange={(val) => handleChange('would_recommend', val)}>
               <div className="flex items-center space-x-2 mb-2">
