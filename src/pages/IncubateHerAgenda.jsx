@@ -323,13 +323,14 @@ export default function IncubateHerAgenda() {
                             </div>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Button 
-                              size="sm" 
-                              variant="ghost"
-                              onClick={() => window.open(content.content_url, '_blank')}
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                            </Button>
+                           <Link to={createPageUrl('IncubateHerCourse') + '?id=' + content.id}>
+                             <Button 
+                               size="sm" 
+                               variant="ghost"
+                             >
+                               <ExternalLink className="w-4 h-4" />
+                             </Button>
+                           </Link>
                             {isFacilitator && (
                               <>
                                 <Button
