@@ -323,7 +323,7 @@ export default function IncubateHerAgenda() {
                             </div>
                           </div>
                           <div className="flex items-center gap-1">
-                           <Link to={createPageUrl('IncubateHerCourse') + '?id=' + content.id}>
+                           <Link to={createPageUrl('IncubateHerCourse') + '?id=' + content.id + '&from=agenda'}>
                              <Button 
                                size="sm" 
                                variant="ghost"

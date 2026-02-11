@@ -34,6 +34,7 @@ export default function IncubateHerCourse() {
   
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get('id');
+  const fromLearningHub = urlParams.get('from') === 'learning';
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
