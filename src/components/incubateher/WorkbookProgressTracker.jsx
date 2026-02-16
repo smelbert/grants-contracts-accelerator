@@ -5,7 +5,7 @@ import { CheckCircle2, Circle, ChevronRight } from 'lucide-react';
 import { WORKBOOK_PAGES, getSections } from './workbookContent';
 
 export default function WorkbookProgressTracker({ responses, currentPageId, onPageSelect }) {
-  const sections = getSections();
+  const sections = [...new Set(WORKBOOK_PAGES.map(page => page.section))];
   
   const calculateProgress = () => {
     const totalPages = WORKBOOK_PAGES.filter(p => p.fields && p.fields.length > 0).length;
