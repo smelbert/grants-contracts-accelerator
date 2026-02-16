@@ -82,6 +82,7 @@ const getUserPortalNav = () => [
       { name: 'Learning Hub', page: 'IncubateHerLearning', icon: BookOpen },
       { name: 'Agenda & Courses', page: 'IncubateHerAgenda', icon: FileText },
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
+      { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText },
       { name: 'Video Library', page: 'IncubateHerVideoLibrary', icon: Video },
       { name: 'Assessments', page: 'IncubateHerPreAssessment', icon: CheckCircle2 },
       { name: 'Readiness Assessment', page: 'FundingReadinessAssessment', icon: Target },

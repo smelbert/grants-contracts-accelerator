@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import WorkbookPage from '@/components/incubateher/WorkbookPage';
+import WorkbookProgressTracker from '@/components/incubateher/WorkbookProgressTracker';
 import { WORKBOOK_PAGES, getSections } from '@/components/incubateher/workbookContent';
 import { ChevronLeft, ChevronRight, Save, Download, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -153,79 +154,166 @@ export default function IncubateHerWorkbook() {
 
   const handleDownloadPDF = async () => {
     const doc = new jsPDF('p', 'mm', 'letter'); // Standard 8.5" x 11"
-    let yPos = 20;
+    const pageWidth = 216; // 8.5 inches in mm
+    const pageHeight = 279; // 11 inches in mm
+    const margin = 20;
+    let pageCount = 1;
+
+    // Helper function to add header
+    const addHeader = (pageNum) => {
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('IncubateHer Funding Readiness Workbook', margin, 10);
+      doc.text(`Page ${pageNum}`, pageWidth - margin, 10, { align: 'right' });
+      doc.setDrawColor(229, 192, 137); // EIS Gold
+      doc.line(margin, 12, pageWidth - margin, 12);
+    };
+
+    // Helper function to add footer
+    const addFooter = (pageNum) => {
+      doc.setDrawColor(229, 192, 137);
+      doc.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
+      doc.setFontSize(7);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions', pageWidth / 2, pageHeight - 10, { align: 'center' });
+    };
 
     // Cover page
-    doc.setFontSize(24);
-    doc.text('IncubateHer Funding Readiness Workbook', 105, yPos, { align: 'center' });
-    yPos += 15;
+    doc.setFontSize(28);
+    doc.setTextColor(20, 58, 80); // EIS Navy
+    doc.text('IncubateHer', pageWidth / 2, 60, { align: 'center' });
+    doc.setFontSize(20);
+    doc.text('Funding Readiness Workbook', pageWidth / 2, 75, { align: 'center' });
+    doc.setFontSize(14);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Preparing for Grants & Contracts', pageWidth / 2, 90, { align: 'center' });
+    
     doc.setFontSize(16);
-    doc.text('Preparing for Grants & Contracts', 105, yPos, { align: 'center' });
-    yPos += 10;
+    doc.setTextColor(20, 58, 80);
+    doc.text(`${user?.full_name || 'Participant'}`, pageWidth / 2, 120, { align: 'center' });
     doc.setFontSize(12);
-    doc.text(`${user?.full_name || 'Participant'}`, 105, yPos, { align: 'center' });
-    yPos += 5;
-    doc.text(new Date().toLocaleDateString(), 105, yPos, { align: 'center' });
+    doc.setTextColor(100, 100, 100);
+    doc.text(new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), pageWidth / 2, 135, { align: 'center' });
+    
+    addFooter(pageCount);
     
     // Process each page
-    WORKBOOK_PAGES.forEach((page, idx) => {
-      if (idx > 0) doc.addPage();
+    WORKBOOK_PAGES.forEach((page) => {
+      // Get custom content if available
+      const customPage = customPages.find(p => p.page_id === page.id);
+      const displayContent = customPage?.content || page.content;
+      
+      doc.addPage();
+      pageCount++;
+      let yPos = 20;
+      
+      addHeader(pageCount);
       yPos = 20;
+      
+      // Section header
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(page.section, margin, yPos);
+      yPos += 8;
       
       // Page title
       doc.setFontSize(16);
-      doc.text(page.title, 20, yPos);
-      yPos += 10;
+      doc.setTextColor(20, 58, 80);
+      const titleLines = doc.splitTextToSize(page.title, pageWidth - 2 * margin);
+      titleLines.forEach(line => {
+        doc.text(line, margin, yPos);
+        yPos += 7;
+      });
+      yPos += 5;
+      
+      // Add content if exists (strip HTML tags for PDF)
+      if (displayContent) {
+        doc.setFontSize(9);
+        doc.setTextColor(60, 60, 60);
+        const cleanContent = displayContent.replace(/<[^>]*>/g, '').trim();
+        if (cleanContent) {
+          const contentLines = doc.splitTextToSize(cleanContent.substring(0, 500), pageWidth - 2 * margin);
+          contentLines.slice(0, 15).forEach(line => {
+            if (yPos > pageHeight - 25) {
+              addFooter(pageCount);
+              doc.addPage();
+              pageCount++;
+              addHeader(pageCount);
+              yPos = 20;
+            }
+            doc.text(line, margin, yPos);
+            yPos += 5;
+          });
+          yPos += 5;
+        }
+      }
       
       // Add responses if this is a worksheet
       if (page.fields && allResponses[page.id]) {
         doc.setFontSize(10);
         page.fields.forEach(field => {
-          if (yPos > 270) {
+          if (yPos > pageHeight - 30) {
+            addFooter(pageCount);
             doc.addPage();
+            pageCount++;
+            addHeader(pageCount);
             yPos = 20;
           }
           
           doc.setFont(undefined, 'bold');
-          doc.text(field.label, 20, yPos);
-          yPos += 7;
+          doc.setTextColor(20, 58, 80);
+          const labelLines = doc.splitTextToSize(field.label, pageWidth - 2 * margin - 5);
+          labelLines.forEach(line => {
+            doc.text(line, margin + 5, yPos);
+            yPos += 5;
+          });
+          yPos += 2;
           
           doc.setFont(undefined, 'normal');
+          doc.setTextColor(60, 60, 60);
           const response = allResponses[page.id][field.id];
           
           if (response) {
             if (typeof response === 'string') {
-              const lines = doc.splitTextToSize(response, 170);
+              const lines = doc.splitTextToSize(response || '(No response)', pageWidth - 2 * margin - 10);
               lines.forEach(line => {
-                if (yPos > 280) {
+                if (yPos > pageHeight - 25) {
+                  addFooter(pageCount);
                   doc.addPage();
+                  pageCount++;
+                  addHeader(pageCount);
                   yPos = 20;
                 }
-                doc.text(line, 25, yPos);
+                doc.text(line, margin + 10, yPos);
                 yPos += 5;
               });
             } else if (Array.isArray(response)) {
               response.forEach(item => {
-                if (yPos > 280) {
+                if (yPos > pageHeight - 25) {
+                  addFooter(pageCount);
                   doc.addPage();
+                  pageCount++;
+                  addHeader(pageCount);
                   yPos = 20;
                 }
-                doc.text(`• ${item}`, 25, yPos);
+                doc.text(`• ${item}`, margin + 10, yPos);
                 yPos += 5;
               });
             }
           } else {
-            doc.text('(No response)', 25, yPos);
+            doc.text('(No response)', margin + 10, yPos);
             yPos += 5;
           }
           
-          yPos += 5;
+          yPos += 3;
         });
       }
+      
+      addFooter(pageCount);
     });
 
-    doc.save(`IncubateHer_Workbook_${user?.full_name || 'Participant'}_${new Date().toISOString().split('T')[0]}.pdf`);
-    toast.success('Workbook downloaded');
+    doc.save(`IncubateHer_Workbook_${user?.full_name?.replace(/\s+/g, '_') || 'Participant'}_${new Date().toISOString().split('T')[0]}.pdf`);
+    toast.success('Workbook downloaded with all content');
   };
 
   const currentPage = WORKBOOK_PAGES[currentPageIndex];
@@ -245,9 +333,26 @@ export default function IncubateHerWorkbook() {
         subtitle="Your comprehensive funding readiness guide"
       />
 
-      <div className="max-w-[900px] mx-auto py-8 space-y-6">
+      <div className="max-w-7xl mx-auto py-8 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Progress Tracker Sidebar */}
+        <div className="lg:col-span-1 hidden lg:block">
+          <div className="sticky top-4">
+            <WorkbookProgressTracker
+              responses={allResponses}
+              currentPageId={currentPage.id}
+              onPageSelect={(pageId) => {
+                const idx = WORKBOOK_PAGES.findIndex(p => p.id === pageId);
+                if (idx >= 0) goToPage(idx);
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="lg:col-span-3 space-y-6">
         {/* Controls */}
-        <Card className="sticky top-0 z-10 shadow-xl border-2 border-[#E5C089]">
+        <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#E5C089]">
           <CardContent className="py-4">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -364,6 +469,7 @@ export default function IncubateHerWorkbook() {
             Next
             <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
+        </div>
         </div>
       </div>
 
