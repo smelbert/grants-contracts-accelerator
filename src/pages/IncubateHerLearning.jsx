@@ -15,7 +15,10 @@ import {
   Target,
   Lock,
   Play,
-  Sparkles
+  Sparkles,
+  FileText,
+  Video,
+  Download
 } from 'lucide-react';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
@@ -247,7 +250,7 @@ export default function IncubateHerLearning() {
                                   <p className="text-sm mb-3" style={{ color: BRAND_COLORS.eisNavy }}>
                                     {course.description}
                                   </p>
-                                  <div className="flex items-center gap-4 mb-3">
+                                  <div className="flex items-center gap-4 mb-3 flex-wrap">
                                     <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
                                       {course.funding_lane}
                                     </Badge>
@@ -263,6 +266,18 @@ export default function IncubateHerLearning() {
                                         {course.curriculum_sections.length} sections
                                       </div>
                                     )}
+                                    {course.handouts && course.handouts.length > 0 && (
+                                      <div className="flex items-center gap-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                                        <FileText className="w-4 h-4" />
+                                        {course.handouts.length} handouts
+                                      </div>
+                                    )}
+                                    {course.curriculum_sections?.some(s => s.video_url || s.presentation_url) && (
+                                      <div className="flex items-center gap-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                                        <Video className="w-4 h-4" />
+                                        Media included
+                                      </div>
+                                    )}
                                   </div>
                                   {progress && (
                                     <div className="mb-3">
@@ -275,6 +290,30 @@ export default function IncubateHerLearning() {
                                         </span>
                                       </div>
                                       <Progress value={progressPercent} className="h-2" />
+                                    </div>
+                                  )}
+
+                                  {/* Quick Access to Resources */}
+                                  {(course.handouts?.length > 0 || course.curriculum_sections?.some(s => s.video_url || s.presentation_url)) && (
+                                    <div className="flex gap-2 mb-3 flex-wrap">
+                                      {course.handouts?.slice(0, 3).map((handout, idx) => (
+                                        <a 
+                                          key={idx}
+                                          href={handout.file_url} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80 transition-opacity"
+                                          style={{ backgroundColor: BRAND_COLORS.neutralLight, color: BRAND_COLORS.eisNavy }}
+                                        >
+                                          <Download className="w-3 h-3" />
+                                          {handout.title.length > 20 ? handout.title.substring(0, 20) + '...' : handout.title}
+                                        </a>
+                                      ))}
+                                      {course.handouts?.length > 3 && (
+                                        <span className="inline-flex items-center px-3 py-1 text-xs" style={{ color: BRAND_COLORS.eisNavy }}>
+                                          +{course.handouts.length - 3} more
+                                        </span>
+                                      )}
                                     </div>
                                   )}
                                 </div>
