@@ -55,7 +55,9 @@ export default function IncubateHerAgenda() {
     }
   });
 
-  const isFacilitator = user?.role === 'admin' || user?.role === 'coach';
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+  const isFacilitator = enrollment?.role === 'facilitator' || enrollment?.role === 'admin';
+  const showAdminControls = isAdmin || isFacilitator;
 
   const toggleSection = (sectionId) => {
     setExpandedSections(prev => ({
@@ -298,7 +300,7 @@ export default function IncubateHerAgenda() {
                       <BookOpen className="w-4 h-4" />
                       Learning Resources
                     </h4>
-                    {isFacilitator && (
+                    {showAdminControls && (
                       <Button
                         size="sm"
                         onClick={() => handleAddCourse(section.id)}
@@ -331,7 +333,7 @@ export default function IncubateHerAgenda() {
                                <ExternalLink className="w-4 h-4" />
                              </Button>
                            </Link>
-                            {isFacilitator && (
+                            {showAdminControls && (
                               <>
                                 <Button
                                   size="sm"
@@ -359,7 +361,7 @@ export default function IncubateHerAgenda() {
                   )}
                 </div>
 
-                {isFacilitator && section.facilitatorNotes && (
+                {showAdminControls && section.facilitatorNotes && (
                   <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                     <h4 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
                       <Users className="w-4 h-4" />
