@@ -205,7 +205,10 @@ export default function LearningContentManagement() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="ghost" onClick={() => { setEditingContent(content); setDialogOpen(true); }}>
+                          <Button size="sm" variant="ghost" onClick={() => { 
+                            setEditingContent(content); 
+                            setBuilderMode(true); 
+                          }}>
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button size="sm" variant="ghost" className="text-red-600" onClick={() => {
