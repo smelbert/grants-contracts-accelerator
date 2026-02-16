@@ -231,7 +231,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
               <p className="text-sm text-slate-600 italic mb-6 pl-13">
                 Complete each field below. Your responses are automatically saved as you type.
               </p>
-              <div className="space-y-6">
+              <div className={page.id === 'toolkit_checklist' ? 'grid grid-cols-2 gap-4' : 'space-y-6'}>
                 {page.fields.map((field) => {
                   const fieldValue = responses?.[field.id] || '';
 
