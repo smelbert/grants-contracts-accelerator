@@ -3,18 +3,16 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Plus, Edit, Trash2, Eye, Clock, Award, Filter } from 'lucide-react';
+import { BookOpen, Plus, Edit, Trash2, Clock, Award, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import CourseBuilder from '@/components/learning/CourseBuilder';
 
 export default function LearningContentManagement() {
   const queryClient = useQueryClient();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [builderMode, setBuilderMode] = useState(false);
   const [editingContent, setEditingContent] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const [filterLane, setFilterLane] = useState('all');
@@ -29,23 +27,19 @@ export default function LearningContentManagement() {
     queryFn: () => base44.entities.LearningContent.list('-created_date')
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.LearningContent.create(data),
+  const saveMutation = useMutation({
+    mutationFn: async (courseData) => {
+      if (editingContent) {
+        return await base44.entities.LearningContent.update(editingContent.id, courseData);
+      } else {
+        return await base44.entities.LearningContent.create(courseData);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['learning-content-admin']);
-      setDialogOpen(false);
+      setBuilderMode(false);
       setEditingContent(null);
-      toast.success('Content created successfully');
-    }
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.LearningContent.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['learning-content-admin']);
-      setDialogOpen(false);
-      setEditingContent(null);
-      toast.success('Content updated successfully');
+      toast.success(editingContent ? 'Course updated successfully' : 'Course created successfully');
     }
   });
 
@@ -57,29 +51,8 @@ export default function LearningContentManagement() {
     }
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    
-    const data = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      content_type: formData.get('content_type'),
-      funding_lane: formData.get('funding_lane'),
-      duration_minutes: parseInt(formData.get('duration_minutes')) || null,
-      content_url: formData.get('content_url') || null,
-      thumbnail_url: formData.get('thumbnail_url') || null,
-      is_premium: formData.get('is_premium') === 'true',
-      incubateher_only: formData.get('incubateher_only') === 'true',
-      agenda_section: formData.get('agenda_section') || null,
-      order: parseInt(formData.get('order')) || 0,
-    };
-
-    if (editingContent) {
-      updateMutation.mutate({ id: editingContent.id, data });
-    } else {
-      createMutation.mutate(data);
-    }
+  const handleSaveCourse = (courseData) => {
+    saveMutation.mutate(courseData);
   };
 
   const filteredContent = allContent.filter(content => {
@@ -91,6 +64,41 @@ export default function LearningContentManagement() {
   const incubateHerContent = filteredContent.filter(c => c.incubateher_only);
   const generalContent = filteredContent.filter(c => !c.incubateher_only);
 
+  if (builderMode) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <Button 
+              variant="ghost" 
+              onClick={() => {
+                setBuilderMode(false);
+                setEditingContent(null);
+              }}
+              className="mb-4"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Course List
+            </Button>
+            <h1 className="text-3xl font-bold text-slate-900">
+              {editingContent ? 'Edit Course' : 'Create New Course'}
+            </h1>
+            <p className="text-slate-600 mt-1">Build your comprehensive course curriculum</p>
+          </div>
+
+          <CourseBuilder
+            course={editingContent}
+            onSave={handleSaveCourse}
+            onCancel={() => {
+              setBuilderMode(false);
+              setEditingContent(null);
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -99,9 +107,15 @@ export default function LearningContentManagement() {
             <h1 className="text-3xl font-bold text-slate-900">Learning Hub Content Management</h1>
             <p className="text-slate-600 mt-1">Manage courses, webinars, workshops, and guides</p>
           </div>
-          <Button onClick={() => { setEditingContent(null); setDialogOpen(true); }} className="bg-blue-600">
+          <Button 
+            onClick={() => { 
+              setEditingContent(null); 
+              setBuilderMode(true); 
+            }} 
+            className="bg-blue-600"
+          >
             <Plus className="w-4 h-4 mr-2" />
-            Add New Content
+            Create New Course
           </Button>
         </div>
 
@@ -156,13 +170,13 @@ export default function LearningContentManagement() {
             <div className="grid gap-4">
               {incubateHerContent.length === 0 ? (
                 <Card>
-                  <CardContent className="py-12 text-center">
-                    <Award className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                    <p className="text-slate-600">No IncubateHer content created yet</p>
-                    <Button onClick={() => { setEditingContent(null); setDialogOpen(true); }} className="mt-4 bg-[#AC1A5B]">
-                      Create First IncubateHer Course
-                    </Button>
-                  </CardContent>
+                <CardContent className="py-12 text-center">
+                  <Award className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-600">No IncubateHer content created yet</p>
+                  <Button onClick={() => { setEditingContent(null); setBuilderMode(true); }} className="mt-4 bg-[#AC1A5B]">
+                    Create First IncubateHer Course
+                  </Button>
+                </CardContent>
                 </Card>
               ) : (
                 incubateHerContent.map(content => (
@@ -241,7 +255,10 @@ export default function LearningContentManagement() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="ghost" onClick={() => { setEditingContent(content); setDialogOpen(true); }}>
+                          <Button size="sm" variant="ghost" onClick={() => { 
+                            setEditingContent(content); 
+                            setBuilderMode(true); 
+                          }}>
                             <Edit className="w-4 h-4" />
                           </Button>
                           <Button size="sm" variant="ghost" className="text-red-600" onClick={() => {
@@ -259,135 +276,6 @@ export default function LearningContentManagement() {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Add/Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingContent ? 'Edit Content' : 'Add New Content'}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">Title *</label>
-                <Input name="title" defaultValue={editingContent?.title} required />
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">Description *</label>
-                <Textarea name="description" defaultValue={editingContent?.description} required rows={3} />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Content Type *</label>
-                <Select name="content_type" defaultValue={editingContent?.content_type || 'course'}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="course">Course</SelectItem>
-                    <SelectItem value="webinar">Webinar</SelectItem>
-                    <SelectItem value="workshop">Workshop</SelectItem>
-                    <SelectItem value="guide">Guide</SelectItem>
-                    <SelectItem value="template">Template</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Funding Lane *</label>
-                <Select name="funding_lane" defaultValue={editingContent?.funding_lane || 'general'}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="grants">Grants</SelectItem>
-                    <SelectItem value="contracts">Contracts</SelectItem>
-                    <SelectItem value="donors">Donors</SelectItem>
-                    <SelectItem value="public_funds">Public Funds</SelectItem>
-                    <SelectItem value="general">General</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Duration (minutes)</label>
-                <Input name="duration_minutes" type="number" defaultValue={editingContent?.duration_minutes} />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Display Order</label>
-                <Input name="order" type="number" defaultValue={editingContent?.order || 0} />
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">Content URL (Gamma, YouTube, etc.)</label>
-                <Input name="content_url" type="url" defaultValue={editingContent?.content_url} />
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">Thumbnail URL</label>
-                <Input name="thumbnail_url" type="url" defaultValue={editingContent?.thumbnail_url} />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Premium Content?</label>
-                <Select name="is_premium" defaultValue={editingContent?.is_premium ? 'true' : 'false'}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="false">No - Free for All</SelectItem>
-                    <SelectItem value="true">Yes - Premium Only</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">IncubateHer Only?</label>
-                <Select name="incubateher_only" defaultValue={editingContent?.incubateher_only ? 'true' : 'false'}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="false">No - General Content</SelectItem>
-                    <SelectItem value="true">Yes - IncubateHer Only</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="col-span-2">
-                <label className="block text-sm font-medium mb-2">Agenda Section (for IncubateHer)</label>
-                <Select name="agenda_section" defaultValue={editingContent?.agenda_section || ''}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select section (optional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={null}>None</SelectItem>
-                    <SelectItem value="intro">Introduction & Orientation</SelectItem>
-                    <SelectItem value="legal">Legal & Organizational Readiness</SelectItem>
-                    <SelectItem value="financial">Financial Management & Budgeting</SelectItem>
-                    <SelectItem value="grants">Grant Writing Fundamentals</SelectItem>
-                    <SelectItem value="contracts">RFPs and Contract Proposals</SelectItem>
-                    <SelectItem value="strategy">Funding Strategy & Sustainability</SelectItem>
-                    <SelectItem value="consultation">One-on-One Consultations</SelectItem>
-                    <SelectItem value="wrap">Wrap-Up & Next Steps</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" className="bg-blue-600" disabled={createMutation.isPending || updateMutation.isPending}>
-                {editingContent ? 'Update' : 'Create'} Content
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
