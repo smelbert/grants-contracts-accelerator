@@ -76,37 +76,37 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
   return (
     <div className="bg-white shadow-2xl mx-auto overflow-visible" style={{ width: '816px' }}>
       {/* Professional Header with Full Branding */}
-      <div className="bg-gradient-to-b from-slate-200 via-[#143A50] to-[#1E4F58] px-12 py-6 border-b-4 border-[#E5C089]">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-6">
-            <div className="bg-white rounded-lg p-3 shadow-md">
+      <div className="bg-gradient-to-b from-slate-200 via-[#143A50] to-[#1E4F58] px-8 py-3 border-b-4 border-[#E5C089]">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-4">
+            <div className="bg-white rounded-lg p-2 shadow-md">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/54239c095_image.png" 
                 alt="Columbus Urban League - IncubateHer" 
-                className="h-20"
+                className="h-12"
               />
             </div>
-            <div className="h-16 w-px bg-white/30" />
-            <div className="bg-white rounded-lg p-3 shadow-md">
+            <div className="h-12 w-px bg-white/30" />
+            <div className="bg-white rounded-lg p-2 shadow-md">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
                 alt="EIS Logo" 
-                className="h-16"
+                className="h-10"
               />
             </div>
           </div>
           <PageTypeBadge type={page.type} />
         </div>
-        <div className="border-t border-white/20 pt-3">
-          <h2 className="text-2xl font-bold text-white mb-1">{displayPage.title}</h2>
+        <div className="border-t border-white/20 pt-2">
+          <h2 className="text-xl font-bold text-white mb-0.5">{displayPage.title}</h2>
           {displayPage.subtitle && (
-            <p className="text-[#E5C089] text-sm font-medium">{displayPage.subtitle}</p>
+            <p className="text-[#E5C089] text-xs font-medium">{displayPage.subtitle}</p>
           )}
         </div>
       </div>
 
       {/* Content Area with Full-Page Layout */}
-      <div className="px-12 py-8 space-y-8">
+      <div className="px-8 py-4 space-y-4">
 
         {/* Personalized Guidance Based on Assessment */}
         <PersonalizedGuidance 
@@ -118,7 +118,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         {displayPage.takeaways && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#143A50]" />
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-300 rounded-xl p-6 shadow-md">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-2 border-blue-300 rounded-xl p-4 shadow-md">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
                   <Lightbulb className="w-5 h-5 text-white" />
@@ -141,7 +141,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         {(displayPage.actionItems || displayPage.action_items) && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#E5C089]" />
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 rounded-xl p-6 shadow-md">
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 rounded-xl p-4 shadow-md">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-white" />
@@ -164,7 +164,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         {displayPage.video_url && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
-            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 rounded-xl p-8 border-2 border-[#E5C089] shadow-lg">
+            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 rounded-xl p-4 border-2 border-[#E5C089] shadow-lg">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-[#AC1A5B] flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -198,7 +198,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
 
         {/* Page Content with Educational Styling */}
         {displayPage.content && (
-          <div className="bg-white rounded-xl p-8 border-2 border-slate-200 shadow-sm">
+          <div className="bg-white rounded-xl p-4 border-2 border-slate-200 shadow-sm">
             <div 
               className="prose prose-slate max-w-none 
                 prose-headings:text-[#143A50] prose-headings:font-bold prose-headings:mb-4
@@ -221,25 +221,25 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         {page.fields && page.fields.length > 0 && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
-            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 border-2 border-[#E5C089] rounded-xl p-8 shadow-lg">
+            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 border-2 border-[#E5C089] rounded-xl p-4 shadow-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-[#143A50] flex items-center justify-center">
-                  <CheckSquare className="w-5 h-5 text-white" />
+                <div className="w-8 h-8 rounded-full bg-[#143A50] flex items-center justify-center">
+                  <CheckSquare className="w-4 h-4 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#143A50]">Fill In Your Responses</h3>
+                <h3 className="text-lg font-bold text-[#143A50]">Fill In Your Responses</h3>
               </div>
-              <p className="text-sm text-slate-600 italic mb-6 pl-13">
+              <p className="text-xs text-slate-600 italic mb-4 pl-11">
                 Complete each field below. Your responses are automatically saved as you type.
               </p>
-              <div className={page.id === 'toolkit_checklist' ? 'grid grid-cols-2 gap-4' : 'space-y-6'}>
+              <div className={page.id === 'toolkit_checklist' ? 'grid grid-cols-2 gap-3' : 'space-y-4'}>
                 {page.fields.map((field) => {
                   const fieldValue = responses?.[field.id] || '';
 
                   switch (field.type) {
                 case 'textarea':
                   return (
-                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
-                      <Label className="text-base mb-2 block font-semibold text-[#143A50]">
+                    <div key={field.id} className="bg-white rounded-lg p-3 border border-slate-300">
+                      <Label className="text-sm mb-1.5 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
@@ -257,8 +257,8 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
 
                 case 'input':
                   return (
-                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
-                      <Label className="text-base mb-2 block font-semibold text-[#143A50]">
+                    <div key={field.id} className="bg-white rounded-lg p-3 border border-slate-300">
+                      <Label className="text-sm mb-1.5 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
@@ -275,8 +275,8 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
 
                 case 'radio':
                   return (
-                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
-                      <Label className="text-base mb-3 block font-semibold text-[#143A50]">
+                    <div key={field.id} className="bg-white rounded-lg p-3 border border-slate-300">
+                      <Label className="text-sm mb-2 block font-semibold text-[#143A50]">
                         {field.label}
                       </Label>
                       {field.description && (
@@ -284,9 +284,9 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                       )}
                       <RadioGroup value={fieldValue} onValueChange={(val) => handleFieldChange(field.id, val)}>
                         {field.options.map((option) => (
-                          <div key={option.value} className="flex items-center space-x-3 mb-3 p-2 hover:bg-slate-50 rounded">
+                          <div key={option.value} className="flex items-center space-x-2 mb-2 p-1.5 hover:bg-slate-50 rounded">
                             <RadioGroupItem value={option.value} id={`${field.id}-${option.value}`} />
-                            <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer flex-1">
+                            <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer flex-1 text-sm">
                               {option.label}
                             </Label>
                           </div>
@@ -388,7 +388,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
       </div>
 
       {/* Professional Footer with Page Info */}
-      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-12 py-4 border-t-4 border-[#E5C089] mt-auto">
+      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-8 py-2 border-t-4 border-[#E5C089] mt-auto">
         <div className="flex items-center justify-between text-sm">
           <div className="text-white/90">
             <span className="font-bold text-white">IncubateHer</span>
