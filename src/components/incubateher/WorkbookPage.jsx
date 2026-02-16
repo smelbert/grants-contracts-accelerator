@@ -284,7 +284,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                       )}
                       <RadioGroup value={fieldValue} onValueChange={(val) => handleFieldChange(field.id, val)}>
                         {field.options.map((option) => (
-                          <div key={option.value} className="flex items-center space-x-2 mb-2 p-1.5 hover:bg-slate-50 rounded">
+                          <div key={option.value} className="flex items-center space-x-2 p-1.5 hover:bg-slate-50 rounded">
                             <RadioGroupItem value={option.value} id={`${field.id}-${option.value}`} />
                             <Label htmlFor={`${field.id}-${option.value}`} className="cursor-pointer flex-1 text-sm">
                               {option.label}
