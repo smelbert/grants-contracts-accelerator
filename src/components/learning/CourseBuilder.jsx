@@ -44,6 +44,7 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   const [aiDialog, setAiDialog] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -98,6 +99,25 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
       tips: [...courseData.tips, tipData]
     });
     setTipDialog(false);
+  };
+
+  const handleApplyAiContent = (content, type) => {
+    if (type === 'outline' && content.sections) {
+      setCourseData(prev => ({
+        ...prev,
+        title: content.title || prev.title,
+        description: content.description || prev.description,
+        curriculum_sections: content.sections.map(section => ({
+          id: `ai-${Date.now()}-${Math.random()}`,
+          title: section.title,
+          description: section.description,
+          duration_minutes: section.duration_minutes,
+          content: section.topics ? `<ul>${section.topics.map(t => `<li>${t}</li>`).join('')}</ul>` : ''
+        }))
+      }));
+      toast.success('Course outline applied!');
+      setAiAssistantOpen(false);
+    }
   };
 
   const handleFileUpload = async (file, type = 'handout') => {
@@ -324,11 +344,11 @@ Return ONLY valid JSON, no additional text.`,
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => setAiDialog(true)}
+                onClick={() => setAiAssistantOpen(true)}
                 className="text-purple-600 border-purple-600"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                AI Generate
+                AI Assistant
               </Button>
               <Button
                 size="sm"
@@ -572,6 +592,14 @@ Return ONLY valid JSON, no additional text.`,
         onClose={() => setAiDialog(false)}
         onGenerate={generateWithAI}
         generating={aiGenerating}
+      />
+
+      {/* AI Content Assistant */}
+      <AIContentAssistant
+        open={aiAssistantOpen}
+        onOpenChange={setAiAssistantOpen}
+        onApplyContent={handleApplyAiContent}
+        mode="create"
       />
     </div>
   );
