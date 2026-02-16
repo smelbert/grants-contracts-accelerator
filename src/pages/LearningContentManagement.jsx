@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Plus, Edit, Trash2, Clock, Award, ArrowLeft } from 'lucide-react';
+import { BookOpen, Plus, Edit, Trash2, Clock, Award, ArrowLeft, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import CourseBuilder from '@/components/learning/CourseBuilder';
+import AIContentAssistant from '@/components/learning/AIContentAssistant';
 
 export default function LearningContentManagement() {
   const queryClient = useQueryClient();
@@ -16,6 +17,7 @@ export default function LearningContentManagement() {
   const [editingContent, setEditingContent] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const [filterLane, setFilterLane] = useState('all');
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -53,6 +55,24 @@ export default function LearningContentManagement() {
 
   const handleSaveCourse = (courseData) => {
     saveMutation.mutate(courseData);
+  };
+
+  const handleApplyAiContent = (content, type) => {
+    if (type === 'outline') {
+      setEditingContent({
+        title: content.title,
+        description: content.description,
+        curriculum_sections: content.sections?.map(s => ({
+          id: `ai-${Date.now()}-${Math.random()}`,
+          title: s.title,
+          description: s.description,
+          duration_minutes: s.duration_minutes,
+          content: s.topics ? `<ul>${s.topics.map(t => `<li>${t}</li>`).join('')}</ul>` : ''
+        }))
+      });
+      setBuilderMode(true);
+      setAiAssistantOpen(false);
+    }
   };
 
   const filteredContent = allContent.filter(content => {
@@ -107,16 +127,25 @@ export default function LearningContentManagement() {
             <h1 className="text-3xl font-bold text-slate-900">Learning Hub Content Management</h1>
             <p className="text-slate-600 mt-1">Manage courses, webinars, workshops, and guides</p>
           </div>
-          <Button 
-            onClick={() => { 
-              setEditingContent(null); 
-              setBuilderMode(true); 
-            }} 
-            className="bg-blue-600"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Create New Course
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => setAiAssistantOpen(true)}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Assistant
+            </Button>
+            <Button 
+              onClick={() => { 
+                setEditingContent(null); 
+                setBuilderMode(true); 
+              }} 
+              className="bg-blue-600"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create New Course
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -278,6 +307,13 @@ export default function LearningContentManagement() {
             </div>
           </TabsContent>
         </Tabs>
+
+        <AIContentAssistant
+          open={aiAssistantOpen}
+          onOpenChange={setAiAssistantOpen}
+          onApplyContent={handleApplyAiContent}
+          mode="create"
+        />
       </div>
     </div>
   );
