@@ -21,9 +21,9 @@ const CONTENT_TYPES = [
   { value: 'all', label: 'All Types', icon: BookOpen },
   { value: 'course', label: 'Courses', icon: BookOpen },
   { value: 'guidebook', label: 'Guidebooks', icon: FileText },
+  { value: 'mini_workbook', label: 'Mini-Workbooks', icon: FileText },
   { value: 'webinar', label: 'Webinars', icon: Video },
   { value: 'workshop', label: 'Workshops', icon: Users },
-  { value: 'guide', label: 'Guides', icon: FileText },
 ];
 
 export default function LearningPage() {
@@ -456,16 +456,20 @@ export default function LearningPage() {
               </div>
             ) : (
               <>
-                {/* Guidebooks Section */}
-                {filteredContent.filter(c => c.content_type === 'guidebook').length > 0 && (
+                {/* Workbooks Section */}
+                {filteredContent.filter(c => c.content_type === 'guidebook' || c.content_type === 'mini_workbook').length > 0 && (
                   <div className="mb-8">
                     <div className="flex items-center gap-2 mb-4">
-                      <FileText className="w-5 h-5 text-[#143A50]" />
-                      <h3 className="text-xl font-bold text-slate-900">Workbooks & Guidebooks</h3>
+                      <FileText className="w-6 h-6 text-[#143A50]" />
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-900">Fillable Workbooks & Mini-Workbooks</h3>
+                        <p className="text-sm text-slate-600">Step-by-step fillable guides in standard 8.5×11 format • Downloadable as PDF</p>
+                      </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredContent
-                        .filter(c => c.content_type === 'guidebook')
+                        .filter(c => c.content_type === 'guidebook' || c.content_type === 'mini_workbook')
+                        .sort((a, b) => (a.order || 0) - (b.order || 0))
                         .map((content, index) => (
                           <motion.div
                             key={content.id}
@@ -486,17 +490,17 @@ export default function LearningPage() {
                 )}
 
                 {/* Other Content */}
-                {filteredContent.filter(c => c.content_type !== 'guidebook').length > 0 && (
+                {filteredContent.filter(c => c.content_type !== 'guidebook' && c.content_type !== 'mini_workbook').length > 0 && (
                   <div>
-                    {filteredContent.some(c => c.content_type === 'guidebook') && (
+                    {filteredContent.some(c => c.content_type === 'guidebook' || c.content_type === 'mini_workbook') && (
                       <div className="flex items-center gap-2 mb-4">
                         <BookOpen className="w-5 h-5 text-blue-600" />
-                        <h3 className="text-xl font-bold text-slate-900">All Learning Content</h3>
+                        <h3 className="text-xl font-bold text-slate-900">Courses & Learning Content</h3>
                       </div>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredContent
-                        .filter(c => c.content_type !== 'guidebook')
+                        .filter(c => c.content_type !== 'guidebook' && c.content_type !== 'mini_workbook')
                         .map((content, index) => (
                           <motion.div
                             key={content.id}
