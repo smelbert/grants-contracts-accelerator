@@ -20,6 +20,7 @@ import MyLearningRequests from '@/components/learning/MyLearningRequests';
 const CONTENT_TYPES = [
   { value: 'all', label: 'All Types', icon: BookOpen },
   { value: 'course', label: 'Courses', icon: BookOpen },
+  { value: 'guidebook', label: 'Guidebooks', icon: FileText },
   { value: 'webinar', label: 'Webinars', icon: Video },
   { value: 'workshop', label: 'Workshops', icon: Users },
   { value: 'guide', label: 'Guides', icon: FileText },
@@ -454,23 +455,67 @@ export default function LearningPage() {
                 <p className="text-slate-500">No learning content matches your filters.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredContent.map((content, index) => (
-                  <motion.div
-                    key={content.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <LearningCard
-                      content={content}
-                      isPremium={content.is_premium}
-                      hasAccess={!content.is_premium}
-                      onStart={handleStartContent}
-                    />
-                  </motion.div>
-                ))}
-              </div>
+              <>
+                {/* Guidebooks Section */}
+                {filteredContent.filter(c => c.content_type === 'guidebook').length > 0 && (
+                  <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <FileText className="w-5 h-5 text-[#143A50]" />
+                      <h3 className="text-xl font-bold text-slate-900">Workbooks & Guidebooks</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredContent
+                        .filter(c => c.content_type === 'guidebook')
+                        .map((content, index) => (
+                          <motion.div
+                            key={content.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                          >
+                            <LearningCard
+                              content={content}
+                              isPremium={content.is_premium}
+                              hasAccess={!content.is_premium}
+                              onStart={handleStartContent}
+                            />
+                          </motion.div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Other Content */}
+                {filteredContent.filter(c => c.content_type !== 'guidebook').length > 0 && (
+                  <div>
+                    {filteredContent.some(c => c.content_type === 'guidebook') && (
+                      <div className="flex items-center gap-2 mb-4">
+                        <BookOpen className="w-5 h-5 text-blue-600" />
+                        <h3 className="text-xl font-bold text-slate-900">All Learning Content</h3>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredContent
+                        .filter(c => c.content_type !== 'guidebook')
+                        .map((content, index) => (
+                          <motion.div
+                            key={content.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                          >
+                            <LearningCard
+                              content={content}
+                              isPremium={content.is_premium}
+                              hasAccess={!content.is_premium}
+                              onStart={handleStartContent}
+                            />
+                          </motion.div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </TabsContent>
 
