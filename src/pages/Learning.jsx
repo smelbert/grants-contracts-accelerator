@@ -20,8 +20,7 @@ import MyLearningRequests from '@/components/learning/MyLearningRequests';
 const CONTENT_TYPES = [
   { value: 'all', label: 'All Types', icon: BookOpen },
   { value: 'course', label: 'Courses', icon: BookOpen },
-  { value: 'guidebook', label: 'Guidebooks', icon: FileText },
-  { value: 'mini_workbook', label: 'Mini-Workbooks', icon: FileText },
+  { value: 'workbook', label: 'Workbooks', icon: FileText },
   { value: 'webinar', label: 'Webinars', icon: Video },
   { value: 'workshop', label: 'Workshops', icon: Users },
 ];
@@ -109,7 +108,10 @@ export default function LearningPage() {
       content.description?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesLane = selectedLane === 'all' || content.funding_lane === selectedLane;
-    const matchesType = selectedType === 'all' || content.content_type === selectedType;
+    
+    // Handle workbook filter (includes both guidebook and mini_workbook)
+    const matchesType = selectedType === 'all' || 
+      (selectedType === 'workbook' ? (content.content_type === 'guidebook' || content.content_type === 'mini_workbook') : content.content_type === selectedType);
     
     const matchesDuration = durationFilter === 'all' || 
       (durationFilter === 'short' && content.duration_minutes <= 30) ||
