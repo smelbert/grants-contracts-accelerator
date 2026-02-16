@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp, Sparkles, Users } from 'lucide-react';
 import PersonalizedGuidance from './PersonalizedGuidance';
+import AIFeedbackPanel from '../workbook/AIFeedbackPanel';
+import CollaborationPanel from '../workbook/CollaborationPanel';
 
 const PageTypeIcon = ({ type }) => {
   const icons = {
@@ -34,6 +37,9 @@ const PageTypeBadge = ({ type }) => {
 };
 
 export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null }) {
+  const [activeAIField, setActiveAIField] = useState(null);
+  const [activeCollabField, setActiveCollabField] = useState(null);
+
   // Use custom content if available, otherwise use default
   // For content field, prefer customContent over default to ensure admin edits show
   const displayPage = customContent 
@@ -238,20 +244,58 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                   switch (field.type) {
                 case 'textarea':
                   return (
-                    <div key={field.id} className="bg-white rounded-lg p-3 border border-slate-300">
-                      <Label className="text-sm mb-1.5 block font-semibold text-[#143A50]">
-                        {field.label}
-                      </Label>
-                      {field.description && (
-                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
+                    <div key={field.id} className="space-y-3">
+                      <div className="bg-white rounded-lg p-3 border border-slate-300">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <Label className="text-sm block font-semibold text-[#143A50]">
+                            {field.label}
+                          </Label>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setActiveAIField(activeAIField === field.id ? null : field.id)}
+                              className="text-purple-600 hover:text-purple-700 h-7 px-2"
+                            >
+                              <Sparkles className="w-3 h-3 mr-1" />
+                              AI
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setActiveCollabField(activeCollabField === field.id ? null : field.id)}
+                              className="text-blue-600 hover:text-blue-700 h-7 px-2"
+                            >
+                              <Users className="w-3 h-3 mr-1" />
+                              Collab
+                            </Button>
+                          </div>
+                        </div>
+                        {field.description && (
+                          <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
+                        )}
+                        <Textarea
+                          value={fieldValue}
+                          onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                          placeholder={field.placeholder}
+                          rows={field.rows || 4}
+                          className="w-full border-2 border-slate-300 focus:border-[#E5C089] focus:ring-2 focus:ring-[#E5C089]/20"
+                        />
+                      </div>
+                      {activeAIField === field.id && (
+                        <AIFeedbackPanel
+                          fieldLabel={field.label}
+                          userResponse={fieldValue}
+                          onClose={() => setActiveAIField(null)}
+                        />
                       )}
-                      <Textarea
-                        value={fieldValue}
-                        onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                        placeholder={field.placeholder}
-                        rows={field.rows || 4}
-                        className="w-full border-2 border-slate-300 focus:border-[#E5C089] focus:ring-2 focus:ring-[#E5C089]/20"
-                      />
+                      {activeCollabField === field.id && (
+                        <CollaborationPanel
+                          pageId={page.id}
+                          fieldId={field.id}
+                          responses={responses}
+                        />
+                      )}
                     </div>
                   );
 

@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import AIFeedbackPanel from '@/components/workbook/AIFeedbackPanel';
+import CollaborationPanel from '@/components/workbook/CollaborationPanel';
 import { 
   Save, 
   Download, 
@@ -14,7 +16,9 @@ import {
   CheckCircle2,
   ChevronRight,
   ChevronLeft,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  Users
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import { toast } from 'sonner';
@@ -122,6 +126,8 @@ export default function CaseForSupport() {
   const [currentSection, setCurrentSection] = useState(0);
   const [responses, setResponses] = useState({});
   const [lastSaved, setLastSaved] = useState(null);
+  const [activeAIField, setActiveAIField] = useState(null);
+  const [activeCollabField, setActiveCollabField] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -379,31 +385,74 @@ export default function CaseForSupport() {
               </CardHeader>
               <CardContent className="p-6">
                 <div className="space-y-6">
-                  {currentSectionData.fields.map((field) => (
-                    <div key={field.id}>
-                      <Label htmlFor={field.id} className="text-base font-medium">
-                        {field.label}
-                      </Label>
-                      {field.type === 'textarea' ? (
-                        <Textarea
-                          id={field.id}
-                          rows={field.rows || 4}
-                          placeholder={field.placeholder}
-                          value={responses[currentSectionData.id]?.[field.id] || ''}
-                          onChange={(e) => handleFieldChange(currentSectionData.id, field.id, e.target.value)}
-                          className="mt-2"
-                        />
-                      ) : (
-                        <Input
-                          id={field.id}
-                          placeholder={field.placeholder}
-                          value={responses[currentSectionData.id]?.[field.id] || ''}
-                          onChange={(e) => handleFieldChange(currentSectionData.id, field.id, e.target.value)}
-                          className="mt-2"
-                        />
-                      )}
-                    </div>
-                  ))}
+                  {currentSectionData.fields.map((field) => {
+                    const fieldValue = responses[currentSectionData.id]?.[field.id] || '';
+                    return (
+                      <div key={field.id} className="space-y-3">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <Label htmlFor={field.id} className="text-base font-medium">
+                              {field.label}
+                            </Label>
+                            {field.type === 'textarea' && (
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setActiveAIField(activeAIField === field.id ? null : field.id)}
+                                  className="text-purple-600 hover:text-purple-700 h-8 px-2"
+                                >
+                                  <Sparkles className="w-4 h-4 mr-1" />
+                                  AI Feedback
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setActiveCollabField(activeCollabField === field.id ? null : field.id)}
+                                  className="text-blue-600 hover:text-blue-700 h-8 px-2"
+                                >
+                                  <Users className="w-4 h-4 mr-1" />
+                                  Collaborate
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                          {field.type === 'textarea' ? (
+                            <Textarea
+                              id={field.id}
+                              rows={field.rows || 4}
+                              placeholder={field.placeholder}
+                              value={fieldValue}
+                              onChange={(e) => handleFieldChange(currentSectionData.id, field.id, e.target.value)}
+                              className="mt-2"
+                            />
+                          ) : (
+                            <Input
+                              id={field.id}
+                              placeholder={field.placeholder}
+                              value={fieldValue}
+                              onChange={(e) => handleFieldChange(currentSectionData.id, field.id, e.target.value)}
+                              className="mt-2"
+                            />
+                          )}
+                        </div>
+                        {activeAIField === field.id && (
+                          <AIFeedbackPanel
+                            fieldLabel={field.label}
+                            userResponse={fieldValue}
+                            onClose={() => setActiveAIField(null)}
+                          />
+                        )}
+                        {activeCollabField === field.id && (
+                          <CollaborationPanel
+                            pageId={currentSectionData.id}
+                            fieldId={field.id}
+                            responses={responses[currentSectionData.id] || {}}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Navigation Buttons */}

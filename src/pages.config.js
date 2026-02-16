@@ -61,6 +61,7 @@ import BoutiqueServices from './pages/BoutiqueServices';
 import BrandingSettings from './pages/BrandingSettings';
 import BudgetBuilder from './pages/BudgetBuilder';
 import Calendar from './pages/Calendar';
+import CaseForSupport from './pages/CaseForSupport';
 import Chat from './pages/Chat';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachIntakeAssessment from './pages/CoachIntakeAssessment';
@@ -173,7 +174,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import CaseForSupport from './pages/CaseForSupport';
 import __Layout from './Layout.jsx';
 
 
@@ -192,6 +192,7 @@ export const PAGES = {
     "BrandingSettings": BrandingSettings,
     "BudgetBuilder": BudgetBuilder,
     "Calendar": Calendar,
+    "CaseForSupport": CaseForSupport,
     "Chat": Chat,
     "CoachDashboard": CoachDashboard,
     "CoachIntakeAssessment": CoachIntakeAssessment,
@@ -304,7 +305,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "CaseForSupport": CaseForSupport,
 }
 
 export const pagesConfig = {
