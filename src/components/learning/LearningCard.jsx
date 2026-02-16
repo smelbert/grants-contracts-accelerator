@@ -9,7 +9,8 @@ const TYPE_CONFIG = {
   course: { icon: BookOpen, label: 'Course' },
   webinar: { icon: Video, label: 'Webinar' },
   workshop: { icon: Users, label: 'Workshop' },
-  guide: { icon: FileText, label: 'Guide' },
+  guidebook: { icon: FileText, label: 'Workbook' },
+  mini_workbook: { icon: FileText, label: 'Mini-Workbook' },
   template: { icon: FileText, label: 'Template' },
 };
 
