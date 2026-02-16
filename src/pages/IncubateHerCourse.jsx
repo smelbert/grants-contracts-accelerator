@@ -31,6 +31,8 @@ export default function IncubateHerCourse() {
   const [currentSection, setCurrentSection] = useState(0);
   const [userNotes, setUserNotes] = useState('');
   const [completedSections, setCompletedSections] = useState([]);
+  const [videoProgress, setVideoProgress] = useState({});
+  const [sectionNotes, setSectionNotes] = useState({});
   
   const urlParams = new URLSearchParams(window.location.search);
   const courseId = urlParams.get('id');
@@ -103,8 +105,14 @@ export default function IncubateHerCourse() {
     if (userActivity?.notes) {
       setUserNotes(userActivity.notes);
     }
+    if (userActivity?.section_notes) {
+      setSectionNotes(userActivity.section_notes || {});
+    }
     if (progress?.completed_sections) {
       setCompletedSections(progress.completed_sections);
+    }
+    if (progress?.video_progress) {
+      setVideoProgress(progress.video_progress || {});
     }
   }, [userActivity, progress]);
 
@@ -149,6 +157,51 @@ export default function IncubateHerCourse() {
       toast.success('Notes saved!');
     }
   });
+
+  const saveSectionNotesMutation = useMutation({
+    mutationFn: async ({ sectionIndex, notes }) => {
+      if (!enrollment?.id || !courseId) return;
+      
+      const updatedSectionNotes = { ...sectionNotes, [sectionIndex]: notes };
+      
+      if (userActivity) {
+        await base44.entities.UserActivity.update(userActivity.id, { 
+          section_notes: updatedSectionNotes 
+        });
+      } else {
+        await base44.entities.UserActivity.create({
+          enrollment_id: enrollment.id,
+          content_id: courseId,
+          participant_email: user.email,
+          activity_type: 'notes',
+          section_notes: updatedSectionNotes
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['course-activity']);
+      toast.success('Section notes saved!');
+    }
+  });
+
+  const updateVideoProgress = (sectionIndex, currentTime, duration) => {
+    const updatedProgress = { 
+      ...videoProgress, 
+      [sectionIndex]: { 
+        currentTime, 
+        duration, 
+        percent: Math.round((currentTime / duration) * 100) 
+      } 
+    };
+    setVideoProgress(updatedProgress);
+    
+    // Auto-save progress
+    if (progress) {
+      base44.entities.UserProgress.update(progress.id, { 
+        video_progress: updatedProgress 
+      });
+    }
+  };
 
   const toggleBookmarkMutation = useMutation({
     mutationFn: async () => {
@@ -407,6 +460,52 @@ export default function IncubateHerCourse() {
                     )}
                   </CardHeader>
                   <CardContent className="space-y-6">
+                    {/* Video Player */}
+                    {currentSectionData?.video_url && (
+                      <div className="rounded-lg overflow-hidden shadow-lg" style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}>
+                        <video
+                          key={currentSection}
+                          className="w-full"
+                          controls
+                          onTimeUpdate={(e) => {
+                            const video = e.target;
+                            updateVideoProgress(currentSection, video.currentTime, video.duration);
+                          }}
+                          onLoadedMetadata={(e) => {
+                            const savedProgress = videoProgress[currentSection];
+                            if (savedProgress?.currentTime) {
+                              e.target.currentTime = savedProgress.currentTime;
+                            }
+                          }}
+                        >
+                          <source src={currentSectionData.video_url} />
+                          Your browser does not support video playback.
+                        </video>
+                        {videoProgress[currentSection] && (
+                          <div className="p-2 bg-slate-100 text-xs text-slate-600">
+                            Progress: {videoProgress[currentSection].percent}% • 
+                            {Math.floor(videoProgress[currentSection].currentTime / 60)}:
+                            {Math.floor(videoProgress[currentSection].currentTime % 60).toString().padStart(2, '0')} / 
+                            {Math.floor(videoProgress[currentSection].duration / 60)}:
+                            {Math.floor(videoProgress[currentSection].duration % 60).toString().padStart(2, '0')}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Embedded Presentation */}
+                    {currentSectionData?.presentation_url && (
+                      <div className="rounded-lg overflow-hidden shadow-lg" style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}>
+                        <iframe
+                          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(currentSectionData.presentation_url)}`}
+                          className="w-full"
+                          style={{ height: '600px' }}
+                          allowFullScreen
+                          title="Presentation Viewer"
+                        />
+                      </div>
+                    )}
+
                     {/* Embedded Gamma Presentation */}
                     {course.content_url && (
                       <div className="rounded-lg overflow-hidden shadow-lg" style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}>
@@ -420,6 +519,15 @@ export default function IncubateHerCourse() {
                       </div>
                     )}
 
+                    {/* Embed Code */}
+                    {currentSectionData?.embed_code && (
+                      <div 
+                        className="rounded-lg overflow-hidden shadow-lg" 
+                        style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}
+                        dangerouslySetInnerHTML={{ __html: currentSectionData.embed_code }}
+                      />
+                    )}
+
                     {/* Section Content */}
                     {currentSectionData?.content && (
                       <div 
@@ -428,6 +536,36 @@ export default function IncubateHerCourse() {
                         dangerouslySetInnerHTML={{ __html: currentSectionData.content }}
                       />
                     )}
+
+                    {/* Section Notes */}
+                    <Card style={{ backgroundColor: BRAND_COLORS.neutralLight }}>
+                      <CardHeader>
+                        <CardTitle className="text-base flex items-center gap-2" style={{ color: BRAND_COLORS.culRed }}>
+                          <MessageSquare className="w-4 h-4" />
+                          Notes for This Section
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <Textarea
+                          value={sectionNotes[currentSection] || ''}
+                          onChange={(e) => setSectionNotes({ ...sectionNotes, [currentSection]: e.target.value })}
+                          placeholder="Take notes specific to this section..."
+                          rows={4}
+                          className="w-full mb-2"
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => saveSectionNotesMutation.mutate({ 
+                            sectionIndex: currentSection, 
+                            notes: sectionNotes[currentSection] || '' 
+                          })}
+                          disabled={saveSectionNotesMutation.isPending}
+                          style={{ backgroundColor: BRAND_COLORS.eisNavy, color: 'white' }}
+                        >
+                          {saveSectionNotesMutation.isPending ? 'Saving...' : 'Save Section Notes'}
+                        </Button>
+                      </CardContent>
+                    </Card>
 
                     {/* Mark Complete */}
                     <div className="flex items-center justify-between pt-6 border-t">
@@ -516,26 +654,57 @@ export default function IncubateHerCourse() {
                   <CardContent className="space-y-3">
                     {course.handouts && course.handouts.length > 0 ? (
                       course.handouts.map((handout, idx) => (
-                        <a
+                        <div
                           key={idx}
-                          href={handout.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between p-4 rounded-lg hover:shadow-md transition-shadow"
+                          className="p-4 rounded-lg border"
                           style={{ backgroundColor: BRAND_COLORS.neutralLight }}
                         >
-                          <div>
-                            <h4 className="font-medium mb-1" style={{ color: BRAND_COLORS.neutralDark }}>
-                              {handout.title}
-                            </h4>
-                            {handout.description && (
-                              <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                {handout.description}
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1">
+                              <h4 className="font-medium mb-1" style={{ color: BRAND_COLORS.neutralDark }}>
+                                {handout.title}
+                              </h4>
+                              {handout.description && (
+                                <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                                  {handout.description}
+                                </p>
+                              )}
+                              <p className="text-xs mt-1" style={{ color: BRAND_COLORS.eisNavy }}>
+                                Type: {handout.file_type || 'PDF'}
                               </p>
-                            )}
+                            </div>
                           </div>
-                          <Download className="w-5 h-5 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
-                        </a>
+                          <div className="flex gap-2">
+                            <a
+                              href={handout.file_url}
+                              download
+                              className="flex-1"
+                            >
+                              <Button
+                                size="sm"
+                                className="w-full"
+                                style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}
+                              >
+                                <Download className="w-4 h-4 mr-2" />
+                                Download
+                              </Button>
+                            </a>
+                            <a
+                              href={handout.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1"
+                            >
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="w-full"
+                              >
+                                View in Browser
+                              </Button>
+                            </a>
+                          </div>
+                        </div>
                       ))
                     ) : (
                       <p style={{ color: BRAND_COLORS.eisNavy }}>No downloadable resources for this course yet.</p>

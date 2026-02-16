@@ -153,6 +153,7 @@ import Register from './pages/Register';
 import RegistrationBuilder from './pages/RegistrationBuilder';
 import RegistrationFlow from './pages/RegistrationFlow';
 import RegistrationManagement from './pages/RegistrationManagement';
+import ResourceLibrary from './pages/ResourceLibrary';
 import ReviewQueue from './pages/ReviewQueue';
 import RoleManagement from './pages/RoleManagement';
 import SaaSAdminDashboard from './pages/SaaSAdminDashboard';
@@ -172,7 +173,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import ResourceLibrary from './pages/ResourceLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -283,6 +283,7 @@ export const PAGES = {
     "RegistrationBuilder": RegistrationBuilder,
     "RegistrationFlow": RegistrationFlow,
     "RegistrationManagement": RegistrationManagement,
+    "ResourceLibrary": ResourceLibrary,
     "ReviewQueue": ReviewQueue,
     "RoleManagement": RoleManagement,
     "SaaSAdminDashboard": SaaSAdminDashboard,
@@ -302,7 +303,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "ResourceLibrary": ResourceLibrary,
 }
 
 export const pagesConfig = {
