@@ -1062,6 +1062,386 @@ export const WORKBOOK_PAGES = [
         placeholder: 'Write your thoughts here...'
       }
     ]
+  },
+
+  // ADDENDUM: GRANT READINESS TOOLKIT
+  {
+    id: 'toolkit_intro',
+    section: 'addendum',
+    title: 'Grant Readiness Toolkit',
+    subtitle: 'A practical tool to help nonprofits decide whether to apply for grants',
+    type: 'handout',
+    content: `
+      <h3 class="font-semibold mb-2 text-sm">How to Use This Toolkit</h3>
+      <p class="mb-3 text-sm">This document is designed to help you answer three key questions:</p>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li>Evaluate whether a grant is a strong fit for your organization</li>
+        <li>Reflect honestly on readiness and capacity</li>
+        <li>Decide whether to apply, wait, or skip — before investing time in writing</li>
+      </ul>
+      
+      <p class="mb-3 text-sm">To get the full use out of this toolkit, for each grant opportunity work through this toolkit in order, making sure you start with the <strong>Grant Opportunity Overview</strong>, <strong>Grant Readiness Checklist</strong>, then complete the <strong>Scorecard</strong>, and finish with the <strong>Decision Matrix</strong> for individual funders.</p>
+      
+      <p class="mb-3 text-sm">This process should take 30–45 minutes and can save dozens of hours in avoided misaligned applications. Regardless of your decision, save a completed copy of this toolkit for each grant opportunity so you can reference it if you come across the same (or similar) grant opportunity in the future.</p>
+      
+      <div class="p-3 bg-amber-50 border border-amber-200 rounded text-sm">
+        <strong>In other words, use this toolkit to help you work smarter, not harder!</strong>
+      </div>
+      
+      <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+        <strong>BONUS TIP:</strong> If you are meeting with other colleagues to decide if you will apply for a grant (which is highly recommended to include program, finance, and other leadership colleagues!), fill out the first 2 sections and share in advance to save time and focus your meeting on discussion, rather than research.
+      </div>
+    `
+  },
+  {
+    id: 'toolkit_overview',
+    section: 'addendum',
+    title: 'Grant Opportunity Overview',
+    type: 'worksheet',
+    content: `
+      <p class="mb-3 text-sm">Complete this section first to ground your assessment.</p>
+    `,
+    fields: [
+      {
+        id: 'funder_name',
+        type: 'input',
+        label: 'Funder Name'
+      },
+      {
+        id: 'grant_name',
+        type: 'input',
+        label: 'Grant Name'
+      },
+      {
+        id: 'deadline',
+        type: 'input',
+        label: 'Deadline'
+      },
+      {
+        id: 'typical_award',
+        type: 'input',
+        label: 'Typical Award Amount'
+      },
+      {
+        id: 'grant_duration',
+        type: 'input',
+        label: 'Grant Duration'
+      },
+      {
+        id: 'reporting_requirements',
+        type: 'textarea',
+        label: 'Reporting Requirements',
+        rows: 3
+      },
+      {
+        id: 'website_rfp_link',
+        type: 'input',
+        label: 'Website / RFP Link'
+      }
+    ]
+  },
+  {
+    id: 'toolkit_checklist',
+    section: 'addendum',
+    title: 'Grant Readiness Checklist',
+    type: 'worksheet',
+    content: `
+      <p class="mb-3 text-sm">Answer the following questions honestly in the context of this specific grant, not grants in general. For each statement below, mark <strong>1) Yes</strong>, <strong>2) Somewhat</strong>, <strong>3) No</strong></p>
+    `,
+    fields: [
+      {
+        id: 'mission_fit_1',
+        type: 'radio',
+        label: "This funder's priorities clearly align with our mission",
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'mission_fit_2',
+        type: 'radio',
+        label: 'The funded activities match our existing programs',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'mission_fit_3',
+        type: 'radio',
+        label: "We can clearly articulate how our work advances the funder's stated goals",
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'mission_fit_4',
+        type: 'radio',
+        label: 'We meet all stated eligibility requirements',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'program_strength_1',
+        type: 'radio',
+        label: 'We can clearly describe the program this grant would support',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'program_strength_2',
+        type: 'radio',
+        label: 'The program has defined goals and outcomes',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'program_strength_3',
+        type: 'radio',
+        label: 'We can provide data, stories, or evidence of impact',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'program_strength_4',
+        type: 'radio',
+        label: 'The program is already underway or well-developed',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'financial_fit_1',
+        type: 'radio',
+        label: "The grant amount is appropriate for our organization's size",
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'financial_fit_2',
+        type: 'radio',
+        label: 'We can realistically manage the funds if awarded',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'financial_fit_3',
+        type: 'radio',
+        label: 'We can meet any match or cost-share requirements',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'financial_fit_4',
+        type: 'radio',
+        label: 'The grant does not create financial strain or dependency',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'capacity_1',
+        type: 'radio',
+        label: 'We have the staff or volunteer capacity to apply on time',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'capacity_2',
+        type: 'radio',
+        label: "We can meet the grant's administrative requirements",
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'capacity_3',
+        type: 'radio',
+        label: 'We can complete reporting requirements if awarded',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      },
+      {
+        id: 'capacity_4',
+        type: 'radio',
+        label: 'This application does not crowd out higher-priority work',
+        options: [
+          { value: 'yes', label: 'Yes (2 points)' },
+          { value: 'somewhat', label: 'Somewhat (1 point)' },
+          { value: 'no', label: 'No (0 points)' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'toolkit_scorecard',
+    section: 'addendum',
+    title: 'Grant Opportunity Scorecard',
+    type: 'worksheet',
+    content: `
+      <p class="mb-3 text-sm">Now we're going to turn your checklist responses into a clearer picture of the fit of this opportunity for your organization. To score, go back to the Grant Readiness Checklist and score each answer. For each statement, score according to the following points, then total each category below:</p>
+      
+      <div class="p-2 bg-slate-100 rounded mb-3 text-sm">
+        <strong>Scoring Guide:</strong><br />
+        2 points = Yes<br />
+        1 point = Somewhat<br />
+        0 points = No
+      </div>
+      
+      <h3 class="font-semibold mb-2 text-sm">Score Interpretation</h3>
+      <ul class="list-disc ml-6 mb-3 text-sm space-y-1">
+        <li><strong>26–32:</strong> Strong fit — move forward with confidence</li>
+        <li><strong>18–25:</strong> Moderate fit — proceed only if capacity allows</li>
+        <li><strong>0–17:</strong> Weak fit — do not apply at this time</li>
+      </ul>
+      
+      <div class="p-2 bg-amber-50 rounded text-sm">
+        Use this score as guidance, not a rule. A high score does not guarantee funding, but a low score almost always predicts wasted effort. Make sure to discuss this interpretation with other colleagues as well.
+      </div>
+    `,
+    fields: [
+      {
+        id: 'mission_score',
+        type: 'input',
+        label: 'Mission & Program Fit Score (out of 8)',
+        placeholder: '__ / 8'
+      },
+      {
+        id: 'program_score',
+        type: 'input',
+        label: 'Program Strength & Evidence Score (out of 8)',
+        placeholder: '__ / 8'
+      },
+      {
+        id: 'financial_score',
+        type: 'input',
+        label: 'Financial Fit Score (out of 8)',
+        placeholder: '__ / 8'
+      },
+      {
+        id: 'capacity_score',
+        type: 'input',
+        label: 'Organizational Capacity Score (out of 8)',
+        placeholder: '__ / 8'
+      },
+      {
+        id: 'total_score',
+        type: 'input',
+        label: 'TOTAL SCORE (out of 32)',
+        placeholder: '__ / 32'
+      }
+    ]
+  },
+  {
+    id: 'toolkit_decision',
+    section: 'addendum',
+    title: 'Grant Decision Matrix (Apply / Wait / Skip)',
+    type: 'worksheet',
+    content: `
+      <p class="mb-3 text-sm">Now, review the results from the Grant Readiness Scorecard. The score should only be used as a guideline — all grants should be discussed with other colleagues (programs, finance, development, etc.) to ensure consensus and confidence moving forward in any decision you make. Make sure to take notes of any discussion for reference later!</p>
+      
+      <h3 class="font-semibold mb-2 text-sm">Discussion Questions:</h3>
+      <ul class="list-disc ml-6 mb-3 text-xs space-y-1">
+        <li>Does pursuing this grant clearly advance our mission and top priorities right now — or would it pull us off course?</li>
+        <li>Do we have an existing relationship, warm connection, or realistic pathway to one with this funder before applying — knowing that most grants are awarded to organizations the funder already knows and trusts?</li>
+        <li>If we say yes to this grant, what are we implicitly saying no to over the next 4–8 weeks?</li>
+        <li>Can we realistically submit a strong, competitive application, not just a completed one?</li>
+      </ul>
+    `,
+    fields: [
+      {
+        id: 'final_decision',
+        type: 'radio',
+        label: 'Final Decision',
+        options: [
+          { value: 'apply', label: 'APPLY: Strong alignment, realistic capacity, and clear value' },
+          { value: 'wait', label: 'WAIT: Good opportunity, but timing or readiness needs improvement' },
+          { value: 'skip', label: 'SKIP: Poor fit or low return on time invested' }
+        ]
+      },
+      {
+        id: 'decision_notes',
+        type: 'textarea',
+        label: 'Notes & Rationale - Why did we make this decision?',
+        rows: 4
+      },
+      {
+        id: 'future_changes',
+        type: 'textarea',
+        label: 'What would need to change for us to apply in the future?',
+        rows: 3
+      },
+      {
+        id: 'revisit_timing',
+        type: 'textarea',
+        label: 'When (if ever) should we revisit this opportunity?',
+        rows: 2
+      }
+    ]
+  },
+  {
+    id: 'toolkit_followup',
+    section: 'addendum',
+    title: 'Follow-Up Actions',
+    type: 'worksheet',
+    fields: [
+      {
+        id: 'add_to_tracker',
+        type: 'checkbox',
+        label: 'Add this funder to your grant tracker',
+        options: [{ value: 'done', label: 'Completed' }]
+      },
+      {
+        id: 'schedule_checkin',
+        type: 'input',
+        label: 'Schedule a future check-in date (if waiting)',
+        placeholder: 'MM/DD/YYYY'
+      },
+      {
+        id: 'capacity_building',
+        type: 'textarea',
+        label: 'Identify capacity-building steps needed to improve readiness',
+        rows: 4
+      }
+    ]
   }
 ];
 
