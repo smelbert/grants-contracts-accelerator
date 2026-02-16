@@ -116,6 +116,7 @@ import IncubateHerWorkbook from './pages/IncubateHerWorkbook';
 import IncubateHerWorkbookEditor from './pages/IncubateHerWorkbookEditor';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
+import LearningContentManagement from './pages/LearningContentManagement';
 import LearningHubAccess from './pages/LearningHubAccess';
 import LearningModule from './pages/LearningModule';
 import LearningProgress from './pages/LearningProgress';
@@ -171,7 +172,7 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import LearningContentManagement from './pages/LearningContentManagement';
+import ResourceLibrary from './pages/ResourceLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -245,6 +246,7 @@ export const PAGES = {
     "IncubateHerWorkbookEditor": IncubateHerWorkbookEditor,
     "Landing": Landing,
     "Learning": Learning,
+    "LearningContentManagement": LearningContentManagement,
     "LearningHubAccess": LearningHubAccess,
     "LearningModule": LearningModule,
     "LearningProgress": LearningProgress,
@@ -300,7 +302,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "LearningContentManagement": LearningContentManagement,
+    "ResourceLibrary": ResourceLibrary,
 }
 
 export const pagesConfig = {
