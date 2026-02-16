@@ -48,7 +48,6 @@ export default function IncubateHerWorkbook() {
     enabled: !!user?.email && !!cohort?.id
   });
 
-  // Load assessment results for personalized guidance
   const { data: assessmentResults } = useQuery({
     queryKey: ['assessment-results', enrollment?.id],
     queryFn: async () => {
@@ -62,7 +61,6 @@ export default function IncubateHerWorkbook() {
     enabled: !!enrollment?.id
   });
 
-  // Load saved responses
   const { data: savedResponses } = useQuery({
     queryKey: ['workbook-responses', enrollment?.id],
     queryFn: async () => {
@@ -74,13 +72,11 @@ export default function IncubateHerWorkbook() {
     enabled: !!enrollment?.id
   });
 
-  // Load custom page content from admin editor
   const { data: customPages = [] } = useQuery({
     queryKey: ['workbook-custom-pages'],
     queryFn: () => base44.entities.WorkbookPageContent.list(),
   });
 
-  // Real-time subscription for custom content updates
   useEffect(() => {
     const unsubscribe = base44.entities.WorkbookPageContent.subscribe(() => {
       queryClient.invalidateQueries({ queryKey: ['workbook-custom-pages'] });
@@ -88,7 +84,6 @@ export default function IncubateHerWorkbook() {
     return unsubscribe;
   }, [queryClient]);
 
-  // Initialize responses from saved data
   useEffect(() => {
     if (savedResponses) {
       const responsesMap = {};
@@ -153,23 +148,21 @@ export default function IncubateHerWorkbook() {
   };
 
   const handleDownloadPDF = async () => {
-    const doc = new jsPDF('p', 'mm', 'letter'); // Standard 8.5" x 11"
-    const pageWidth = 216; // 8.5 inches in mm
-    const pageHeight = 279; // 11 inches in mm
+    const doc = new jsPDF('p', 'mm', 'letter');
+    const pageWidth = 216;
+    const pageHeight = 279;
     const margin = 20;
     let pageCount = 1;
 
-    // Helper function to add header
     const addHeader = (pageNum) => {
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
       doc.text('IncubateHer Funding Readiness Workbook', margin, 10);
       doc.text(`Page ${pageNum}`, pageWidth - margin, 10, { align: 'right' });
-      doc.setDrawColor(229, 192, 137); // EIS Gold
+      doc.setDrawColor(229, 192, 137);
       doc.line(margin, 12, pageWidth - margin, 12);
     };
 
-    // Helper function to add footer
     const addFooter = (pageNum) => {
       doc.setDrawColor(229, 192, 137);
       doc.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
@@ -178,9 +171,8 @@ export default function IncubateHerWorkbook() {
       doc.text('Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions', pageWidth / 2, pageHeight - 10, { align: 'center' });
     };
 
-    // Cover page
     doc.setFontSize(28);
-    doc.setTextColor(20, 58, 80); // EIS Navy
+    doc.setTextColor(20, 58, 80);
     doc.text('IncubateHer', pageWidth / 2, 60, { align: 'center' });
     doc.setFontSize(20);
     doc.text('Funding Readiness Workbook', pageWidth / 2, 75, { align: 'center' });
@@ -197,9 +189,7 @@ export default function IncubateHerWorkbook() {
     
     addFooter(pageCount);
     
-    // Process each page
     WORKBOOK_PAGES.forEach((page) => {
-      // Get custom content if available
       const customPage = customPages.find(p => p.page_id === page.id);
       const displayContent = customPage?.content || page.content;
       
@@ -210,13 +200,11 @@ export default function IncubateHerWorkbook() {
       addHeader(pageCount);
       yPos = 20;
       
-      // Section header
       doc.setFontSize(10);
       doc.setTextColor(100, 100, 100);
       doc.text(page.section, margin, yPos);
       yPos += 8;
       
-      // Page title
       doc.setFontSize(16);
       doc.setTextColor(20, 58, 80);
       const titleLines = doc.splitTextToSize(page.title, pageWidth - 2 * margin);
@@ -226,7 +214,6 @@ export default function IncubateHerWorkbook() {
       });
       yPos += 5;
       
-      // Add content if exists (strip HTML tags for PDF)
       if (displayContent) {
         doc.setFontSize(9);
         doc.setTextColor(60, 60, 60);
@@ -248,7 +235,6 @@ export default function IncubateHerWorkbook() {
         }
       }
       
-      // Add responses if this is a worksheet
       if (page.fields && allResponses[page.id]) {
         doc.setFontSize(10);
         page.fields.forEach(field => {
@@ -335,140 +321,136 @@ export default function IncubateHerWorkbook() {
 
       <div className="max-w-7xl mx-auto py-8 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Progress Tracker Sidebar */}
-        <div className="lg:col-span-1 hidden lg:block">
-          <div className="sticky top-4">
-            <WorkbookProgressTracker
-              responses={allResponses}
-              currentPageId={currentPage.id}
-              onPageSelect={(pageId) => {
-                const idx = WORKBOOK_PAGES.findIndex(p => p.id === pageId);
-                if (idx >= 0) goToPage(idx);
-              }}
-            />
+          <div className="lg:col-span-1 hidden lg:block">
+            <div className="sticky top-4">
+              <WorkbookProgressTracker
+                responses={allResponses}
+                currentPageId={currentPage.id}
+                onPageSelect={(pageId) => {
+                  const idx = WORKBOOK_PAGES.findIndex(p => p.id === pageId);
+                  if (idx >= 0) goToPage(idx);
+                }}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-6">
-        {/* Controls */}
-        <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#E5C089]">
-          <CardContent className="py-4">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => goToPage(currentPageIndex - 1)}
-                  disabled={currentPageIndex === 0}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                
-                <Select
-                  value={currentPageIndex.toString()}
-                  onValueChange={(val) => goToPage(parseInt(val))}
-                >
-                  <SelectTrigger className="w-80">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sections.map((section) => (
-                      <div key={section.id}>
-                        <div className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase">
-                          {section.name}
-                        </div>
-                        {section.pages.map((page) => {
-                          const idx = WORKBOOK_PAGES.findIndex(p => p.id === page.id);
-                          return (
-                            <SelectItem key={page.id} value={idx.toString()}>
-                              {page.title}
-                            </SelectItem>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <div className="lg:col-span-3 space-y-6">
+            <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#E5C089]">
+              <CardContent className="py-4">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => goToPage(currentPageIndex - 1)}
+                      disabled={currentPageIndex === 0}
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    
+                    <Select
+                      value={currentPageIndex.toString()}
+                      onValueChange={(val) => goToPage(parseInt(val))}
+                    >
+                      <SelectTrigger className="w-80">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map((section) => (
+                          <div key={section.id}>
+                            <div className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase">
+                              {section.name}
+                            </div>
+                            {section.pages.map((page) => {
+                              const idx = WORKBOOK_PAGES.findIndex(p => p.id === page.id);
+                              return (
+                                <SelectItem key={page.id} value={idx.toString()}>
+                                  {page.title}
+                                </SelectItem>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => goToPage(currentPageIndex + 1)}
-                  disabled={currentPageIndex === WORKBOOK_PAGES.length - 1}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => goToPage(currentPageIndex + 1)}
+                      disabled={currentPageIndex === WORKBOOK_PAGES.length - 1}
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
 
-              <div className="flex items-center gap-2">
-                {lastSaved && (
-                  <span className="text-xs text-slate-600 flex items-center gap-1">
-                    <Check className="w-3 h-3 text-green-600" />
-                    Saved {lastSaved.toLocaleTimeString()}
-                  </span>
-                )}
-                
-                {currentPage.fields && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="bg-white"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Progress
-                  </Button>
-                )}
+                  <div className="flex items-center gap-2">
+                    {lastSaved && (
+                      <span className="text-xs text-slate-600 flex items-center gap-1">
+                        <Check className="w-3 h-3 text-green-600" />
+                        Saved {lastSaved.toLocaleTimeString()}
+                      </span>
+                    )}
+                    
+                    {currentPage.fields && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="bg-white"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Progress
+                      </Button>
+                    )}
 
-                <Button
-                  size="sm"
-                  onClick={handleDownloadPDF}
-                  className="bg-[#143A50]"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PDF
-                </Button>
-              </div>
+                    <Button
+                      size="sm"
+                      onClick={handleDownloadPDF}
+                      className="bg-[#143A50]"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download PDF
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
+                  <span>Page {currentPageIndex + 1} of {WORKBOOK_PAGES.length}</span>
+                  <span>•</span>
+                  <span>{Math.round(((currentPageIndex + 1) / WORKBOOK_PAGES.length) * 100)}% Complete</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <WorkbookPage
+              page={currentPage}
+              responses={allResponses[currentPage.id] || {}}
+              onResponseChange={handleResponseChange}
+              assessmentResults={assessmentResults}
+              customContent={customPages.find(p => p.page_id === currentPage.id)}
+            />
+
+            <div className="flex justify-between items-center mt-6">
+              <Button
+                variant="outline"
+                onClick={() => goToPage(currentPageIndex - 1)}
+                disabled={currentPageIndex === 0}
+              >
+                <ChevronLeft className="w-4 h-4 mr-2" />
+                Previous
+              </Button>
+              
+              <Button
+                onClick={() => goToPage(currentPageIndex + 1)}
+                disabled={currentPageIndex === WORKBOOK_PAGES.length - 1}
+                className="bg-[#143A50]"
+              >
+                Next
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </Button>
             </div>
-
-            <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
-              <span>Page {currentPageIndex + 1} of {WORKBOOK_PAGES.length}</span>
-              <span>•</span>
-              <span>{Math.round(((currentPageIndex + 1) / WORKBOOK_PAGES.length) * 100)}% Complete</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Page Content - No Card Wrapper */}
-        <WorkbookPage
-          page={currentPage}
-          responses={allResponses[currentPage.id] || {}}
-          onResponseChange={handleResponseChange}
-          assessmentResults={assessmentResults}
-          customContent={customPages.find(p => p.page_id === currentPage.id)}
-        />
-
-        {/* Navigation Footer */}
-        <div className="flex justify-between items-center mt-6">
-          <Button
-            variant="outline"
-            onClick={() => goToPage(currentPageIndex - 1)}
-            disabled={currentPageIndex === 0}
-          >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Previous
-          </Button>
-          
-          <Button
-            onClick={() => goToPage(currentPageIndex + 1)}
-            disabled={currentPageIndex === WORKBOOK_PAGES.length - 1}
-            className="bg-[#143A50]"
-          >
-            Next
-            <ChevronRight className="w-4 h-4 ml-2" />
-          </Button>
           </div>
         </div>
       </div>
