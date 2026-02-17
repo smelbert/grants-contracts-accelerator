@@ -129,109 +129,145 @@ export default function IncubateHerAgenda() {
     });
   };
 
-  const agendaSections = [
+  const sessionDays = [
     {
-      id: 'intro',
-      title: 'Introduction & Orientation',
-      duration: '45 minutes',
-      topics: [
-        'Welcome and program overview',
-        'Understanding grants vs. contracts',
-        'Success metrics and completion requirements',
-        'Tour of the workbook and resources'
-      ],
-      facilitatorNotes: 'Emphasize the difference between grants and contracts early. Use the visual comparison chart.'
+      date: 'Monday – March 2',
+      time: '5:30–7:30 PM (Virtual – Google Meet)',
+      totalMinutes: 120,
+      sections: [
+        {
+          id: 'intro',
+          title: 'Program Orientation & Funding Foundations',
+          duration: '30 minutes',
+          topics: [
+            'Welcome & expectations',
+            'Completion requirements',
+            'Consultation cap explanation',
+            'Overview of grants, proposals, and contracts',
+            'Understanding funding landscapes for early-stage vs. growth-phase businesses'
+          ],
+          facilitatorNotes: 'Set clear expectations early. Explain the consultation process and cap.'
+        },
+        {
+          id: 'legal',
+          title: 'Legal Structure & Organizational Compliance',
+          duration: '45 minutes',
+          topics: [
+            'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
+            'Formation vs. readiness',
+            'Required documentation basics',
+            'Insurance, governance (if applicable), compliance realities',
+            'Common structural mistakes'
+          ],
+          facilitatorNotes: 'Many participants struggle with structural requirements. Clarify LLC vs nonprofit eligibility.'
+        },
+        {
+          id: 'intro',
+          title: 'Funding Readiness Reality Check',
+          duration: '45 minutes',
+          topics: [
+            'What "ready" actually means',
+            'Assessing documentation gaps',
+            'Capacity alignment',
+            'When NOT to pursue funding',
+            'Pre-assessment reflection'
+          ],
+          facilitatorNotes: 'Help participants self-assess realistically. Some may not be ready yet - that\'s okay.'
+        }
+      ]
     },
     {
-      id: 'legal',
-      title: 'Legal & Organizational Readiness',
-      duration: '90 minutes',
-      topics: [
-        'Required documentation checklist',
-        'Nonprofit status and compliance',
-        'Board governance requirements',
-        'Insurance and liability considerations',
-        'Record-keeping best practices'
-      ],
-      facilitatorNotes: 'Many participants struggle with governance. Have the board assessment tool ready.'
+      date: 'Thursday – March 5',
+      time: '5:30–7:30 PM (Virtual – Google Meet)',
+      totalMinutes: 120,
+      sections: [
+        {
+          id: 'financial',
+          title: 'Financial Management & Budget Development',
+          duration: '60 minutes',
+          topics: [
+            'Basic financial systems for entrepreneurs',
+            'Budget building fundamentals',
+            'Revenue vs. reimbursement',
+            'Indirect costs (simple explanation)',
+            'Cash flow awareness',
+            'Common financial red flags'
+          ],
+          facilitatorNotes: 'Use the budget template during this session. Walk through a sample budget line by line.'
+        },
+        {
+          id: 'grants',
+          title: 'Grants, Proposals & RFP Fundamentals',
+          duration: '60 minutes',
+          topics: [
+            'How to find opportunities',
+            'Reading guidelines correctly',
+            'Grants vs. competitive proposals',
+            'RFP structure overview',
+            'Deliverables vs. outcomes',
+            'Avoiding common application mistakes'
+          ],
+          facilitatorNotes: 'Clarify the difference between grants and contracts. Show real examples.'
+        }
+      ]
     },
     {
-      id: 'financial',
-      title: 'Financial Management & Budgeting',
-      duration: '90 minutes',
-      topics: [
-        'Financial systems and controls',
-        'Budget development for proposals',
-        'Indirect cost rates explained',
-        'Cash flow and fund accounting',
-        'Audit readiness'
-      ],
-      facilitatorNotes: 'Use the budget template during this session. Walk through a sample budget line by line.'
-    },
-    {
-      id: 'grants',
-      title: 'Grant Writing Fundamentals',
-      duration: '120 minutes',
-      topics: [
-        'Finding the right opportunities',
-        'Reading and responding to guidelines',
-        'Narrative development strategies',
-        'Logic models and outcomes',
-        'Common pitfalls and how to avoid them'
-      ],
-      facilitatorNotes: 'Participants often underestimate timeline. Stress the 6-8 week preparation period.'
-    },
-    {
-      id: 'contracts',
-      title: 'RFPs and Contract Proposals',
-      duration: '120 minutes',
-      topics: [
-        'Understanding RFP requirements',
-        'Competitive vs. collaborative proposals',
-        'Pricing and cost structure',
-        'Past performance documentation',
-        'Proposal compliance checklist',
-        'Contract negotiation basics'
-      ],
-      facilitatorNotes: 'Emphasize the binding nature of contracts vs. grants. Use real RFP examples.'
-    },
-    {
-      id: 'strategy',
-      title: 'Funding Strategy & Sustainability',
-      duration: '60 minutes',
-      topics: [
-        'Building a diversified funding portfolio',
-        'Grant lifecycle management',
-        'Relationship-building with funders',
-        'Reporting and stewardship',
-        'Long-term sustainability planning'
-      ],
-      facilitatorNotes: 'Connect back to their individual goals from pre-assessment.'
-    },
-    {
-      id: 'consultation',
-      title: 'One-on-One Consultations',
-      duration: 'Scheduled individually',
-      topics: [
-        'Personalized readiness assessment',
-        'Document review and feedback',
-        'Next steps and action planning',
-        'Q&A specific to your organization'
-      ],
-      facilitatorNotes: 'Review pre-assessment scores before each consultation. Have checklist ready.'
-    },
-    {
-      id: 'wrap',
-      title: 'Wrap-Up & Next Steps',
-      duration: '45 minutes',
-      topics: [
-        'Post-assessment completion',
-        'Certificate of completion',
-        'Ongoing support resources',
-        'Giveaway announcement (if applicable)',
-        'Alumni network information'
-      ],
-      facilitatorNotes: 'Ensure all participants have completed post-assessment before revealing giveaway eligibility.'
+      date: 'Saturday – March 7',
+      time: '9:00 AM–12:00 PM (In Person)',
+      location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
+      totalMinutes: 180,
+      sections: [
+        {
+          id: 'grants',
+          title: 'Deep Dive: Grant Writing Fundamentals',
+          duration: '60 minutes',
+          topics: [
+            'Narrative components',
+            'Problem statements',
+            'Goals & measurable outcomes',
+            'Logic model basics (simple)',
+            'Alignment language'
+          ],
+          facilitatorNotes: 'Participants often underestimate timeline. Stress the 6-8 week preparation period.'
+        },
+        {
+          id: 'contracts',
+          title: 'RFPs & Contract Proposals in Practice',
+          duration: '45 minutes',
+          topics: [
+            'Competitive positioning',
+            'Pricing considerations',
+            'Capability statements',
+            'Past performance documentation',
+            'Evaluating bid feasibility'
+          ],
+          facilitatorNotes: 'Emphasize the binding nature of contracts vs. grants. Use real RFP examples.'
+        },
+        {
+          id: 'strategy',
+          title: 'Funding Strategy & Long-Term Sustainability',
+          duration: '30 minutes',
+          topics: [
+            'Diversified funding portfolio',
+            'Contracts vs. grants in growth strategy',
+            'Relationship building',
+            'Grant lifecycle awareness'
+          ],
+          facilitatorNotes: 'Connect back to their individual goals from pre-assessment.'
+        },
+        {
+          id: 'consultation',
+          title: 'Consultation Preparation Lab',
+          duration: '30 minutes',
+          topics: [
+            'What to bring to your 1:1',
+            'Document checklist',
+            'How to maximize advisory time',
+            'Booking instructions'
+          ],
+          facilitatorNotes: 'Provide consultation booking link. Clarify expectations and preparation requirements.'
+        }
+      ]
     }
   ];
 
@@ -247,40 +283,89 @@ export default function IncubateHerAgenda() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-[#143A50]" />
-              Important Note
+              Program Schedule Overview
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-700">
-              <strong>No Wednesday sessions.</strong> All sessions are scheduled on alternate days to accommodate participant availability.
+            <p className="text-slate-700 mb-4">
+              The IncubateHer program is structured across three sessions with a total of 7 hours of instruction plus individual consultations.
             </p>
+            <div className="space-y-2">
+              {sessionDays.map((day, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <Badge className="bg-[#143A50] mt-1">{idx + 1}</Badge>
+                  <div>
+                    <p className="font-medium text-slate-900">{day.date}</p>
+                    <p className="text-sm text-slate-600">{day.time}</p>
+                    {day.location && (
+                      <p className="text-sm text-slate-600 flex items-center gap-1 mt-1">
+                        <MapPin className="w-3 h-3" />
+                        {day.location}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        {agendaSections.map((section) => (
-          <Card key={section.id} className="overflow-hidden">
-            <CardHeader 
-              className="cursor-pointer hover:bg-slate-50 transition-colors"
-              onClick={() => toggleSection(section.id)}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {expandedSections[section.id] ? (
-                    <ChevronDown className="w-5 h-5 text-[#143A50]" />
-                  ) : (
-                    <ChevronRight className="w-5 h-5 text-[#143A50]" />
-                  )}
+        {sessionDays.map((day, dayIdx) => (
+          <div key={dayIdx} className="space-y-4">
+            <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
+              <CardHeader>
+                <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-lg">{section.title}</CardTitle>
-                    <Badge variant="outline" className="mt-1">
-                      {section.duration}
-                    </Badge>
+                    <CardTitle className="text-2xl mb-1">{day.date}</CardTitle>
+                    <div className="flex items-center gap-3 text-white/90">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {day.time}
+                      </span>
+                      {day.location && (
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          {day.location}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  <Badge className="bg-white text-[#143A50]">
+                    {day.totalMinutes} minutes
+                  </Badge>
                 </div>
-              </div>
-            </CardHeader>
+              </CardHeader>
+            </Card>
 
-            {expandedSections[section.id] && (
+            {day.sections.map((section, sectionIdx) => (
+              <Card key={`${dayIdx}-${sectionIdx}`} className="overflow-hidden ml-4">
+                <CardHeader 
+                  className="cursor-pointer hover:bg-slate-50 transition-colors"
+                  onClick={() => toggleSection(`${dayIdx}-${section.id}-${sectionIdx}`)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {expandedSections[`${dayIdx}-${section.id}-${sectionIdx}`] ? (
+                        <ChevronDown className="w-5 h-5 text-[#143A50]" />
+                      ) : (
+                        <ChevronRight className="w-5 h-5 text-[#143A50]" />
+                      )}
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Badge className="bg-[#E5C089] text-[#143A50]">
+                            {sectionIdx + 1}
+                          </Badge>
+                          <CardTitle className="text-lg">{section.title}</CardTitle>
+                        </div>
+                        <Badge variant="outline" className="mt-1">
+                          {section.duration}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                {expandedSections[`${dayIdx}-${section.id}-${sectionIdx}`] && (
               <CardContent className="space-y-4">
                 <div>
                   <h4 className="font-semibold text-slate-700 mb-2">Topics Covered:</h4>
@@ -370,9 +455,11 @@ export default function IncubateHerAgenda() {
                     <p className="text-amber-800 text-sm">{section.facilitatorNotes}</p>
                   </div>
                 )}
-              </CardContent>
-            )}
-          </Card>
+                </CardContent>
+              )}
+              </Card>
+            ))}
+          </div>
         ))}
       </div>
 
