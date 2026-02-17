@@ -19,39 +19,52 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function IncubateHerRegistration() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Personal Information
+    // Participant Information
     full_name: '',
     email: '',
     phone: '',
-    preferred_pronouns: '',
+    business_name: '',
+    business_website: '',
     
-    // Organization Information
-    organization_name: '',
-    organization_type: '',
-    organization_stage: '',
-    years_in_operation: '',
-    mission_statement: '',
+    // Entrepreneurship Stage
+    current_stage: '',
+    industry_focus: '',
     
-    // Program Interest
+    // Business Structure
+    business_structure: '',
+    business_structure_other: '',
+    has_ein: '',
+    has_business_bank: '',
+    
+    // Funding Interest
+    funding_pathway: '',
     primary_funding_goal: '',
-    biggest_challenge: '',
-    current_funding_sources: [],
-    prior_grant_experience: '',
+    prior_funding_experience: '',
     
-    // Background
-    how_heard_about: '',
-    previous_training: '',
-    expectations: '',
+    // Readiness Snapshot
+    existing_materials: [],
+    most_helpful: [],
     
-    // Demographics (optional)
-    identify_as_woman: '',
-    identify_as_person_of_color: '',
-    age_range: '',
+    // Session Commitment
+    session_march_2: false,
+    session_march_5: false,
+    session_march_7: false,
     
-    // Commitment
-    schedule_acknowledgment: false,
-    attendance_commitment: false,
-    consent_to_share: false
+    // Consultation
+    consultation_interest: '',
+    consultation_understanding: false,
+    consultation_focus: '',
+    
+    // Program Expectations
+    readiness_understanding: false,
+    funding_not_guaranteed: false,
+    giveaway_understanding: false,
+    
+    // Recording Consent
+    recording_consent: '',
+    
+    // Signature
+    electronic_signature: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -185,22 +198,40 @@ Elbert Innovative Solutions Team`
       if (!formData.full_name) newErrors.full_name = 'Required';
       if (!formData.email) newErrors.email = 'Required';
       if (!formData.phone) newErrors.phone = 'Required';
+      if (!formData.business_name) newErrors.business_name = 'Required';
     }
 
     if (step === 2) {
-      if (!formData.organization_name) newErrors.organization_name = 'Required';
-      if (!formData.organization_type) newErrors.organization_type = 'Required';
-      if (!formData.organization_stage) newErrors.organization_stage = 'Required';
+      if (!formData.current_stage) newErrors.current_stage = 'Required';
+      if (!formData.industry_focus) newErrors.industry_focus = 'Required';
+      if (!formData.business_structure) newErrors.business_structure = 'Required';
+      if (!formData.has_ein) newErrors.has_ein = 'Required';
+      if (!formData.has_business_bank) newErrors.has_business_bank = 'Required';
     }
 
     if (step === 3) {
+      if (!formData.funding_pathway) newErrors.funding_pathway = 'Required';
       if (!formData.primary_funding_goal) newErrors.primary_funding_goal = 'Required';
-      if (!formData.biggest_challenge) newErrors.biggest_challenge = 'Required';
+      if (!formData.prior_funding_experience) newErrors.prior_funding_experience = 'Required';
+      if (formData.existing_materials.length === 0) newErrors.existing_materials = 'Required';
+      if (formData.most_helpful.length === 0) newErrors.most_helpful = 'Required';
+    }
+
+    if (step === 4) {
+      if (!formData.session_march_2 || !formData.session_march_5 || !formData.session_march_7) {
+        newErrors.session_commitment = 'All sessions required';
+      }
+      if (!formData.consultation_interest) newErrors.consultation_interest = 'Required';
+      if (!formData.consultation_understanding) newErrors.consultation_understanding = 'Required';
+      if (!formData.consultation_focus) newErrors.consultation_focus = 'Required';
     }
 
     if (step === 5) {
-      if (!formData.schedule_acknowledgment) newErrors.schedule_acknowledgment = 'Required';
-      if (!formData.attendance_commitment) newErrors.attendance_commitment = 'Required';
+      if (!formData.readiness_understanding) newErrors.readiness_understanding = 'Required';
+      if (!formData.funding_not_guaranteed) newErrors.funding_not_guaranteed = 'Required';
+      if (!formData.giveaway_understanding) newErrors.giveaway_understanding = 'Required';
+      if (!formData.recording_consent) newErrors.recording_consent = 'Required';
+      if (!formData.electronic_signature) newErrors.electronic_signature = 'Required';
     }
 
     setErrors(newErrors);
@@ -234,11 +265,11 @@ Elbert Innovative Solutions Team`
   };
 
   const steps = [
-    { num: 1, label: 'Personal Info' },
-    { num: 2, label: 'Organization' },
-    { num: 3, label: 'Program Goals' },
-    { num: 4, label: 'Background' },
-    { num: 5, label: 'Commitment' }
+    { num: 1, label: 'Participant Info' },
+    { num: 2, label: 'Business Details' },
+    { num: 3, label: 'Funding & Readiness' },
+    { num: 4, label: 'Session Commitment' },
+    { num: 5, label: 'Final Confirmations' }
   ];
 
   if (enrollMutation.isSuccess) {
@@ -282,6 +313,33 @@ Elbert Innovative Solutions Team`
       />
 
       <div className="max-w-3xl mx-auto px-6 py-8">
+        {/* Introduction */}
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <p className="mb-4" style={{ color: BRAND_COLORS.eisNavy }}>
+              IncubateHer supports entrepreneurs in the early stages of entrepreneurship or in the growth phase of an existing business.
+            </p>
+            <p className="mb-4" style={{ color: BRAND_COLORS.eisNavy }}>
+              This Funding Readiness Series will help you understand and prepare for grants, competitive proposals, and contract opportunities based on your business structure, stage, and capacity.
+            </p>
+            <div className="bg-slate-50 rounded-lg p-4 mb-4">
+              <h3 className="font-semibold mb-3" style={{ color: BRAND_COLORS.culRed }}>Session Schedule</h3>
+              <ul className="space-y-2 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                <li>• <strong>Monday, March 2</strong> | 5:30–7:30 PM (Virtual – Google Meet)</li>
+                <li>• <strong>Thursday, March 5</strong> | 5:30–7:30 PM (Virtual – Google Meet)</li>
+                <li>• <strong>Saturday, March 7</strong> | 9:00 AM–12:00 PM (In Person)<br/>
+                    <span className="pl-4">Columbus Metropolitan Library – Shepard Location, Meeting Room 1</span>
+                </li>
+              </ul>
+            </div>
+            <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+              Upon registration, you will receive a confirmation email with the Google Meet link and next steps.
+            </p>
+            <p className="text-sm mt-3 font-medium" style={{ color: BRAND_COLORS.culRed }}>
+              Up to twenty (20) participants who complete all sessions and required assessments will be eligible to schedule a one-hour individual consultation with Dr. Shawnté Elbert on a first-come, first-served basis.
+            </p>
+          </CardContent>
+        </Card>
         {/* Progress Indicator */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -313,7 +371,7 @@ Elbert Innovative Solutions Team`
 
         <form onSubmit={handleSubmit}>
           <AnimatePresence mode="wait">
-            {/* Step 1: Personal Information */}
+            {/* Step 1: Participant Information */}
             {currentStep === 1 && (
               <motion.div
                 key="step1"
@@ -323,7 +381,7 @@ Elbert Innovative Solutions Team`
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Personal Information</CardTitle>
+                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Participant Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
@@ -356,11 +414,20 @@ Elbert Innovative Solutions Team`
                       {errors.phone && <p className="text-sm text-red-600 mt-1">{errors.phone}</p>}
                     </div>
                     <div>
-                      <Label>Preferred Pronouns (Optional)</Label>
+                      <Label>Business Name (or type "In Formation") *</Label>
                       <Input
-                        value={formData.preferred_pronouns}
-                        onChange={(e) => updateField('preferred_pronouns', e.target.value)}
-                        placeholder="she/her, they/them, etc."
+                        value={formData.business_name}
+                        onChange={(e) => updateField('business_name', e.target.value)}
+                        placeholder="Your business name or 'In Formation'"
+                      />
+                      {errors.business_name && <p className="text-sm text-red-600 mt-1">{errors.business_name}</p>}
+                    </div>
+                    <div>
+                      <Label>Business Website or Social Media (if applicable)</Label>
+                      <Input
+                        value={formData.business_website}
+                        onChange={(e) => updateField('business_website', e.target.value)}
+                        placeholder="https://... or @socialmedia"
                       />
                     </div>
                   </CardContent>
@@ -368,7 +435,7 @@ Elbert Innovative Solutions Team`
               </motion.div>
             )}
 
-            {/* Step 2: Organization Information */}
+            {/* Step 2: Entrepreneurship Stage & Business Structure */}
             {currentStep === 2 && (
               <motion.div
                 key="step2"
@@ -378,74 +445,106 @@ Elbert Innovative Solutions Team`
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Organization Information</CardTitle>
+                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Entrepreneurship Stage & Business Structure</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label>Organization/Business Name *</Label>
-                      <Input
-                        value={formData.organization_name}
-                        onChange={(e) => updateField('organization_name', e.target.value)}
-                        placeholder="Your organization name"
-                      />
-                      {errors.organization_name && <p className="text-sm text-red-600 mt-1">{errors.organization_name}</p>}
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        ENTREPRENEURSHIP STAGE
+                      </h3>
+                      <div>
+                        <Label>Which best describes your current stage? *</Label>
+                        <Select value={formData.current_stage} onValueChange={(v) => updateField('current_stage', v)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select stage" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="idea">Idea Stage (exploring a concept)</SelectItem>
+                            <SelectItem value="formation">Formation Stage (registering or setting up)</SelectItem>
+                            <SelectItem value="early">Early-Stage Business (launched and building foundation)</SelectItem>
+                            <SelectItem value="growth">Growth Phase Business (established and scaling)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.current_stage && <p className="text-sm text-red-600 mt-1">{errors.current_stage}</p>}
+                      </div>
+                      <div>
+                        <Label>Industry or Business Focus *</Label>
+                        <Input
+                          value={formData.industry_focus}
+                          onChange={(e) => updateField('industry_focus', e.target.value)}
+                          placeholder="e.g., Healthcare, Education, Technology"
+                        />
+                        {errors.industry_focus && <p className="text-sm text-red-600 mt-1">{errors.industry_focus}</p>}
+                      </div>
                     </div>
-                    <div>
-                      <Label>Organization Type *</Label>
-                      <Select value={formData.organization_type} onValueChange={(v) => updateField('organization_type', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="nonprofit_501c3">501(c)(3) Nonprofit</SelectItem>
-                          <SelectItem value="nonprofit_other">Other Nonprofit Structure</SelectItem>
-                          <SelectItem value="for_profit">For-Profit Business</SelectItem>
-                          <SelectItem value="social_enterprise">Social Enterprise</SelectItem>
-                          <SelectItem value="community_based">Community-Based Organization</SelectItem>
-                          <SelectItem value="startup">Startup/In Formation</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {errors.organization_type && <p className="text-sm text-red-600 mt-1">{errors.organization_type}</p>}
-                    </div>
-                    <div>
-                      <Label>Organization Stage *</Label>
-                      <Select value={formData.organization_stage} onValueChange={(v) => updateField('organization_stage', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select stage" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="idea">Idea Stage</SelectItem>
-                          <SelectItem value="startup">Startup (0-2 years)</SelectItem>
-                          <SelectItem value="early">Early Stage (2-5 years)</SelectItem>
-                          <SelectItem value="established">Established (5+ years)</SelectItem>
-                          <SelectItem value="scaling">Growth/Scaling</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {errors.organization_stage && <p className="text-sm text-red-600 mt-1">{errors.organization_stage}</p>}
-                    </div>
-                    <div>
-                      <Label>Years in Operation</Label>
-                      <Input
-                        value={formData.years_in_operation}
-                        onChange={(e) => updateField('years_in_operation', e.target.value)}
-                        placeholder="e.g., 2"
-                      />
-                    </div>
-                    <div>
-                      <Label>Mission Statement (Brief)</Label>
-                      <Textarea
-                        value={formData.mission_statement}
-                        onChange={(e) => updateField('mission_statement', e.target.value)}
-                        placeholder="What is your organization's mission?"
-                        rows={3}
-                      />
+
+                    <div className="space-y-4 border-t pt-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        BUSINESS STRUCTURE
+                      </h3>
+                      <div>
+                        <Label>Current Business Structure *</Label>
+                        <Select value={formData.business_structure} onValueChange={(v) => updateField('business_structure', v)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select structure" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="not_registered">Not yet registered</SelectItem>
+                            <SelectItem value="sole_proprietor">Sole Proprietor</SelectItem>
+                            <SelectItem value="llc">LLC</SelectItem>
+                            <SelectItem value="scorp_ccorp">S-Corp / C-Corp</SelectItem>
+                            <SelectItem value="nonprofit_501c3">Nonprofit (501c3)</SelectItem>
+                            <SelectItem value="fiscal_sponsor">Fiscal Sponsor</SelectItem>
+                            <SelectItem value="other">Other (please specify)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.business_structure && <p className="text-sm text-red-600 mt-1">{errors.business_structure}</p>}
+                      </div>
+                      {formData.business_structure === 'other' && (
+                        <div>
+                          <Label>Please specify</Label>
+                          <Input
+                            value={formData.business_structure_other}
+                            onChange={(e) => updateField('business_structure_other', e.target.value)}
+                            placeholder="Specify your business structure"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <Label>Do you currently have an EIN? *</Label>
+                        <RadioGroup value={formData.has_ein} onValueChange={(v) => updateField('has_ein', v)}>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="yes" id="ein-yes" />
+                            <Label htmlFor="ein-yes" className="cursor-pointer">Yes</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="no" id="ein-no" />
+                            <Label htmlFor="ein-no" className="cursor-pointer">No</Label>
+                          </div>
+                        </RadioGroup>
+                        {errors.has_ein && <p className="text-sm text-red-600 mt-1">{errors.has_ein}</p>}
+                      </div>
+                      <div>
+                        <Label>Do you have a separate business bank account? *</Label>
+                        <RadioGroup value={formData.has_business_bank} onValueChange={(v) => updateField('has_business_bank', v)}>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="yes" id="bank-yes" />
+                            <Label htmlFor="bank-yes" className="cursor-pointer">Yes</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="no" id="bank-no" />
+                            <Label htmlFor="bank-no" className="cursor-pointer">No</Label>
+                          </div>
+                        </RadioGroup>
+                        {errors.has_business_bank && <p className="text-sm text-red-600 mt-1">{errors.has_business_bank}</p>}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </motion.div>
             )}
 
-            {/* Step 3: Program Goals */}
+            {/* Step 3: Funding Interest & Readiness */}
             {currentStep === 3 && (
               <motion.div
                 key="step3"
@@ -455,77 +554,126 @@ Elbert Innovative Solutions Team`
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Your Funding Goals</CardTitle>
+                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Funding Interest & Readiness Snapshot</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label>Primary Funding Goal *</Label>
-                      <Select value={formData.primary_funding_goal} onValueChange={(v) => updateField('primary_funding_goal', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="What do you hope to achieve?" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="learn_grants">Learn about grants and how to apply</SelectItem>
-                          <SelectItem value="learn_contracts">Learn about government contracts</SelectItem>
-                          <SelectItem value="build_readiness">Build organizational readiness for funding</SelectItem>
-                          <SelectItem value="understand_requirements">Understand funder requirements</SelectItem>
-                          <SelectItem value="diversify_funding">Diversify funding sources</SelectItem>
-                          <SelectItem value="improve_writing">Improve grant writing skills</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {errors.primary_funding_goal && <p className="text-sm text-red-600 mt-1">{errors.primary_funding_goal}</p>}
-                    </div>
-                    <div>
-                      <Label>Biggest Challenge *</Label>
-                      <Textarea
-                        value={formData.biggest_challenge}
-                        onChange={(e) => updateField('biggest_challenge', e.target.value)}
-                        placeholder="What's your biggest challenge in pursuing funding?"
-                        rows={3}
-                      />
-                      {errors.biggest_challenge && <p className="text-sm text-red-600 mt-1">{errors.biggest_challenge}</p>}
-                    </div>
-                    <div>
-                      <Label>Current Funding Sources (Select all that apply)</Label>
-                      <div className="space-y-2">
-                        {['Individual Donors', 'Foundation Grants', 'Government Grants', 'Contracts', 'Earned Income', 'Crowdfunding', 'Corporate Sponsorships', 'None Yet'].map((source) => (
-                          <div key={source} className="flex items-center gap-2">
-                            <Checkbox
-                              id={source}
-                              checked={formData.current_funding_sources.includes(source)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  updateField('current_funding_sources', [...formData.current_funding_sources, source]);
-                                } else {
-                                  updateField('current_funding_sources', formData.current_funding_sources.filter(s => s !== source));
-                                }
-                              }}
-                            />
-                            <Label htmlFor={source} className="cursor-pointer">{source}</Label>
-                          </div>
-                        ))}
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        FUNDING INTEREST
+                      </h3>
+                      <div>
+                        <Label>Which funding pathway are you most interested in right now? *</Label>
+                        <Select value={formData.funding_pathway} onValueChange={(v) => updateField('funding_pathway', v)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select pathway" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="grants">Grants</SelectItem>
+                            <SelectItem value="proposals">Competitive Proposals</SelectItem>
+                            <SelectItem value="contracts">Government or Corporate Contracts</SelectItem>
+                            <SelectItem value="unsure">I'm unsure and need help determining</SelectItem>
+                            <SelectItem value="multiple">Multiple pathways</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.funding_pathway && <p className="text-sm text-red-600 mt-1">{errors.funding_pathway}</p>}
+                      </div>
+                      <div>
+                        <Label>What is your primary funding goal within the next 6–12 months? *</Label>
+                        <Textarea
+                          value={formData.primary_funding_goal}
+                          onChange={(e) => updateField('primary_funding_goal', e.target.value)}
+                          placeholder="Describe your funding goals..."
+                          rows={3}
+                        />
+                        {errors.primary_funding_goal && <p className="text-sm text-red-600 mt-1">{errors.primary_funding_goal}</p>}
+                      </div>
+                      <div>
+                        <Label>Have you previously applied for funding? *</Label>
+                        <Select value={formData.prior_funding_experience} onValueChange={(v) => updateField('prior_funding_experience', v)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select experience" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="funded">Yes – Successfully funded</SelectItem>
+                            <SelectItem value="not_funded">Yes – Not funded</SelectItem>
+                            <SelectItem value="first_time">No – First time applying</SelectItem>
+                            <SelectItem value="assisted">Assisted someone else but not my own business</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.prior_funding_experience && <p className="text-sm text-red-600 mt-1">{errors.prior_funding_experience}</p>}
                       </div>
                     </div>
-                    <div>
-                      <Label>Prior Grant/Contract Experience</Label>
-                      <Select value={formData.prior_grant_experience} onValueChange={(v) => updateField('prior_grant_experience', v)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your experience level" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">No experience</SelectItem>
-                          <SelectItem value="some">Applied but not successful</SelectItem>
-                          <SelectItem value="moderate">Received 1-2 grants/contracts</SelectItem>
-                          <SelectItem value="experienced">Received multiple grants/contracts</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                    <div className="space-y-4 border-t pt-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        READINESS SNAPSHOT
+                      </h3>
+                      <div>
+                        <Label>Which of the following do you already have? (Select all that apply) *</Label>
+                        <div className="space-y-2 mt-2">
+                          {[
+                            'Business overview or executive summary',
+                            'Budget (even if basic)',
+                            'Defined services or program description',
+                            'Defined target market',
+                            'Impact metrics or outcomes',
+                            'Capability statement (for contracts)',
+                            'None of the above yet'
+                          ].map((item) => (
+                            <div key={item} className="flex items-center gap-2">
+                              <Checkbox
+                                id={item}
+                                checked={formData.existing_materials.includes(item)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    updateField('existing_materials', [...formData.existing_materials, item]);
+                                  } else {
+                                    updateField('existing_materials', formData.existing_materials.filter(s => s !== item));
+                                  }
+                                }}
+                              />
+                              <Label htmlFor={item} className="cursor-pointer">{item}</Label>
+                            </div>
+                          ))}
+                        </div>
+                        {errors.existing_materials && <p className="text-sm text-red-600 mt-1">{errors.existing_materials}</p>}
+                      </div>
+                      <div>
+                        <Label>What would be most helpful for you during this series? (Select all that apply) *</Label>
+                        <div className="space-y-2 mt-2">
+                          {[
+                            'Understanding funding eligibility',
+                            'Clarifying readiness gaps',
+                            'Organizing documents',
+                            'Learning budgeting basics',
+                            'Understanding RFPs and contracts',
+                            'Identifying next steps'
+                          ].map((item) => (
+                            <div key={item} className="flex items-center gap-2">
+                              <Checkbox
+                                id={item}
+                                checked={formData.most_helpful.includes(item)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    updateField('most_helpful', [...formData.most_helpful, item]);
+                                  } else {
+                                    updateField('most_helpful', formData.most_helpful.filter(s => s !== item));
+                                  }
+                                }}
+                              />
+                              <Label htmlFor={item} className="cursor-pointer">{item}</Label>
+                            </div>
+                          ))}
+                        </div>
+                        {errors.most_helpful && <p className="text-sm text-red-600 mt-1">{errors.most_helpful}</p>}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </motion.div>
             )}
 
-            {/* Step 4: Background */}
+            {/* Step 4: Session Commitment & Consultation */}
             {currentStep === 4 && (
               <motion.div
                 key="step4"
@@ -535,93 +683,92 @@ Elbert Innovative Solutions Team`
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Background Information</CardTitle>
+                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Session Commitment & Consultation</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label>How did you hear about IncubateHer?</Label>
-                      <Input
-                        value={formData.how_heard_about}
-                        onChange={(e) => updateField('how_heard_about', e.target.value)}
-                        placeholder="Columbus Urban League, friend, social media, etc."
-                      />
-                    </div>
-                    <div>
-                      <Label>Previous Training/Workshops</Label>
-                      <Textarea
-                        value={formData.previous_training}
-                        onChange={(e) => updateField('previous_training', e.target.value)}
-                        placeholder="Have you attended any grant writing or business development training?"
-                        rows={2}
-                      />
-                    </div>
-                    <div>
-                      <Label>What do you hope to gain from this program?</Label>
-                      <Textarea
-                        value={formData.expectations}
-                        onChange={(e) => updateField('expectations', e.target.value)}
-                        placeholder="Share your expectations and what success looks like for you"
-                        rows={3}
-                      />
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        SESSION COMMITMENT
+                      </h3>
+                      <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                        Please confirm your availability for the following sessions: *
+                      </p>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            id="session1"
+                            checked={formData.session_march_2}
+                            onCheckedChange={(checked) => updateField('session_march_2', checked)}
+                          />
+                          <Label htmlFor="session1" className="cursor-pointer leading-relaxed">
+                            Monday, March 2 | 5:30–7:30 PM (Virtual)
+                          </Label>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            id="session2"
+                            checked={formData.session_march_5}
+                            onCheckedChange={(checked) => updateField('session_march_5', checked)}
+                          />
+                          <Label htmlFor="session2" className="cursor-pointer leading-relaxed">
+                            Thursday, March 5 | 5:30–7:30 PM (Virtual)
+                          </Label>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            id="session3"
+                            checked={formData.session_march_7}
+                            onCheckedChange={(checked) => updateField('session_march_7', checked)}
+                          />
+                          <Label htmlFor="session3" className="cursor-pointer leading-relaxed">
+                            Saturday, March 7 | 9:00 AM–12:00 PM (In Person – CML Shepard)
+                          </Label>
+                        </div>
+                      </div>
+                      {errors.session_commitment && <p className="text-sm text-red-600 mt-1">{errors.session_commitment}</p>}
                     </div>
 
-                    <div className="border-t pt-4">
-                      <p className="text-sm mb-4" style={{ color: BRAND_COLORS.eisNavy }}>
-                        <strong>Optional:</strong> This program specifically supports women entrepreneurs of color. 
-                        This information helps us understand our community and improve our programming.
+                    <div className="space-y-4 border-t pt-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        ONE-ON-ONE CONSULTATION
+                      </h3>
+                      <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                        Up to twenty (20) participants who complete all sessions and required assessments will be eligible to schedule a one-hour advisory consultation on a first-come, first-served basis.
                       </p>
-                      <div className="space-y-4">
-                        <div>
-                          <Label>Do you identify as a woman?</Label>
-                          <RadioGroup value={formData.identify_as_woman} onValueChange={(v) => updateField('identify_as_woman', v)}>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="yes" id="woman-yes" />
-                              <Label htmlFor="woman-yes" className="cursor-pointer">Yes</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="no" id="woman-no" />
-                              <Label htmlFor="woman-no" className="cursor-pointer">No</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="prefer_not_to_say" id="woman-prefer" />
-                              <Label htmlFor="woman-prefer" className="cursor-pointer">Prefer not to say</Label>
-                            </div>
-                          </RadioGroup>
-                        </div>
-                        <div>
-                          <Label>Do you identify as a person of color?</Label>
-                          <RadioGroup value={formData.identify_as_person_of_color} onValueChange={(v) => updateField('identify_as_person_of_color', v)}>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="yes" id="poc-yes" />
-                              <Label htmlFor="poc-yes" className="cursor-pointer">Yes</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="no" id="poc-no" />
-                              <Label htmlFor="poc-no" className="cursor-pointer">No</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="prefer_not_to_say" id="poc-prefer" />
-                              <Label htmlFor="poc-prefer" className="cursor-pointer">Prefer not to say</Label>
-                            </div>
-                          </RadioGroup>
-                        </div>
-                        <div>
-                          <Label>Age Range (Optional)</Label>
-                          <Select value={formData.age_range} onValueChange={(v) => updateField('age_range', v)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select range" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="18-24">18-24</SelectItem>
-                              <SelectItem value="25-34">25-34</SelectItem>
-                              <SelectItem value="35-44">35-44</SelectItem>
-                              <SelectItem value="45-54">45-54</SelectItem>
-                              <SelectItem value="55-64">55-64</SelectItem>
-                              <SelectItem value="65+">65+</SelectItem>
-                              <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                      <div>
+                        <Label>Are you interested in scheduling a consultation if eligible? *</Label>
+                        <Select value={formData.consultation_interest} onValueChange={(v) => updateField('consultation_interest', v)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select option" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="yes">Yes</SelectItem>
+                            <SelectItem value="maybe">Maybe</SelectItem>
+                            <SelectItem value="no">No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.consultation_interest && <p className="text-sm text-red-600 mt-1">{errors.consultation_interest}</p>}
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          id="consult-understand"
+                          checked={formData.consultation_understanding}
+                          onCheckedChange={(checked) => updateField('consultation_understanding', checked)}
+                        />
+                        <Label htmlFor="consult-understand" className="cursor-pointer leading-relaxed">
+                          I understand that consultations are limited to the first 20 eligible participants and are first-come, first-served. *
+                        </Label>
+                      </div>
+                      {errors.consultation_understanding && <p className="text-sm text-red-600 mt-1">{errors.consultation_understanding}</p>}
+                      <div>
+                        <Label>Briefly describe what you would most like to focus on during your consultation. *</Label>
+                        <Textarea
+                          value={formData.consultation_focus}
+                          onChange={(e) => updateField('consultation_focus', e.target.value)}
+                          placeholder="What would you like to discuss?"
+                          rows={3}
+                        />
+                        {errors.consultation_focus && <p className="text-sm text-red-600 mt-1">{errors.consultation_focus}</p>}
                       </div>
                     </div>
                   </CardContent>
@@ -629,7 +776,7 @@ Elbert Innovative Solutions Team`
               </motion.div>
             )}
 
-            {/* Step 5: Commitment */}
+            {/* Step 5: Final Confirmations */}
             {currentStep === 5 && (
               <motion.div
                 key="step5"
@@ -639,65 +786,110 @@ Elbert Innovative Solutions Team`
               >
                 <Card>
                   <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Program Commitment</CardTitle>
+                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>Program Expectations & Consent</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <Alert>
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        <strong>Session Schedule:</strong>
-                        <ul className="mt-2 space-y-1 text-sm">
-                          <li>• Monday, March 2 | 5:30–7:30 PM (Virtual – Google Meet)</li>
-                          <li>• Thursday, March 5 | 5:30–7:30 PM (Virtual – Google Meet)</li>
-                          <li>• Saturday, March 7 | 9:00 AM–12:00 PM (In-Person)</li>
-                          <li className="pl-4">Columbus Metropolitan Library – Shepard Location, Meeting Room 1</li>
-                        </ul>
-                      </AlertDescription>
-                    </Alert>
-
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <Checkbox
-                          id="schedule"
-                          checked={formData.schedule_acknowledgment}
-                          onCheckedChange={(checked) => updateField('schedule_acknowledgment', checked)}
-                        />
-                        <Label htmlFor="schedule" className="cursor-pointer leading-relaxed">
-                          I acknowledge the session dates and times and confirm I can attend all three sessions *
-                        </Label>
-                      </div>
-                      {errors.schedule_acknowledgment && <p className="text-sm text-red-600">{errors.schedule_acknowledgment}</p>}
-
-                      <div className="flex items-start gap-3">
-                        <Checkbox
-                          id="attendance"
-                          checked={formData.attendance_commitment}
-                          onCheckedChange={(checked) => updateField('attendance_commitment', checked)}
-                        />
-                        <Label htmlFor="attendance" className="cursor-pointer leading-relaxed">
-                          I commit to full participation and completing program requirements (pre-assessment, workbook, consultation) *
-                        </Label>
-                      </div>
-                      {errors.attendance_commitment && <p className="text-sm text-red-600">{errors.attendance_commitment}</p>}
-
-                      <div className="flex items-start gap-3">
-                        <Checkbox
-                          id="consent"
-                          checked={formData.consent_to_share}
-                          onCheckedChange={(checked) => updateField('consent_to_share', checked)}
-                        />
-                        <Label htmlFor="consent" className="cursor-pointer leading-relaxed">
-                          I consent to sharing my feedback and success stories (anonymously if preferred) to help improve the program
-                        </Label>
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        PROGRAM EXPECTATIONS
+                      </h3>
+                      <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                        This program focuses on readiness and preparation. It does not include full drafting, editing, or submission services (except the completion-based non-federal giveaway opportunity described below).
+                      </p>
+                      <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                        Funding approval is determined by external agencies and is not guaranteed.
+                      </p>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            id="readiness"
+                            checked={formData.readiness_understanding}
+                            onCheckedChange={(checked) => updateField('readiness_understanding', checked)}
+                          />
+                          <Label htmlFor="readiness" className="cursor-pointer leading-relaxed">
+                            I understand this series focuses on readiness and advisory support, not full drafting or submission services. *
+                          </Label>
+                        </div>
+                        {errors.readiness_understanding && <p className="text-sm text-red-600">{errors.readiness_understanding}</p>}
+                        
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            id="not-guaranteed"
+                            checked={formData.funding_not_guaranteed}
+                            onCheckedChange={(checked) => updateField('funding_not_guaranteed', checked)}
+                          />
+                          <Label htmlFor="not-guaranteed" className="cursor-pointer leading-relaxed">
+                            I understand that funding awards are not guaranteed. *
+                          </Label>
+                        </div>
+                        {errors.funding_not_guaranteed && <p className="text-sm text-red-600">{errors.funding_not_guaranteed}</p>}
                       </div>
                     </div>
 
-                    <div className="bg-slate-50 rounded-lg p-4">
+                    <div className="space-y-4 border-t pt-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        COMPLETION INCENTIVE
+                      </h3>
                       <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                        <strong>Please Note:</strong> This program supports funding readiness and preparation. 
-                        It does not include grant searches, application writing during sessions, or funding guarantees. 
-                        Limited spots available.
+                        Participants who:
                       </p>
+                      <ul className="text-sm ml-4 space-y-1" style={{ color: BRAND_COLORS.eisNavy }}>
+                        <li>• Attend all sessions</li>
+                        <li>• Complete required assessments</li>
+                        <li>• Complete their consultation</li>
+                      </ul>
+                      <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                        Will be entered into a randomized drawing for one complimentary grant-writing session for a non-federal opportunity.
+                      </p>
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          id="giveaway"
+                          checked={formData.giveaway_understanding}
+                          onCheckedChange={(checked) => updateField('giveaway_understanding', checked)}
+                        />
+                        <Label htmlFor="giveaway" className="cursor-pointer leading-relaxed">
+                          I understand the giveaway applies only to non-federal funding opportunities and requires full program completion. *
+                        </Label>
+                      </div>
+                      {errors.giveaway_understanding && <p className="text-sm text-red-600 mt-1">{errors.giveaway_understanding}</p>}
+                    </div>
+
+                    <div className="space-y-4 border-t pt-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        RECORDING & CONSENT
+                      </h3>
+                      <div>
+                        <Label>I consent to virtual sessions being recorded for educational purposes within the cohort. *</Label>
+                        <RadioGroup value={formData.recording_consent} onValueChange={(v) => updateField('recording_consent', v)} className="mt-2">
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="yes" id="record-yes" />
+                            <Label htmlFor="record-yes" className="cursor-pointer">Yes</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="no" id="record-no" />
+                            <Label htmlFor="record-no" className="cursor-pointer">No</Label>
+                          </div>
+                        </RadioGroup>
+                        {errors.recording_consent && <p className="text-sm text-red-600 mt-1">{errors.recording_consent}</p>}
+                      </div>
+                    </div>
+
+                    <div className="space-y-4 border-t pt-4">
+                      <h3 className="font-semibold text-sm" style={{ color: BRAND_COLORS.neutralDark }}>
+                        ELECTRONIC SIGNATURE
+                      </h3>
+                      <div>
+                        <Label>Electronic Signature *</Label>
+                        <Input
+                          value={formData.electronic_signature}
+                          onChange={(e) => updateField('electronic_signature', e.target.value)}
+                          placeholder="Type your full name"
+                        />
+                        <p className="text-xs text-slate-500 mt-1">
+                          By typing your name, you agree to the terms and conditions stated above.
+                        </p>
+                        {errors.electronic_signature && <p className="text-sm text-red-600 mt-1">{errors.electronic_signature}</p>}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
