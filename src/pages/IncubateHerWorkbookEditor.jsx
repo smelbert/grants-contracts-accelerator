@@ -37,6 +37,7 @@ export default function IncubateHerWorkbookEditor() {
   const [videoDescription, setVideoDescription] = useState('');
   const [takeaways, setTakeaways] = useState([]);
   const [actionItems, setActionItems] = useState([]);
+  const [requiredForConsultation, setRequiredForConsultation] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -68,6 +69,7 @@ export default function IncubateHerWorkbookEditor() {
       setVideoDescription(pageData?.video_description || '');
       setTakeaways(pageData?.takeaways || []);
       setActionItems(pageData?.actionItems || pageData?.action_items || []);
+      setRequiredForConsultation(pageData?.required_for_consultation || false);
     }
   }, [selectedPageId, customPages]);
 
@@ -132,6 +134,7 @@ export default function IncubateHerWorkbookEditor() {
       video_description: videoDescription || null,
       takeaways: takeaways.length > 0 ? takeaways : null,
       action_items: actionItems.length > 0 ? actionItems : null,
+      required_for_consultation: requiredForConsultation,
       last_edited_by: user?.email
     });
   };
@@ -385,6 +388,21 @@ Return only the HTML content, no explanations.`,
                           />
                         </div>
                       )}
+
+                      <div className="pt-4 border-t">
+                        <div className="flex items-center gap-3">
+                          <Checkbox 
+                            checked={requiredForConsultation}
+                            onCheckedChange={setRequiredForConsultation}
+                          />
+                          <div>
+                            <label className="text-sm font-medium">Required for Consultation</label>
+                            <p className="text-xs text-slate-500">
+                              Participants must complete this page before booking a one-on-one consultation
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="ai" className="space-y-4">

@@ -38,7 +38,34 @@ export default function IncubateHerConsultations() {
     enabled: !!user?.email
   });
 
+  // Check workbook completion
+  const { data: workbookPages = [] } = useQuery({
+    queryKey: ['workbook-pages'],
+    queryFn: () => base44.entities.WorkbookPageContent.list()
+  });
+
+  const { data: workbookResponses = [] } = useQuery({
+    queryKey: ['workbook-responses', user?.email],
+    queryFn: async () => {
+      return base44.entities.WorkbookResponse.filter({
+        user_email: user.email
+      });
+    },
+    enabled: !!user?.email
+  });
+
+  // Calculate workbook completion percentage
+  const requiredPages = workbookPages.filter(p => p.required_for_consultation);
+  const completedRequiredPages = requiredPages.filter(page => 
+    workbookResponses.some(r => r.page_id === page.page_id && r.responses && Object.keys(r.responses).length > 0)
+  );
+  const workbookCompletionPercent = requiredPages.length > 0 
+    ? Math.round((completedRequiredPages.length / requiredPages.length) * 100)
+    : 0;
+  const workbookRequirementMet = workbookCompletionPercent >= 50;
+
   const allChecklistComplete = enrollment?.pre_assessment_completed && 
+    workbookRequirementMet &&
     Object.values(checklist).every(v => v);
 
   const saveChecklistMutation = useMutation({
@@ -194,26 +221,54 @@ export default function IncubateHerConsultations() {
           </CardContent>
         </Card>
 
-        {!enrollment?.pre_assessment_completed && (
+        {(!enrollment?.pre_assessment_completed || !workbookRequirementMet) && (
           <Card className="border-l-4 border-l-amber-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-amber-900">
                 <AlertCircle className="w-5 h-5" />
-                Pre-Assessment Required
+                Requirements Not Met
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-slate-700 mb-4">
-                You must complete the pre-assessment before booking your consultation. This helps us understand your current readiness level.
-              </p>
-              <Button className="bg-[#143A50]">
-                Complete Pre-Assessment
-              </Button>
+            <CardContent className="space-y-4">
+              {!enrollment?.pre_assessment_completed && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertCircle className="w-4 h-4 text-amber-600" />
+                    <p className="font-medium text-slate-900">Pre-Assessment Required</p>
+                  </div>
+                  <p className="text-slate-700 text-sm mb-3">
+                    You must complete the pre-assessment before booking your consultation.
+                  </p>
+                  <Button className="bg-[#143A50]">
+                    Complete Pre-Assessment
+                  </Button>
+                </div>
+              )}
+              
+              {!workbookRequirementMet && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-600" />
+                      <p className="font-medium text-slate-900">Workbook Completion Required</p>
+                    </div>
+                    <Badge variant="outline" className="text-amber-600 border-amber-600">
+                      {workbookCompletionPercent}% Complete
+                    </Badge>
+                  </div>
+                  <p className="text-slate-700 text-sm mb-3">
+                    Complete at least 50% of the required workbook pages ({completedRequiredPages.length} of {requiredPages.length} completed).
+                  </p>
+                  <Button className="bg-[#143A50]">
+                    Continue Workbook
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
 
-        {enrollment?.pre_assessment_completed && (
+        {enrollment?.pre_assessment_completed && workbookRequirementMet && (
           <>
             <Card>
               <CardHeader>
@@ -233,6 +288,23 @@ export default function IncubateHerConsultations() {
                     <div className="flex-1">
                       <p className="font-medium text-slate-700">Pre-Assessment Completed</p>
                       <p className="text-sm text-slate-500">Required to book consultation</p>
+                    </div>
+                    <Badge variant="outline" className="bg-green-50 text-green-700">
+                      Complete
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox 
+                      checked={workbookRequirementMet}
+                      disabled
+                      className="mt-1"
+                    />
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-700">Workbook Completion</p>
+                      <p className="text-sm text-slate-500">
+                        {completedRequiredPages.length} of {requiredPages.length} required pages completed ({workbookCompletionPercent}%)
+                      </p>
                     </div>
                     <Badge variant="outline" className="bg-green-50 text-green-700">
                       Complete
