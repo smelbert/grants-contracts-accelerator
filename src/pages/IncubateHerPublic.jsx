@@ -56,6 +56,9 @@ export default function IncubateHerPublic() {
         });
       }
 
+      // Invite user to the platform
+      await base44.users.inviteUser(data.email, 'user');
+
       // Create enrollment
       await base44.entities.ProgramEnrollment.create({
         cohort_id: cohort.id,
@@ -84,22 +87,52 @@ export default function IncubateHerPublic() {
         });
       }
 
-      // Send welcome email
+      // Send welcome email with session details
       await base44.integrations.Core.SendEmail({
         to: data.email,
         subject: 'Welcome to IncubateHer Funding Readiness Program',
-        body: `Hi ${data.name},\n\nWelcome to the IncubateHer Funding Readiness Program!\n\nYou're now enrolled in this transformative program funded by Columbus Urban League and delivered by Elbert Innovative Solutions.\n\nNext Steps:\n1. Log in to the platform to complete your pre-assessment\n2. Choose your schedule option\n3. Access your program materials\n\nYou now have full access to:\n- IncubateHer community space\n- Projects and documents workspace\n- Templates and resources\n- Funding opportunities library\n- Direct messaging\n\nWe're excited to support your funding readiness journey!\n\nBest regards,\nElbert Innovative Solutions Team`
+        body: `Hi ${data.name},
+
+Welcome to the IncubateHer Funding Readiness Program!
+
+You're now enrolled in this transformative program funded by Columbus Urban League and delivered by Elbert Innovative Solutions.
+
+SESSION SCHEDULE:
+• Monday, March 2 | 5:30–7:30 PM (Virtual – Google Meet)
+• Thursday, March 5 | 5:30–7:30 PM (Virtual – Google Meet)
+• Saturday, March 7 | 9:00 AM–12:00 PM (In-Person)
+  Columbus Metropolitan Library – Shepard Location, Meeting Room 1
+
+You will receive the Google Meet link 24 hours before each virtual session.
+
+NEXT STEPS:
+1. Check your email for your platform invitation
+2. Set up your account and log in
+3. Complete your pre-assessment
+4. Access your program materials
+
+You now have full access to:
+• IncubateHer community space
+• Projects and documents workspace
+• Templates and resources
+• Funding opportunities library
+• Direct messaging
+
+We're excited to support your funding readiness journey!
+
+Best regards,
+Elbert Innovative Solutions Team`
       });
 
       return { success: true };
     },
     onSuccess: () => {
-      toast.success('Enrollment successful! Check your email for next steps.');
+      toast.success('Enrollment successful! Check your email for login instructions and session details.');
       setFormData({ name: '', email: '', organization: '', phone: '' });
       setShowEnrollment(false);
     },
-    onError: () => {
-      toast.error('Enrollment failed. Please try again.');
+    onError: (err) => {
+      toast.error(err.message || 'Enrollment failed. Please try again.');
     }
   });
 
@@ -143,8 +176,8 @@ export default function IncubateHerPublic() {
           <Card style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
             <CardContent className="pt-6 text-center">
               <Calendar className="w-12 h-12 mx-auto mb-3" style={{ color: BRAND_COLORS.eisGold }} />
-              <p className="text-3xl font-bold mb-2" style={{ color: BRAND_COLORS.culRed }}>3 Formats</p>
-              <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>Choose the schedule that fits your life</p>
+              <p className="text-3xl font-bold mb-2" style={{ color: BRAND_COLORS.culRed }}>3 Sessions</p>
+              <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>Two virtual and one in-person</p>
             </CardContent>
           </Card>
           <Card style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
