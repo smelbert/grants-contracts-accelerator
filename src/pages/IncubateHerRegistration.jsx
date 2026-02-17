@@ -147,38 +147,52 @@ export default function IncubateHerRegistration() {
       // Send welcome email
       await base44.integrations.Core.SendEmail({
         to: data.email,
-        subject: 'Welcome to IncubateHer Funding Readiness Program',
-        body: `Hi ${data.full_name},
-
-Welcome to the IncubateHer Funding Readiness Program!
-
-You're now enrolled in this transformative program funded by Columbus Urban League and delivered by Elbert Innovative Solutions.
-
-SESSION SCHEDULE:
-• Monday, March 2 | 5:30–7:30 PM (Virtual – Google Meet)
-• Thursday, March 5 | 5:30–7:30 PM (Virtual – Google Meet)
-• Saturday, March 7 | 9:00 AM–12:00 PM (In-Person)
-  Columbus Metropolitan Library – Shepard Location, Meeting Room 1
-
-You will receive the Google Meet link 24 hours before each virtual session.
-
-NEXT STEPS:
-1. Check your email for your platform invitation
-2. Set up your account and log in
-3. Complete your pre-assessment
-4. Access your program materials
-
-You now have full access to:
-• IncubateHer community space
-• Projects and documents workspace
-• Templates and resources
-• Funding opportunities library
-• Direct messaging
-
-We're excited to support your funding readiness journey!
-
-Best regards,
-Elbert Innovative Solutions Team`
+        from_name: 'IncubateHer Program',
+        subject: 'Welcome to IncubateHer Funding Readiness Series',
+        body: `
+          <p>Hello ${data.full_name},</p>
+          
+          <p>Thank you for registering for the <strong>IncubateHer Funding Readiness Series: Preparing for Grants, Proposals & Contracts</strong>.</p>
+          
+          <p>This program is hosted by <strong>Columbus Urban League</strong> and delivered by <strong>Elbert Innovative Solutions (EIS)</strong>.</p>
+          
+          <h3 style="margin-top: 20px; margin-bottom: 10px;">Session Schedule</h3>
+          <ul>
+            <li><strong>Monday, March 2</strong> | 5:30–7:30 PM (Virtual – Google Meet)</li>
+            <li><strong>Thursday, March 5</strong> | 5:30–7:30 PM (Virtual – Google Meet)</li>
+            <li><strong>Saturday, March 7</strong> | 9:00 AM–12:00 PM (In Person)<br/>
+                Columbus Metropolitan Library – Shepard Location, Meeting Room 1</li>
+          </ul>
+          
+          <p>You will receive the Google Meet link 24 hours before each virtual session.</p>
+          
+          <h3 style="margin-top: 20px; margin-bottom: 10px;">Next Steps</h3>
+          <ol>
+            <li>Check your email for your platform invitation</li>
+            <li>Set up your account and log in</li>
+            <li>Complete your pre-assessment</li>
+            <li>Access your program materials and workbook</li>
+          </ol>
+          
+          <h3 style="margin-top: 20px; margin-bottom: 10px;">You Now Have Access To:</h3>
+          <ul>
+            <li>IncubateHer community space</li>
+            <li>Projects and documents workspace</li>
+            <li>Templates and resources</li>
+            <li>Funding opportunities library</li>
+            <li>Direct messaging with facilitators and peers</li>
+          </ul>
+          
+          <p style="margin-top: 20px;"><strong>Consultation Eligibility:</strong><br/>
+          Up to twenty (20) participants who complete all sessions and required assessments will be eligible to schedule a one-hour individual consultation with Dr. Shawnté Elbert on a first-come, first-served basis.</p>
+          
+          <p>We're excited to support your funding readiness journey!</p>
+          
+          <p>Warm regards,<br/>
+          Dr. Shawnté Elbert<br/>
+          Elbert Innovative Solutions<br/>
+          <em>On behalf of Columbus Urban League</em></p>
+        `
       });
 
       return { success: true };

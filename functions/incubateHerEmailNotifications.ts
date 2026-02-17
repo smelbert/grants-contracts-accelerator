@@ -27,15 +27,18 @@ Deno.serve(async (req) => {
     switch (notification_type) {
       case 'session_reminder':
         subject = `Reminder: IncubateHer Session Tomorrow - ${data.session_title}`;
+        const sessionDetails = {
+          'March 2': 'Monday, March 2 | 5:30–7:30 PM (Virtual – Google Meet)',
+          'March 5': 'Thursday, March 5 | 5:30–7:30 PM (Virtual – Google Meet)',
+          'March 7': 'Saturday, March 7 | 9:00 AM–12:00 PM (In Person) - Columbus Metropolitan Library, Shepard Location, Meeting Room 1'
+        };
         body = `
           <p>Hello ${enrollment.participant_name},</p>
           
           <p>This is a friendly reminder about your upcoming IncubateHer session:</p>
           
-          <p><strong>Session:</strong> ${data.session_title}<br>
-          <strong>Date:</strong> ${new Date(data.session_date).toLocaleDateString()}<br>
-          <strong>Time:</strong> ${data.start_time}<br>
-          <strong>Location/Link:</strong> ${data.location_or_link || 'TBD'}</p>
+          <p><strong>${sessionDetails[data.session_date] || data.session_title}</strong></p>
+          ${data.location_or_link ? `<p><strong>Meeting Link:</strong> ${data.location_or_link}</p>` : ''}
           
           <p><strong>Before the session:</strong></p>
           <ul>
@@ -47,7 +50,7 @@ Deno.serve(async (req) => {
           <p>See you soon!</p>
           
           <p>Warm regards,<br>
-          Dr. Shawnte Elbert<br>
+          Dr. Shawnté Elbert<br>
           Elbert Innovative Solutions</p>
         `;
         break;
