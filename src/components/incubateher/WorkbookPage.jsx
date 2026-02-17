@@ -10,6 +10,8 @@ import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp, Spar
 import PersonalizedGuidance from './PersonalizedGuidance';
 import AIFeedbackPanel from '../workbook/AIFeedbackPanel';
 import CollaborationPanel from '../workbook/CollaborationPanel';
+import TableEditor from '../shared/TableEditor';
+import ChartBuilder from '../shared/ChartBuilder';
 
 const PageTypeIcon = ({ type }) => {
   const icons = {
@@ -383,41 +385,26 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                       {field.description && (
                         <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
                       )}
-                      <div className="overflow-x-auto">
-                        <table className="w-full border-collapse">
-                          <thead>
-                            <tr className="bg-[#143A50]">
-                              {field.columns.map((col) => (
-                                <th key={col.id} className="border border-slate-300 p-3 text-left font-semibold text-sm text-white">
-                                  {col.label}
-                                </th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Array.from({ length: field.rows || 3 }).map((_, rowIdx) => {
-                              const rowData = (Array.isArray(fieldValue) ? fieldValue[rowIdx] : {}) || {};
-                              return (
-                                <tr key={rowIdx} className="hover:bg-slate-50">
-                                  {field.columns.map((col) => (
-                                    <td key={col.id} className="border border-slate-300 p-2">
-                                      <Input
-                                        value={rowData[col.id] || ''}
-                                        onChange={(e) => {
-                                          const newRows = Array.isArray(fieldValue) ? [...fieldValue] : [];
-                                          newRows[rowIdx] = { ...rowData, [col.id]: e.target.value };
-                                          handleFieldChange(field.id, newRows);
-                                        }}
-                                        className="w-full border-slate-300 focus:border-[#E5C089]"
-                                      />
-                                    </td>
-                                  ))}
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
+                      <TableEditor
+                        value={fieldValue || []}
+                        onChange={(value) => handleFieldChange(field.id, value)}
+                      />
+                    </div>
+                  );
+
+                case 'chart':
+                  return (
+                    <div key={field.id} className="bg-white rounded-lg p-4 border border-slate-300">
+                      <Label className="text-base mb-3 block font-semibold text-[#143A50]">
+                        {field.label}
+                      </Label>
+                      {field.description && (
+                        <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
+                      )}
+                      <ChartBuilder
+                        value={fieldValue || {}}
+                        onChange={(value) => handleFieldChange(field.id, value)}
+                      />
                     </div>
                   );
 
