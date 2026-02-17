@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Download, FileText, BookOpen, Target, Filter } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Download, FileText, BookOpen, Target, Filter, Star, Heart, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
+import ResourceRecommendations from '@/components/resources/ResourceRecommendations';
 
 const RESOURCE_TYPES = [
   { value: 'all', label: 'All Resources', icon: FileText },
@@ -16,9 +19,21 @@ const RESOURCE_TYPES = [
   { value: 'template', label: 'Templates', icon: FileText },
 ];
 
+const FUNDING_STAGES = [
+  { value: 'all', label: 'All Stages' },
+  { value: 'research', label: 'Research & Discovery' },
+  { value: 'proposal_writing', label: 'Proposal Writing' },
+  { value: 'budgeting', label: 'Budget Development' },
+  { value: 'reporting', label: 'Grant Reporting' },
+  { value: 'stewardship', label: 'Donor Stewardship' },
+];
+
 export default function ResourceLibrary() {
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedStage, setSelectedStage] = useState('all');
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -33,6 +48,48 @@ export default function ResourceLibrary() {
     },
   });
 
+  const { data: favorites = [] } = useQuery({
+    queryKey: ['resource-favorites', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return await base44.entities.ResourceFavorite.filter({
+        user_email: user.email
+      });
+    },
+    enabled: !!user?.email,
+  });
+
+  const toggleFavoriteMutation = useMutation({
+    mutationFn: async ({ handout, isFavorited }) => {
+      if (isFavorited) {
+        const existingFav = favorites.find(f => 
+          f.resource_title === handout.title && 
+          f.resource_url === handout.file_url
+        );
+        if (existingFav) {
+          return await base44.entities.ResourceFavorite.delete(existingFav.id);
+        }
+      } else {
+        return await base44.entities.ResourceFavorite.create({
+          user_email: user.email,
+          resource_type: 'handout',
+          resource_title: handout.title,
+          resource_url: handout.file_url,
+          resource_metadata: {
+            parent_title: handout.parentTitle,
+            file_type: handout.file_type,
+            description: handout.description,
+            funding_lane: handout.funding_lane
+          }
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['resource-favorites']);
+      toast.success('Favorites updated');
+    },
+  });
+
   const allHandouts = resources?.flatMap(resource => 
     resource.handouts?.map(handout => ({
       ...handout,
@@ -42,7 +99,25 @@ export default function ResourceLibrary() {
     })) || []
   ) || [];
 
-  const filteredHandouts = allHandouts.filter(handout => {
+  const enrichedHandouts = allHandouts.map(handout => {
+    const isFavorited = favorites.some(f => 
+      f.resource_title === handout.title && 
+      f.resource_url === handout.file_url
+    );
+    
+    // Infer stage based on content
+    let stage = 'research';
+    const titleLower = handout.title?.toLowerCase() || '';
+    const descLower = handout.description?.toLowerCase() || '';
+    if (titleLower.includes('proposal') || titleLower.includes('writing')) stage = 'proposal_writing';
+    else if (titleLower.includes('budget') || titleLower.includes('financial')) stage = 'budgeting';
+    else if (titleLower.includes('report') || titleLower.includes('impact')) stage = 'reporting';
+    else if (titleLower.includes('steward') || titleLower.includes('donor')) stage = 'stewardship';
+    
+    return { ...handout, isFavorited, stage };
+  });
+
+  const filteredHandouts = enrichedHandouts.filter(handout => {
     const matchesSearch = !searchQuery || 
       handout.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       handout.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,7 +127,11 @@ export default function ResourceLibrary() {
       handout.file_type?.toLowerCase().includes(selectedType) ||
       handout.title?.toLowerCase().includes(selectedType);
     
-    return matchesSearch && matchesType;
+    const matchesStage = selectedStage === 'all' || handout.stage === selectedStage;
+    
+    const matchesFavorites = !showFavoritesOnly || handout.isFavorited;
+    
+    return matchesSearch && matchesType && matchesStage && matchesFavorites;
   });
 
   const handleDownload = (handout) => {
@@ -81,43 +160,104 @@ export default function ResourceLibrary() {
           </p>
         </div>
 
+        {/* AI Recommendations */}
+        <ResourceRecommendations 
+          userEmail={user?.email}
+          onResourceClick={(rec) => {
+            // Scroll to resources and apply filters based on recommendation
+            if (rec.type) setSelectedType(rec.type);
+            if (rec.stage) setSelectedStage(rec.stage);
+            document.getElementById('resources-section')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
+
         {/* Search and Filter */}
-        <Card className="mb-6 border-2 border-[#E5C089] shadow-lg">
+        <Card className="mb-6 border-2 border-[#E5C089] shadow-lg" id="resources-section">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                <Input
-                  placeholder="Search resources..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 border-2 focus:border-[#143A50]"
-                />
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                {RESOURCE_TYPES.map((type) => {
-                  const Icon = type.icon;
-                  return (
-                    <Button
-                      key={type.value}
-                      variant={selectedType === type.value ? 'default' : 'outline'}
-                      onClick={() => setSelectedType(type.value)}
-                      className={selectedType === type.value ? 'bg-[#143A50]' : ''}
-                    >
-                      <Icon className="w-4 h-4 mr-2" />
-                      {type.label}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
-              <span>{filteredHandouts.length} resources found</span>
-              {searchQuery && (
-                <Button variant="ghost" size="sm" onClick={() => setSearchQuery('')}>
-                  Clear search
+            <div className="flex flex-col gap-4">
+              {/* Search Bar */}
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                  <Input
+                    placeholder="Search resources..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 border-2 focus:border-[#143A50]"
+                  />
+                </div>
+                <Button
+                  variant={showFavoritesOnly ? 'default' : 'outline'}
+                  onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                  className={showFavoritesOnly ? 'bg-[#AC1A5B]' : ''}
+                >
+                  <Heart className={`w-4 h-4 mr-2 ${showFavoritesOnly ? 'fill-current' : ''}`} />
+                  Favorites
                 </Button>
-              )}
+              </div>
+
+              {/* Filters Row */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <label className="text-xs text-slate-600 mb-1 block">Resource Type</label>
+                  <Select value={selectedType} onValueChange={setSelectedType}>
+                    <SelectTrigger className="border-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {RESOURCE_TYPES.map(type => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-1">
+                  <label className="text-xs text-slate-600 mb-1 block">Funding Stage</label>
+                  <Select value={selectedStage} onValueChange={setSelectedStage}>
+                    <SelectTrigger className="border-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FUNDING_STAGES.map(stage => (
+                        <SelectItem key={stage.value} value={stage.value}>
+                          {stage.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Results Summary */}
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-600">
+                    {filteredHandouts.length} resources found
+                  </span>
+                  {showFavoritesOnly && (
+                    <Badge className="bg-[#AC1A5B]">
+                      <Heart className="w-3 h-3 mr-1" />
+                      Favorites Only
+                    </Badge>
+                  )}
+                </div>
+                {(searchQuery || selectedType !== 'all' || selectedStage !== 'all' || showFavoritesOnly) && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSelectedType('all');
+                      setSelectedStage('all');
+                      setShowFavoritesOnly(false);
+                    }}
+                  >
+                    Clear all filters
+                  </Button>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -132,15 +272,28 @@ export default function ResourceLibrary() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredHandouts.map((handout, idx) => (
-              <Card key={idx} className="hover:shadow-xl transition-shadow border-2 hover:border-[#E5C089]">
+              <Card key={idx} className={`hover:shadow-xl transition-all border-2 ${handout.isFavorited ? 'border-[#AC1A5B]' : 'hover:border-[#E5C089]'}`}>
                 <CardHeader className="bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
                   <div className="flex items-start justify-between mb-2">
                     <FileText className="w-8 h-8 text-[#E5C089]" />
-                    {handout.file_type && (
-                      <Badge variant="secondary" className="bg-white/20 text-white">
-                        {handout.file_type.toUpperCase()}
-                      </Badge>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {handout.file_type && (
+                        <Badge variant="secondary" className="bg-white/20 text-white">
+                          {handout.file_type.toUpperCase()}
+                        </Badge>
+                      )}
+                      <button
+                        onClick={() => toggleFavoriteMutation.mutate({ 
+                          handout, 
+                          isFavorited: handout.isFavorited 
+                        })}
+                        className="hover:scale-110 transition-transform"
+                      >
+                        <Heart 
+                          className={`w-5 h-5 ${handout.isFavorited ? 'fill-[#E5C089] text-[#E5C089]' : 'text-white/60'}`}
+                        />
+                      </button>
+                    </div>
                   </div>
                   <CardTitle className="text-lg">{handout.title}</CardTitle>
                   {handout.description && (
@@ -150,12 +303,24 @@ export default function ResourceLibrary() {
                   )}
                 </CardHeader>
                 <CardContent className="p-4">
-                  {handout.parentTitle && (
-                    <div className="mb-3 pb-3 border-b border-slate-200">
-                      <p className="text-xs text-slate-500 mb-1">From course:</p>
-                      <p className="text-sm font-medium text-slate-700">{handout.parentTitle}</p>
+                  <div className="mb-3 space-y-2">
+                    {handout.parentTitle && (
+                      <div className="pb-2 border-b border-slate-200">
+                        <p className="text-xs text-slate-500 mb-1">From course:</p>
+                        <p className="text-sm font-medium text-slate-700">{handout.parentTitle}</p>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        {FUNDING_STAGES.find(s => s.value === handout.stage)?.label || 'Research'}
+                      </Badge>
+                      {handout.funding_lane && (
+                        <Badge variant="outline" className="text-xs">
+                          {handout.funding_lane}
+                        </Badge>
+                      )}
                     </div>
-                  )}
+                  </div>
                   <Button 
                     onClick={() => handleDownload(handout)}
                     className="w-full bg-[#143A50] hover:bg-[#1E4F58]"
