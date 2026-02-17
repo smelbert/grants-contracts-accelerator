@@ -55,6 +55,7 @@ const getUserPortalNav = () => [
     groupName: 'Workspace',
     items: [
       { name: 'Funding Readiness', page: 'FundingReadinessAssessment', icon: CheckCircle2 },
+      { name: 'AI Document Review', page: 'AIDocumentReview', icon: Sparkles },
       { name: 'Projects', page: 'Projects', icon: FileText },
       { name: 'Documents', page: 'Documents', icon: FileText },
       { name: 'Templates', page: 'Templates', icon: BookOpen, dataTour: 'templates' },
