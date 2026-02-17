@@ -292,6 +292,9 @@ export default function LearningContentManagement() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
+                          <Button size="sm" variant="ghost" onClick={() => setReviewingContent(content)}>
+                            <GitBranch className="w-4 h-4" />
+                          </Button>
                           <Button size="sm" variant="ghost" onClick={() => { 
                             setEditingContent(content); 
                             setBuilderMode(true); 
@@ -375,10 +378,9 @@ export default function LearningContentManagement() {
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
-                      </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        </div>
+                        </CardContent>
+                        </Card>
                 ))
               )}
             </div>
