@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import AIContentAssistant from './AIContentAssistant';
+import EnhancedAICourseAssistant from './EnhancedAICourseAssistant';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,6 +46,7 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   const [aiGenerating, setAiGenerating] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
+  const [enhancedAiOpen, setEnhancedAiOpen] = useState(false);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -344,11 +346,11 @@ Return ONLY valid JSON, no additional text.`,
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => setAiAssistantOpen(true)}
+                onClick={() => setEnhancedAiOpen(true)}
                 className="text-purple-600 border-purple-600"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                AI Assistant
+                AI Course Builder
               </Button>
               <Button
                 size="sm"
@@ -600,6 +602,14 @@ Return ONLY valid JSON, no additional text.`,
         onOpenChange={setAiAssistantOpen}
         onApplyContent={handleApplyAiContent}
         mode="create"
+      />
+
+      {/* Enhanced AI Course Assistant */}
+      <EnhancedAICourseAssistant
+        open={enhancedAiOpen}
+        onClose={() => setEnhancedAiOpen(false)}
+        onApplyContent={handleApplyAiContent}
+        existingCourse={courseData}
       />
     </div>
   );
