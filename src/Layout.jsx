@@ -610,21 +610,6 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
 
-      {/* Onboarding Flow */}
-      {showOnboardingFlow && (
-        <>
-          <OnboardingFlow 
-            userEmail={user.email} 
-            userRole={effectiveRole} 
-          />
-          <AIOnboardingAssistant
-            userRole={effectiveRole}
-            currentPage={currentPageName}
-            userProgress="In Progress"
-          />
-        </>
-      )}
-
       {/* IncubateHer Onboarding */}
       {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && (
         <IncubateHerOnboarding

@@ -111,6 +111,7 @@ import IncubateHerParticipants from './pages/IncubateHerParticipants';
 import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
 import IncubateHerPublic from './pages/IncubateHerPublic';
+import IncubateHerRegistration from './pages/IncubateHerRegistration';
 import IncubateHerReport from './pages/IncubateHerReport';
 import IncubateHerSchedule from './pages/IncubateHerSchedule';
 import IncubateHerVideoLibrary from './pages/IncubateHerVideoLibrary';
@@ -175,7 +176,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerRegistration from './pages/IncubateHerRegistration';
 import __Layout from './Layout.jsx';
 
 
@@ -244,6 +244,7 @@ export const PAGES = {
     "IncubateHerPostAssessment": IncubateHerPostAssessment,
     "IncubateHerPreAssessment": IncubateHerPreAssessment,
     "IncubateHerPublic": IncubateHerPublic,
+    "IncubateHerRegistration": IncubateHerRegistration,
     "IncubateHerReport": IncubateHerReport,
     "IncubateHerSchedule": IncubateHerSchedule,
     "IncubateHerVideoLibrary": IncubateHerVideoLibrary,
@@ -308,7 +309,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerRegistration": IncubateHerRegistration,
 }
 
 export const pagesConfig = {
