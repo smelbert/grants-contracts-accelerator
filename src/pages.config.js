@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AIContentManagement from './pages/AIContentManagement';
+import AIDocumentReview from './pages/AIDocumentReview';
 import AIFundingMatcher from './pages/AIFundingMatcher';
 import AIGuardrails from './pages/AIGuardrails';
 import AboutEIS from './pages/AboutEIS';
@@ -174,12 +175,12 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import AIDocumentReview from './pages/AIDocumentReview';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AIContentManagement": AIContentManagement,
+    "AIDocumentReview": AIDocumentReview,
     "AIFundingMatcher": AIFundingMatcher,
     "AIGuardrails": AIGuardrails,
     "AboutEIS": AboutEIS,
@@ -306,7 +307,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "AIDocumentReview": AIDocumentReview,
 }
 
 export const pagesConfig = {

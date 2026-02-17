@@ -195,22 +195,35 @@ export default function IncubateHerPublic() {
             </h2>
             <div className="max-w-2xl mx-auto">
               <div className="p-8 rounded-lg text-center" style={{ backgroundColor: BRAND_COLORS.neutralLight, border: `3px solid ${BRAND_COLORS.eisGold}` }}>
-                <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.eisNavy }}>Two Evenings + Saturday Half-Day</h3>
+                <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.eisNavy }}>March 2, 5 & 7, 2026</h3>
                 <p className="text-lg mb-6" style={{ color: BRAND_COLORS.neutralDark }}>In-Person & Virtual Sessions</p>
                 <div className="space-y-3 text-left max-w-md mx-auto">
-                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-                    <Calendar className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
-                    <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>Monday 5:30 PM – 7:30 PM (Virtual)</span>
+                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                    <Calendar className="w-5 h-5 flex-shrink-0 mt-1" style={{ color: BRAND_COLORS.eisGold }} />
+                    <div>
+                      <span className="font-medium block" style={{ color: BRAND_COLORS.neutralDark }}>Monday, March 2 | 5:30–7:30 PM</span>
+                      <span className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>Virtual – Google Meet</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-                    <Calendar className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
-                    <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>Thursday 5:30 PM – 7:30 PM (Virtual)</span>
+                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                    <Calendar className="w-5 h-5 flex-shrink-0 mt-1" style={{ color: BRAND_COLORS.eisGold }} />
+                    <div>
+                      <span className="font-medium block" style={{ color: BRAND_COLORS.neutralDark }}>Thursday, March 5 | 5:30–7:30 PM</span>
+                      <span className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>Virtual – Google Meet</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-                    <Calendar className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
-                    <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>Saturday 9:30 AM – 12:30 PM (In-Person)</span>
+                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                    <Calendar className="w-5 h-5 flex-shrink-0 mt-1" style={{ color: BRAND_COLORS.culRed }} />
+                    <div>
+                      <span className="font-medium block" style={{ color: BRAND_COLORS.neutralDark }}>Saturday, March 7 | 9:00 AM–12:00 PM</span>
+                      <span className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>In-Person – Columbus Metropolitan Library</span>
+                      <span className="text-sm block" style={{ color: BRAND_COLORS.eisNavy }}>Shepard Location, Meeting Room 1</span>
+                    </div>
                   </div>
                 </div>
+                <p className="text-sm mt-6" style={{ color: BRAND_COLORS.eisNavy }}>
+                  After you register, you will receive a confirmation email with the Google Meet link and next steps.
+                </p>
               </div>
             </div>
           </CardContent>
