@@ -82,39 +82,84 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
   };
 
   return (
-    <div className="bg-white shadow-2xl mx-auto overflow-visible" style={{ width: '816px' }}>
-      {/* Professional Header with Full Branding */}
-      <div className="bg-gradient-to-b from-slate-200 via-[#143A50] to-[#1E4F58] px-8 py-3 border-b-4 border-[#E5C089]">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-4">
-            <div className="bg-white rounded-lg p-2 shadow-md">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/54239c095_image.png" 
-                alt="Columbus Urban League - IncubateHer" 
-                className="h-12"
-              />
-            </div>
-            <div className="h-12 w-px bg-white/30" />
-            <div className="bg-white rounded-lg p-2 shadow-md">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
-                alt="EIS Logo" 
-                className="h-10"
-              />
-            </div>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          @page {
+            size: 8.5in 11in;
+            margin: 0.75in;
+          }
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .no-print {
+            display: none !important;
+          }
+          .print-page {
+            page-break-after: always;
+            width: 8.5in;
+            min-height: 11in;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+          }
+        }
+        .print-page {
+          width: 8.5in;
+          min-height: 11in;
+          padding: 0.75in;
+          margin: 0 auto;
+          background: white;
+          box-sizing: border-box;
+          position: relative;
+          font-family: 'Inter', sans-serif;
+        }
+        .header-band {
+          background: linear-gradient(to right, #0f766e, #14b8a6);
+          color: white;
+          padding: 16px 20px;
+          border-radius: 8px;
+          margin-bottom: 24px;
+        }
+        .footer-band {
+          position: absolute;
+          bottom: 0.5in;
+          left: 0.75in;
+          right: 0.75in;
+          font-size: 10px;
+          color: #6b7280;
+          display: flex;
+          justify-content: space-between;
+        }
+        @media screen {
+          .print-page {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+          }
+        }
+      `}} />
+
+      <div className="print-page bg-white shadow-2xl mx-auto">
+        {/* Header Band */}
+        <div className="header-band">
+          <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>
+            IncubateHer Funding Readiness Workbook
           </div>
-          <PageTypeBadge type={page.type} />
-        </div>
-        <div className="border-t border-white/20 pt-2">
-          <h2 className="text-xl font-bold text-white mb-0.5">{displayPage.title}</h2>
+          <div style={{ fontSize: '13px', opacity: 0.9 }}>
+            Preparing for Grants, Proposals & Contracts
+          </div>
+          <div style={{ fontSize: '16px', fontWeight: 600, marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '12px' }}>
+            {displayPage.title}
+          </div>
           {displayPage.subtitle && (
-            <p className="text-[#E5C089] text-xs font-medium">{displayPage.subtitle}</p>
+            <div style={{ fontSize: '12px', marginTop: '4px', opacity: 0.85 }}>
+              {displayPage.subtitle}
+            </div>
           )}
         </div>
-      </div>
 
-      {/* Content Area with Full-Page Layout */}
-      <div className="px-8 py-4 space-y-4">
+      {/* Content Area */}
+      <div className="space-y-4" style={{ fontSize: '12px', lineHeight: 1.6, color: '#111827', paddingBottom: '60px' }}>
 
         {/* Personalized Guidance Based on Assessment */}
         <PersonalizedGuidance 
@@ -418,19 +463,12 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         )}
       </div>
 
-      {/* Professional Footer with Page Info */}
-      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] px-8 py-2 border-t-4 border-[#E5C089] mt-auto">
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-white/90">
-            <span className="font-bold text-white">IncubateHer</span>
-            <span className="text-white/60 mx-2">|</span>
-            <span className="text-[#E5C089]">Funding Readiness: Preparing for Grants & Contracts</span>
-          </div>
-          <div className="text-white/60 text-xs">
-            Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions
-          </div>
-        </div>
+      {/* Footer Band */}
+      <div className="footer-band">
+        <div>Elbert Innovative Solutions × Columbus Urban League</div>
+        <div>Page {page.order || 1}</div>
       </div>
     </div>
+    </>
   );
 }
