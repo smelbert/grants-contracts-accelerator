@@ -67,29 +67,22 @@ export default function AIOnboardingAssistant({ userRole, currentPage, userProgr
     return tips[currentPage] || null;
   };
 
-  // Show welcome message on first load
+  // Initialize welcome message but keep minimized
   useEffect(() => {
-    if (!hasShownWelcome && !isOpen) {
-      setTimeout(() => {
-        const welcomeMessage = getWelcomeMessage();
-        setMessages([{ role: 'assistant', content: welcomeMessage }]);
-        setIsOpen(true);
-        setHasShownWelcome(true);
-      }, 2000);
+    if (!hasShownWelcome) {
+      const welcomeMessage = getWelcomeMessage();
+      setMessages([{ role: 'assistant', content: welcomeMessage }]);
+      setHasShownWelcome(true);
     }
   }, [hasShownWelcome]);
 
-  // Show contextual tips when page changes
+  // Add contextual tips to messages but don't auto-open
   useEffect(() => {
     if (hasShownWelcome && currentPage) {
       const pageTips = getPageTips();
-      if (pageTips && messages.length > 0) {
+      if (pageTips && messages.length > 0 && !messages.some(m => m.content.includes(pageTips.title))) {
         const tipMessage = `🎯 **${pageTips.title}**\n\n${pageTips.tips.map((tip, i) => `${i + 1}. ${tip}`).join('\n\n')}`;
         setMessages(prev => [...prev, { role: 'assistant', content: tipMessage }]);
-        if (!isOpen) {
-          setIsOpen(true);
-          setIsMinimized(false);
-        }
       }
     }
   }, [currentPage]);

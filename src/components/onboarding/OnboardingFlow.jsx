@@ -93,6 +93,10 @@ export default function OnboardingFlow({ userEmail, userRole, onComplete }) {
 
   const updateChecklistMutation = useMutation({
     mutationFn: async ({ itemId, completed }) => {
+      if (!checklist?.id) {
+        throw new Error('Checklist not found');
+      }
+
       const updatedItems = checklist.checklist_items.map(item =>
         item.id === itemId
           ? { ...item, completed, completed_date: completed ? new Date().toISOString() : null }
@@ -104,19 +108,26 @@ export default function OnboardingFlow({ userEmail, userRole, onComplete }) {
       
       // Award points for completing item
       if (completed && completedItem?.points) {
-        await base44.entities.UserActivity.create({
-          user_email: userEmail,
-          activity_type: 'onboarding_step_completed',
-          points: completedItem.points,
-          description: `Completed: ${completedItem.title}`,
-          metadata: { step_id: itemId }
-        });
+        try {
+          await base44.entities.UserActivity.create({
+            user_email: userEmail,
+            activity_type: 'onboarding_step_completed',
+            points: completedItem.points,
+            description: `Completed: ${completedItem.title}`,
+            metadata: { step_id: itemId }
+          });
+        } catch (error) {
+          console.error('Failed to create activity:', error);
+        }
       }
       
-      return await base44.entities.OnboardingChecklist.update(checklist.id, {
+      const updated = await base44.entities.OnboardingChecklist.update(checklist.id, {
         checklist_items: updatedItems,
         completed: allCompleted,
+        current_step: updatedItems.filter(i => i.completed).length
       });
+
+      return updated;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries(['onboarding-checklist']);
