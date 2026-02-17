@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { CheckCircle2, Users, Target, Calendar, Award, ArrowRight } from 'lucide-react';
+import { createPageUrl } from '@/utils';
 import { toast } from 'react-hot-toast';
 
 export default function IncubateHerPublic() {
@@ -160,15 +161,16 @@ Elbert Innovative Solutions Team`
           <p className="text-xl mb-8 max-w-3xl mx-auto" style={{ color: BRAND_COLORS.eisNavy }}>
             An intensive program helping entrepreneurs—especially women of color building nonprofit and for-profit businesses—understand what funders need to see before they say yes.
           </p>
-          <Button
-            size="lg"
-            onClick={() => setShowEnrollment(true)}
-            className="text-white text-lg px-8 py-6"
-            style={{ backgroundColor: BRAND_COLORS.eisGold }}
-          >
-            Enroll Now – Free Program
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <a href={createPageUrl('IncubateHerRegistration')}>
+            <Button
+              size="lg"
+              className="text-white text-lg px-8 py-6"
+              style={{ backgroundColor: BRAND_COLORS.eisGold }}
+            >
+              Enroll Now – Free Program
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </a>
         </div>
 
         {/* Stats */}
@@ -270,14 +272,15 @@ Elbert Innovative Solutions Team`
             <p className="text-lg mb-6 opacity-90">
               This free program is funded by Columbus Urban League and delivered by Elbert Innovative Solutions
             </p>
-            <Button
-              size="lg"
-              onClick={() => setShowEnrollment(true)}
-              className="text-lg px-8 py-6"
-              style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralDark }}
-            >
-              Enroll Now
-            </Button>
+            <a href={createPageUrl('IncubateHerRegistration')}>
+              <Button
+                size="lg"
+                className="text-lg px-8 py-6"
+                style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralDark }}
+              >
+                Enroll Now
+              </Button>
+            </a>
             <p className="text-sm mt-4 opacity-75">
               Limited spots available for this cohort
             </p>
