@@ -83,10 +83,8 @@ const getUserPortalNav = () => [
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
       { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText },
       { name: 'Video Library', page: 'IncubateHerVideoLibrary', icon: Video },
-      { name: 'Assessments', page: 'IncubateHerPreAssessment', icon: CheckCircle2 },
-      { name: 'Readiness Assessment', page: 'FundingReadinessAssessment', icon: Target },
+      { name: 'Assessments & Evaluations', page: 'IncubateHerAssessments', icon: CheckCircle2 },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
-      { name: 'Program Evaluation', page: 'IncubateHerEvaluation', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
     ]
