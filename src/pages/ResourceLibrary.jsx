@@ -6,33 +6,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Search, Download, FileText, BookOpen, Target, Heart, Star, Eye, X } from 'lucide-react';
+import { Search, Download, FileText, BookOpen, Heart, Star, Eye } from 'lucide-react';
 import { toast } from 'sonner';
+import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
 
-const RESOURCE_CATEGORIES = [
-  { value: 'all', label: 'All Resources', icon: FileText },
-  { value: 'template', label: 'Templates', icon: FileText },
-  { value: 'guidebook', label: 'Guidebooks', icon: BookOpen },
-  { value: 'worksheet', label: 'Worksheets', icon: FileText },
-];
-
-const FUNDING_STAGES = [
-  { value: 'all', label: 'All Stages' },
-  { value: 'research', label: 'Research & Discovery' },
-  { value: 'proposal_writing', label: 'Proposal Writing' },
-  { value: 'budgeting', label: 'Budget Development' },
-  { value: 'reporting', label: 'Grant Reporting' },
-  { value: 'stewardship', label: 'Donor Stewardship' },
-];
+const CATEGORY_LABELS = {
+  foundational: 'Foundational / Readiness',
+  financial_compliance: 'Financial & Compliance',
+  grant_writing: 'Grant Writing Core',
+  renewals: 'Renewals & Continuation',
+  contracts_rfp: 'Contracts & RFP',
+  donor_philanthropy: 'Donor & Philanthropy',
+  public_funding: 'Public Funding & Civic',
+  strategic: 'Strategic & Sustainability',
+  ai_tools: 'AI-Supported Tools',
+  quality_tools: 'Review & Quality',
+  meta_resources: 'Meta-Resources'
+};
 
 export default function ResourceLibrary() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedStage, setSelectedStage] = useState('all');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [previewResource, setPreviewResource] = useState(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -43,20 +40,19 @@ export default function ResourceLibrary() {
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: resources, isLoading } = useQuery({
-    queryKey: ['standalone-resources'],
+  const { data: templates, isLoading } = useQuery({
+    queryKey: ['published-templates'],
     queryFn: async () => {
-      return await base44.entities.LearningContent.filter({
-        is_standalone_resource: true
-      });
+      const allTemplates = await base44.entities.Template.filter({ is_active: true });
+      return allTemplates;
     },
   });
 
   const { data: favorites = [] } = useQuery({
-    queryKey: ['resource-favorites', user?.email],
+    queryKey: ['template-favorites', user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
-      return await base44.entities.ResourceFavorite.filter({
+      return await base44.entities.TemplateFavorite.filter({
         user_email: user.email
       });
     },
@@ -71,26 +67,19 @@ export default function ResourceLibrary() {
   const toggleFavoriteMutation = useMutation({
     mutationFn: async ({ resource, isFavorited }) => {
       if (isFavorited) {
-        const existingFav = favorites.find(f => f.resource_id === resource.id);
+        const existingFav = favorites.find(f => f.template_id === resource.id);
         if (existingFav) {
-          return await base44.entities.ResourceFavorite.delete(existingFav.id);
+          return await base44.entities.TemplateFavorite.delete(existingFav.id);
         }
       } else {
-        return await base44.entities.ResourceFavorite.create({
+        return await base44.entities.TemplateFavorite.create({
           user_email: user.email,
-          resource_type: resource.content_type,
-          resource_id: resource.id,
-          resource_title: resource.title,
-          resource_url: resource.file_url,
-          resource_metadata: {
-            description: resource.description,
-            funding_lane: resource.funding_lane
-          }
+          template_id: resource.id
         });
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['resource-favorites']);
+      queryClient.invalidateQueries(['template-favorites']);
       toast.success('Favorites updated');
     },
   });
@@ -107,8 +96,8 @@ export default function ResourceLibrary() {
     },
   });
 
-  const enrichedResources = resources?.map(resource => {
-    const isFavorited = favorites.some(f => f.resource_id === resource.id);
+  const enrichedResources = templates?.map(resource => {
+    const isFavorited = favorites.some(f => f.template_id === resource.id);
     const resourceReviews = reviews.filter(r => r.resource_id === resource.id);
     const avgRating = resourceReviews.length > 0
       ? resourceReviews.reduce((sum, r) => sum + r.rating, 0) / resourceReviews.length
@@ -119,34 +108,47 @@ export default function ResourceLibrary() {
 
   const filteredResources = enrichedResources.filter(resource => {
     const matchesSearch = !searchQuery || 
-      resource.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      resource.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      resource.template_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      resource.purpose?.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = selectedCategory === 'all' || resource.content_type === selectedCategory;
-    const matchesStage = selectedStage === 'all';
+    const matchesCategory = selectedCategory === 'all' || resource.category === selectedCategory;
     const matchesFavorites = !showFavoritesOnly || resource.isFavorited;
     
-    return matchesSearch && matchesCategory && matchesStage && matchesFavorites;
+    return matchesSearch && matchesCategory && matchesFavorites;
   });
 
   const workbookTemplates = filteredResources.filter(r => 
-    r.content_type === 'guidebook' || r.title?.toLowerCase().includes('workbook')
+    r.category === 'foundational' || r.subcategory?.toLowerCase().includes('workbook')
   );
   const otherResources = filteredResources.filter(r => 
-    r.content_type !== 'guidebook' && !r.title?.toLowerCase().includes('workbook')
+    r.category !== 'foundational' && !r.subcategory?.toLowerCase().includes('workbook')
   );
 
   const handleDownload = (resource) => {
-    window.open(resource.file_url, '_blank');
-    toast.success('Download started');
+    // Create a blob from the template content and download as PDF-like HTML
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${resource.template_name}</title>
+          <style>
+            body { font-family: Georgia, serif; line-height: 1.8; padding: 2cm; }
+            @media print { body { margin: 0; } }
+          </style>
+        </head>
+        <body>
+          <h1>${resource.template_name}</h1>
+          ${resource.template_content || ''}
+          <script>window.print();</script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    toast.success('Opening print dialog...');
   };
 
   const handlePreview = (resource) => {
-    if (resource.file_url?.toLowerCase().endsWith('.pdf')) {
-      setPreviewResource(resource);
-    } else {
-      toast.error('Preview is only available for PDF files');
-    }
+    setPreviewResource(resource);
   };
 
   if (isLoading) {
@@ -163,7 +165,6 @@ export default function ResourceLibrary() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#143A50] mb-2">Resource Library</h1>
           <p className="text-slate-600">
@@ -171,7 +172,6 @@ export default function ResourceLibrary() {
           </p>
         </div>
 
-        {/* Search and Filter */}
         <Card className="mb-6 border-2 border-[#E5C089] shadow-lg">
           <CardContent className="p-6">
             <div className="flex flex-col gap-4">
@@ -199,14 +199,13 @@ export default function ResourceLibrary() {
                 <span className="text-slate-600">
                   {filteredResources.length} resources found
                 </span>
-                {(searchQuery || selectedCategory !== 'all' || selectedStage !== 'all' || showFavoritesOnly) && (
+                {(searchQuery || selectedCategory !== 'all' || showFavoritesOnly) && (
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => {
                       setSearchQuery('');
                       setSelectedCategory('all');
-                      setSelectedStage('all');
                       setShowFavoritesOnly(false);
                     }}
                   >
@@ -265,31 +264,35 @@ export default function ResourceLibrary() {
           </TabsContent>
         </Tabs>
 
-        {/* PDF Preview Dialog */}
         {previewResource && (
           <Dialog open={!!previewResource} onOpenChange={() => setPreviewResource(null)}>
-            <DialogContent className="max-w-6xl h-[90vh]">
+            <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
               <DialogHeader>
                 <DialogTitle className="flex items-center justify-between">
-                  <span>{previewResource.title}</span>
+                  <span>{previewResource.template_name}</span>
                   <Button size="sm" onClick={() => handleDownload(previewResource)}>
                     <Download className="w-4 h-4 mr-2" />
                     Download
                   </Button>
                 </DialogTitle>
               </DialogHeader>
-              <div className="flex-1 h-full">
-                <iframe
-                  src={previewResource.file_url}
-                  className="w-full h-full rounded-lg border"
-                  title="PDF Preview"
-                />
+              <div className="flex-1 overflow-y-auto border rounded-lg p-6 bg-white">
+                <BrandedTemplateWrapper>
+                  <div 
+                    className="prose prose-slate max-w-none"
+                    style={{
+                      fontFamily: 'Georgia, "Times New Roman", serif',
+                      lineHeight: '1.8'
+                    }}
+                  >
+                    <div dangerouslySetInnerHTML={{ __html: previewResource.template_content }} />
+                  </div>
+                </BrandedTemplateWrapper>
               </div>
             </DialogContent>
           </Dialog>
         )}
 
-        {/* Review Dialog */}
         {reviewDialogOpen && reviewingResource && (
           <ReviewDialog
             resource={reviewingResource}
@@ -326,7 +329,7 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
               <FileText className="w-8 h-8 text-[#E5C089]" />
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="bg-white/20 text-white">
-                  {resource.content_type?.toUpperCase()}
+                  {CATEGORY_LABELS[resource.category] || resource.category}
                 </Badge>
                 <button
                   onClick={() => onFavorite(resource)}
@@ -338,10 +341,10 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
                 </button>
               </div>
             </div>
-            <CardTitle className="text-lg">{resource.title}</CardTitle>
-            {resource.description && (
+            <CardTitle className="text-lg">{resource.template_name}</CardTitle>
+            {resource.purpose && (
               <CardDescription className="text-white/80 text-sm">
-                {resource.description}
+                {resource.purpose}
               </CardDescription>
             )}
           </CardHeader>
@@ -362,23 +365,21 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
                   </span>
                 </div>
               )}
-              {resource.funding_lane && (
+              {resource.maturity_level && (
                 <Badge variant="outline" className="text-xs">
-                  {resource.funding_lane}
+                  {resource.maturity_level}
                 </Badge>
               )}
             </div>
             <div className="flex gap-2">
-              {resource.file_url?.toLowerCase().endsWith('.pdf') && (
-                <Button 
-                  variant="outline"
-                  onClick={() => onPreview(resource)}
-                  className="flex-1"
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  Preview
-                </Button>
-              )}
+              <Button 
+                variant="outline"
+                onClick={() => onPreview(resource)}
+                className="flex-1"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Preview
+              </Button>
               <Button 
                 onClick={() => onDownload(resource)}
                 className="flex-1 bg-[#143A50] hover:bg-[#1E4F58]"
@@ -425,7 +426,7 @@ function ReviewDialog({ resource, userEmail, onClose, onSubmit }) {
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Review: {resource.title}</DialogTitle>
+          <DialogTitle>Review: {resource.template_name}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
