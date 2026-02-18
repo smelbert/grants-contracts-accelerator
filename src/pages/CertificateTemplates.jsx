@@ -79,7 +79,7 @@ export default function CertificateTemplatesPage() {
     setEditingTemplate(null);
     setFormData({
       template_name: '',
-      template_layout: 'blue_wave_completion',
+      template_layout: 'blue_wave_landscape',
       cohort_id: '',
       is_default: false,
       header_text: 'Certificate of Completion',
@@ -224,7 +224,7 @@ export default function CertificateTemplatesPage() {
             <CardContent>
               <div className="space-y-3">
                 <ProfessionalLayoutPreview 
-                  layout={template.template_layout || 'blue_wave_completion'}
+                  layout={template.template_layout || 'blue_wave_landscape'}
                   colors={{
                     primary: template.primary_color,
                     secondary: template.secondary_color,
