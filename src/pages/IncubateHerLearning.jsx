@@ -399,12 +399,15 @@ export default function IncubateHerLearning() {
         </Card>
 
         {/* Day-by-Day Curriculum */}
-        {sessionDays.map((day, dayIdx) => (
+        {sessionDays.map((day, dayIdx) => {
+          const meetingLink = cohort?.day_meeting_links?.[`day${dayIdx + 1}`];
+          
+          return (
           <div key={dayIdx} className="mb-6">
             <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white mb-4">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex-1">
                     <CardTitle className="text-2xl mb-1">{day.date}</CardTitle>
                     <div className="flex items-center gap-3 text-white/90">
                       <span className="flex items-center gap-1">
@@ -418,6 +421,18 @@ export default function IncubateHerLearning() {
                         </span>
                       )}
                     </div>
+                    {meetingLink && (
+                      <a 
+                        href={meetingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                      >
+                        <Video className="w-4 h-4" />
+                        <span className="text-sm font-medium">Join Google Meet</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
                   </div>
                   <Badge className="bg-white text-[#143A50]">
                     {day.totalMinutes} minutes
@@ -506,7 +521,8 @@ export default function IncubateHerLearning() {
               </Card>
             ))}
           </div>
-        ))}
+        );
+        })}
 
         {/* Completion Status - Hide for CUL Observers */}
         {!isCULObserver && completionPercent === 100 && (
