@@ -9,33 +9,52 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, MapPin, Video, Users, Plus, Edit, Trash2, Copy } from 'lucide-react';
+import { Calendar, MapPin, Video, Users, Plus, Edit, Trash2, Copy, Send } from 'lucide-react';
 import { toast } from 'sonner';
+import RecurringEventForm from '@/components/events/RecurringEventForm';
+import TicketingForm from '@/components/events/TicketingForm';
+import PostEventSurveyForm from '@/components/events/PostEventSurveyForm';
 
 export default function EventManagement() {
   const [isCreating, setIsCreating] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
+    event_name: '',
     description: '',
     event_type: 'webinar',
-    event_date: '',
-    event_time: '',
-    duration_minutes: 60,
+    start_date: '',
+    end_date: '',
+    timezone: 'America/New_York',
     location_type: 'virtual',
     location_details: '',
-    meeting_link: '',
+    meeting_url: '',
     max_attendees: null,
     registration_required: true,
-    is_public: true,
-    tags: []
+    status: 'upcoming',
+    is_recurring: false,
+    recurrence_pattern: null,
+    ticketing_enabled: false,
+    ticket_tiers: [],
+    post_event_survey: {
+      enabled: false,
+      questions: []
+    },
+    calendar_integration: {
+      google_calendar_enabled: true,
+      outlook_enabled: true
+    }
   });
 
   const queryClient = useQueryClient();
 
   const { data: events = [], isLoading } = useQuery({
     queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('-event_date')
+    queryFn: () => base44.entities.Event.list('-start_date')
+  });
+
+  const { data: surveyResponses = [] } = useQuery({
+    queryKey: ['event-survey-responses'],
+    queryFn: () => base44.entities.EventSurveyResponse.list()
   });
 
   const { data: registrations = [] } = useQuery({
@@ -72,21 +91,50 @@ export default function EventManagement() {
     }
   });
 
+  const sendSurveyMutation = useMutation({
+    mutationFn: async (eventId) => {
+      const event = events.find(e => e.id === eventId);
+      const attendees = registrations.filter(r => r.event_id === eventId && r.status === 'confirmed');
+      
+      for (const attendee of attendees) {
+        await base44.integrations.Core.SendEmail({
+          to: attendee.user_email,
+          subject: `${event.post_event_survey.survey_title || 'Event Feedback'} - ${event.event_name}`,
+          body: `Thank you for attending ${event.event_name}! We'd love to hear your feedback. Please complete our survey.`
+        });
+      }
+    },
+    onSuccess: () => {
+      toast.success('Surveys sent to all attendees');
+    }
+  });
+
   const resetForm = () => {
     setFormData({
-      title: '',
+      event_name: '',
       description: '',
       event_type: 'webinar',
-      event_date: '',
-      event_time: '',
-      duration_minutes: 60,
+      start_date: '',
+      end_date: '',
+      timezone: 'America/New_York',
       location_type: 'virtual',
       location_details: '',
-      meeting_link: '',
+      meeting_url: '',
       max_attendees: null,
       registration_required: true,
-      is_public: true,
-      tags: []
+      status: 'upcoming',
+      is_recurring: false,
+      recurrence_pattern: null,
+      ticketing_enabled: false,
+      ticket_tiers: [],
+      post_event_survey: {
+        enabled: false,
+        questions: []
+      },
+      calendar_integration: {
+        google_calendar_enabled: true,
+        outlook_enabled: true
+      }
     });
   };
 
@@ -136,10 +184,10 @@ export default function EventManagement() {
           <Card>
             <CardContent className="p-6 space-y-6">
               <div>
-                <Label>Event Title</Label>
+                <Label>Event Name</Label>
                 <Input
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  value={formData.event_name}
+                  onChange={(e) => setFormData({ ...formData, event_name: e.target.value })}
                   placeholder="Grant Writing Workshop"
                 />
               </div>
@@ -192,31 +240,22 @@ export default function EventManagement() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label>Event Date</Label>
+                  <Label>Start Date & Time</Label>
                   <Input
-                    type="date"
-                    value={formData.event_date}
-                    onChange={(e) => setFormData({ ...formData, event_date: e.target.value })}
+                    type="datetime-local"
+                    value={formData.start_date}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
                   />
                 </div>
 
                 <div>
-                  <Label>Event Time</Label>
+                  <Label>End Date & Time</Label>
                   <Input
-                    type="time"
-                    value={formData.event_time}
-                    onChange={(e) => setFormData({ ...formData, event_time: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <Label>Duration (minutes)</Label>
-                  <Input
-                    type="number"
-                    value={formData.duration_minutes}
-                    onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
+                    type="datetime-local"
+                    value={formData.end_date}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
                   />
                 </div>
               </div>
@@ -253,6 +292,10 @@ export default function EventManagement() {
                   placeholder="50"
                 />
               </div>
+
+              <RecurringEventForm formData={formData} setFormData={setFormData} />
+              <TicketingForm formData={formData} setFormData={setFormData} />
+              <PostEventSurveyForm formData={formData} setFormData={setFormData} />
 
               <div className="flex justify-end gap-3 pt-4 border-t">
                 <Button variant="outline" onClick={() => {
@@ -303,7 +346,8 @@ export default function EventManagement() {
             events.map((event) => {
               const registrationCount = getEventRegistrationCount(event.id);
               const isFull = event.max_attendees && registrationCount >= event.max_attendees;
-              const isPast = new Date(event.event_date) < new Date();
+              const isPast = new Date(event.start_date) < new Date();
+              const surveyCount = surveyResponses.filter(s => s.event_id === event.id).length;
 
               return (
                 <Card key={event.id}>
@@ -317,13 +361,13 @@ export default function EventManagement() {
                           {isPast && <Badge variant="outline">Past</Badge>}
                           {isFull && <Badge className="bg-red-100 text-red-800">Full</Badge>}
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">{event.title}</h3>
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">{event.event_name}</h3>
                         <p className="text-slate-600 mb-4">{event.description}</p>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-slate-400" />
-                            <span>{new Date(event.event_date).toLocaleDateString()}</span>
+                            <span>{new Date(event.start_date).toLocaleDateString()}</span>
                           </div>
                           {event.location_type === 'virtual' && (
                             <div className="flex items-center gap-2">
@@ -344,7 +388,34 @@ export default function EventManagement() {
                               {event.max_attendees ? `/${event.max_attendees}` : ''} attendees
                             </span>
                           </div>
+                          {event.is_recurring && (
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline">Recurring</Badge>
+                            </div>
+                          )}
+                          {event.ticketing_enabled && (
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline">Ticketing</Badge>
+                            </div>
+                          )}
                         </div>
+                        {isPast && event.post_event_survey?.enabled && (
+                          <div className="mt-3 pt-3 border-t">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-slate-600">
+                                Survey responses: {surveyCount}/{registrationCount}
+                              </span>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => sendSurveyMutation.mutate(event.id)}
+                              >
+                                <Send className="w-4 h-4 mr-2" />
+                                Send Survey
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex gap-2">

@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, MapPin, Video, Clock, Users, CheckCircle } from 'lucide-react';
+import { Calendar, MapPin, Video, Clock, Users, CheckCircle, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
+import CalendarExportButtons from '@/components/events/CalendarExportButtons';
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -57,8 +58,8 @@ export default function Events() {
     return myRegistrations.find(r => r.event_id === eventId && r.status === 'confirmed');
   };
 
-  const upcomingEvents = events.filter(e => new Date(e.event_date) >= new Date());
-  const pastEvents = events.filter(e => new Date(e.event_date) < new Date());
+  const upcomingEvents = events.filter(e => new Date(e.start_date) >= new Date());
+  const pastEvents = events.filter(e => new Date(e.start_date) < new Date());
   const myEvents = events.filter(e => isRegistered(e.id));
 
   const eventTypeColors = {
@@ -72,7 +73,8 @@ export default function Events() {
   const EventCard = ({ event }) => {
     const registered = isRegistered(event.id);
     const registration = getMyRegistration(event.id);
-    const isPast = new Date(event.event_date) < new Date();
+    const isPast = new Date(event.start_date) < new Date();
+    const hasPaidTiers = event.ticket_tiers?.some(t => t.price > 0);
 
     return (
       <Card className="hover:shadow-lg transition">
@@ -87,22 +89,20 @@ export default function Events() {
             </div>
           </div>
 
-          <h3 className="text-xl font-bold text-slate-900 mb-2">{event.title}</h3>
+          <h3 className="text-xl font-bold text-slate-900 mb-2">{event.event_name}</h3>
           <p className="text-slate-600 mb-4 line-clamp-2">{event.description}</p>
 
           <div className="space-y-2 text-sm text-slate-600 mb-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>{new Date(event.event_date).toLocaleDateString('en-US', { 
+              <span>{new Date(event.start_date).toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
-                day: 'numeric' 
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
               })}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              <span>{event.event_time} ({event.duration_minutes} minutes)</span>
             </div>
             {event.location_type === 'virtual' && (
               <div className="flex items-center gap-2">
@@ -116,7 +116,24 @@ export default function Events() {
                 <span>{event.location_details?.split('\n')[0]}</span>
               </div>
             )}
+            {event.is_recurring && (
+              <div>
+                <Badge variant="outline" className="text-xs">Recurring Event</Badge>
+              </div>
+            )}
+            {hasPaidTiers && (
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                <span>Paid Event - Multiple tiers available</span>
+              </div>
+            )}
           </div>
+
+          {!isPast && !registered && (
+            <div className="mb-3">
+              <CalendarExportButtons event={event} />
+            </div>
+          )}
 
           {!isPast && (
             <div>
