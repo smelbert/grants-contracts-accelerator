@@ -185,13 +185,9 @@ export default function MemberManagement() {
             )}
           </CardContent>
         </Card>
-      </div>
-    </div>
-  );
-}
 
-      {/* Member Detail & Role Update Dialog */}
-      <Dialog open={!!selectedMember} onOpenChange={() => setSelectedMember(null)}>
+        {/* Member Detail & Role Update Dialog */}
+        <Dialog open={!!selectedMember} onOpenChange={() => setSelectedMember(null)}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
@@ -356,3 +352,7 @@ export default function MemberManagement() {
           )}
         </DialogContent>
       </Dialog>
+      </div>
+    </div>
+  );
+}
