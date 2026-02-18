@@ -1,232 +1,325 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
-import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
-import { CheckCircle2, Clock, MapPin } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-
-const SCHEDULE_OPTIONS = [
-  {
-    id: 'option_c',
-    title: 'Two Evenings + Saturday Half-Day (Face-to-Face Option)',
-    sessions: [
-      { 
-        day: 'Monday Evening', 
-        time: '5:30 PM – 7:30 PM',
-        topic: 'Funding Foundations',
-        description: 'Grants vs. contracts; Funding mindset and readiness overview'
-      },
-      { 
-        day: 'Thursday Evening', 
-        time: '5:30 PM – 7:30 PM',
-        topic: 'Documents & RFP Orientation',
-        description: 'Core documents and systems; Budget basics; Preparing to evaluate opportunities'
-      },
-      { 
-        day: 'Saturday (In-Person)', 
-        time: '9:30 AM – 12:30 PM', 
-        inPerson: true,
-        topic: 'Integration & Application',
-        description: 'Case examples and discussion; Small-group exercises; "Is this fundable yet?" readiness mapping; Q&A and next-step planning'
-      }
-    ],
-    bestFor: 'Participants who want interactive in-person collaboration',
-    totalHours: 7,
-    topics: ['Funding Foundations', 'Documents & RFP Orientation', 'Integration & Application Workshop']
-  }
-];
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Calendar, Video, MapPin, Users, CheckCircle, FileText, Upload, Play } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function IncubateHerSchedule() {
+  const [editingSession, setEditingSession] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const queryClient = useQueryClient();
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
 
-  const { data: cohort } = useQuery({
-    queryKey: ['incubateher-cohort'],
-    queryFn: async () => {
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
-      });
-      return cohorts[0];
-    }
+  const { data: cohorts = [] } = useQuery({
+    queryKey: ['incubateher-cohorts'],
+    queryFn: () => base44.entities.ProgramCohort.filter({ program_code: 'incubateher' })
   });
 
-  const { data: enrollment, isLoading: enrollmentLoading } = useQuery({
-    queryKey: ['enrollment', user?.email],
+  const { data: sessions = [] } = useQuery({
+    queryKey: ['program-sessions'],
+    queryFn: () => base44.entities.ProgramSession.list('-session_date')
+  });
+
+  const { data: enrollment } = useQuery({
+    queryKey: ['my-enrollment', user?.email],
     queryFn: async () => {
-      if (!user?.email || !cohort?.id) return null;
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        cohort_id: cohort.id
+        participant_email: user.email
       });
       return enrollments[0];
     },
-    enabled: !!user?.email && !!cohort?.id
+    enabled: !!user?.email
   });
 
-  // Redirect if already enrolled with a schedule selected
-  React.useEffect(() => {
-    if (enrollment?.selected_schedule_option && !isRedirecting) {
-      setIsRedirecting(true);
-      window.location.href = '/app/IncubateHerLearning';
-    }
-  }, [enrollment, isRedirecting]);
+  const { data: attendance = [] } = useQuery({
+    queryKey: ['my-attendance', enrollment?.id],
+    queryFn: () => base44.entities.SessionAttendance.filter({
+      enrollment_id: enrollment.id
+    }),
+    enabled: !!enrollment?.id
+  });
 
-  const selectScheduleMutation = useMutation({
-    mutationFn: async (optionId) => {
-      if (enrollment) {
-        return await base44.entities.ProgramEnrollment.update(enrollment.id, {
-          selected_schedule_option: optionId
-        });
-      } else {
-        return await base44.entities.ProgramEnrollment.create({
-          cohort_id: cohort.id,
-          participant_email: user.email,
-          participant_name: user.full_name,
-          selected_schedule_option: optionId,
-          role: 'participant'
-        });
-      }
-    },
+  const updateSessionMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.ProgramSession.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['enrollment']);
-      toast.success('Schedule selected! Redirecting to Learning Hub...');
-      setTimeout(() => {
-        window.location.href = '/app/IncubateHerLearning';
-      }, 1500);
+      queryClient.invalidateQueries(['program-sessions']);
+      toast.success('Session updated');
+      setEditingSession(null);
     }
   });
 
-  const handleSelect = (optionId) => {
-    setSelectedOption(optionId);
-    selectScheduleMutation.mutate(optionId);
+  const handleVideoUpload = async (sessionId) => {
+    if (!videoFile) return;
+
+    setUploadingVideo(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: videoFile });
+      
+      await updateSessionMutation.mutateAsync({
+        id: sessionId,
+        data: { video_url: file_url }
+      });
+      
+      setVideoFile(null);
+      toast.success('Video uploaded successfully');
+    } catch (error) {
+      toast.error('Failed to upload video');
+    } finally {
+      setUploadingVideo(false);
+    }
   };
 
-  // Show loading while checking enrollment
-  if (enrollmentLoading || isRedirecting) {
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-        <CoBrandedHeader title="Loading..." />
-        <div className="max-w-4xl mx-auto p-6 text-center">
-          <p className="text-slate-600">
-            {isRedirecting ? 'Redirecting to Learning Hub...' : 'Checking your enrollment status...'}
-          </p>
-        </div>
-        <CoBrandedFooter />
-      </div>
-    );
-  }
+  const isAttended = (sessionId) => {
+    return attendance.some(a => a.session_id === sessionId && a.attended);
+  };
+
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner' || user?.role === 'coach';
+
+  const groupSessionsByDay = (sessions) => {
+    const grouped = {};
+    sessions.forEach(session => {
+      const date = new Date(session.session_date).toLocaleDateString();
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      grouped[date].push(session);
+    });
+    return grouped;
+  };
+
+  const sessionsByDay = groupSessionsByDay(sessions);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-      <CoBrandedHeader 
-        title="Choose Your Schedule"
-        subtitle="Select the option that works best for you"
-      />
-
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="flex justify-center">
-          {SCHEDULE_OPTIONS.map((option) => {
-            const isSelected = enrollment?.selected_schedule_option === option.id || selectedOption === option.id;
-            
-            return (
-              <Card 
-                key={option.id}
-                className={`transition-all hover:shadow-lg max-w-2xl w-full ${isSelected ? 'ring-2' : ''}`}
-                style={{ 
-                  borderColor: isSelected ? BRAND_COLORS.eisGold : BRAND_COLORS.neutralGray,
-                  ringColor: isSelected ? BRAND_COLORS.eisGold : 'transparent'
-                }}
-              >
-                <CardContent className="pt-6">
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-3" style={{ color: BRAND_COLORS.culRed }}>
-                      {option.title}
-                    </h3>
-                    <p className="text-sm mb-3" style={{ color: BRAND_COLORS.neutralDark }}>
-                      <strong>Best for:</strong> {option.bestFor}
-                    </p>
-                    <Badge style={{ backgroundColor: BRAND_COLORS.eisNavy, color: BRAND_COLORS.neutralLight }}>
-                      <Clock className="w-3 h-3 mr-1" />
-                      {option.totalHours} hours total
-                    </Badge>
-                  </div>
-
-                  {/* Sessions */}
-                  <div className="space-y-3 mb-6">
-                    {option.sessions.map((session, idx) => (
-                      <div key={idx} className="p-4 rounded-lg border-2" style={{ backgroundColor: BRAND_COLORS.neutralLight, borderColor: BRAND_COLORS.eisGold }}>
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1">
-                            <p className="font-bold text-base" style={{ color: BRAND_COLORS.eisNavy }}>
-                              {session.day}
-                            </p>
-                            <p className="text-sm font-medium" style={{ color: BRAND_COLORS.culRed }}>
-                              {session.time}
-                            </p>
-                          </div>
-                          {session.inPerson && (
-                            <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
-                              <MapPin className="w-3 h-3 mr-1" />
-                              In-Person
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="mt-2">
-                          <p className="text-sm font-semibold mb-1" style={{ color: BRAND_COLORS.eisNavy }}>
-                            {session.topic}
-                          </p>
-                          <p className="text-xs" style={{ color: BRAND_COLORS.neutralDark }}>
-                            {session.description}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Topics */}
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold mb-2" style={{ color: BRAND_COLORS.eisNavy }}>
-                      CORE TOPICS
-                    </p>
-                    <ul className="space-y-1">
-                      {option.topics.map((topic, idx) => (
-                        <li key={idx} className="flex items-start gap-2 text-xs" style={{ color: BRAND_COLORS.neutralDark }}>
-                          <CheckCircle2 className="w-3 h-3 mt-0.5 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
-                          {topic}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Button
-                    onClick={() => handleSelect(option.id)}
-                    className="w-full text-white"
-                    disabled={isSelected}
-                    style={{ 
-                      backgroundColor: isSelected ? BRAND_COLORS.eisNavy : BRAND_COLORS.eisGold,
-                      opacity: isSelected ? 0.8 : 1
-                    }}
-                  >
-                    {isSelected ? 'Selected' : 'Select This Option'}
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">IncubateHer Schedule</h1>
+          <p className="text-slate-600">View sessions, watch recordings, and track attendance</p>
         </div>
-      </div>
 
-      <CoBrandedFooter />
+        <Tabs defaultValue="schedule">
+          <TabsList>
+            <TabsTrigger value="schedule">Schedule</TabsTrigger>
+            <TabsTrigger value="recordings">Recordings</TabsTrigger>
+            {isAdmin && <TabsTrigger value="manage">Manage Sessions</TabsTrigger>}
+          </TabsList>
+
+          <TabsContent value="schedule" className="mt-6">
+            <div className="space-y-6">
+              {Object.entries(sessionsByDay).map(([date, daySessions]) => {
+                const primarySession = daySessions[0];
+                const hasVideo = primarySession?.video_url;
+                const sessionDate = new Date(primarySession.session_date);
+                const isPast = sessionDate < new Date();
+                
+                return (
+                  <Card key={date} className="overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="text-2xl mb-2">{date}</CardTitle>
+                          <div className="flex items-center gap-4 text-sm">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4" />
+                              <span>{sessionDate.toLocaleDateString('en-US', { weekday: 'long' })}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {primarySession.format === 'virtual' ? (
+                                <>
+                                  <Video className="w-4 h-4" />
+                                  <span>Virtual</span>
+                                </>
+                              ) : (
+                                <>
+                                  <MapPin className="w-4 h-4" />
+                                  <span>In Person</span>
+                                </>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span>{primarySession.start_time}</span>
+                            </div>
+                          </div>
+                        </div>
+                        {isAttended(primarySession.id) && (
+                          <Badge className="bg-green-500">
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            Attended
+                          </Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="p-6">
+                      <div className="space-y-6">
+                        {/* Topics Covered */}
+                        <div>
+                          <h3 className="font-semibold text-lg mb-3">Topics Covered</h3>
+                          <div className="space-y-2">
+                            {daySessions.map((session, idx) => (
+                              <div key={session.id} className="flex items-start gap-3">
+                                <Badge variant="outline" className="mt-1">
+                                  {idx + 1}
+                                </Badge>
+                                <div className="flex-1">
+                                  <p className="font-medium">{session.topic}</p>
+                                  {session.description && (
+                                    <p className="text-sm text-slate-600 mt-1">{session.description}</p>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Video Recording */}
+                        {hasVideo && (
+                          <div>
+                            <h3 className="font-semibold text-lg mb-3">Session Recording</h3>
+                            <div className="bg-slate-900 rounded-lg overflow-hidden">
+                              <video
+                                controls
+                                className="w-full"
+                                src={primarySession.video_url}
+                              >
+                                Your browser does not support video playback.
+                              </video>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Handouts & Resources */}
+                        {primarySession.handouts?.length > 0 && (
+                          <div>
+                            <h3 className="font-semibold text-lg mb-3">Handouts & Resources</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {primarySession.handouts.map((handout, idx) => (
+                                <a
+                                  key={idx}
+                                  href={handout.file_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-3 p-3 border rounded-lg hover:bg-slate-50 transition"
+                                >
+                                  <FileText className="w-5 h-5 text-[#AC1A5B]" />
+                                  <div className="flex-1">
+                                    <p className="font-medium text-sm">{handout.title}</p>
+                                    <p className="text-xs text-slate-600">{handout.description}</p>
+                                  </div>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Join/Access Info */}
+                        {!isPast && primarySession.format === 'virtual' && primarySession.meeting_link && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <Button
+                              className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
+                              onClick={() => window.open(primarySession.meeting_link, '_blank')}
+                            >
+                              <Video className="w-4 h-4 mr-2" />
+                              Join Virtual Session
+                            </Button>
+                          </div>
+                        )}
+
+                        {!isPast && primarySession.format === 'in_person' && primarySession.location && (
+                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                            <div className="flex items-start gap-3">
+                              <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
+                              <div>
+                                <p className="font-semibold text-amber-900">In-Person Location</p>
+                                <p className="text-sm text-amber-800 mt-1">{primarySession.location}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="recordings" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sessions.filter(s => s.video_url).map(session => (
+                <Card key={session.id}>
+                  <CardContent className="p-4">
+                    <div className="aspect-video bg-slate-900 rounded-lg mb-3 relative overflow-hidden">
+                      <video src={session.video_url} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <Play className="w-12 h-12 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="font-semibold mb-1">{session.topic}</h3>
+                    <p className="text-sm text-slate-600">
+                      {new Date(session.session_date).toLocaleDateString()}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {isAdmin && (
+            <TabsContent value="manage" className="mt-6">
+              <div className="space-y-4">
+                {sessions.map(session => (
+                  <Card key={session.id}>
+                    <CardHeader>
+                      <CardTitle className="text-lg">{session.topic}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Upload Session Video</Label>
+                          <div className="flex gap-2 mt-2">
+                            <Input
+                              type="file"
+                              accept="video/*"
+                              onChange={(e) => setVideoFile(e.target.files[0])}
+                            />
+                            <Button
+                              onClick={() => handleVideoUpload(session.id)}
+                              disabled={!videoFile || uploadingVideo}
+                              className="bg-[#AC1A5B] hover:bg-[#A65D40]"
+                            >
+                              <Upload className="w-4 h-4 mr-2" />
+                              {uploadingVideo ? 'Uploading...' : 'Upload'}
+                            </Button>
+                          </div>
+                        </div>
+                        {session.video_url && (
+                          <div className="text-sm text-green-600 flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4" />
+                            Video uploaded
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+          )}
+        </Tabs>
+      </div>
     </div>
   );
 }

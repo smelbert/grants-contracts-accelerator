@@ -24,9 +24,35 @@ export default function DiscussionsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: communitySpaces = [] } = useQuery({
+  const { data: userAccess } = useQuery({
+    queryKey: ['userAccess', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const access = await base44.entities.UserAccessLevel.filter({
+        user_email: user.email
+      });
+      return access[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: allSpaces = [] } = useQuery({
     queryKey: ['communitySpaces'],
     queryFn: () => base44.entities.CommunitySpace.filter({ space_type: 'posts', is_active: true }),
+  });
+
+  // Filter spaces based on user access
+  const communitySpaces = allSpaces.filter(space => {
+    // If user is admin, show all spaces
+    if (user?.role === 'admin' || user?.role === 'owner') return true;
+    
+    // Check if space is for IncubateHer program
+    if (space.slug === 'incubateher-program' || space.icon === 'Target') {
+      return userAccess?.entry_point === 'incubateher_program';
+    }
+    
+    // For other spaces, show if user has community access
+    return userAccess?.community_access;
   });
 
   // Parse URL parameters for space filter
@@ -37,6 +63,11 @@ export default function DiscussionsPage() {
       const space = communitySpaces.find(s => s.slug === spaceSlug);
       if (space) {
         setSelectedSpace(space.id);
+      } else {
+        // If space not found or no access, redirect to first available space
+        if (communitySpaces.length > 0) {
+          setSelectedSpace(communitySpaces[0].id);
+        }
       }
     }
   }, [communitySpaces]);

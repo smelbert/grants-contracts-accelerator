@@ -83,8 +83,8 @@ const getUserPortalNav = () => [
     items: [
       { name: 'Program Overview', page: 'IncubateHerOverview', icon: Target },
       { name: 'Learning Hub', page: 'IncubateHerLearning', icon: BookOpen },
+      { name: 'Schedule & Videos', page: 'IncubateHerSchedule', icon: Calendar },
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
-      { name: 'Video Library', page: 'IncubateHerVideoLibrary', icon: Video },
       { name: 'Assessments & Evaluations', page: 'IncubateHerAssessments', icon: CheckCircle2 },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
@@ -192,6 +192,7 @@ const getAdminPortalNav = () => [
       { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
       { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
       { name: 'Participant Workbooks', page: 'IncubateHerParticipantWorkbooks', icon: BookOpen },
+      { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: CheckCircle2 },
       { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users },
       { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings },
       { name: 'Agenda & Courses Editor', page: 'IncubateHerAgenda', icon: FileText },

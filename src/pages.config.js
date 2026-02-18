@@ -189,6 +189,7 @@ import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
 import ProgramMessaging from './pages/ProgramMessaging';
 import EventManagement from './pages/EventManagement';
+import IncubateHerAttendance from './pages/IncubateHerAttendance';
 import __Layout from './Layout.jsx';
 
 
@@ -335,6 +336,7 @@ export const PAGES = {
     "ProgramAnnouncements": ProgramAnnouncements,
     "ProgramMessaging": ProgramMessaging,
     "EventManagement": EventManagement,
+    "IncubateHerAttendance": IncubateHerAttendance,
 }
 
 export const pagesConfig = {
