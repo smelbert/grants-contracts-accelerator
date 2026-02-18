@@ -96,6 +96,7 @@ import Home from './pages/Home';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
 import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
 import IncubateHerAgenda from './pages/IncubateHerAgenda';
+import IncubateHerAssessments from './pages/IncubateHerAssessments';
 import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
@@ -176,7 +177,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerAssessments from './pages/IncubateHerAssessments';
 import __Layout from './Layout.jsx';
 
 
@@ -230,6 +230,7 @@ export const PAGES = {
     "IncubateHerAdmin": IncubateHerAdmin,
     "IncubateHerAdminConsole": IncubateHerAdminConsole,
     "IncubateHerAgenda": IncubateHerAgenda,
+    "IncubateHerAssessments": IncubateHerAssessments,
     "IncubateHerCULDashboard": IncubateHerCULDashboard,
     "IncubateHerCompletion": IncubateHerCompletion,
     "IncubateHerConsultations": IncubateHerConsultations,
@@ -310,7 +311,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerAssessments": IncubateHerAssessments,
 }
 
 export const pagesConfig = {

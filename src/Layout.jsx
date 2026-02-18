@@ -72,6 +72,7 @@ const getUserPortalNav = () => [
     groupName: 'Learning',
     items: [
       { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning', requiresAccess: 'learning_hub' },
+      { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText },
       { name: 'Live Sessions / Events', page: 'Calendar', icon: Calendar },
     ]
   },
@@ -81,7 +82,6 @@ const getUserPortalNav = () => [
       { name: 'Program Overview', page: 'IncubateHerOverview', icon: Target },
       { name: 'Learning Hub', page: 'IncubateHerLearning', icon: BookOpen },
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
-      { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText },
       { name: 'Video Library', page: 'IncubateHerVideoLibrary', icon: Video },
       { name: 'Assessments & Evaluations', page: 'IncubateHerAssessments', icon: CheckCircle2 },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
