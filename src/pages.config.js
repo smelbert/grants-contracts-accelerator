@@ -192,6 +192,7 @@ import EventManagement from './pages/EventManagement';
 import IncubateHerAttendance from './pages/IncubateHerAttendance';
 import GrantWritingPreAssessment from './pages/GrantWritingPreAssessment';
 import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
+import AssessmentAnalytics from './pages/AssessmentAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -341,6 +342,7 @@ export const PAGES = {
     "IncubateHerAttendance": IncubateHerAttendance,
     "GrantWritingPreAssessment": GrantWritingPreAssessment,
     "GrantWritingPostAssessment": GrantWritingPostAssessment,
+    "AssessmentAnalytics": AssessmentAnalytics,
 }
 
 export const pagesConfig = {
