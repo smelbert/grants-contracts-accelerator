@@ -185,6 +185,7 @@ import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import ProgramModuleManager from './pages/ProgramModuleManager';
 import CertificateTemplates from './pages/CertificateTemplates';
 import IssuedCertificates from './pages/IssuedCertificates';
+import VerifyCertificate from './pages/VerifyCertificate';
 import __Layout from './Layout.jsx';
 
 
@@ -327,6 +328,7 @@ export const PAGES = {
     "ProgramModuleManager": ProgramModuleManager,
     "CertificateTemplates": CertificateTemplates,
     "IssuedCertificates": IssuedCertificates,
+    "VerifyCertificate": VerifyCertificate,
 }
 
 export const pagesConfig = {

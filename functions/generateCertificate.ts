@@ -58,6 +58,22 @@ Deno.serve(async (req) => {
     // Generate certificate number
     const certificateNumber = `${cohort.program_code}-${Date.now()}-${enrollment.participant_email.substring(0, 3).toUpperCase()}`;
 
+    // Get certificate template
+    const templates = await base44.asServiceRole.entities.CertificateTemplate.filter({
+      cohort_id: enrollment.cohort_id,
+      is_active: true
+    });
+    
+    let template = templates[0];
+    if (!template) {
+      // Try to get default template
+      const defaultTemplates = await base44.asServiceRole.entities.CertificateTemplate.filter({
+        is_default: true,
+        is_active: true
+      });
+      template = defaultTemplates[0];
+    }
+
     // Create PDF certificate
     const doc = new jsPDF({
       orientation: 'landscape',
@@ -65,55 +81,121 @@ Deno.serve(async (req) => {
       format: 'a4'
     });
 
-    // Background
-    doc.setFillColor(245, 245, 250);
-    doc.rect(0, 0, 297, 210, 'F');
+    if (template) {
+      // Use custom template
+      const bgColor = template.background_color || '#FFFFFF';
+      const borderColor = template.border_color || '#143A50';
+      const textColor = template.text_color || '#000000';
+      const accentColor = template.accent_color || '#E5C089';
 
-    // Border
-    doc.setDrawColor(20, 58, 80);
-    doc.setLineWidth(2);
-    doc.rect(10, 10, 277, 190);
-    doc.setLineWidth(0.5);
-    doc.rect(15, 15, 267, 180);
+      // Parse hex colors to RGB
+      const hexToRgb = (hex) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : { r: 255, g: 255, b: 255 };
+      };
 
-    // Title
-    doc.setFontSize(36);
-    doc.setTextColor(20, 58, 80);
-    doc.text('Certificate of Completion', 148.5, 50, { align: 'center' });
+      const bg = hexToRgb(bgColor);
+      const border = hexToRgb(borderColor);
+      const text = hexToRgb(textColor);
+      const accent = hexToRgb(accentColor);
 
-    // Subtitle
-    doc.setFontSize(14);
-    doc.setTextColor(100, 100, 100);
-    doc.text('This certifies that', 148.5, 70, { align: 'center' });
+      // Background
+      doc.setFillColor(bg.r, bg.g, bg.b);
+      doc.rect(0, 0, 297, 210, 'F');
 
-    // Participant name
-    doc.setFontSize(28);
-    doc.setTextColor(20, 58, 80);
-    doc.text(enrollment.participant_name, 148.5, 90, { align: 'center' });
+      // Border
+      doc.setDrawColor(border.r, border.g, border.b);
+      doc.setLineWidth(2);
+      doc.rect(10, 10, 277, 190);
+      doc.setLineWidth(0.5);
+      doc.rect(15, 15, 267, 180);
 
-    // Program details
-    doc.setFontSize(14);
-    doc.setTextColor(100, 100, 100);
-    doc.text('has successfully completed', 148.5, 105, { align: 'center' });
+      // Title
+      doc.setFontSize(36);
+      doc.setTextColor(accent.r, accent.g, accent.b);
+      doc.text(template.header_text || 'Certificate of Completion', 148.5, 50, { align: 'center' });
 
-    doc.setFontSize(20);
-    doc.setTextColor(20, 58, 80);
-    doc.text(cohort.program_name, 148.5, 120, { align: 'center' });
+      // Body text with placeholder replacement
+      let bodyText = template.body_template || 'This certifies that {participant_name} has successfully completed {program_name} on {completion_date}.';
+      bodyText = bodyText.replace('{participant_name}', enrollment.participant_name);
+      bodyText = bodyText.replace('{program_name}', cohort.program_name);
+      bodyText = bodyText.replace('{completion_date}', new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }));
+      bodyText = bodyText.replace('{total_hours}', totalHours.toString());
+      bodyText = bodyText.replace('{funder_organization}', cohort.funder_organization || '');
+      bodyText = bodyText.replace('{delivery_organization}', cohort.delivery_organization || '');
 
-    // Hours and date
-    doc.setFontSize(12);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`${totalHours} Total Hours • Completed ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, 148.5, 135, { align: 'center' });
+      doc.setFontSize(14);
+      doc.setTextColor(text.r, text.g, text.b);
+      const splitBody = doc.splitTextToSize(bodyText, 240);
+      doc.text(splitBody, 148.5, 90, { align: 'center' });
 
-    // Certificate number
-    doc.setFontSize(10);
-    doc.text(`Certificate No: ${certificateNumber}`, 148.5, 175, { align: 'center' });
+      // Signatures
+      if (template.signature_fields && template.signature_fields.length > 0) {
+        const sigY = 150;
+        const spacing = 240 / (template.signature_fields.length + 1);
+        template.signature_fields.forEach((sig, idx) => {
+          const x = 30 + (spacing * (idx + 1));
+          doc.setLineWidth(0.5);
+          doc.line(x - 30, sigY, x + 30, sigY);
+          doc.setFontSize(10);
+          doc.setTextColor(text.r, text.g, text.b);
+          doc.text(sig.name, x, sigY + 7, { align: 'center' });
+          doc.setFontSize(8);
+          doc.text(sig.title, x, sigY + 12, { align: 'center' });
+        });
+      }
 
-    // Signature line
-    doc.setLineWidth(0.5);
-    doc.line(60, 160, 120, 160);
-    doc.setFontSize(10);
-    doc.text('Program Director', 90, 167, { align: 'center' });
+      // Footer
+      if (template.footer_text) {
+        let footerText = template.footer_text;
+        footerText = footerText.replace('{funder_organization}', cohort.funder_organization || '');
+        footerText = footerText.replace('{delivery_organization}', cohort.delivery_organization || '');
+        doc.setFontSize(10);
+        doc.setTextColor(text.r, text.g, text.b);
+        doc.text(footerText, 148.5, 185, { align: 'center' });
+      }
+
+      // Certificate number
+      doc.setFontSize(8);
+      doc.text(`Certificate No: ${certificateNumber}`, 148.5, 195, { align: 'center' });
+    } else {
+      // Default template (existing code)
+      doc.setFillColor(245, 245, 250);
+      doc.rect(0, 0, 297, 210, 'F');
+      doc.setDrawColor(20, 58, 80);
+      doc.setLineWidth(2);
+      doc.rect(10, 10, 277, 190);
+      doc.setLineWidth(0.5);
+      doc.rect(15, 15, 267, 180);
+      doc.setFontSize(36);
+      doc.setTextColor(20, 58, 80);
+      doc.text('Certificate of Completion', 148.5, 50, { align: 'center' });
+      doc.setFontSize(14);
+      doc.setTextColor(100, 100, 100);
+      doc.text('This certifies that', 148.5, 70, { align: 'center' });
+      doc.setFontSize(28);
+      doc.setTextColor(20, 58, 80);
+      doc.text(enrollment.participant_name, 148.5, 90, { align: 'center' });
+      doc.setFontSize(14);
+      doc.setTextColor(100, 100, 100);
+      doc.text('has successfully completed', 148.5, 105, { align: 'center' });
+      doc.setFontSize(20);
+      doc.setTextColor(20, 58, 80);
+      doc.text(cohort.program_name, 148.5, 120, { align: 'center' });
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`${totalHours} Total Hours • Completed ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, 148.5, 135, { align: 'center' });
+      doc.setFontSize(10);
+      doc.text(`Certificate No: ${certificateNumber}`, 148.5, 175, { align: 'center' });
+      doc.setLineWidth(0.5);
+      doc.line(60, 160, 120, 160);
+      doc.setFontSize(10);
+      doc.text('Program Director', 90, 167, { align: 'center' });
+    }
 
     // Convert to base64
     const pdfBase64 = doc.output('datauristring');

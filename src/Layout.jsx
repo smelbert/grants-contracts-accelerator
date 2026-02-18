@@ -211,6 +211,8 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Program Management', page: 'ProgramManagement', icon: Settings },
       { name: 'Program Modules', page: 'ProgramModuleManager', icon: BookOpen },
+      { name: 'Certificate Templates', page: 'CertificateTemplates', icon: BadgeIcon },
+      { name: 'Issued Certificates', page: 'IssuedCertificates', icon: BadgeIcon },
     ]
   },
   {
