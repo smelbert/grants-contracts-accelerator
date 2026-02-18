@@ -20,7 +20,6 @@ import MyLearningRequests from '@/components/learning/MyLearningRequests';
 const CONTENT_TYPES = [
   { value: 'all', label: 'All Types', icon: BookOpen },
   { value: 'course', label: 'Courses', icon: BookOpen },
-  { value: 'workbook', label: 'Workbooks', icon: FileText },
   { value: 'webinar', label: 'Webinars', icon: Video },
   { value: 'workshop', label: 'Workshops', icon: Users },
 ];
@@ -110,10 +109,7 @@ export default function LearningPage() {
       content.description?.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesLane = selectedLane === 'all' || content.funding_lane === selectedLane;
-    
-    // Handle workbook filter (includes both guidebook and mini_workbook)
-    const matchesType = selectedType === 'all' || 
-      (selectedType === 'workbook' ? (content.content_type === 'guidebook' || content.content_type === 'mini_workbook') : content.content_type === selectedType);
+    const matchesType = selectedType === 'all' || content.content_type === selectedType;
     
     const matchesDuration = durationFilter === 'all' || 
       (durationFilter === 'short' && content.duration_minutes <= 30) ||
@@ -459,71 +455,23 @@ export default function LearningPage() {
                 <p className="text-slate-500">No learning content matches your filters.</p>
               </div>
             ) : (
-              <>
-                {/* Workbooks Section */}
-                {filteredContent.filter(c => c.content_type === 'guidebook' || c.content_type === 'mini_workbook').length > 0 && (
-                  <div className="mb-8">
-                    <div className="flex items-center gap-2 mb-4">
-                      <FileText className="w-6 h-6 text-[#143A50]" />
-                      <div>
-                        <h3 className="text-xl font-bold text-slate-900">Fillable Workbooks & Mini-Workbooks</h3>
-                        <p className="text-sm text-slate-600">Step-by-step fillable guides in standard 8.5×11 format • Downloadable as PDF</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredContent
-                        .filter(c => c.content_type === 'guidebook' || c.content_type === 'mini_workbook')
-                        .sort((a, b) => (a.order || 0) - (b.order || 0))
-                        .map((content, index) => (
-                          <motion.div
-                            key={content.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                          >
-                            <LearningCard
-                              content={content}
-                              isPremium={content.is_premium}
-                              hasAccess={!content.is_premium}
-                              onStart={handleStartContent}
-                            />
-                          </motion.div>
-                        ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Other Content */}
-                {filteredContent.filter(c => c.content_type !== 'guidebook' && c.content_type !== 'mini_workbook').length > 0 && (
-                  <div>
-                    {filteredContent.some(c => c.content_type === 'guidebook' || c.content_type === 'mini_workbook') && (
-                      <div className="flex items-center gap-2 mb-4">
-                        <BookOpen className="w-5 h-5 text-blue-600" />
-                        <h3 className="text-xl font-bold text-slate-900">Courses & Learning Content</h3>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredContent
-                        .filter(c => c.content_type !== 'guidebook' && c.content_type !== 'mini_workbook')
-                        .map((content, index) => (
-                          <motion.div
-                            key={content.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                          >
-                            <LearningCard
-                              content={content}
-                              isPremium={content.is_premium}
-                              hasAccess={!content.is_premium}
-                              onStart={handleStartContent}
-                            />
-                          </motion.div>
-                        ))}
-                    </div>
-                  </div>
-                )}
-              </>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredContent.map((content, index) => (
+                  <motion.div
+                    key={content.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <LearningCard
+                      content={content}
+                      isPremium={content.is_premium}
+                      hasAccess={!content.is_premium}
+                      onStart={handleStartContent}
+                    />
+                  </motion.div>
+                ))}
+              </div>
             )}
           </TabsContent>
 

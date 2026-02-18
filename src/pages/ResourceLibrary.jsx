@@ -7,16 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Download, FileText, BookOpen, Target, Filter, Star, Heart, Sparkles } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Search, Download, FileText, BookOpen, Target, Heart, Star, Eye, X } from 'lucide-react';
 import { toast } from 'sonner';
-import ResourceRecommendations from '@/components/resources/ResourceRecommendations';
 
-const RESOURCE_TYPES = [
+const RESOURCE_CATEGORIES = [
   { value: 'all', label: 'All Resources', icon: FileText },
-  { value: 'worksheet', label: 'Worksheets', icon: FileText },
-  { value: 'handout', label: 'Handouts', icon: BookOpen },
-  { value: 'guide', label: 'Guides', icon: Target },
   { value: 'template', label: 'Templates', icon: FileText },
+  { value: 'guidebook', label: 'Guidebooks', icon: BookOpen },
+  { value: 'worksheet', label: 'Worksheets', icon: FileText },
 ];
 
 const FUNDING_STAGES = [
@@ -31,9 +31,12 @@ const FUNDING_STAGES = [
 export default function ResourceLibrary() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStage, setSelectedStage] = useState('all');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [previewResource, setPreviewResource] = useState(null);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [reviewingResource, setReviewingResource] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -41,9 +44,8 @@ export default function ResourceLibrary() {
   });
 
   const { data: resources, isLoading } = useQuery({
-    queryKey: ['resources'],
+    queryKey: ['standalone-resources'],
     queryFn: async () => {
-      // Get standalone resources (templates, guidebooks, etc.)
       return await base44.entities.LearningContent.filter({
         is_standalone_resource: true
       });
@@ -61,27 +63,28 @@ export default function ResourceLibrary() {
     enabled: !!user?.email,
   });
 
+  const { data: reviews = [] } = useQuery({
+    queryKey: ['resource-reviews'],
+    queryFn: () => base44.entities.ResourceReview.list(),
+  });
+
   const toggleFavoriteMutation = useMutation({
-    mutationFn: async ({ handout, isFavorited }) => {
+    mutationFn: async ({ resource, isFavorited }) => {
       if (isFavorited) {
-        const existingFav = favorites.find(f => 
-          f.resource_title === handout.title && 
-          f.resource_url === handout.file_url
-        );
+        const existingFav = favorites.find(f => f.resource_id === resource.id);
         if (existingFav) {
           return await base44.entities.ResourceFavorite.delete(existingFav.id);
         }
       } else {
         return await base44.entities.ResourceFavorite.create({
           user_email: user.email,
-          resource_type: 'handout',
-          resource_title: handout.title,
-          resource_url: handout.file_url,
+          resource_type: resource.content_type,
+          resource_id: resource.id,
+          resource_title: resource.title,
+          resource_url: resource.file_url,
           resource_metadata: {
-            parent_title: handout.parentTitle,
-            file_type: handout.file_type,
-            description: handout.description,
-            funding_lane: handout.funding_lane
+            description: resource.description,
+            funding_lane: resource.funding_lane
           }
         });
       }
@@ -92,55 +95,58 @@ export default function ResourceLibrary() {
     },
   });
 
-  // Convert resources to display format
-  const allHandouts = resources?.map(resource => ({
-    title: resource.title,
-    description: resource.description,
-    file_url: resource.file_url || resource.content_url,
-    file_type: resource.content_type,
-    funding_lane: resource.funding_lane,
-    parentTitle: null,
-    parentDescription: null,
-    resource_id: resource.id
-  })) || [];
-
-  const enrichedHandouts = allHandouts.map(handout => {
-    const isFavorited = favorites.some(f => 
-      f.resource_title === handout.title && 
-      f.resource_url === handout.file_url
-    );
-    
-    // Infer stage based on content
-    let stage = 'research';
-    const titleLower = handout.title?.toLowerCase() || '';
-    const descLower = handout.description?.toLowerCase() || '';
-    if (titleLower.includes('proposal') || titleLower.includes('writing')) stage = 'proposal_writing';
-    else if (titleLower.includes('budget') || titleLower.includes('financial')) stage = 'budgeting';
-    else if (titleLower.includes('report') || titleLower.includes('impact')) stage = 'reporting';
-    else if (titleLower.includes('steward') || titleLower.includes('donor')) stage = 'stewardship';
-    
-    return { ...handout, isFavorited, stage };
+  const submitReviewMutation = useMutation({
+    mutationFn: async (reviewData) => {
+      return await base44.entities.ResourceReview.create(reviewData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['resource-reviews']);
+      setReviewDialogOpen(false);
+      setReviewingResource(null);
+      toast.success('Review submitted');
+    },
   });
 
-  const filteredHandouts = enrichedHandouts.filter(handout => {
+  const enrichedResources = resources?.map(resource => {
+    const isFavorited = favorites.some(f => f.resource_id === resource.id);
+    const resourceReviews = reviews.filter(r => r.resource_id === resource.id);
+    const avgRating = resourceReviews.length > 0
+      ? resourceReviews.reduce((sum, r) => sum + r.rating, 0) / resourceReviews.length
+      : 0;
+
+    return { ...resource, isFavorited, reviewCount: resourceReviews.length, avgRating };
+  }) || [];
+
+  const filteredResources = enrichedResources.filter(resource => {
     const matchesSearch = !searchQuery || 
-      handout.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      handout.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      handout.parentTitle?.toLowerCase().includes(searchQuery.toLowerCase());
+      resource.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      resource.description?.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesType = selectedType === 'all' || 
-      handout.file_type?.toLowerCase().includes(selectedType) ||
-      handout.title?.toLowerCase().includes(selectedType);
+    const matchesCategory = selectedCategory === 'all' || resource.content_type === selectedCategory;
+    const matchesStage = selectedStage === 'all';
+    const matchesFavorites = !showFavoritesOnly || resource.isFavorited;
     
-    const matchesStage = selectedStage === 'all' || handout.stage === selectedStage;
-    
-    const matchesFavorites = !showFavoritesOnly || handout.isFavorited;
-    
-    return matchesSearch && matchesType && matchesStage && matchesFavorites;
+    return matchesSearch && matchesCategory && matchesStage && matchesFavorites;
   });
 
-  const handleDownload = (handout) => {
-    window.open(handout.file_url, '_blank');
+  const workbookTemplates = filteredResources.filter(r => 
+    r.content_type === 'guidebook' || r.title?.toLowerCase().includes('workbook')
+  );
+  const otherResources = filteredResources.filter(r => 
+    r.content_type !== 'guidebook' && !r.title?.toLowerCase().includes('workbook')
+  );
+
+  const handleDownload = (resource) => {
+    window.open(resource.file_url, '_blank');
+    toast.success('Download started');
+  };
+
+  const handlePreview = (resource) => {
+    if (resource.file_url?.toLowerCase().endsWith('.pdf')) {
+      setPreviewResource(resource);
+    } else {
+      toast.error('Preview is only available for PDF files');
+    }
   };
 
   if (isLoading) {
@@ -161,26 +167,14 @@ export default function ResourceLibrary() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-[#143A50] mb-2">Resource Library</h1>
           <p className="text-slate-600">
-            Download worksheets, handouts, guides, and templates to support your funding readiness journey
+            Download templates, guidebooks, and workbooks to support your funding journey
           </p>
         </div>
 
-        {/* AI Recommendations */}
-        <ResourceRecommendations 
-          userEmail={user?.email}
-          onResourceClick={(rec) => {
-            // Scroll to resources and apply filters based on recommendation
-            if (rec.type) setSelectedType(rec.type);
-            if (rec.stage) setSelectedStage(rec.stage);
-            document.getElementById('resources-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
-
         {/* Search and Filter */}
-        <Card className="mb-6 border-2 border-[#E5C089] shadow-lg" id="resources-section">
+        <Card className="mb-6 border-2 border-[#E5C089] shadow-lg">
           <CardContent className="p-6">
             <div className="flex flex-col gap-4">
-              {/* Search Bar */}
               <div className="flex gap-2">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -201,60 +195,17 @@ export default function ResourceLibrary() {
                 </Button>
               </div>
 
-              {/* Filters Row */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <label className="text-xs text-slate-600 mb-1 block">Resource Type</label>
-                  <Select value={selectedType} onValueChange={setSelectedType}>
-                    <SelectTrigger className="border-2">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {RESOURCE_TYPES.map(type => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex-1">
-                  <label className="text-xs text-slate-600 mb-1 block">Funding Stage</label>
-                  <Select value={selectedStage} onValueChange={setSelectedStage}>
-                    <SelectTrigger className="border-2">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {FUNDING_STAGES.map(stage => (
-                        <SelectItem key={stage.value} value={stage.value}>
-                          {stage.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Results Summary */}
               <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-600">
-                    {filteredHandouts.length} resources found
-                  </span>
-                  {showFavoritesOnly && (
-                    <Badge className="bg-[#AC1A5B]">
-                      <Heart className="w-3 h-3 mr-1" />
-                      Favorites Only
-                    </Badge>
-                  )}
-                </div>
-                {(searchQuery || selectedType !== 'all' || selectedStage !== 'all' || showFavoritesOnly) && (
+                <span className="text-slate-600">
+                  {filteredResources.length} resources found
+                </span>
+                {(searchQuery || selectedCategory !== 'all' || selectedStage !== 'all' || showFavoritesOnly) && (
                   <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => {
                       setSearchQuery('');
-                      setSelectedType('all');
+                      setSelectedCategory('all');
                       setSelectedStage('all');
                       setShowFavoritesOnly(false);
                     }}
@@ -267,101 +218,247 @@ export default function ResourceLibrary() {
           </CardContent>
         </Card>
 
-        {/* Resources Grid */}
-        {filteredHandouts.length === 0 ? (
-          <Card className="p-12 text-center">
-            <FileText className="w-16 h-16 mx-auto text-slate-300 mb-4" />
-            <h3 className="text-xl font-semibold text-slate-700 mb-2">No resources found</h3>
-            <p className="text-slate-500">Try adjusting your search or filter criteria</p>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredHandouts.map((handout, idx) => (
-              <Card key={idx} className={`hover:shadow-xl transition-all border-2 ${handout.isFavorited ? 'border-[#AC1A5B]' : 'hover:border-[#E5C089]'}`}>
-                <CardHeader className="bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
-                  <div className="flex items-start justify-between mb-2">
-                    <FileText className="w-8 h-8 text-[#E5C089]" />
-                    <div className="flex items-center gap-2">
-                      {handout.file_type && (
-                        <Badge variant="secondary" className="bg-white/20 text-white">
-                          {handout.file_type.toUpperCase()}
-                        </Badge>
-                      )}
-                      <button
-                        onClick={() => toggleFavoriteMutation.mutate({ 
-                          handout, 
-                          isFavorited: handout.isFavorited 
-                        })}
-                        className="hover:scale-110 transition-transform"
-                      >
-                        <Heart 
-                          className={`w-5 h-5 ${handout.isFavorited ? 'fill-[#E5C089] text-[#E5C089]' : 'text-white/60'}`}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                  <CardTitle className="text-lg">{handout.title}</CardTitle>
-                  {handout.description && (
-                    <CardDescription className="text-white/80 text-sm">
-                      {handout.description}
-                    </CardDescription>
-                  )}
-                </CardHeader>
-                <CardContent className="p-4">
-                  <div className="mb-3 space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">
-                        {FUNDING_STAGES.find(s => s.value === handout.stage)?.label || 'Research'}
-                      </Badge>
-                      {handout.funding_lane && (
-                        <Badge variant="outline" className="text-xs">
-                          {handout.funding_lane}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <Button 
-                    onClick={() => handleDownload(handout)}
-                    className="w-full bg-[#143A50] hover:bg-[#1E4F58]"
-                  >
+        <Tabs defaultValue="workbooks" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="workbooks">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Workbook Templates ({workbookTemplates.length})
+            </TabsTrigger>
+            <TabsTrigger value="other">
+              <FileText className="w-4 h-4 mr-2" />
+              Templates & Guides ({otherResources.length})
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="workbooks">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold text-[#143A50] mb-2">Workbook Templates</h2>
+              <p className="text-slate-600">Fillable workbooks to guide your planning and development</p>
+            </div>
+            <ResourceGrid 
+              resources={workbookTemplates}
+              onDownload={handleDownload}
+              onPreview={handlePreview}
+              onFavorite={(resource) => toggleFavoriteMutation.mutate({ resource, isFavorited: resource.isFavorited })}
+              onReview={(resource) => {
+                setReviewingResource(resource);
+                setReviewDialogOpen(true);
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="other">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold text-[#143A50] mb-2">Templates & Guides</h2>
+              <p className="text-slate-600">Essential documents and guides for your funding work</p>
+            </div>
+            <ResourceGrid 
+              resources={otherResources}
+              onDownload={handleDownload}
+              onPreview={handlePreview}
+              onFavorite={(resource) => toggleFavoriteMutation.mutate({ resource, isFavorited: resource.isFavorited })}
+              onReview={(resource) => {
+                setReviewingResource(resource);
+                setReviewDialogOpen(true);
+              }}
+            />
+          </TabsContent>
+        </Tabs>
+
+        {/* PDF Preview Dialog */}
+        {previewResource && (
+          <Dialog open={!!previewResource} onOpenChange={() => setPreviewResource(null)}>
+            <DialogContent className="max-w-6xl h-[90vh]">
+              <DialogHeader>
+                <DialogTitle className="flex items-center justify-between">
+                  <span>{previewResource.title}</span>
+                  <Button size="sm" onClick={() => handleDownload(previewResource)}>
                     <Download className="w-4 h-4 mr-2" />
                     Download
                   </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex-1 h-full">
+                <iframe
+                  src={previewResource.file_url}
+                  className="w-full h-full rounded-lg border"
+                  title="PDF Preview"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
 
-        {/* Featured: Grant Readiness Toolkit */}
-        <Card className="mt-8 border-4 border-[#AC1A5B] bg-gradient-to-br from-[#AC1A5B]/5 to-[#E5C089]/5">
-          <CardHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 rounded-full bg-[#AC1A5B] flex items-center justify-center">
-                <Target className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl text-[#143A50]">Grant Readiness Toolkit</CardTitle>
-                <CardDescription>Complete assessment and planning guide</CardDescription>
+        {/* Review Dialog */}
+        {reviewDialogOpen && reviewingResource && (
+          <ReviewDialog
+            resource={reviewingResource}
+            userEmail={user?.email}
+            onClose={() => {
+              setReviewDialogOpen(false);
+              setReviewingResource(null);
+            }}
+            onSubmit={(reviewData) => submitReviewMutation.mutate(reviewData)}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }) {
+  if (resources.length === 0) {
+    return (
+      <Card className="p-12 text-center">
+        <FileText className="w-16 h-16 mx-auto text-slate-300 mb-4" />
+        <h3 className="text-xl font-semibold text-slate-700 mb-2">No resources found</h3>
+        <p className="text-slate-500">Try adjusting your search or filter criteria</p>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {resources.map((resource) => (
+        <Card key={resource.id} className={`hover:shadow-xl transition-all border-2 ${resource.isFavorited ? 'border-[#AC1A5B]' : 'hover:border-[#E5C089]'}`}>
+          <CardHeader className="bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
+            <div className="flex items-start justify-between mb-2">
+              <FileText className="w-8 h-8 text-[#E5C089]" />
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="bg-white/20 text-white">
+                  {resource.content_type?.toUpperCase()}
+                </Badge>
+                <button
+                  onClick={() => onFavorite(resource)}
+                  className="hover:scale-110 transition-transform"
+                >
+                  <Heart 
+                    className={`w-5 h-5 ${resource.isFavorited ? 'fill-[#E5C089] text-[#E5C089]' : 'text-white/60'}`}
+                  />
+                </button>
               </div>
             </div>
+            <CardTitle className="text-lg">{resource.title}</CardTitle>
+            {resource.description && (
+              <CardDescription className="text-white/80 text-sm">
+                {resource.description}
+              </CardDescription>
+            )}
           </CardHeader>
-          <CardContent>
-            <p className="text-slate-700 mb-4">
-              A comprehensive toolkit to help you assess grant alignment and organizational readiness before applying. 
-              Includes the Grant Alignment Assessment, Organizational Readiness Assessment, and Capacity & Risk Analysis.
-            </p>
-            <Button 
-              onClick={() => window.open('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/GrantReadinessToolkit.pdf', '_blank')}
-              size="lg"
-              className="bg-[#AC1A5B] hover:bg-[#8C1548]"
+          <CardContent className="p-4">
+            <div className="mb-3 space-y-2">
+              {resource.avgRating > 0 && (
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-4 h-4 ${star <= resource.avgRating ? 'fill-[#E5C089] text-[#E5C089]' : 'text-slate-300'}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-slate-600">
+                    {resource.avgRating.toFixed(1)} ({resource.reviewCount} reviews)
+                  </span>
+                </div>
+              )}
+              {resource.funding_lane && (
+                <Badge variant="outline" className="text-xs">
+                  {resource.funding_lane}
+                </Badge>
+              )}
+            </div>
+            <div className="flex gap-2">
+              {resource.file_url?.toLowerCase().endsWith('.pdf') && (
+                <Button 
+                  variant="outline"
+                  onClick={() => onPreview(resource)}
+                  className="flex-1"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Preview
+                </Button>
+              )}
+              <Button 
+                onClick={() => onDownload(resource)}
+                className="flex-1 bg-[#143A50] hover:bg-[#1E4F58]"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onReview(resource)}
+              className="w-full mt-2 text-slate-600"
             >
-              <Download className="w-5 h-5 mr-2" />
-              Download Grant Readiness Toolkit
+              <Star className="w-4 h-4 mr-2" />
+              Write a Review
             </Button>
           </CardContent>
         </Card>
-      </div>
+      ))}
     </div>
+  );
+}
+
+function ReviewDialog({ resource, userEmail, onClose, onSubmit }) {
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+
+  const handleSubmit = () => {
+    if (rating === 0) {
+      toast.error('Please select a rating');
+      return;
+    }
+    onSubmit({
+      resource_id: resource.id,
+      user_email: userEmail,
+      rating,
+      review_text: reviewText,
+      is_verified_download: true
+    });
+  };
+
+  return (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Review: {resource.title}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium mb-2 block">Your Rating</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => setRating(star)}
+                  className="hover:scale-110 transition-transform"
+                >
+                  <Star
+                    className={`w-8 h-8 ${star <= rating ? 'fill-[#E5C089] text-[#E5C089]' : 'text-slate-300'}`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-sm font-medium mb-2 block">Your Review (Optional)</label>
+            <Textarea
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              placeholder="Share your thoughts about this resource..."
+              rows={4}
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={onClose}>Cancel</Button>
+            <Button onClick={handleSubmit} className="bg-[#143A50]">Submit Review</Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
