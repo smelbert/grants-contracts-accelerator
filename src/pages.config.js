@@ -179,6 +179,8 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
+import MyProfile from './pages/MyProfile';
+import ProgramCalendar from './pages/ProgramCalendar';
 import __Layout from './Layout.jsx';
 
 
@@ -315,6 +317,8 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
     "WorkbookSectionEditor": WorkbookSectionEditor,
+    "MyProfile": MyProfile,
+    "ProgramCalendar": ProgramCalendar,
 }
 
 export const pagesConfig = {

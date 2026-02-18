@@ -74,7 +74,7 @@ const getUserPortalNav = () => [
     items: [
       { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning', requiresAccess: 'learning_hub' },
       { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText },
-      { name: 'Live Sessions / Events', page: 'Calendar', icon: Calendar },
+      { name: 'Program Calendar', page: 'ProgramCalendar', icon: Calendar },
     ]
   },
   {
@@ -101,6 +101,7 @@ const getUserPortalNav = () => [
   {
     groupName: 'Settings',
     items: [
+      { name: 'My Profile', page: 'MyProfile', icon: User },
       { name: 'My Organization', page: 'Profile', icon: Building2 },
       { name: 'Settings', page: 'Settings', icon: SettingsIcon },
     ]
