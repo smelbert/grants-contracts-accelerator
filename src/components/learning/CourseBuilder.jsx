@@ -325,6 +325,49 @@ Return ONLY valid JSON, no additional text.`,
               </div>
             )}
 
+            <div>
+              <Label>Order (for sorting)</Label>
+              <Input
+                type="number"
+                value={courseData.order || ''}
+                onChange={(e) => setCourseData({ ...courseData, order: parseInt(e.target.value) || 0 })}
+                placeholder="0"
+              />
+            </div>
+
+            <div>
+              <Label>Meeting Link (Google Meet/Zoom)</Label>
+              <Input
+                value={courseData.meeting_link || ''}
+                onChange={(e) => setCourseData({ ...courseData, meeting_link: e.target.value })}
+                placeholder="https://meet.google.com/..."
+              />
+            </div>
+
+            {courseData.incubateher_only && (
+              <div className="col-span-2">
+                <Label>Agenda Section ID</Label>
+                <Select 
+                  value={courseData.agenda_section || ''} 
+                  onValueChange={(val) => setCourseData({ ...courseData, agenda_section: val })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Link to agenda section (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>None</SelectItem>
+                    <SelectItem value="intro">Intro / Orientation</SelectItem>
+                    <SelectItem value="legal">Legal Structure</SelectItem>
+                    <SelectItem value="financial">Financial Management</SelectItem>
+                    <SelectItem value="grants">Grants</SelectItem>
+                    <SelectItem value="contracts">Contracts / RFPs</SelectItem>
+                    <SelectItem value="strategy">Strategy</SelectItem>
+                    <SelectItem value="consultation">Consultation Prep</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div className="col-span-2 space-y-3">
               <label className="flex items-center gap-2">
                 <input
@@ -739,13 +782,44 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
               />
             </TabsContent>
 
-            <TabsContent value="video" className="space-y-2">
-              <Label>Video URL (YouTube, Vimeo, or direct link)</Label>
+            <TabsContent value="video" className="space-y-3">
+              <Label>Video URL (direct .mp4 link or uploaded file)</Label>
               <Input
                 value={formData.video_url || ''}
                 onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                placeholder="https://www.youtube.com/watch?v=..."
+                placeholder="https://... or upload video file"
               />
+              <div className="flex items-center gap-2">
+                <Button 
+                  type="button" 
+                  onClick={() => document.getElementById('video-upload').click()} 
+                  disabled={uploadingFile}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploadingFile ? 'Uploading...' : 'Upload Video File'}
+                </Button>
+                <input
+                  id="video-upload"
+                  type="file"
+                  className="hidden"
+                  accept="video/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const url = await onFileUpload(file);
+                      if (url) {
+                        setFormData({ ...formData, video_url: url });
+                        toast.success('Video uploaded!');
+                      }
+                    }
+                  }}
+                />
+              </div>
+              <p className="text-xs text-slate-500">
+                For YouTube/Vimeo, use the direct video file URL, not the page URL
+              </p>
             </TabsContent>
 
             <TabsContent value="presentation" className="space-y-2">
