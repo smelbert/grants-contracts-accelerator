@@ -95,6 +95,7 @@ const getUserPortalNav = () => [
     groupName: 'Community',
     items: [
       { name: 'Community Spaces', page: 'Community', icon: Users },
+      { name: 'Events', page: 'Events', icon: Calendar },
       { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
       { name: 'My Mentorship', page: 'MyMentorship', icon: Target },
     ]
@@ -137,6 +138,7 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
       { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
+      { name: 'Event Management', page: 'EventManagement', icon: Calendar },
       { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
       { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
     ]

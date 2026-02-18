@@ -5,151 +5,215 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, MapPin, Users, Video, Clock, Plus } from 'lucide-react';
-import { format } from 'date-fns';
-import { toast } from 'react-hot-toast';
-import RSVPButton from '@/components/events/RSVPButton';
-import { hasPermission, PERMISSIONS } from '@/components/lib/permissions';
+import { Calendar, MapPin, Video, Clock, Users, CheckCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
-export default function EventsPage() {
-  const { data: events = [] } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('-start_date'),
-  });
+export default function Events() {
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: events = [] } = useQuery({
+    queryKey: ['events'],
+    queryFn: () => base44.entities.Event.filter({ is_public: true }, '-event_date')
   });
 
   const { data: myRegistrations = [] } = useQuery({
-    queryKey: ['myUpcomingEvents', user?.email],
-    queryFn: async () => {
-      const regs = await base44.entities.EventRegistration.filter({
-        attendee_email: user.email,
-        registration_status: 'registered'
-      });
-      const eventIds = regs.map(r => r.event_id);
-      const registeredEvents = events.filter(e => eventIds.includes(e.id));
-      return registeredEvents.filter(e => new Date(e.start_date) > new Date());
-    },
-    enabled: !!user?.email && events.length > 0,
+    queryKey: ['my-registrations', user?.email],
+    queryFn: () => base44.entities.EventRegistration.filter({ user_email: user.email }),
+    enabled: !!user?.email
   });
 
-  const upcomingEvents = events.filter(e => e.status === 'upcoming');
-  const liveEvents = events.filter(e => e.status === 'live');
-  const canCreateEvents = hasPermission(user?.role, PERMISSIONS.CREATE_EVENTS);
+  const registerMutation = useMutation({
+    mutationFn: (eventId) => base44.entities.EventRegistration.create({
+      event_id: eventId,
+      user_email: user.email,
+      user_name: user.full_name,
+      status: 'confirmed'
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['my-registrations']);
+      toast.success('Successfully registered for event!');
+    }
+  });
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Calendar className="w-8 h-8 text-purple-600" />
-              Events
-            </h1>
-            <p className="text-slate-600 mt-2">Join workshops, webinars, and networking events</p>
+  const cancelRegistrationMutation = useMutation({
+    mutationFn: (registrationId) => base44.entities.EventRegistration.update(registrationId, { status: 'cancelled' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['my-registrations']);
+      toast.success('Registration cancelled');
+    }
+  });
+
+  const isRegistered = (eventId) => {
+    return myRegistrations.some(r => r.event_id === eventId && r.status === 'confirmed');
+  };
+
+  const getMyRegistration = (eventId) => {
+    return myRegistrations.find(r => r.event_id === eventId && r.status === 'confirmed');
+  };
+
+  const upcomingEvents = events.filter(e => new Date(e.event_date) >= new Date());
+  const pastEvents = events.filter(e => new Date(e.event_date) < new Date());
+  const myEvents = events.filter(e => isRegistered(e.id));
+
+  const eventTypeColors = {
+    webinar: 'bg-blue-100 text-blue-800',
+    workshop: 'bg-green-100 text-green-800',
+    meetup: 'bg-purple-100 text-purple-800',
+    training: 'bg-amber-100 text-amber-800',
+    conference: 'bg-pink-100 text-pink-800'
+  };
+
+  const EventCard = ({ event }) => {
+    const registered = isRegistered(event.id);
+    const registration = getMyRegistration(event.id);
+    const isPast = new Date(event.event_date) < new Date();
+
+    return (
+      <Card className="hover:shadow-lg transition">
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <Badge className={eventTypeColors[event.event_type]}>
+                {event.event_type}
+              </Badge>
+              {registered && <Badge className="ml-2 bg-green-100 text-green-800">Registered</Badge>}
+              {isPast && <Badge variant="outline" className="ml-2">Past</Badge>}
+            </div>
           </div>
-          {canCreateEvents && (
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Create Event
-            </Button>
-          )}
-        </div>
 
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All Events</TabsTrigger>
-            <TabsTrigger value="my-events">My Events ({myRegistrations.length})</TabsTrigger>
-          </TabsList>
+          <h3 className="text-xl font-bold text-slate-900 mb-2">{event.title}</h3>
+          <p className="text-slate-600 mb-4 line-clamp-2">{event.description}</p>
 
-          <TabsContent value="all" className="space-y-8">
-            {liveEvents.length > 0 && (
-              <div>
-                <h2 className="text-xl font-bold mb-4">🔴 Live Now</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {liveEvents.map(event => (
-                    <EventCard key={event.id} event={event} userEmail={user?.email} isLive />
-                  ))}
-                </div>
+          <div className="space-y-2 text-sm text-slate-600 mb-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span>{new Date(event.event_date).toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              <span>{event.event_time} ({event.duration_minutes} minutes)</span>
+            </div>
+            {event.location_type === 'virtual' && (
+              <div className="flex items-center gap-2">
+                <Video className="w-4 h-4" />
+                <span>Virtual Event</span>
               </div>
             )}
-
-            <div>
-              <h2 className="text-xl font-bold mb-4">Upcoming Events</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {upcomingEvents.map(event => (
-                  <EventCard key={event.id} event={event} userEmail={user?.email} />
-                ))}
+            {event.location_type === 'in_person' && (
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span>{event.location_details?.split('\n')[0]}</span>
               </div>
+            )}
+          </div>
+
+          {!isPast && (
+            <div>
+              {registered ? (
+                <div className="space-y-2">
+                  {event.meeting_link && (
+                    <Button 
+                      className="w-full bg-[#143A50] hover:bg-[#1E4F58]"
+                      onClick={() => window.open(event.meeting_link, '_blank')}
+                    >
+                      Join Event
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => cancelRegistrationMutation.mutate(registration.id)}
+                  >
+                    Cancel Registration
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  className="w-full bg-[#143A50] hover:bg-[#1E4F58]"
+                  onClick={() => registerMutation.mutate(event.id)}
+                >
+                  Register Now
+                </Button>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Events</h1>
+          <p className="text-slate-600">Discover and register for upcoming events</p>
+        </div>
+
+        <Tabs defaultValue="upcoming">
+          <TabsList>
+            <TabsTrigger value="upcoming">Upcoming Events</TabsTrigger>
+            <TabsTrigger value="my-events">My Events</TabsTrigger>
+            <TabsTrigger value="past">Past Events</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="upcoming" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {upcomingEvents.length === 0 ? (
+                <Card className="col-span-full">
+                  <CardContent className="py-12 text-center">
+                    <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600">No upcoming events</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                upcomingEvents.map(event => <EventCard key={event.id} event={event} />)
+              )}
             </div>
           </TabsContent>
 
-          <TabsContent value="my-events">
-            {myRegistrations.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {myRegistrations.map(event => (
-                  <EventCard key={event.id} event={event} userEmail={user?.email} isRegistered />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                <p className="text-slate-600">You haven't registered for any events yet</p>
-              </div>
-            )}
+          <TabsContent value="my-events" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myEvents.length === 0 ? (
+                <Card className="col-span-full">
+                  <CardContent className="py-12 text-center">
+                    <CheckCircle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600">No registered events</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                myEvents.map(event => <EventCard key={event.id} event={event} />)
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="past" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pastEvents.length === 0 ? (
+                <Card className="col-span-full">
+                  <CardContent className="py-12 text-center">
+                    <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600">No past events</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                pastEvents.map(event => <EventCard key={event.id} event={event} />)
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
     </div>
-  );
-}
-
-function EventCard({ event, userEmail, isLive, isRegistered }) {
-  return (
-    <Card className={isLive ? 'border-red-500 border-2' : isRegistered ? 'border-emerald-500 border-2' : ''}>
-      {event.cover_image_url && (
-        <img src={event.cover_image_url} alt={event.event_name} className="w-full h-40 object-cover rounded-t-xl" />
-      )}
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <CardTitle className="text-lg">{event.event_name}</CardTitle>
-          <div className="flex gap-2">
-            {isLive && <Badge className="bg-red-500">Live</Badge>}
-            {isRegistered && <Badge className="bg-emerald-500">Registered</Badge>}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <p className="text-sm text-slate-600 line-clamp-2">{event.description}</p>
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center gap-2 text-slate-600">
-            <Clock className="w-4 h-4" />
-            {format(new Date(event.start_date), 'MMM d, yyyy h:mm a')}
-          </div>
-          <div className="flex items-center gap-2 text-slate-600">
-            {event.location_type === 'virtual' ? <Video className="w-4 h-4" /> : <MapPin className="w-4 h-4" />}
-            {event.location_type === 'virtual' ? 'Virtual Event' : event.location_details}
-          </div>
-          {event.max_attendees && (
-            <div className="flex items-center gap-2 text-slate-600">
-              <Users className="w-4 h-4" />
-              {event.total_registered || 0} / {event.max_attendees} registered
-            </div>
-          )}
-        </div>
-        {isLive && event.meeting_url ? (
-          <Button className="w-full" asChild>
-            <a href={event.meeting_url} target="_blank" rel="noopener noreferrer">
-              Join Now
-            </a>
-          </Button>
-        ) : (
-          <RSVPButton event={event} userEmail={userEmail} />
-        )}
-      </CardContent>
-    </Card>
   );
 }

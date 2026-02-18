@@ -188,6 +188,7 @@ import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
 import ProgramMessaging from './pages/ProgramMessaging';
+import EventManagement from './pages/EventManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -333,6 +334,7 @@ export const PAGES = {
     "WorkflowsAutomation": WorkflowsAutomation,
     "ProgramAnnouncements": ProgramAnnouncements,
     "ProgramMessaging": ProgramMessaging,
+    "EventManagement": EventManagement,
 }
 
 export const pagesConfig = {
