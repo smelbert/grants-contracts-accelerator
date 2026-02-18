@@ -151,6 +151,9 @@ export default function TrainingFrameworkEditorPage() {
       level_expectations: (levelExpectations.level1 || levelExpectations.level2 || levelExpectations.level3) 
         ? levelExpectations 
         : undefined,
+      video_url: formData.get('videoUrl') || undefined,
+      embedded_content_url: formData.get('embeddedUrl') || undefined,
+      handouts: editingContent?.handouts || [],
       display_order: parseInt(formData.get('displayOrder')),
       is_published: formData.get('published') === 'on'
     };
@@ -392,6 +395,74 @@ export default function TrainingFrameworkEditorPage() {
                 <div className="border rounded-lg overflow-hidden">
                   <ReactQuill theme="snow" value={content} onChange={setContent} />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Video URL</Label>
+                  <Input name="videoUrl" defaultValue={editingContent?.video_url} placeholder="https://youtube.com/watch?v=..." />
+                </div>
+                <div>
+                  <Label>Embedded Content URL</Label>
+                  <Input name="embeddedUrl" defaultValue={editingContent?.embedded_content_url} placeholder="https://..." />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label>Handouts & Resources</Label>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = '.pdf,.ppt,.pptx,.doc,.docx';
+                    fileInput.onchange = async (e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+                      toast.loading('Uploading file...');
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      const currentHandouts = editingContent?.handouts || [];
+                      const titleInput = document.querySelector('input[name="title"]');
+                      setEditingContent({
+                        ...editingContent,
+                        handouts: [
+                          ...currentHandouts,
+                          { title: file.name, file_url, file_type: file.type }
+                        ]
+                      });
+                      toast.dismiss();
+                      toast.success('File uploaded');
+                    };
+                    fileInput.click();
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Upload Handout
+                </Button>
+                
+                {editingContent?.handouts?.map((handout, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                    <div>
+                      <p className="text-sm font-medium">{handout.title}</p>
+                      <a href={handout.file_url} target="_blank" className="text-xs text-blue-600">View</a>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditingContent({
+                          ...editingContent,
+                          handouts: editingContent.handouts.filter((_, i) => i !== idx)
+                        });
+                      }}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
 
               <div>

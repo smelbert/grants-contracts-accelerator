@@ -173,7 +173,7 @@ const getAdminPortalNav = () => [
       { name: 'Training Framework', page: 'TrainingFramework', icon: BookOpen },
       { name: 'Content Editor', page: 'TrainingFrameworkEditor', icon: FileText },
       { name: 'Live Sessions', page: 'LiveSessionManagement', icon: Video },
-      { name: 'Assessments', page: 'AssessmentManagement', icon: FileText },
+      { name: 'Pre/Post Assessments', page: 'AssessmentManagement', icon: FileText },
       { name: 'Promotion Gates', page: 'PromotionGateConfig', icon: Target },
     ]
   },
