@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Edit, Trash2, Award, Eye, Copy, Palette } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import LayoutPreview, { layouts } from '@/components/certificates/LayoutPreview';
+import ProfessionalLayoutPreview, { professionalLayouts } from '@/components/certificates/ProfessionalLayouts';
 
 export default function CertificateTemplatesPage() {
   const queryClient = useQueryClient();
@@ -20,20 +20,19 @@ export default function CertificateTemplatesPage() {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [formData, setFormData] = useState({
     template_name: '',
-    template_layout: 'modern_blue_geometric',
+    template_layout: 'blue_wave_completion',
     cohort_id: '',
     is_default: false,
     header_text: 'Certificate of Completion',
-    body_template: 'This certifies that {participant_name} has successfully completed {program_name} on {completion_date}. Total program hours: {total_hours}.',
+    body_template: 'In appreciation of your outstanding dedication and consistent contribution during the {program_name}. Your efforts have greatly impacted the success and vision of the program.',
     footer_text: 'Funded by {funder_organization} | Delivered by {delivery_organization}',
     logo_url: '',
     co_logo_url: '',
     signature_fields: [],
+    primary_color: '#143A50',
+    secondary_color: '#E5C089',
     background_color: '#FFFFFF',
-    border_color: '#143A50',
     text_color: '#000000',
-    accent_color: '#E5C089',
-    secondary_color: '#1E4F58',
     include_qr_code: true,
     is_active: true
   });
@@ -80,20 +79,19 @@ export default function CertificateTemplatesPage() {
     setEditingTemplate(null);
     setFormData({
       template_name: '',
-      template_layout: 'modern_blue_geometric',
+      template_layout: 'blue_wave_completion',
       cohort_id: '',
       is_default: false,
       header_text: 'Certificate of Completion',
-      body_template: 'This certifies that {participant_name} has successfully completed {program_name} on {completion_date}. Total program hours: {total_hours}.',
+      body_template: 'In appreciation of your outstanding dedication and consistent contribution during the {program_name}. Your efforts have greatly impacted the success and vision of the program.',
       footer_text: 'Funded by {funder_organization} | Delivered by {delivery_organization}',
       logo_url: '',
       co_logo_url: '',
       signature_fields: [],
+      primary_color: '#143A50',
+      secondary_color: '#E5C089',
       background_color: '#FFFFFF',
-      border_color: '#143A50',
       text_color: '#000000',
-      accent_color: '#E5C089',
-      secondary_color: '#1E4F58',
       include_qr_code: true,
       is_active: true
     });
@@ -145,78 +143,44 @@ export default function CertificateTemplatesPage() {
 
   const renderPreview = () => {
     const template = previewTemplate || formData;
+    const layoutConfig = professionalLayouts[template.template_layout];
+    
+    if (!layoutConfig) return null;
+
     const sampleData = {
       participant_name: 'Jane Doe',
-      program_name: 'IncubateHer Funding Readiness',
-      completion_date: new Date().toLocaleDateString(),
+      program_name: 'IncubateHer Funding Readiness Program',
+      completion_date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       total_hours: '12',
       funder_organization: 'Columbus Urban League',
       delivery_organization: 'Elbert Innovative Solutions'
     };
     
-    let bodyText = template.body_template;
+    let bodyText = template.body_template || '';
     Object.keys(sampleData).forEach(key => {
       bodyText = bodyText.replace(new RegExp(`{${key}}`, 'g'), sampleData[key]);
     });
 
-    let footerText = template.footer_text || '';
-    Object.keys(sampleData).forEach(key => {
-      footerText = footerText.replace(new RegExp(`{${key}}`, 'g'), sampleData[key]);
-    });
+    const colors = {
+      primary: template.primary_color,
+      secondary: template.secondary_color,
+      background: template.background_color,
+      text: template.text_color
+    };
 
     return (
-      <div 
-        className="border-8 p-12 rounded-lg shadow-lg max-w-4xl mx-auto"
-        style={{ 
-          backgroundColor: template.background_color,
-          borderColor: template.border_color,
-          color: template.text_color
-        }}
-      >
-        <div className="text-center space-y-6">
-          {(template.logo_url || template.co_logo_url) && (
-            <div className="flex items-center justify-center gap-8 mb-8">
-              {template.logo_url && <img src={template.logo_url} alt="Logo" className="h-16 object-contain" />}
-              {template.co_logo_url && <img src={template.co_logo_url} alt="Co-Logo" className="h-16 object-contain" />}
-            </div>
-          )}
-          
-          <h1 className="text-4xl font-bold" style={{ color: template.accent_color }}>
-            {template.header_text}
-          </h1>
-          
-          <div className="py-8">
-            <p className="text-lg leading-relaxed">{bodyText}</p>
-          </div>
-
-          {template.signature_fields && template.signature_fields.length > 0 && (
-            <div className="flex justify-center gap-16 pt-8 mt-8 border-t">
-              {template.signature_fields.map((sig, idx) => (
-                <div key={idx} className="text-center">
-                  {sig.signature_image_url && (
-                    <img src={sig.signature_image_url} alt="Signature" className="h-12 mx-auto mb-2" />
-                  )}
-                  <div className="border-t-2 border-gray-400 pt-2 min-w-[200px]">
-                    <p className="font-semibold">{sig.name}</p>
-                    <p className="text-sm text-gray-600">{sig.title}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {footerText && (
-            <p className="text-sm text-gray-600 pt-8">{footerText}</p>
-          )}
-
-          {template.include_qr_code && (
-            <div className="pt-4">
-              <div className="inline-block p-3 bg-gray-100 rounded">
-                <p className="text-xs text-gray-500">QR Code for Verification</p>
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="max-w-5xl mx-auto">
+        {layoutConfig.render({
+          headerText: template.header_text,
+          participantName: sampleData.participant_name,
+          bodyText: bodyText,
+          signatures: template.signature_fields,
+          colors: colors,
+          logos: {
+            main: template.logo_url,
+            co: template.co_logo_url
+          }
+        })}
       </div>
     );
   };
@@ -259,13 +223,13 @@ export default function CertificateTemplatesPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <LayoutPreview 
-                  layout={template.template_layout || 'modern_blue_geometric'}
+                <ProfessionalLayoutPreview 
+                  layout={template.template_layout || 'blue_wave_completion'}
                   colors={{
+                    primary: template.primary_color,
+                    secondary: template.secondary_color,
                     background: template.background_color,
-                    border: template.border_color,
-                    text: template.text_color,
-                    accent: template.accent_color
+                    text: template.text_color
                   }}
                 />
                 <div className="flex gap-2 pt-3 border-t">
@@ -327,29 +291,31 @@ export default function CertificateTemplatesPage() {
                 </div>
 
                 <div>
-                  <Label className="flex items-center gap-2">
+                  <Label className="flex items-center gap-2 mb-3">
                     <Palette className="w-4 h-4" />
-                    Certificate Layout *
+                    Certificate Layout * (Professional Designs - Structure Locked)
                   </Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
-                    {Object.entries(layouts).map(([key, layout]) => (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                    {Object.entries(professionalLayouts).map(([key, layout]) => (
                       <button
                         key={key}
                         type="button"
                         onClick={() => setFormData({ ...formData, template_layout: key })}
-                        className={`p-2 border-2 rounded-lg transition hover:border-[#143A50] ${
-                          formData.template_layout === key ? 'border-[#143A50] bg-[#143A50]/5' : 'border-slate-200'
+                        className={`relative p-3 border-2 rounded-lg transition hover:border-[#143A50] ${
+                          formData.template_layout === key ? 'border-[#143A50] bg-[#143A50]/5 ring-2 ring-[#143A50]/20' : 'border-slate-200'
                         }`}
                       >
-                        <LayoutPreview 
-                          layout={key}
-                          colors={{
-                            background: formData.background_color,
-                            border: formData.border_color,
-                            text: formData.text_color,
-                            accent: formData.accent_color
-                          }}
-                        />
+                        <div className="h-32 overflow-hidden rounded">
+                          <ProfessionalLayoutPreview 
+                            layout={key}
+                            colors={{
+                              primary: formData.primary_color,
+                              secondary: formData.secondary_color,
+                              background: formData.background_color,
+                              text: formData.text_color
+                            }}
+                          />
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -404,46 +370,77 @@ export default function CertificateTemplatesPage() {
                 </div>
 
                 {/* Colors */}
-                <div className="grid grid-cols-5 gap-4">
-                  <div>
-                    <Label>Background</Label>
-                    <Input
-                      type="color"
-                      value={formData.background_color}
-                      onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>Border</Label>
-                    <Input
-                      type="color"
-                      value={formData.border_color}
-                      onChange={(e) => setFormData({ ...formData, border_color: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>Text</Label>
-                    <Input
-                      type="color"
-                      value={formData.text_color}
-                      onChange={(e) => setFormData({ ...formData, text_color: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>Accent</Label>
-                    <Input
-                      type="color"
-                      value={formData.accent_color}
-                      onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>Secondary</Label>
-                    <Input
-                      type="color"
-                      value={formData.secondary_color}
-                      onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
-                    />
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">Brand Colors (Customize while keeping professional design)</Label>
+                  <div className="grid grid-cols-4 gap-4">
+                    <div>
+                      <Label className="text-xs">Primary Color</Label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="color"
+                          value={formData.primary_color}
+                          onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
+                          className="w-16 h-10"
+                        />
+                        <Input
+                          type="text"
+                          value={formData.primary_color}
+                          onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Secondary/Accent</Label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="color"
+                          value={formData.secondary_color}
+                          onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
+                          className="w-16 h-10"
+                        />
+                        <Input
+                          type="text"
+                          value={formData.secondary_color}
+                          onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Background</Label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="color"
+                          value={formData.background_color}
+                          onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
+                          className="w-16 h-10"
+                        />
+                        <Input
+                          type="text"
+                          value={formData.background_color}
+                          onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Text Color</Label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="color"
+                          value={formData.text_color}
+                          onChange={(e) => setFormData({ ...formData, text_color: e.target.value })}
+                          className="w-16 h-10"
+                        />
+                        <Input
+                          type="text"
+                          value={formData.text_color}
+                          onChange={(e) => setFormData({ ...formData, text_color: e.target.value })}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
