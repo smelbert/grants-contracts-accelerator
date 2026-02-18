@@ -24,13 +24,11 @@ export default function IncubateHerSchedule() {
 
   const { data: cohorts = [] } = useQuery({
     queryKey: ['incubateher-cohorts'],
-    queryFn: () => base44.entities.ProgramCohort.filter({ program_code: 'incubateher' })
+    queryFn: () => base44.entities.ProgramCohort.filter({ program_code: 'incubateher_funding_readiness' })
   });
 
-  const { data: sessions = [] } = useQuery({
-    queryKey: ['program-sessions'],
-    queryFn: () => base44.entities.ProgramSession.list('-session_date')
-  });
+  const cohort = cohorts[0];
+  const sessionDays = cohort?.session_days || [];
 
   const { data: enrollment } = useQuery({
     queryKey: ['my-enrollment', user?.email],
@@ -43,33 +41,29 @@ export default function IncubateHerSchedule() {
     enabled: !!user?.email
   });
 
-  const { data: attendance = [] } = useQuery({
-    queryKey: ['my-attendance', enrollment?.id],
-    queryFn: () => base44.entities.SessionAttendance.filter({
-      enrollment_id: enrollment.id
-    }),
-    enabled: !!enrollment?.id
-  });
-
-  const updateSessionMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.ProgramSession.update(id, data),
+  const updateCohortMutation = useMutation({
+    mutationFn: (data) => base44.entities.ProgramCohort.update(cohort.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['program-sessions']);
+      queryClient.invalidateQueries(['incubateher-cohorts']);
       toast.success('Session updated');
-      setEditingSession(null);
     }
   });
 
-  const handleVideoUpload = async (sessionId) => {
-    if (!videoFile) return;
+  const handleVideoUpload = async (dayIndex) => {
+    if (!videoFile || !cohort) return;
 
     setUploadingVideo(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: videoFile });
       
-      await updateSessionMutation.mutateAsync({
-        id: sessionId,
-        data: { video_url: file_url }
+      const updatedSessionDays = [...sessionDays];
+      updatedSessionDays[dayIndex] = {
+        ...updatedSessionDays[dayIndex],
+        video_url: file_url
+      };
+      
+      await updateCohortMutation.mutateAsync({
+        session_days: updatedSessionDays
       });
       
       setVideoFile(null);
@@ -81,25 +75,7 @@ export default function IncubateHerSchedule() {
     }
   };
 
-  const isAttended = (sessionId) => {
-    return attendance.some(a => a.session_id === sessionId && a.attended);
-  };
-
-  const isAdmin = user?.role === 'admin' || user?.role === 'owner' || user?.role === 'coach';
-
-  const groupSessionsByDay = (sessions) => {
-    const grouped = {};
-    sessions.forEach(session => {
-      const date = new Date(session.session_date).toLocaleDateString();
-      if (!grouped[date]) {
-        grouped[date] = [];
-      }
-      grouped[date].push(session);
-    });
-    return grouped;
-  };
-
-  const sessionsByDay = groupSessionsByDay(sessions);
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner' || Array.isArray(user?.role) && (user.role.includes('admin') || user.role.includes('coach'));
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -118,159 +94,141 @@ export default function IncubateHerSchedule() {
 
           <TabsContent value="schedule" className="mt-6">
             <div className="space-y-6">
-              {Object.entries(sessionsByDay).map(([date, daySessions]) => {
-                const primarySession = daySessions[0];
-                const hasVideo = primarySession?.video_url;
-                const sessionDate = new Date(primarySession.session_date);
-                const isPast = sessionDate < new Date();
-                
-                return (
-                  <Card key={date} className="overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-2xl mb-2">{date}</CardTitle>
-                          <div className="flex items-center gap-4 text-sm">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4" />
-                              <span>{sessionDate.toLocaleDateString('en-US', { weekday: 'long' })}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {primarySession.format === 'virtual' ? (
-                                <>
-                                  <Video className="w-4 h-4" />
-                                  <span>Virtual</span>
-                                </>
-                              ) : (
-                                <>
-                                  <MapPin className="w-4 h-4" />
-                                  <span>In Person</span>
-                                </>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span>{primarySession.start_time}</span>
-                            </div>
-                          </div>
-                        </div>
-                        {isAttended(primarySession.id) && (
-                          <Badge className="bg-green-500">
-                            <CheckCircle className="w-4 h-4 mr-1" />
-                            Attended
-                          </Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="p-6">
-                      <div className="space-y-6">
-                        {/* Topics Covered */}
-                        <div>
-                          <h3 className="font-semibold text-lg mb-3">Topics Covered</h3>
-                          <div className="space-y-2">
-                            {daySessions.map((session, idx) => (
-                              <div key={session.id} className="flex items-start gap-3">
-                                <Badge variant="outline" className="mt-1">
-                                  {idx + 1}
-                                </Badge>
-                                <div className="flex-1">
-                                  <p className="font-medium">{session.topic}</p>
-                                  {session.description && (
-                                    <p className="text-sm text-slate-600 mt-1">{session.description}</p>
-                                  )}
-                                </div>
+              {sessionDays.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600">No sessions scheduled yet</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                sessionDays.map((day, dayIndex) => {
+                  const hasVideo = day.video_url;
+                  const isVirtual = day.time?.toLowerCase().includes('virtual');
+                  
+                  return (
+                    <Card key={dayIndex} className="overflow-hidden">
+                      <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <CardTitle className="text-2xl mb-2">{day.date}</CardTitle>
+                            <div className="flex items-center gap-4 text-sm">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4" />
+                                <span>{day.time}</span>
                               </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Video Recording */}
-                        {hasVideo && (
-                          <div>
-                            <h3 className="font-semibold text-lg mb-3">Session Recording</h3>
-                            <div className="bg-slate-900 rounded-lg overflow-hidden">
-                              <video
-                                controls
-                                className="w-full"
-                                src={primarySession.video_url}
-                              >
-                                Your browser does not support video playback.
-                              </video>
+                              <div className="flex items-center gap-2">
+                                {isVirtual ? (
+                                  <>
+                                    <Video className="w-4 h-4" />
+                                    <span>Virtual</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <MapPin className="w-4 h-4" />
+                                    <span>In Person</span>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                        )}
+                        </div>
+                      </CardHeader>
 
-                        {/* Handouts & Resources */}
-                        {primarySession.handouts?.length > 0 && (
+                      <CardContent className="p-6">
+                        <div className="space-y-6">
+                          {/* Topics Covered */}
                           <div>
-                            <h3 className="font-semibold text-lg mb-3">Handouts & Resources</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {primarySession.handouts.map((handout, idx) => (
-                                <a
-                                  key={idx}
-                                  href={handout.file_url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-3 p-3 border rounded-lg hover:bg-slate-50 transition"
-                                >
-                                  <FileText className="w-5 h-5 text-[#AC1A5B]" />
-                                  <div className="flex-1">
-                                    <p className="font-medium text-sm">{handout.title}</p>
-                                    <p className="text-xs text-slate-600">{handout.description}</p>
+                            <h3 className="font-semibold text-lg mb-3">Topics Covered</h3>
+                            <div className="space-y-3">
+                              {day.sections?.map((section, idx) => (
+                                <div key={idx} className="border-l-4 border-[#E5C089] pl-4">
+                                  <div className="flex items-start gap-3">
+                                    <Badge variant="outline" className="mt-1">
+                                      {idx + 1}
+                                    </Badge>
+                                    <div className="flex-1">
+                                      <p className="font-medium text-lg">{section.title}</p>
+                                      <p className="text-sm text-slate-500 mb-2">{section.duration_minutes} minutes</p>
+                                      {section.topics && (
+                                        <ul className="space-y-1 mt-2">
+                                          {section.topics.map((topic, topicIdx) => (
+                                            <li key={topicIdx} className="text-sm text-slate-600 flex items-start gap-2">
+                                              <span className="text-[#AC1A5B] mt-1">•</span>
+                                              <span>{topic}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      )}
+                                    </div>
                                   </div>
-                                </a>
+                                </div>
                               ))}
                             </div>
                           </div>
-                        )}
 
-                        {/* Join/Access Info */}
-                        {!isPast && primarySession.format === 'virtual' && primarySession.meeting_link && (
-                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <Button
-                              className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
-                              onClick={() => window.open(primarySession.meeting_link, '_blank')}
-                            >
-                              <Video className="w-4 h-4 mr-2" />
-                              Join Virtual Session
-                            </Button>
-                          </div>
-                        )}
-
-                        {!isPast && primarySession.format === 'in_person' && primarySession.location && (
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                            <div className="flex items-start gap-3">
-                              <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
-                              <div>
-                                <p className="font-semibold text-amber-900">In-Person Location</p>
-                                <p className="text-sm text-amber-800 mt-1">{primarySession.location}</p>
+                          {/* Video Recording */}
+                          {hasVideo && (
+                            <div>
+                              <h3 className="font-semibold text-lg mb-3">Session Recording</h3>
+                              <div className="bg-slate-900 rounded-lg overflow-hidden">
+                                <video
+                                  controls
+                                  className="w-full"
+                                  src={day.video_url}
+                                >
+                                  Your browser does not support video playback.
+                                </video>
                               </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                          )}
+
+                          {/* Join/Access Info */}
+                          {day.meeting_link && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                              <Button
+                                className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
+                                onClick={() => window.open(day.meeting_link, '_blank')}
+                              >
+                                <Video className="w-4 h-4 mr-2" />
+                                Join Virtual Session
+                              </Button>
+                            </div>
+                          )}
+
+                          {day.location && (
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                              <div className="flex items-start gap-3">
+                                <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
+                                <div>
+                                  <p className="font-semibold text-amber-900">In-Person Location</p>
+                                  <p className="text-sm text-amber-800 mt-1">{day.location}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="recordings" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sessions.filter(s => s.video_url).map(session => (
-                <Card key={session.id}>
+              {sessionDays.filter(day => day.video_url).map((day, index) => (
+                <Card key={index} className="cursor-pointer hover:shadow-lg transition">
                   <CardContent className="p-4">
                     <div className="aspect-video bg-slate-900 rounded-lg mb-3 relative overflow-hidden">
-                      <video src={session.video_url} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <video src={day.video_url} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
                         <Play className="w-12 h-12 text-white" />
                       </div>
                     </div>
-                    <h3 className="font-semibold mb-1">{session.topic}</h3>
-                    <p className="text-sm text-slate-600">
-                      {new Date(session.session_date).toLocaleDateString()}
-                    </p>
+                    <h3 className="font-semibold mb-1">{day.date}</h3>
+                    <p className="text-sm text-slate-600">{day.time}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -280,15 +238,16 @@ export default function IncubateHerSchedule() {
           {isAdmin && (
             <TabsContent value="manage" className="mt-6">
               <div className="space-y-4">
-                {sessions.map(session => (
-                  <Card key={session.id}>
+                {sessionDays.map((day, dayIndex) => (
+                  <Card key={dayIndex}>
                     <CardHeader>
-                      <CardTitle className="text-lg">{session.topic}</CardTitle>
+                      <CardTitle className="text-lg">{day.date}</CardTitle>
+                      <p className="text-sm text-slate-600">{day.time}</p>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
                         <div>
-                          <Label>Upload Session Video</Label>
+                          <Label>Upload Session Video for This Day</Label>
                           <div className="flex gap-2 mt-2">
                             <Input
                               type="file"
@@ -296,8 +255,8 @@ export default function IncubateHerSchedule() {
                               onChange={(e) => setVideoFile(e.target.files[0])}
                             />
                             <Button
-                              onClick={() => handleVideoUpload(session.id)}
-                              disabled={!videoFile || uploadingVideo}
+                              onClick={() => handleVideoUpload(dayIndex)}
+                              disabled={!videoFile || uploadingVideo || !cohort}
                               className="bg-[#AC1A5B] hover:bg-[#A65D40]"
                             >
                               <Upload className="w-4 h-4 mr-2" />
@@ -305,12 +264,20 @@ export default function IncubateHerSchedule() {
                             </Button>
                           </div>
                         </div>
-                        {session.video_url && (
+                        {day.video_url && (
                           <div className="text-sm text-green-600 flex items-center gap-2">
                             <CheckCircle className="w-4 h-4" />
                             Video uploaded
                           </div>
                         )}
+                        <div className="pt-3 border-t">
+                          <p className="text-sm font-medium text-slate-700 mb-2">Sections covered this day:</p>
+                          <div className="space-y-1">
+                            {day.sections?.map((section, idx) => (
+                              <p key={idx} className="text-sm text-slate-600">• {section.title}</p>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
