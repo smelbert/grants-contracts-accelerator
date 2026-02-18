@@ -9,8 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Award, Eye, Copy } from 'lucide-react';
+import { Plus, Edit, Trash2, Award, Eye, Copy, Palette } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import LayoutPreview, { layouts } from '@/components/certificates/LayoutPreview';
 
 export default function CertificateTemplatesPage() {
   const queryClient = useQueryClient();
@@ -19,6 +20,7 @@ export default function CertificateTemplatesPage() {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [formData, setFormData] = useState({
     template_name: '',
+    template_layout: 'modern_blue_geometric',
     cohort_id: '',
     is_default: false,
     header_text: 'Certificate of Completion',
@@ -31,6 +33,7 @@ export default function CertificateTemplatesPage() {
     border_color: '#143A50',
     text_color: '#000000',
     accent_color: '#E5C089',
+    secondary_color: '#1E4F58',
     include_qr_code: true,
     is_active: true
   });
@@ -77,6 +80,7 @@ export default function CertificateTemplatesPage() {
     setEditingTemplate(null);
     setFormData({
       template_name: '',
+      template_layout: 'modern_blue_geometric',
       cohort_id: '',
       is_default: false,
       header_text: 'Certificate of Completion',
@@ -89,6 +93,7 @@ export default function CertificateTemplatesPage() {
       border_color: '#143A50',
       text_color: '#000000',
       accent_color: '#E5C089',
+      secondary_color: '#1E4F58',
       include_qr_code: true,
       is_active: true
     });
@@ -254,10 +259,15 @@ export default function CertificateTemplatesPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="text-sm bg-slate-50 p-3 rounded-lg">
-                  <p className="font-medium text-xs text-slate-500 mb-1">Body Template</p>
-                  <p className="text-slate-700 line-clamp-2">{template.body_template}</p>
-                </div>
+                <LayoutPreview 
+                  layout={template.template_layout || 'modern_blue_geometric'}
+                  colors={{
+                    background: template.background_color,
+                    border: template.border_color,
+                    text: template.text_color,
+                    accent: template.accent_color
+                  }}
+                />
                 <div className="flex gap-2 pt-3 border-t">
                   <Button size="sm" variant="outline" onClick={() => setPreviewTemplate(template)} className="flex-1">
                     <Eye className="w-3 h-3 mr-1" />
@@ -317,6 +327,35 @@ export default function CertificateTemplatesPage() {
                 </div>
 
                 <div>
+                  <Label className="flex items-center gap-2">
+                    <Palette className="w-4 h-4" />
+                    Certificate Layout *
+                  </Label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                    {Object.entries(layouts).map(([key, layout]) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, template_layout: key })}
+                        className={`p-2 border-2 rounded-lg transition hover:border-[#143A50] ${
+                          formData.template_layout === key ? 'border-[#143A50] bg-[#143A50]/5' : 'border-slate-200'
+                        }`}
+                      >
+                        <LayoutPreview 
+                          layout={key}
+                          colors={{
+                            background: formData.background_color,
+                            border: formData.border_color,
+                            text: formData.text_color,
+                            accent: formData.accent_color
+                          }}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
                   <Label>Header Text *</Label>
                   <Input
                     required
@@ -365,7 +404,7 @@ export default function CertificateTemplatesPage() {
                 </div>
 
                 {/* Colors */}
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-5 gap-4">
                   <div>
                     <Label>Background</Label>
                     <Input
@@ -396,6 +435,14 @@ export default function CertificateTemplatesPage() {
                       type="color"
                       value={formData.accent_color}
                       onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Secondary</Label>
+                    <Input
+                      type="color"
+                      value={formData.secondary_color}
+                      onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
                     />
                   </div>
                 </div>
