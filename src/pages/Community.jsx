@@ -365,6 +365,31 @@ export default function CommunityPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {spaces.map((space, idx) => {
                 const Icon = iconMap[space.icon] || Users;
+                
+                // Determine space color scheme
+                let colorScheme = {
+                  gradient: 'from-[#143A50] to-[#1E4F58]',
+                  badge: 'bg-[#E5C089] text-[#143A50]',
+                  border: 'border-[#143A50]/30',
+                  button: 'bg-[#143A50] hover:bg-[#1E4F58]'
+                };
+                
+                if (space.icon === 'Target' || space.slug === 'incubateher-program') {
+                  colorScheme = {
+                    gradient: 'from-[#AC1A5B] to-[#A65D40]',
+                    badge: 'bg-[#AC1A5B] text-white',
+                    border: 'border-[#AC1A5B]/30',
+                    button: 'bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90'
+                  };
+                } else if (['GraduationCap', 'MessageCircle'].includes(space.icon)) {
+                  colorScheme = {
+                    gradient: 'from-[#AC1A5B] to-[#A65D40]',
+                    badge: 'bg-[#E5C089] text-[#143A50]',
+                    border: 'border-[#AC1A5B]/30',
+                    button: 'bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90'
+                  };
+                }
+                
                 return (
                   <motion.div
                     key={space.id}
@@ -372,24 +397,38 @@ export default function CommunityPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: idx * 0.05 }}
                   >
-                    <Card className="h-full hover:shadow-lg transition-all">
+                    <Card className={`h-full hover:shadow-xl transition-all border-2 ${colorScheme.border}`}>
                       <CardHeader>
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-                            <Icon className="w-5 h-5 text-[#143A50]" />
+                        <div className="flex items-start justify-between mb-3">
+                          <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${colorScheme.gradient} flex items-center justify-center`}>
+                            <Icon className="w-6 h-6 text-white" />
                           </div>
-                          <CardTitle className="text-lg">{space.space_name}</CardTitle>
+                          <Badge className={colorScheme.badge}>
+                            {space.member_count || 0}
+                          </Badge>
                         </div>
+                        <CardTitle className="text-lg">{space.space_name}</CardTitle>
                         <CardDescription className="text-sm line-clamp-2">
                           {space.description}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
-                          <Button variant="outline" className="w-full">
-                            View Space
+                          <Button className={`w-full ${colorScheme.button}`}>
+                            Enter Space
+                            <ArrowRight className="w-4 h-4 ml-2" />
                           </Button>
                         </Link>
+                        <div className="flex items-center justify-between mt-3 text-sm text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <MessageSquare className="w-4 h-4" />
+                            {space.content_count || 0} posts
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <TrendingUp className="w-4 h-4" />
+                            Active
+                          </span>
+                        </div>
                       </CardContent>
                     </Card>
                   </motion.div>

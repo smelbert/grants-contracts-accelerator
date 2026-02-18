@@ -24,26 +24,26 @@ export default function DiscussionsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
 
+  const { data: communitySpaces = [] } = useQuery({
+    queryKey: ['communitySpaces'],
+    queryFn: () => base44.entities.CommunitySpace.filter({ space_type: 'posts', is_active: true }),
+  });
+
   // Parse URL parameters for space filter
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const spaceSlug = params.get('space');
-    if (spaceSlug) {
+    if (spaceSlug && communitySpaces.length > 0) {
       const space = communitySpaces.find(s => s.slug === spaceSlug);
       if (space) {
         setSelectedSpace(space.id);
       }
     }
-  }, []);
+  }, [communitySpaces]);
 
   const { data: discussions = [] } = useQuery({
     queryKey: ['discussions'],
     queryFn: () => base44.entities.Discussion.list('-created_date'),
-  });
-
-  const { data: communitySpaces = [] } = useQuery({
-    queryKey: ['communitySpaces'],
-    queryFn: () => base44.entities.CommunitySpace.filter({ space_type: 'posts', is_active: true }),
   });
 
   const { data: user } = useQuery({
