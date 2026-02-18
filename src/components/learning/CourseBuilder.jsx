@@ -34,6 +34,8 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
     drip_schedule: [],
     is_premium: false,
     incubateher_only: false,
+    is_standalone_resource: false,
+    file_url: '',
     ...course
   });
 
@@ -312,7 +314,18 @@ Return ONLY valid JSON, no additional text.`,
               />
             </div>
 
-            <div className="col-span-2 flex gap-4">
+            {courseData.is_standalone_resource && (
+              <div className="col-span-2">
+                <Label>File URL (for download) *</Label>
+                <Input
+                  value={courseData.file_url || ''}
+                  onChange={(e) => setCourseData({ ...courseData, file_url: e.target.value })}
+                  placeholder="https://... (PDF, document, or other file)"
+                />
+              </div>
+            )}
+
+            <div className="col-span-2 space-y-3">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -331,6 +344,19 @@ Return ONLY valid JSON, no additional text.`,
                   className="rounded"
                 />
                 <span className="text-sm">IncubateHer Only</span>
+              </label>
+
+              <label className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <input
+                  type="checkbox"
+                  checked={courseData.is_standalone_resource}
+                  onChange={(e) => setCourseData({ ...courseData, is_standalone_resource: e.target.checked })}
+                  className="rounded"
+                />
+                <div>
+                  <span className="text-sm font-medium text-slate-900 block">Standalone Resource</span>
+                  <span className="text-xs text-slate-600">Appears in Resource Library, not Learning Hub</span>
+                </div>
               </label>
             </div>
           </div>
