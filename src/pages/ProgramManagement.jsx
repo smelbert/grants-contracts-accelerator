@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Plus, Edit, Users, Settings } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, Edit, Users, Settings, Trash2, UserPlus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export default function ProgramManagementPage() {
@@ -21,7 +22,13 @@ export default function ProgramManagementPage() {
     funder_organization: '',
     delivery_organization: '',
     description: '',
-    is_active: true
+    is_active: true,
+    facilitators: []
+  });
+  const [newFacilitator, setNewFacilitator] = useState({
+    name: '',
+    email: '',
+    role: 'co-facilitator'
   });
 
   const { data: programs } = useQuery({
@@ -45,7 +52,8 @@ export default function ProgramManagementPage() {
         funder_organization: '',
         delivery_organization: '',
         description: '',
-        is_active: true
+        is_active: true,
+        facilitators: []
       });
       toast.success('Program created successfully');
     }
@@ -77,9 +85,30 @@ export default function ProgramManagementPage() {
       funder_organization: program.funder_organization,
       delivery_organization: program.delivery_organization,
       description: program.description,
-      is_active: program.is_active
+      is_active: program.is_active,
+      facilitators: program.facilitators || []
     });
     setShowCreateModal(true);
+  };
+
+  const addFacilitator = () => {
+    if (!newFacilitator.name || !newFacilitator.email) {
+      toast.error('Please enter both name and email');
+      return;
+    }
+    setFormData({
+      ...formData,
+      facilitators: [...(formData.facilitators || []), { ...newFacilitator }]
+    });
+    setNewFacilitator({ name: '', email: '', role: 'co-facilitator' });
+    toast.success('Facilitator added');
+  };
+
+  const removeFacilitator = (index) => {
+    setFormData({
+      ...formData,
+      facilitators: formData.facilitators.filter((_, i) => i !== index)
+    });
   };
 
   const getProgramEnrollmentCount = (programId) => {
@@ -216,6 +245,89 @@ export default function ProgramManagementPage() {
                     onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
                   />
                 </div>
+                
+                {/* Facilitators Section */}
+                <div className="space-y-3 pt-4 border-t">
+                  <Label className="text-base font-semibold">Program Facilitators</Label>
+                  
+                  {/* Existing Facilitators */}
+                  {formData.facilitators?.length > 0 && (
+                    <div className="space-y-2">
+                      {formData.facilitators.map((facilitator, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                          <div className="flex-1">
+                            <p className="font-medium text-sm">{facilitator.name}</p>
+                            <p className="text-xs text-slate-600">{facilitator.email}</p>
+                            <Badge variant="outline" className="mt-1 text-xs">
+                              {facilitator.role}
+                            </Badge>
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeFacilitator(index)}
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Add New Facilitator */}
+                  <div className="p-4 border border-slate-200 rounded-lg space-y-3">
+                    <Label className="text-sm font-medium flex items-center gap-2">
+                      <UserPlus className="w-4 h-4" />
+                      Add Facilitator
+                    </Label>
+                    <div className="grid grid-cols-1 gap-3">
+                      <div>
+                        <Label className="text-xs">Name</Label>
+                        <Input
+                          value={newFacilitator.name}
+                          onChange={(e) => setNewFacilitator({ ...newFacilitator, name: e.target.value })}
+                          placeholder="Full name"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Email</Label>
+                        <Input
+                          value={newFacilitator.email}
+                          onChange={(e) => setNewFacilitator({ ...newFacilitator, email: e.target.value })}
+                          placeholder="email@example.com"
+                          type="email"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Role</Label>
+                        <Select
+                          value={newFacilitator.role}
+                          onValueChange={(value) => setNewFacilitator({ ...newFacilitator, role: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="lead">Lead Facilitator</SelectItem>
+                            <SelectItem value="co-facilitator">Co-Facilitator</SelectItem>
+                            <SelectItem value="guest">Guest Speaker</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={addFacilitator}
+                        className="w-full"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Facilitator
+                      </Button>
+                    </div>
+                  </div>
+                </div>
                 <div className="flex gap-3 pt-4">
                   <Button
                     type="button"
@@ -230,8 +342,10 @@ export default function ProgramManagementPage() {
                         funder_organization: '',
                         delivery_organization: '',
                         description: '',
-                        is_active: true
+                        is_active: true,
+                        facilitators: []
                       });
+                      setNewFacilitator({ name: '', email: '', role: 'co-facilitator' });
                     }}
                   >
                     Cancel
