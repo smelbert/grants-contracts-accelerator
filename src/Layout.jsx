@@ -41,7 +41,8 @@ import {
   Palette,
   Target,
   TrendingUp,
-  Settings
+  Settings,
+  Flag
 } from 'lucide-react';
 
 // User Portal Navigation with Groups
