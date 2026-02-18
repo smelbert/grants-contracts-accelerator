@@ -20,7 +20,7 @@ export default function CertificateTemplatesPage() {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [formData, setFormData] = useState({
     template_name: '',
-    template_layout: 'blue_wave_completion',
+    template_layout: 'blue_wave_landscape',
     cohort_id: '',
     is_default: false,
     header_text: 'Certificate of Completion',
