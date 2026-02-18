@@ -190,6 +190,8 @@ import ProgramAnnouncements from './pages/ProgramAnnouncements';
 import ProgramMessaging from './pages/ProgramMessaging';
 import EventManagement from './pages/EventManagement';
 import IncubateHerAttendance from './pages/IncubateHerAttendance';
+import GrantWritingPreAssessment from './pages/GrantWritingPreAssessment';
+import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
 import __Layout from './Layout.jsx';
 
 
@@ -337,6 +339,8 @@ export const PAGES = {
     "ProgramMessaging": ProgramMessaging,
     "EventManagement": EventManagement,
     "IncubateHerAttendance": IncubateHerAttendance,
+    "GrantWritingPreAssessment": GrantWritingPreAssessment,
+    "GrantWritingPostAssessment": GrantWritingPostAssessment,
 }
 
 export const pagesConfig = {
