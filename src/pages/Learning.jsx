@@ -103,7 +103,10 @@ export default function LearningPage() {
     }
   });
 
-  const filteredContent = (learningContent || []).filter(content => {
+  // Separate content for Browse All (exclude program-specific courses)
+  const browseContent = (learningContent || []).filter(c => !c.incubateher_only);
+  
+  const filteredContent = browseContent.filter(content => {
     const matchesSearch = !searchQuery || 
       content.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       content.description?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -355,11 +358,11 @@ export default function LearningPage() {
                   user={user}
                   organization={organization}
                   userProgress={userProgress}
-                  allContent={learningContent}
+                  allContent={browseContent}
                 />
                 <AILearningRecommendations
                   organization={organization}
-                  learningContent={learningContent || []}
+                  learningContent={browseContent}
                   fundingGaps={organization.readiness_status ? `Current readiness: ${organization.readiness_status}` : null}
                 />
               </div>
