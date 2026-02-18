@@ -21,8 +21,15 @@ import {
   ArrowRight,
   Clock,
   Award,
-  Sparkles
+  Sparkles,
+  Home,
+  ChevronRight,
+  Play,
+  FileText,
+  Video
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { toast } from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 
@@ -328,106 +335,154 @@ export default function IncubateHerCourse() {
   const currentSectionData = sections[currentSection];
   const progressPercent = sections.length > 0 ? Math.round((completedSections.length / sections.length) * 100) : 0;
 
-  return (
-    <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-      <CoBrandedHeader 
-        title={course.title}
-        subtitle={course.description}
-      />
+  // Get all courses from the same program for navigation
+  const { data: allCourses } = useQuery({
+    queryKey: ['all-incubateher-courses'],
+    queryFn: async () => {
+      const content = await base44.entities.LearningContent.filter({
+        incubateher_only: true
+      });
+      return content.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
+  });
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Course Header */}
-        <Card className="mb-6" style={{ borderColor: BRAND_COLORS.culRed, borderWidth: 2 }}>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralDark }}>
+  const currentCourseIndex = allCourses?.findIndex(c => c.id === courseId) || 0;
+  const previousCourse = allCourses?.[currentCourseIndex - 1];
+  const nextCourse = allCourses?.[currentCourseIndex + 1];
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Sticky Top Navigation Bar */}
+      <div className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        <div className="px-6 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link to={createPageUrl('IncubateHerLearning')}>
+                <Button variant="ghost" size="sm">
+                  <Home className="w-4 h-4 mr-2" />
+                  Back to Learning Hub
+                </Button>
+              </Link>
+              <div className="h-6 w-px bg-slate-300" />
+              <div className="flex items-center gap-2">
+                <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }} className="text-xs">
                   {course.funding_lane}
                 </Badge>
-                {course.duration_minutes && (
-                  <div className="flex items-center gap-2 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                    <Clock className="w-4 h-4" />
-                    {course.duration_minutes} min
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <Progress value={progressPercent} className="w-32" />
-                  <span className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                    {progressPercent}%
-                  </span>
-                </div>
+                <Progress value={progressPercent} className="w-24" />
+                <span className="text-xs font-medium text-slate-600">
+                  {progressPercent}% Complete
+                </span>
               </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {course.duration_minutes && (
+                <div className="flex items-center gap-1 text-sm text-slate-600">
+                  <Clock className="w-4 h-4" />
+                  {course.duration_minutes} min
+                </div>
+              )}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => toggleBookmarkMutation.mutate()}
                 style={{ color: userActivity?.is_bookmarked ? BRAND_COLORS.culRed : BRAND_COLORS.eisNavy }}
               >
-                <Bookmark className={`w-5 h-5 ${userActivity?.is_bookmarked ? 'fill-current' : ''}`} />
+                <Bookmark className={`w-4 h-4 ${userActivity?.is_bookmarked ? 'fill-current' : ''}`} />
               </Button>
             </div>
+          </div>
+        </div>
+      </div>
 
+      <div className="flex min-h-[calc(100vh-73px)]">
+        {/* Left Sidebar - Course Sections */}
+        <div className="w-80 border-r border-slate-200 bg-slate-50 overflow-y-auto">
+          <div className="p-6 border-b border-slate-200 bg-white">
+            <h2 className="font-bold text-lg mb-1" style={{ color: BRAND_COLORS.culRed }}>
+              {course.title}
+            </h2>
+            <p className="text-sm text-slate-600 mb-4">{course.description}</p>
+            
             {progressPercent === 100 && (
-              <div className="flex items-center gap-2 p-3 rounded-lg animate-pulse" style={{ backgroundColor: BRAND_COLORS.eisGold + '20' }}>
+              <div className="flex items-center gap-2 p-3 rounded-lg mb-4" style={{ backgroundColor: BRAND_COLORS.eisGold + '20' }}>
                 <Award className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
-                <span className="font-medium" style={{ color: BRAND_COLORS.neutralDark }}>
-                  Course Completed! 🎉 +50 Bonus Points
+                <span className="text-xs font-medium" style={{ color: BRAND_COLORS.neutralDark }}>
+                  Course Completed! 🎉
                 </span>
               </div>
             )}
-          </CardContent>
-        </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar - Section Navigation */}
-          <div className="lg:col-span-1">
-            <Card className="lg:sticky lg:top-6 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
-              <CardHeader>
-                <CardTitle className="text-lg" style={{ color: BRAND_COLORS.culRed }}>
-                  Course Sections
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {sections.map((section, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setCurrentSection(idx);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`w-full text-left p-3 rounded-lg transition-all ${
-                      currentSection === idx ? 'shadow-md' : 'hover:bg-gray-50'
-                    }`}
-                    style={{
-                      backgroundColor: currentSection === idx ? BRAND_COLORS.eisGold + '20' : 'transparent',
-                      borderLeft: `3px solid ${completedSections.includes(idx) ? BRAND_COLORS.eisGold : 'transparent'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      {completedSections.includes(idx) ? (
-                        <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
-                      ) : (
-                        <div className="w-4 h-4 rounded-full border-2 flex-shrink-0" style={{ borderColor: BRAND_COLORS.eisNavy }} />
-                      )}
-                      <span className="text-sm font-medium" style={{ color: BRAND_COLORS.neutralDark }}>
-                        {idx + 1}. {section.title}
-                      </span>
-                    </div>
-                    {section.duration_minutes && (
-                      <p className="text-xs ml-6" style={{ color: BRAND_COLORS.eisNavy }}>
-                        {section.duration_minutes} min
-                      </p>
-                    )}
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
+            <div className="text-xs text-slate-500 mb-2">
+              Completed {completedSections.length} of {sections.length} lessons
+            </div>
+            <Progress value={progressPercent} className="h-2" />
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="p-4">
+            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+              Course Sections
+            </h3>
+            <div className="space-y-1">
+              {sections.map((section, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setCurrentSection(idx);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-start gap-2 ${
+                    currentSection === idx 
+                      ? 'bg-white shadow-sm' 
+                      : 'hover:bg-white/50'
+                  }`}
+                >
+                  {completedSections.includes(idx) ? (
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: BRAND_COLORS.eisGold }} />
+                  ) : (
+                    <div 
+                      className="w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5" 
+                      style={{ borderColor: currentSection === idx ? BRAND_COLORS.culRed : '#cbd5e1' }} 
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-slate-900 truncate">
+                      {section.title}
+                    </div>
+                    {section.duration_minutes && (
+                      <div className="text-xs text-slate-500 mt-0.5">
+                        {section.duration_minutes} min
+                      </div>
+                    )}
+                  </div>
+                  {currentSection === idx && (
+                    <Play className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: BRAND_COLORS.culRed }} />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-4xl mx-auto p-8">
+            {/* Section Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
+                <span>Lesson {currentSection + 1} of {sections.length}</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2" style={{ color: BRAND_COLORS.culRed }}>
+                {currentSectionData?.title}
+              </h1>
+              {currentSectionData?.description && (
+                <p className="text-slate-600">
+                  {currentSectionData.description}
+                </p>
+              )}
+            </div>
+
             <Tabs defaultValue="content" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-6">
+              <TabsList className="mb-6">
                 <TabsTrigger value="content">
                   <BookOpen className="w-4 h-4 mr-2" />
                   Content
@@ -447,306 +502,284 @@ export default function IncubateHerCourse() {
               </TabsList>
 
               {/* Content Tab */}
-              <TabsContent value="content">
-                <Card>
-                  <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>
-                      {currentSectionData?.title}
-                    </CardTitle>
-                    {currentSectionData?.description && (
-                      <p className="text-sm mt-2" style={{ color: BRAND_COLORS.eisNavy }}>
-                        {currentSectionData.description}
-                      </p>
-                    )}
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Video Player */}
-                    {currentSectionData?.video_url && (
-                      <div className="rounded-lg overflow-hidden shadow-lg" style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}>
-                        <video
-                          key={currentSection}
-                          className="w-full"
-                          controls
-                          onTimeUpdate={(e) => {
-                            const video = e.target;
-                            updateVideoProgress(currentSection, video.currentTime, video.duration);
-                          }}
-                          onLoadedMetadata={(e) => {
-                            const savedProgress = videoProgress[currentSection];
-                            if (savedProgress?.currentTime) {
-                              e.target.currentTime = savedProgress.currentTime;
-                            }
-                          }}
-                        >
-                          <source src={currentSectionData.video_url} />
-                          Your browser does not support video playback.
-                        </video>
-                        {videoProgress[currentSection] && (
-                          <div className="p-2 bg-slate-100 text-xs text-slate-600">
-                            Progress: {videoProgress[currentSection].percent}% • 
-                            {Math.floor(videoProgress[currentSection].currentTime / 60)}:
-                            {Math.floor(videoProgress[currentSection].currentTime % 60).toString().padStart(2, '0')} / 
-                            {Math.floor(videoProgress[currentSection].duration / 60)}:
-                            {Math.floor(videoProgress[currentSection].duration % 60).toString().padStart(2, '0')}
-                          </div>
-                        )}
+              <TabsContent value="content" className="space-y-6">
+                {/* Video Player */}
+                {currentSectionData?.video_url && (
+                  <div className="rounded-lg overflow-hidden shadow-lg bg-slate-100">
+                    <video
+                      key={currentSection}
+                      className="w-full"
+                      controls
+                      onTimeUpdate={(e) => {
+                        const video = e.target;
+                        updateVideoProgress(currentSection, video.currentTime, video.duration);
+                      }}
+                      onLoadedMetadata={(e) => {
+                        const savedProgress = videoProgress[currentSection];
+                        if (savedProgress?.currentTime) {
+                          e.target.currentTime = savedProgress.currentTime;
+                        }
+                      }}
+                    >
+                      <source src={currentSectionData.video_url} />
+                      Your browser does not support video playback.
+                    </video>
+                    {videoProgress[currentSection] && (
+                      <div className="p-3 bg-white border-t border-slate-200 text-xs text-slate-600 flex items-center gap-2">
+                        <Video className="w-4 h-4 text-slate-400" />
+                        <span>Progress: {videoProgress[currentSection].percent}%</span>
+                        <span>•</span>
+                        <span>
+                          {Math.floor(videoProgress[currentSection].currentTime / 60)}:
+                          {Math.floor(videoProgress[currentSection].currentTime % 60).toString().padStart(2, '0')} / 
+                          {Math.floor(videoProgress[currentSection].duration / 60)}:
+                          {Math.floor(videoProgress[currentSection].duration % 60).toString().padStart(2, '0')}
+                        </span>
                       </div>
                     )}
+                  </div>
+                )}
 
-                    {/* Embedded Presentation */}
-                    {currentSectionData?.presentation_url && (
-                      <div className="rounded-lg overflow-hidden shadow-lg" style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}>
-                        <iframe
-                          src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(currentSectionData.presentation_url)}`}
-                          className="w-full"
-                          style={{ height: '600px' }}
-                          allowFullScreen
-                          title="Presentation Viewer"
-                        />
-                      </div>
-                    )}
+                {/* Embedded Presentation */}
+                {currentSectionData?.presentation_url && (
+                  <div className="rounded-lg overflow-hidden shadow-lg border border-slate-200">
+                    <iframe
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(currentSectionData.presentation_url)}`}
+                      className="w-full"
+                      style={{ height: '600px' }}
+                      allowFullScreen
+                      title="Presentation Viewer"
+                    />
+                  </div>
+                )}
 
-                    {/* Embedded Gamma Presentation */}
-                    {course.content_url && (
-                      <div className="rounded-lg overflow-hidden shadow-lg" style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}>
-                        <iframe
-                          src={course.content_url}
-                          className="w-full"
-                          style={{ height: '600px' }}
-                          allowFullScreen
-                          title="Course Presentation"
-                        />
-                      </div>
-                    )}
+                {/* Embedded Gamma Presentation */}
+                {course.content_url && (
+                  <div className="rounded-lg overflow-hidden shadow-lg border border-slate-200">
+                    <iframe
+                      src={course.content_url}
+                      className="w-full"
+                      style={{ height: '600px' }}
+                      allowFullScreen
+                      title="Course Presentation"
+                    />
+                  </div>
+                )}
 
-                    {/* Embed Code */}
-                    {currentSectionData?.embed_code && (
-                      <div 
-                        className="rounded-lg overflow-hidden shadow-lg" 
-                        style={{ border: `2px solid ${BRAND_COLORS.eisGold}` }}
-                        dangerouslySetInnerHTML={{ __html: currentSectionData.embed_code }}
-                      />
-                    )}
+                {/* Embed Code */}
+                {currentSectionData?.embed_code && (
+                  <div 
+                    className="rounded-lg overflow-hidden shadow-lg border border-slate-200" 
+                    dangerouslySetInnerHTML={{ __html: currentSectionData.embed_code }}
+                  />
+                )}
 
-                    {/* Section Content */}
-                    {currentSectionData?.content && (
-                      <div 
-                        className="prose max-w-none p-6 rounded-lg"
-                        style={{ backgroundColor: BRAND_COLORS.neutralLight }}
-                        dangerouslySetInnerHTML={{ __html: currentSectionData.content }}
-                      />
-                    )}
+                {/* Section Content */}
+                {currentSectionData?.content && (
+                  <div 
+                    className="prose max-w-none p-6 rounded-lg bg-slate-50 border border-slate-200"
+                    dangerouslySetInnerHTML={{ __html: currentSectionData.content }}
+                  />
+                )}
 
-                    {/* Section Notes */}
-                    <Card style={{ backgroundColor: BRAND_COLORS.neutralLight }}>
-                      <CardHeader>
-                        <CardTitle className="text-base flex items-center gap-2" style={{ color: BRAND_COLORS.culRed }}>
-                          <MessageSquare className="w-4 h-4" />
-                          Notes for This Section
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <Textarea
-                          value={sectionNotes[currentSection] || ''}
-                          onChange={(e) => setSectionNotes({ ...sectionNotes, [currentSection]: e.target.value })}
-                          placeholder="Take notes specific to this section..."
-                          rows={4}
-                          className="w-full mb-2"
-                        />
-                        <Button
-                          size="sm"
-                          onClick={() => saveSectionNotesMutation.mutate({ 
-                            sectionIndex: currentSection, 
-                            notes: sectionNotes[currentSection] || '' 
-                          })}
-                          disabled={saveSectionNotesMutation.isPending}
-                          style={{ backgroundColor: BRAND_COLORS.eisNavy, color: 'white' }}
-                        >
-                          {saveSectionNotesMutation.isPending ? 'Saving...' : 'Save Section Notes'}
-                        </Button>
-                      </CardContent>
-                    </Card>
+                {/* Section Notes */}
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: BRAND_COLORS.culRed }}>
+                    <MessageSquare className="w-4 h-4" />
+                    Notes for This Section
+                  </h3>
+                  <Textarea
+                    value={sectionNotes[currentSection] || ''}
+                    onChange={(e) => setSectionNotes({ ...sectionNotes, [currentSection]: e.target.value })}
+                    placeholder="Take notes specific to this section..."
+                    rows={4}
+                    className="w-full mb-3"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={() => saveSectionNotesMutation.mutate({ 
+                      sectionIndex: currentSection, 
+                      notes: sectionNotes[currentSection] || '' 
+                    })}
+                    disabled={saveSectionNotesMutation.isPending}
+                    style={{ backgroundColor: BRAND_COLORS.eisNavy, color: 'white' }}
+                  >
+                    {saveSectionNotesMutation.isPending ? 'Saving...' : 'Save Section Notes'}
+                  </Button>
+                </div>
 
-                    {/* Mark Complete */}
-                    <div className="flex items-center justify-between pt-6 border-t">
-                      <Button
-                        variant="outline"
-                        onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
-                        disabled={currentSection === 0}
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Previous
+                {/* Navigation & Mark Complete */}
+                <div className="flex items-center justify-between pt-6 border-t border-slate-200">
+                  {currentSection > 0 ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setCurrentSection(currentSection - 1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Previous
+                    </Button>
+                  ) : (
+                    <div></div>
+                  )}
+                  
+                  {!completedSections.includes(currentSection) && (
+                    <Button
+                      onClick={() => markSectionComplete(currentSection)}
+                      className="text-white"
+                      style={{ backgroundColor: BRAND_COLORS.eisGold }}
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      Mark as Complete
+                    </Button>
+                  )}
+                  
+                  {currentSection < sections.length - 1 ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setCurrentSection(currentSection + 1);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      Next
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  ) : nextCourse ? (
+                    <Link to={createPageUrl('IncubateHerCourse') + '?id=' + nextCourse.id + '&from=learning'}>
+                      <Button style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
+                        Next Course
+                        <ChevronRight className="w-4 h-4 ml-2" />
                       </Button>
-                      
-                      {!completedSections.includes(currentSection) && (
-                        <Button
-                          onClick={() => markSectionComplete(currentSection)}
-                          className="text-white"
-                          style={{ backgroundColor: BRAND_COLORS.eisGold }}
-                        >
-                          <CheckCircle2 className="w-4 h-4 mr-2" />
-                          Mark as Complete
-                        </Button>
-                      )}
-                      
-                      <Button
-                        variant="outline"
-                        onClick={() => setCurrentSection(Math.min(sections.length - 1, currentSection + 1))}
-                        disabled={currentSection === sections.length - 1}
-                      >
-                        Next
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  ) : (
+                    <Link to={createPageUrl('IncubateHerLearning')}>
+                      <Button style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
+                        Back to Learning Hub
                       </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </Link>
+                  )}
+                </div>
               </TabsContent>
 
               {/* Tips Tab */}
-              <TabsContent value="tips">
-                <Card>
-                  <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>
-                      <Lightbulb className="w-5 h-5 inline mr-2" />
-                      Tips & Best Practices
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {course.tips && course.tips.length > 0 ? (
-                      course.tips.map((tip, idx) => (
-                        <div
-                          key={idx}
-                          className="p-4 rounded-lg border-l-4"
-                          style={{
-                            backgroundColor: BRAND_COLORS.neutralLight,
-                            borderColor: tip.category === 'warning' ? BRAND_COLORS.culRed : BRAND_COLORS.eisGold
-                          }}
-                        >
-                          <div className="flex items-start gap-3">
-                            <Star className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: BRAND_COLORS.eisGold }} />
-                            <div>
-                              <h4 className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
-                                {tip.title}
-                              </h4>
-                              <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                {tip.content}
-                              </p>
-                            </div>
-                          </div>
+              <TabsContent value="tips" className="space-y-4">
+                {course.tips && course.tips.length > 0 ? (
+                  course.tips.map((tip, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-lg border-l-4 bg-slate-50"
+                      style={{
+                        borderColor: tip.category === 'warning' ? BRAND_COLORS.culRed : BRAND_COLORS.eisGold
+                      }}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Star className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: BRAND_COLORS.eisGold }} />
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+                            {tip.title}
+                          </h4>
+                          <p className="text-sm text-slate-600">
+                            {tip.content}
+                          </p>
                         </div>
-                      ))
-                    ) : (
-                      <p style={{ color: BRAND_COLORS.eisNavy }}>No tips available for this course yet.</p>
-                    )}
-                  </CardContent>
-                </Card>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-slate-600">No tips available for this course yet.</p>
+                )}
               </TabsContent>
 
               {/* Resources Tab */}
-              <TabsContent value="resources">
-                <Card>
-                  <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>
-                      <Download className="w-5 h-5 inline mr-2" />
-                      Downloadable Resources
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {course.handouts && course.handouts.length > 0 ? (
-                      course.handouts.map((handout, idx) => (
-                        <div
-                          key={idx}
-                          className="p-4 rounded-lg border"
-                          style={{ backgroundColor: BRAND_COLORS.neutralLight }}
-                        >
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex-1">
-                              <h4 className="font-medium mb-1" style={{ color: BRAND_COLORS.neutralDark }}>
-                                {handout.title}
-                              </h4>
-                              {handout.description && (
-                                <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                  {handout.description}
-                                </p>
-                              )}
-                              <p className="text-xs mt-1" style={{ color: BRAND_COLORS.eisNavy }}>
-                                Type: {handout.file_type || 'PDF'}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <a
-                              href={handout.file_url}
-                              download
-                              className="flex-1"
-                            >
-                              <Button
-                                size="sm"
-                                className="w-full"
-                                style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}
-                              >
-                                <Download className="w-4 h-4 mr-2" />
-                                Download
-                              </Button>
-                            </a>
-                            <a
-                              href={handout.file_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex-1"
-                            >
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="w-full"
-                              >
-                                View in Browser
-                              </Button>
-                            </a>
-                          </div>
+              <TabsContent value="resources" className="space-y-3">
+                {course.handouts && course.handouts.length > 0 ? (
+                  course.handouts.map((handout, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-lg border border-slate-200 bg-slate-50"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h4 className="font-medium mb-1 text-slate-900">
+                            {handout.title}
+                          </h4>
+                          {handout.description && (
+                            <p className="text-sm text-slate-600">
+                              {handout.description}
+                            </p>
+                          )}
+                          <p className="text-xs mt-1 text-slate-500">
+                            Type: {handout.file_type || 'PDF'}
+                          </p>
                         </div>
-                      ))
-                    ) : (
-                      <p style={{ color: BRAND_COLORS.eisNavy }}>No downloadable resources for this course yet.</p>
-                    )}
-                  </CardContent>
-                </Card>
+                      </div>
+                      <div className="flex gap-2">
+                        <a
+                          href={handout.file_url}
+                          download
+                          className="flex-1"
+                        >
+                          <Button
+                            size="sm"
+                            className="w-full"
+                            style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </Button>
+                        </a>
+                        <a
+                          href={handout.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                        >
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-full"
+                          >
+                            View in Browser
+                          </Button>
+                        </a>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-slate-600">No downloadable resources for this course yet.</p>
+                )}
               </TabsContent>
 
               {/* Notes Tab */}
               <TabsContent value="notes">
-                <Card>
-                  <CardHeader>
-                    <CardTitle style={{ color: BRAND_COLORS.culRed }}>
-                      <MessageSquare className="w-5 h-5 inline mr-2" />
-                      My Personal Notes
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Textarea
-                      value={userNotes}
-                      onChange={(e) => setUserNotes(e.target.value)}
-                      placeholder="Take notes as you learn... These notes are private and only visible to you."
-                      rows={12}
-                      className="w-full mb-4"
-                    />
-                    <Button
-                      onClick={() => saveNotesMutation.mutate(userNotes)}
-                      disabled={saveNotesMutation.isPending}
-                      className="text-white"
-                      style={{ backgroundColor: BRAND_COLORS.eisGold }}
-                    >
-                      {saveNotesMutation.isPending ? 'Saving...' : 'Save Notes'}
-                    </Button>
-                  </CardContent>
-                </Card>
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4" style={{ color: BRAND_COLORS.culRed }}>
+                    My Personal Notes
+                  </h3>
+                  <Textarea
+                    value={userNotes}
+                    onChange={(e) => setUserNotes(e.target.value)}
+                    placeholder="Take notes as you learn... These notes are private and only visible to you."
+                    rows={12}
+                    className="w-full mb-4"
+                  />
+                  <Button
+                    onClick={() => saveNotesMutation.mutate(userNotes)}
+                    disabled={saveNotesMutation.isPending}
+                    className="text-white"
+                    style={{ backgroundColor: BRAND_COLORS.eisGold }}
+                  >
+                    {saveNotesMutation.isPending ? 'Saving...' : 'Save Notes'}
+                  </Button>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
         </div>
       </div>
-
-      <CoBrandedFooter />
     </div>
   );
 }
