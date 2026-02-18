@@ -89,7 +89,6 @@ export default function IncubateHerSchedule() {
           <TabsList>
             <TabsTrigger value="schedule">Schedule</TabsTrigger>
             <TabsTrigger value="recordings">Recordings</TabsTrigger>
-            {isAdmin && <TabsTrigger value="manage">Manage Sessions</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="schedule" className="mt-6">
@@ -235,56 +234,7 @@ export default function IncubateHerSchedule() {
             </div>
           </TabsContent>
 
-          {isAdmin && (
-            <TabsContent value="manage" className="mt-6">
-              <div className="space-y-4">
-                {sessionDays.map((day, dayIndex) => (
-                  <Card key={dayIndex}>
-                    <CardHeader>
-                      <CardTitle className="text-lg">{day.date}</CardTitle>
-                      <p className="text-sm text-slate-600">{day.time}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div>
-                          <Label>Upload Session Video for This Day</Label>
-                          <div className="flex gap-2 mt-2">
-                            <Input
-                              type="file"
-                              accept="video/*"
-                              onChange={(e) => setVideoFile(e.target.files[0])}
-                            />
-                            <Button
-                              onClick={() => handleVideoUpload(dayIndex)}
-                              disabled={!videoFile || uploadingVideo || !cohort}
-                              className="bg-[#AC1A5B] hover:bg-[#A65D40]"
-                            >
-                              <Upload className="w-4 h-4 mr-2" />
-                              {uploadingVideo ? 'Uploading...' : 'Upload'}
-                            </Button>
-                          </div>
-                        </div>
-                        {day.video_url && (
-                          <div className="text-sm text-green-600 flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4" />
-                            Video uploaded
-                          </div>
-                        )}
-                        <div className="pt-3 border-t">
-                          <p className="text-sm font-medium text-slate-700 mb-2">Sections covered this day:</p>
-                          <div className="space-y-1">
-                            {day.sections?.map((section, idx) => (
-                              <p key={idx} className="text-sm text-slate-600">• {section.title}</p>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          )}
+
         </Tabs>
       </div>
     </div>

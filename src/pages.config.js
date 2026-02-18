@@ -54,6 +54,7 @@ import AIGuardrails from './pages/AIGuardrails';
 import AboutEIS from './pages/AboutEIS';
 import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
+import AssessmentAnalytics from './pages/AssessmentAnalytics';
 import AssessmentManagement from './pages/AssessmentManagement';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import AuditLogs from './pages/AuditLogs';
@@ -82,6 +83,7 @@ import DonorStewardshipPlanner from './pages/DonorStewardshipPlanner';
 import DynamicRegistration from './pages/DynamicRegistration';
 import EmailHub from './pages/EmailHub';
 import EthicsCompliance from './pages/EthicsCompliance';
+import EventManagement from './pages/EventManagement';
 import Events from './pages/Events';
 import FAQManagement from './pages/FAQManagement';
 import FlagsNotes from './pages/FlagsNotes';
@@ -93,11 +95,14 @@ import GrantDashboard from './pages/GrantDashboard';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
+import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
+import GrantWritingPreAssessment from './pages/GrantWritingPreAssessment';
 import Home from './pages/Home';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
 import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
 import IncubateHerAgenda from './pages/IncubateHerAgenda';
 import IncubateHerAssessments from './pages/IncubateHerAssessments';
+import IncubateHerAttendance from './pages/IncubateHerAttendance';
 import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
@@ -147,8 +152,10 @@ import PlatformSettings from './pages/PlatformSettings';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
+import ProgramAnnouncements from './pages/ProgramAnnouncements';
 import ProgramCalendar from './pages/ProgramCalendar';
 import ProgramManagement from './pages/ProgramManagement';
+import ProgramMessaging from './pages/ProgramMessaging';
 import ProgramModuleManager from './pages/ProgramModuleManager';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
@@ -186,13 +193,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import ProgramAnnouncements from './pages/ProgramAnnouncements';
-import ProgramMessaging from './pages/ProgramMessaging';
-import EventManagement from './pages/EventManagement';
-import IncubateHerAttendance from './pages/IncubateHerAttendance';
-import GrantWritingPreAssessment from './pages/GrantWritingPreAssessment';
-import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
-import AssessmentAnalytics from './pages/AssessmentAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -204,6 +204,7 @@ export const PAGES = {
     "AboutEIS": AboutEIS,
     "AdminDashboard": AdminDashboard,
     "ApplicationTracker": ApplicationTracker,
+    "AssessmentAnalytics": AssessmentAnalytics,
     "AssessmentManagement": AssessmentManagement,
     "AssignedOrganizations": AssignedOrganizations,
     "AuditLogs": AuditLogs,
@@ -232,6 +233,7 @@ export const PAGES = {
     "DynamicRegistration": DynamicRegistration,
     "EmailHub": EmailHub,
     "EthicsCompliance": EthicsCompliance,
+    "EventManagement": EventManagement,
     "Events": Events,
     "FAQManagement": FAQManagement,
     "FlagsNotes": FlagsNotes,
@@ -243,11 +245,14 @@ export const PAGES = {
     "GrantReadinessAssessment": GrantReadinessAssessment,
     "GrantReadinessIntensive": GrantReadinessIntensive,
     "GrantSubmission": GrantSubmission,
+    "GrantWritingPostAssessment": GrantWritingPostAssessment,
+    "GrantWritingPreAssessment": GrantWritingPreAssessment,
     "Home": Home,
     "IncubateHerAdmin": IncubateHerAdmin,
     "IncubateHerAdminConsole": IncubateHerAdminConsole,
     "IncubateHerAgenda": IncubateHerAgenda,
     "IncubateHerAssessments": IncubateHerAssessments,
+    "IncubateHerAttendance": IncubateHerAttendance,
     "IncubateHerCULDashboard": IncubateHerCULDashboard,
     "IncubateHerCompletion": IncubateHerCompletion,
     "IncubateHerConsultations": IncubateHerConsultations,
@@ -297,8 +302,10 @@ export const PAGES = {
     "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
+    "ProgramAnnouncements": ProgramAnnouncements,
     "ProgramCalendar": ProgramCalendar,
     "ProgramManagement": ProgramManagement,
+    "ProgramMessaging": ProgramMessaging,
     "ProgramModuleManager": ProgramModuleManager,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
@@ -336,13 +343,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "ProgramAnnouncements": ProgramAnnouncements,
-    "ProgramMessaging": ProgramMessaging,
-    "EventManagement": EventManagement,
-    "IncubateHerAttendance": IncubateHerAttendance,
-    "GrantWritingPreAssessment": GrantWritingPreAssessment,
-    "GrantWritingPostAssessment": GrantWritingPostAssessment,
-    "AssessmentAnalytics": AssessmentAnalytics,
 }
 
 export const pagesConfig = {
