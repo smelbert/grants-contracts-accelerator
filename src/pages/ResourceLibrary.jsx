@@ -217,17 +217,38 @@ export default function ResourceLibrary() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="workbooks" className="space-y-6">
+        <Tabs defaultValue="all" className="space-y-6">
           <TabsList>
+            <TabsTrigger value="all">
+              <FileText className="w-4 h-4 mr-2" />
+              All Resources ({filteredResources.length})
+            </TabsTrigger>
             <TabsTrigger value="workbooks">
               <BookOpen className="w-4 h-4 mr-2" />
               Workbook Templates ({workbookTemplates.length})
             </TabsTrigger>
-            <TabsTrigger value="other">
+            <TabsTrigger value="templates">
               <FileText className="w-4 h-4 mr-2" />
               Templates & Guides ({otherResources.length})
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="all">
+            <div className="mb-4">
+              <h2 className="text-2xl font-bold text-[#143A50] mb-2">All Resources</h2>
+              <p className="text-slate-600">Complete library of templates, workbooks, and guides</p>
+            </div>
+            <ResourceGrid 
+              resources={filteredResources}
+              onDownload={handleDownload}
+              onPreview={handlePreview}
+              onFavorite={(resource) => toggleFavoriteMutation.mutate({ resource, isFavorited: resource.isFavorited })}
+              onReview={(resource) => {
+                setReviewingResource(resource);
+                setReviewDialogOpen(true);
+              }}
+            />
+          </TabsContent>
 
           <TabsContent value="workbooks">
             <div className="mb-4">
@@ -246,7 +267,7 @@ export default function ResourceLibrary() {
             />
           </TabsContent>
 
-          <TabsContent value="other">
+          <TabsContent value="templates">
             <div className="mb-4">
               <h2 className="text-2xl font-bold text-[#143A50] mb-2">Templates & Guides</h2>
               <p className="text-slate-600">Essential documents and guides for your funding work</p>
@@ -276,18 +297,105 @@ export default function ResourceLibrary() {
                   </Button>
                 </DialogTitle>
               </DialogHeader>
-              <div className="flex-1 overflow-y-auto border rounded-lg p-6 bg-white">
-                <BrandedTemplateWrapper>
-                  <div 
-                    className="prose prose-slate max-w-none"
-                    style={{
-                      fontFamily: 'Georgia, "Times New Roman", serif',
-                      lineHeight: '1.8'
-                    }}
-                  >
-                    <div dangerouslySetInnerHTML={{ __html: previewResource.template_content }} />
+              <div className="flex-1 overflow-y-auto border rounded-lg bg-white">
+                <div className="p-8 max-w-4xl mx-auto">
+                  {/* Professional Header */}
+                  <div className="border-b-4 border-[#143A50] pb-6 mb-8">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h1 className="text-3xl font-bold text-[#143A50] mb-2">
+                          {previewResource.template_name}
+                        </h1>
+                        {previewResource.purpose && (
+                          <p className="text-lg text-slate-600 italic">
+                            {previewResource.purpose}
+                          </p>
+                        )}
+                      </div>
+                      <img 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
+                        alt="EIS Logo" 
+                        className="h-16 w-auto"
+                      />
+                    </div>
+                    <div className="flex items-center gap-4 flex-wrap">
+                      <Badge className="bg-[#E5C089] text-[#143A50]">
+                        {CATEGORY_LABELS[previewResource.category] || previewResource.category}
+                      </Badge>
+                      <Badge variant="outline">
+                        {previewResource.maturity_level}
+                      </Badge>
+                      <span className="text-sm text-slate-500">
+                        {previewResource.funding_lane}
+                      </span>
+                    </div>
                   </div>
-                </BrandedTemplateWrapper>
+
+                  {/* Guidance Sections */}
+                  {previewResource.when_to_use && (
+                    <div className="mb-6 p-4 border-l-4 border-green-500 bg-green-50 rounded-r">
+                      <h3 className="text-lg font-bold text-green-800 mb-2 flex items-center gap-2">
+                        <span className="text-2xl">✓</span> When to Use This Template
+                      </h3>
+                      <p className="text-green-900">{previewResource.when_to_use}</p>
+                    </div>
+                  )}
+
+                  {previewResource.when_not_to_use && (
+                    <div className="mb-6 p-4 border-l-4 border-red-500 bg-red-50 rounded-r">
+                      <h3 className="text-lg font-bold text-red-800 mb-2 flex items-center gap-2">
+                        <span className="text-2xl">✗</span> When NOT to Use
+                      </h3>
+                      <p className="text-red-900">{previewResource.when_not_to_use}</p>
+                    </div>
+                  )}
+
+                  {previewResource.what_funders_look_for && (
+                    <div className="mb-6 p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r">
+                      <h3 className="text-lg font-bold text-blue-800 mb-2 flex items-center gap-2">
+                        <span className="text-2xl">👁</span> What Funders Look For
+                      </h3>
+                      <p className="text-blue-900">{previewResource.what_funders_look_for}</p>
+                    </div>
+                  )}
+
+                  {previewResource.common_mistakes && (
+                    <div className="mb-6 p-4 border-l-4 border-amber-500 bg-amber-50 rounded-r">
+                      <h3 className="text-lg font-bold text-amber-800 mb-2 flex items-center gap-2">
+                        <span className="text-2xl">⚠</span> Common Mistakes to Avoid
+                      </h3>
+                      <p className="text-amber-900">{previewResource.common_mistakes}</p>
+                    </div>
+                  )}
+
+                  {/* Template Content */}
+                  {previewResource.template_content && (
+                    <div className="mt-8">
+                      <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white px-6 py-3 rounded-t-lg">
+                        <h2 className="text-xl font-bold">Template Content</h2>
+                      </div>
+                      <div className="border-2 border-[#143A50] rounded-b-lg p-6 bg-white">
+                        <BrandedTemplateWrapper>
+                          <div 
+                            className="prose prose-slate max-w-none"
+                            style={{
+                              fontFamily: 'Georgia, "Times New Roman", serif',
+                              lineHeight: '1.8'
+                            }}
+                          >
+                            <div dangerouslySetInnerHTML={{ __html: previewResource.template_content }} />
+                          </div>
+                        </BrandedTemplateWrapper>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Footer */}
+                  <div className="mt-12 pt-6 border-t border-slate-200 text-center text-sm text-slate-500">
+                    <p>© Elbert Innovative Solutions | Funding Readiness Resource Library</p>
+                    <p className="mt-1">For questions or support, contact your EIS advisor</p>
+                  </div>
+                </div>
               </div>
             </DialogContent>
           </Dialog>
