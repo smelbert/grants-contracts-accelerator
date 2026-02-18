@@ -181,6 +181,7 @@ import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import MyProfile from './pages/MyProfile';
 import ProgramCalendar from './pages/ProgramCalendar';
+import OpportunityReports from './pages/OpportunityReports';
 import __Layout from './Layout.jsx';
 
 
@@ -319,6 +320,7 @@ export const PAGES = {
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "MyProfile": MyProfile,
     "ProgramCalendar": ProgramCalendar,
+    "OpportunityReports": OpportunityReports,
 }
 
 export const pagesConfig = {

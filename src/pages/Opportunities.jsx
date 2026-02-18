@@ -16,7 +16,11 @@ import {
   MapPin,
   TrendingUp,
   Filter,
-  X
+  X,
+  Shield,
+  ShieldCheck,
+  AlertTriangle,
+  Flag
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -26,6 +30,8 @@ export default function OpportunitiesPage() {
   const [selectedType, setSelectedType] = useState('all');
   const [selectedFundingLane, setSelectedFundingLane] = useState('all');
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportingOpportunity, setReportingOpportunity] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -81,6 +87,32 @@ export default function OpportunitiesPage() {
 
   const isSaved = (opportunityId) => {
     return savedOpportunities.some(s => s.opportunity_id === opportunityId);
+  };
+
+  const reportOpportunityMutation = useMutation({
+    mutationFn: async ({ opportunityId, reason, description }) => {
+      return await base44.entities.OpportunityReport.create({
+        opportunity_id: opportunityId,
+        reported_by_email: user.email,
+        report_reason: reason,
+        description: description || '',
+        status: 'pending'
+      });
+    },
+    onSuccess: () => {
+      toast.success('Report submitted. Thank you for helping keep our platform safe!');
+      setReportDialogOpen(false);
+      setReportingOpportunity(null);
+    },
+  });
+
+  const getVettingInfo = (opportunity) => {
+    if (!opportunity.ai_vetting_notes) return null;
+    try {
+      return JSON.parse(opportunity.ai_vetting_notes);
+    } catch {
+      return null;
+    }
   };
 
   const today = new Date();
@@ -238,6 +270,11 @@ export default function OpportunitiesPage() {
                       onSave={() => saveOpportunityMutation.mutate(opp)}
                       onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
                       onClick={() => setSelectedOpportunity(opp)}
+                      onReport={() => {
+                        setReportingOpportunity(opp);
+                        setReportDialogOpen(true);
+                      }}
+                      vettingInfo={getVettingInfo(opp)}
                     />
                   ))}
                 </div>
@@ -273,6 +310,11 @@ export default function OpportunitiesPage() {
                       isSaved={true}
                       onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
                       onClick={() => setSelectedOpportunity(opp)}
+                      onReport={() => {
+                        setReportingOpportunity(opp);
+                        setReportDialogOpen(true);
+                      }}
+                      vettingInfo={getVettingInfo(opp)}
                     />
                   ))}
                 </div>
@@ -314,6 +356,11 @@ export default function OpportunitiesPage() {
                       onSave={() => saveOpportunityMutation.mutate(opp)}
                       onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
                       onClick={() => setSelectedOpportunity(opp)}
+                      onReport={() => {
+                        setReportingOpportunity(opp);
+                        setReportDialogOpen(true);
+                      }}
+                      vettingInfo={getVettingInfo(opp)}
                       isExpired={true}
                     />
                   ))}
@@ -337,6 +384,30 @@ export default function OpportunitiesPage() {
               unsaveOpportunityMutation.mutate(selectedOpportunity.id);
               setSelectedOpportunity(null);
             }}
+            onReport={() => {
+              setReportingOpportunity(selectedOpportunity);
+              setReportDialogOpen(true);
+              setSelectedOpportunity(null);
+            }}
+            vettingInfo={getVettingInfo(selectedOpportunity)}
+          />
+        )}
+
+        {/* Report Dialog */}
+        {reportDialogOpen && (
+          <ReportOpportunityDialog
+            opportunity={reportingOpportunity}
+            onClose={() => {
+              setReportDialogOpen(false);
+              setReportingOpportunity(null);
+            }}
+            onSubmit={(reason, description) => {
+              reportOpportunityMutation.mutate({
+                opportunityId: reportingOpportunity.id,
+                reason,
+                description
+              });
+            }}
           />
         )}
       </div>
@@ -344,7 +415,7 @@ export default function OpportunitiesPage() {
   );
 }
 
-function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick, isExpired = false }) {
+function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick, onReport, vettingInfo, isExpired = false }) {
   const laneColors = {
     grants: 'from-emerald-500 to-green-600',
     contracts: 'from-blue-500 to-indigo-600',
@@ -383,6 +454,18 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick, isEx
                   Expired
                 </Badge>
               )}
+              {vettingInfo?.is_legitimate && vettingInfo?.score >= 80 && (
+                <Badge className="bg-green-100 text-green-800 border-green-200 gap-1">
+                  <ShieldCheck className="w-3 h-3" />
+                  Verified
+                </Badge>
+              )}
+              {vettingInfo && !vettingInfo.is_legitimate && (
+                <Badge className="bg-red-100 text-red-800 border-red-200 gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  Flagged
+                </Badge>
+              )}
             </div>
             <CardTitle className="mb-2 text-xl group-hover:text-emerald-700 transition-colors line-clamp-2">
               {opportunity.title}
@@ -413,8 +496,8 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick, isEx
           </Button>
         </div>
       </CardHeader>
-      <CardContent onClick={onClick} className="pt-0">
-        <div className="flex flex-wrap items-center gap-4 text-sm">
+      <CardContent className="pt-0">
+        <div className="flex flex-wrap items-center gap-4 text-sm" onClick={onClick}>
           {opportunity.amount_min && (
             <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
               <DollarSign className="w-4 h-4" />
@@ -434,12 +517,28 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick, isEx
             </div>
           )}
         </div>
+        
+        {/* Report button */}
+        <div className="mt-3 pt-3 border-t border-slate-100">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-slate-500 hover:text-red-600 text-xs"
+            onClick={(e) => {
+              e.stopPropagation();
+              onReport();
+            }}
+          >
+            <Flag className="w-3 h-3 mr-1" />
+            Report as suspicious
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
 }
 
-function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsave }) {
+function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsave, onReport, vettingInfo }) {
   const laneColors = {
     grants: 'from-emerald-500 to-green-600',
     contracts: 'from-blue-500 to-indigo-600',
@@ -474,6 +573,18 @@ function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsav
               {opportunity.amount_min && (
                 <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">
                   ${opportunity.amount_min.toLocaleString()} {opportunity.amount_max && `- $${opportunity.amount_max.toLocaleString()}`}
+                </Badge>
+              )}
+              {vettingInfo?.is_legitimate && vettingInfo?.score >= 80 && (
+                <Badge className="bg-green-100 text-green-800 border-green-200 gap-1">
+                  <ShieldCheck className="w-4 h-4" />
+                  AI Verified ({vettingInfo.score}/100)
+                </Badge>
+              )}
+              {vettingInfo && !vettingInfo.is_legitimate && (
+                <Badge className="bg-red-100 text-red-800 border-red-200 gap-1">
+                  <AlertTriangle className="w-4 h-4" />
+                  Flagged for Review
                 </Badge>
               )}
             </div>
@@ -546,6 +657,42 @@ function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsav
             </div>
           )}
 
+          {/* Vetting Info */}
+          {vettingInfo && (
+            <div className={`p-4 rounded-lg border-2 ${
+              vettingInfo.is_legitimate 
+                ? 'bg-green-50 border-green-200' 
+                : 'bg-red-50 border-red-200'
+            }`}>
+              <div className="flex items-start gap-3">
+                {vettingInfo.is_legitimate ? (
+                  <ShieldCheck className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                )}
+                <div className="flex-1">
+                  <h4 className={`font-semibold mb-2 ${vettingInfo.is_legitimate ? 'text-green-900' : 'text-red-900'}`}>
+                    {vettingInfo.is_legitimate ? 'AI Verified' : 'Flagged for Review'}
+                  </h4>
+                  <p className="text-sm mb-2 text-slate-700">{vettingInfo.notes}</p>
+                  {vettingInfo.red_flags?.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-xs font-semibold mb-1 text-slate-600">Concerns:</p>
+                      <ul className="text-xs space-y-1 text-slate-600">
+                        {vettingInfo.red_flags.map((flag, idx) => (
+                          <li key={idx}>• {flag}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <p className="text-xs text-slate-500 mt-2">
+                    Legitimacy Score: {vettingInfo.score}/100 • Vetted {format(new Date(opportunity.ai_vetting_date), 'MMM d, yyyy')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t">
             <Button
@@ -573,6 +720,97 @@ function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsav
                 </a>
               </Button>
             )}
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={onReport}
+              className="text-slate-600 hover:text-red-600"
+            >
+              <Flag className="w-5 h-5 mr-2" />
+              Report as Suspicious
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function ReportOpportunityDialog({ opportunity, onClose, onSubmit }) {
+  const [reason, setReason] = useState('');
+  const [description, setDescription] = useState('');
+
+  const reasons = [
+    { value: 'suspicious_funder', label: 'Suspicious or unknown funder' },
+    { value: 'unrealistic_amounts', label: 'Unrealistic funding amounts' },
+    { value: 'fake_contact_info', label: 'Fake or invalid contact information' },
+    { value: 'scam_indicators', label: 'Appears to be a scam' },
+    { value: 'duplicate_listing', label: 'Duplicate listing' },
+    { value: 'outdated_info', label: 'Outdated or incorrect information' },
+    { value: 'other', label: 'Other concern' }
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6" onClick={onClose}>
+      <Card className="max-w-lg w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div>
+              <CardTitle className="text-xl mb-2">Report Opportunity</CardTitle>
+              <CardDescription>Help us keep the platform safe by reporting suspicious listings</CardDescription>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="p-3 bg-slate-50 rounded-lg">
+            <p className="text-sm font-medium text-slate-900 line-clamp-2">{opportunity.title}</p>
+            <p className="text-xs text-slate-600">{opportunity.funder_name}</p>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Reason for reporting</label>
+            <select
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-white text-sm"
+            >
+              <option value="">Select a reason...</option>
+              {reasons.map(r => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">Additional details (optional)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none"
+              placeholder="Provide any additional context or details..."
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => onSubmit(reason, description)}
+              disabled={!reason}
+              className="flex-1 bg-red-600 hover:bg-red-700"
+            >
+              <Flag className="w-4 h-4 mr-2" />
+              Submit Report
+            </Button>
           </div>
         </CardContent>
       </Card>
