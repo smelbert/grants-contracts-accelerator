@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ChevronDown, ChevronRight, Clock, MapPin, Users, BookOpen, ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Clock, MapPin, Users, BookOpen, ExternalLink, Plus, Edit, Trash2, Settings } from 'lucide-react';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
+import ProgramAgendaEditor from '@/components/admin/ProgramAgendaEditor';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
@@ -20,6 +21,7 @@ export default function IncubateHerAgenda() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
+  const [agendaEditorOpen, setAgendaEditorOpen] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -37,13 +39,16 @@ export default function IncubateHerAgenda() {
     enabled: !!user?.email
   });
 
-  const { data: cohort } = useQuery({
-    queryKey: ['cohort', enrollment?.cohort_id],
+  const { data: cohorts } = useQuery({
+    queryKey: ['incubateher-cohort'],
     queryFn: async () => {
-      return await base44.entities.ProgramCohort.filter({ id: enrollment.cohort_id });
-    },
-    enabled: !!enrollment?.cohort_id
+      return await base44.entities.ProgramCohort.filter({ 
+        program_code: 'incubateher_funding_readiness' 
+      });
+    }
   });
+
+  const cohort = cohorts?.[0];
 
   const { data: learningContent } = useQuery({
     queryKey: ['incubateher-learning'],
@@ -58,6 +63,15 @@ export default function IncubateHerAgenda() {
   const isAdmin = user?.role === 'admin' || user?.role === 'owner';
   const isFacilitator = enrollment?.role === 'facilitator' || enrollment?.role === 'admin';
   const showAdminControls = isAdmin || isFacilitator;
+
+  const updateCohortMutation = useMutation({
+    mutationFn: (cohortData) => base44.entities.ProgramCohort.update(cohort.id, cohortData),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['incubateher-cohort']);
+      setAgendaEditorOpen(false);
+      toast.success('Program agenda updated');
+    }
+  });
 
   const toggleSection = (sectionId) => {
     setExpandedSections(prev => ({
@@ -129,16 +143,16 @@ export default function IncubateHerAgenda() {
     });
   };
 
-  const sessionDays = [
+  const sessionDays = cohort?.session_days || [
     {
       date: 'Monday – March 2',
       time: '5:30–7:30 PM (Virtual – Google Meet)',
-      totalMinutes: 120,
+      meeting_link: '',
       sections: [
         {
           id: 'intro',
           title: 'Program Orientation & Funding Foundations',
-          duration: '30 minutes',
+          duration_minutes: 30,
           topics: [
             'Welcome & expectations',
             'Completion requirements',
@@ -146,12 +160,12 @@ export default function IncubateHerAgenda() {
             'Overview of grants, proposals, and contracts',
             'Understanding funding landscapes for early-stage vs. growth-phase businesses'
           ],
-          facilitatorNotes: 'Set clear expectations early. Explain the consultation process and cap.'
+          facilitator_notes: 'Set clear expectations early. Explain the consultation process and cap.'
         },
         {
           id: 'legal',
           title: 'Legal Structure & Organizational Compliance',
-          duration: '45 minutes',
+          duration_minutes: 45,
           topics: [
             'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
             'Formation vs. readiness',
@@ -159,12 +173,12 @@ export default function IncubateHerAgenda() {
             'Insurance, governance (if applicable), compliance realities',
             'Common structural mistakes'
           ],
-          facilitatorNotes: 'Many participants struggle with structural requirements. Clarify LLC vs nonprofit eligibility.'
+          facilitator_notes: 'Many participants struggle with structural requirements. Clarify LLC vs nonprofit eligibility.'
         },
         {
           id: 'intro',
           title: 'Funding Readiness Reality Check',
-          duration: '45 minutes',
+          duration_minutes: 45,
           topics: [
             'What "ready" actually means',
             'Assessing documentation gaps',
@@ -172,19 +186,19 @@ export default function IncubateHerAgenda() {
             'When NOT to pursue funding',
             'Pre-assessment reflection'
           ],
-          facilitatorNotes: 'Help participants self-assess realistically. Some may not be ready yet - that\'s okay.'
+          facilitator_notes: 'Help participants self-assess realistically. Some may not be ready yet - that\'s okay.'
         }
       ]
     },
     {
       date: 'Thursday – March 5',
       time: '5:30–7:30 PM (Virtual – Google Meet)',
-      totalMinutes: 120,
+      meeting_link: '',
       sections: [
         {
           id: 'financial',
           title: 'Financial Management & Budget Development',
-          duration: '60 minutes',
+          duration_minutes: 60,
           topics: [
             'Basic financial systems for entrepreneurs',
             'Budget building fundamentals',
@@ -193,12 +207,12 @@ export default function IncubateHerAgenda() {
             'Cash flow awareness',
             'Common financial red flags'
           ],
-          facilitatorNotes: 'Use the budget template during this session. Walk through a sample budget line by line.'
+          facilitator_notes: 'Use the budget template during this session. Walk through a sample budget line by line.'
         },
         {
           id: 'grants',
           title: 'Grants, Proposals & RFP Fundamentals',
-          duration: '60 minutes',
+          duration_minutes: 60,
           topics: [
             'How to find opportunities',
             'Reading guidelines correctly',
@@ -207,7 +221,7 @@ export default function IncubateHerAgenda() {
             'Deliverables vs. outcomes',
             'Avoiding common application mistakes'
           ],
-          facilitatorNotes: 'Clarify the difference between grants and contracts. Show real examples.'
+          facilitator_notes: 'Clarify the difference between grants and contracts. Show real examples.'
         }
       ]
     },
@@ -215,12 +229,12 @@ export default function IncubateHerAgenda() {
       date: 'Saturday – March 7',
       time: '9:00 AM–12:00 PM (In Person)',
       location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
-      totalMinutes: 180,
+      meeting_link: '',
       sections: [
         {
           id: 'grants',
           title: 'Deep Dive: Grant Writing Fundamentals',
-          duration: '60 minutes',
+          duration_minutes: 60,
           topics: [
             'Narrative components',
             'Problem statements',
@@ -228,12 +242,12 @@ export default function IncubateHerAgenda() {
             'Logic model basics (simple)',
             'Alignment language'
           ],
-          facilitatorNotes: 'Participants often underestimate timeline. Stress the 6-8 week preparation period.'
+          facilitator_notes: 'Participants often underestimate timeline. Stress the 6-8 week preparation period.'
         },
         {
           id: 'contracts',
           title: 'RFPs & Contract Proposals in Practice',
-          duration: '45 minutes',
+          duration_minutes: 45,
           topics: [
             'Competitive positioning',
             'Pricing considerations',
@@ -241,35 +255,39 @@ export default function IncubateHerAgenda() {
             'Past performance documentation',
             'Evaluating bid feasibility'
           ],
-          facilitatorNotes: 'Emphasize the binding nature of contracts vs. grants. Use real RFP examples.'
+          facilitator_notes: 'Emphasize the binding nature of contracts vs. grants. Use real RFP examples.'
         },
         {
           id: 'strategy',
           title: 'Funding Strategy & Long-Term Sustainability',
-          duration: '30 minutes',
+          duration_minutes: 30,
           topics: [
             'Diversified funding portfolio',
             'Contracts vs. grants in growth strategy',
             'Relationship building',
             'Grant lifecycle awareness'
           ],
-          facilitatorNotes: 'Connect back to their individual goals from pre-assessment.'
+          facilitator_notes: 'Connect back to their individual goals from pre-assessment.'
         },
         {
           id: 'consultation',
           title: 'Consultation Preparation Lab',
-          duration: '30 minutes',
+          duration_minutes: 30,
           topics: [
             'What to bring to your 1:1',
             'Document checklist',
             'How to maximize advisory time',
             'Booking instructions'
           ],
-          facilitatorNotes: 'Provide consultation booking link. Clarify expectations and preparation requirements.'
+          facilitator_notes: 'Provide consultation booking link. Clarify expectations and preparation requirements.'
         }
       ]
     }
   ];
+
+  const calculateDayTotal = (sections) => {
+    return sections?.reduce((total, section) => total + (section.duration_minutes || 0), 0) || 0;
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -279,6 +297,15 @@ export default function IncubateHerAgenda() {
       />
 
       <div className="max-w-5xl mx-auto p-6 space-y-6">
+        {showAdminControls && (
+          <div className="flex justify-end">
+            <Button onClick={() => setAgendaEditorOpen(true)} variant="outline">
+              <Settings className="w-4 h-4 mr-2" />
+              Edit Agenda Structure
+            </Button>
+          </div>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -310,7 +337,10 @@ export default function IncubateHerAgenda() {
           </CardContent>
         </Card>
 
-        {sessionDays.map((day, dayIdx) => (
+        {sessionDays.map((day, dayIdx) => {
+          const dayTotal = calculateDayTotal(day.sections);
+          
+          return (
           <div key={dayIdx} className="space-y-4">
             <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
               <CardHeader>
@@ -331,7 +361,7 @@ export default function IncubateHerAgenda() {
                     </div>
                   </div>
                   <Badge className="bg-white text-[#143A50]">
-                    {day.totalMinutes} minutes
+                    {dayTotal} minutes
                   </Badge>
                 </div>
               </CardHeader>
@@ -358,7 +388,7 @@ export default function IncubateHerAgenda() {
                           <CardTitle className="text-lg">{section.title}</CardTitle>
                         </div>
                         <Badge variant="outline" className="mt-1">
-                          {section.duration}
+                          {section.duration_minutes} minutes
                         </Badge>
                       </div>
                     </div>
@@ -446,13 +476,13 @@ export default function IncubateHerAgenda() {
                   )}
                 </div>
 
-                {showAdminControls && section.facilitatorNotes && (
+                {showAdminControls && section.facilitator_notes && (
                   <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                     <h4 className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
                       <Users className="w-4 h-4" />
                       Facilitator Notes
                     </h4>
-                    <p className="text-amber-800 text-sm">{section.facilitatorNotes}</p>
+                    <p className="text-amber-800 text-sm">{section.facilitator_notes}</p>
                   </div>
                 )}
                 </CardContent>
@@ -460,7 +490,8 @@ export default function IncubateHerAgenda() {
               </Card>
             ))}
           </div>
-        ))}
+        );
+        })}
       </div>
 
       <CoBrandedFooter />
@@ -520,6 +551,16 @@ export default function IncubateHerAgenda() {
               </Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Agenda Editor Dialog */}
+      <Dialog open={agendaEditorOpen} onOpenChange={setAgendaEditorOpen}>
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
+          <ProgramAgendaEditor
+            cohort={cohort}
+            onSave={(updatedCohort) => updateCohortMutation.mutate(updatedCohort)}
+          />
         </DialogContent>
       </Dialog>
     </div>

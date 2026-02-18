@@ -137,16 +137,16 @@ export default function IncubateHerLearning() {
   const completionPercent = totalCourses > 0 ? Math.round((completedCourses.length / totalCourses) * 100) : 0;
   const totalPoints = enrollment?.gamification_points || 0;
 
-  const sessionDays = [
+  const sessionDays = cohort?.session_days || [
     {
       date: 'Monday – March 2',
       time: '5:30–7:30 PM (Virtual – Google Meet)',
-      totalMinutes: 120,
+      meeting_link: '',
       sections: [
         {
           id: 'intro',
           title: 'Program Orientation & Funding Foundations',
-          duration: '30 minutes',
+          duration_minutes: 30,
           topics: [
             'Welcome & expectations',
             'Completion requirements',
@@ -158,7 +158,7 @@ export default function IncubateHerLearning() {
         {
           id: 'legal',
           title: 'Legal Structure & Organizational Compliance',
-          duration: '45 minutes',
+          duration_minutes: 45,
           topics: [
             'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
             'Formation vs. readiness',
@@ -170,7 +170,7 @@ export default function IncubateHerLearning() {
         {
           id: 'intro',
           title: 'Funding Readiness Reality Check',
-          duration: '45 minutes',
+          duration_minutes: 45,
           topics: [
             'What "ready" actually means',
             'Assessing documentation gaps',
@@ -184,12 +184,12 @@ export default function IncubateHerLearning() {
     {
       date: 'Thursday – March 5',
       time: '5:30–7:30 PM (Virtual – Google Meet)',
-      totalMinutes: 120,
+      meeting_link: '',
       sections: [
         {
           id: 'financial',
           title: 'Financial Management & Budget Development',
-          duration: '60 minutes',
+          duration_minutes: 60,
           topics: [
             'Basic financial systems for entrepreneurs',
             'Budget building fundamentals',
@@ -202,7 +202,7 @@ export default function IncubateHerLearning() {
         {
           id: 'grants',
           title: 'Grants, Proposals & RFP Fundamentals',
-          duration: '60 minutes',
+          duration_minutes: 60,
           topics: [
             'How to find opportunities',
             'Reading guidelines correctly',
@@ -218,12 +218,12 @@ export default function IncubateHerLearning() {
       date: 'Saturday – March 7',
       time: '9:00 AM–12:00 PM (In Person)',
       location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
-      totalMinutes: 180,
+      meeting_link: '',
       sections: [
         {
           id: 'grants',
           title: 'Deep Dive: Grant Writing Fundamentals',
-          duration: '60 minutes',
+          duration_minutes: 60,
           topics: [
             'Narrative components',
             'Problem statements',
@@ -235,7 +235,7 @@ export default function IncubateHerLearning() {
         {
           id: 'contracts',
           title: 'RFPs & Contract Proposals in Practice',
-          duration: '45 minutes',
+          duration_minutes: 45,
           topics: [
             'Competitive positioning',
             'Pricing considerations',
@@ -247,7 +247,7 @@ export default function IncubateHerLearning() {
         {
           id: 'strategy',
           title: 'Funding Strategy & Long-Term Sustainability',
-          duration: '30 minutes',
+          duration_minutes: 30,
           topics: [
             'Diversified funding portfolio',
             'Contracts vs. grants in growth strategy',
@@ -258,7 +258,7 @@ export default function IncubateHerLearning() {
         {
           id: 'consultation',
           title: 'Consultation Preparation Lab',
-          duration: '30 minutes',
+          duration_minutes: 30,
           topics: [
             'What to bring to your 1:1',
             'Document checklist',
@@ -400,7 +400,7 @@ export default function IncubateHerLearning() {
 
         {/* Day-by-Day Curriculum */}
         {sessionDays.map((day, dayIdx) => {
-          const meetingLink = cohort?.day_meeting_links?.[`day${dayIdx + 1}`];
+          const dayTotal = day.sections?.reduce((total, section) => total + (section.duration_minutes || 0), 0) || 0;
           
           return (
           <div key={dayIdx} className="mb-6">
@@ -421,9 +421,9 @@ export default function IncubateHerLearning() {
                         </span>
                       )}
                     </div>
-                    {meetingLink && (
+                    {day.meeting_link && (
                       <a 
-                        href={meetingLink}
+                        href={day.meeting_link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
@@ -435,7 +435,7 @@ export default function IncubateHerLearning() {
                     )}
                   </div>
                   <Badge className="bg-white text-[#143A50]">
-                    {day.totalMinutes} minutes
+                    {dayTotal} minutes
                   </Badge>
                 </div>
               </CardHeader>
@@ -462,7 +462,7 @@ export default function IncubateHerLearning() {
                           <CardTitle className="text-lg">{section.title}</CardTitle>
                         </div>
                         <Badge variant="outline" className="mt-1">
-                          {section.duration}
+                          {section.duration_minutes} minutes
                         </Badge>
                       </div>
                     </div>

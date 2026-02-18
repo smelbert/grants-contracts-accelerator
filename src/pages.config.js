@@ -132,6 +132,7 @@ import MentorDashboard from './pages/MentorDashboard';
 import MentorManagement from './pages/MentorManagement';
 import MyClassroom from './pages/MyClassroom';
 import MyMentorship from './pages/MyMentorship';
+import Notifications from './pages/Notifications';
 import Opportunities from './pages/Opportunities';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -177,7 +178,6 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import Notifications from './pages/Notifications';
 import __Layout from './Layout.jsx';
 
 
@@ -267,6 +267,7 @@ export const PAGES = {
     "MentorManagement": MentorManagement,
     "MyClassroom": MyClassroom,
     "MyMentorship": MyMentorship,
+    "Notifications": Notifications,
     "Opportunities": Opportunities,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -312,7 +313,6 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "Notifications": Notifications,
 }
 
 export const pagesConfig = {
