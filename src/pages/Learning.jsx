@@ -60,11 +60,13 @@ export default function LearningPage() {
     queryKey: ['learning'],
     queryFn: async () => {
       const allContent = await base44.entities.LearningContent.list();
-      // Filter out IncubateHer-only content if user is not enrolled
+      // Filter out standalone resources (they belong in Resource Library)
+      // Also filter out IncubateHer-only content if user is not enrolled
+      let filtered = allContent.filter(c => !c.is_standalone_resource);
       if (!enrollment) {
-        return allContent.filter(c => !c.incubateher_only);
+        filtered = filtered.filter(c => !c.incubateher_only);
       }
-      return allContent;
+      return filtered;
     },
     enabled: !!user
   });

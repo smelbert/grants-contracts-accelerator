@@ -43,8 +43,10 @@ export default function ResourceLibrary() {
   const { data: resources, isLoading } = useQuery({
     queryKey: ['resources'],
     queryFn: async () => {
-      const handouts = await base44.entities.LearningContent.filter({});
-      return handouts.filter(h => h.handouts && h.handouts.length > 0);
+      // Get standalone resources (templates, guidebooks, etc.)
+      return await base44.entities.LearningContent.filter({
+        is_standalone_resource: true
+      });
     },
   });
 
@@ -90,14 +92,17 @@ export default function ResourceLibrary() {
     },
   });
 
-  const allHandouts = resources?.flatMap(resource => 
-    resource.handouts?.map(handout => ({
-      ...handout,
-      parentTitle: resource.title,
-      parentDescription: resource.description,
-      funding_lane: resource.funding_lane,
-    })) || []
-  ) || [];
+  // Convert resources to display format
+  const allHandouts = resources?.map(resource => ({
+    title: resource.title,
+    description: resource.description,
+    file_url: resource.file_url || resource.content_url,
+    file_type: resource.content_type,
+    funding_lane: resource.funding_lane,
+    parentTitle: null,
+    parentDescription: null,
+    resource_id: resource.id
+  })) || [];
 
   const enrichedHandouts = allHandouts.map(handout => {
     const isFavorited = favorites.some(f => 
@@ -304,12 +309,6 @@ export default function ResourceLibrary() {
                 </CardHeader>
                 <CardContent className="p-4">
                   <div className="mb-3 space-y-2">
-                    {handout.parentTitle && (
-                      <div className="pb-2 border-b border-slate-200">
-                        <p className="text-xs text-slate-500 mb-1">From course:</p>
-                        <p className="text-sm font-medium text-slate-700">{handout.parentTitle}</p>
-                      </div>
-                    )}
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
                         {FUNDING_STAGES.find(s => s.value === handout.stage)?.label || 'Research'}
