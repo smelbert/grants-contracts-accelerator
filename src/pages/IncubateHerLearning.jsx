@@ -18,13 +18,20 @@ import {
   Sparkles,
   FileText,
   Video,
-  Download
+  Download,
+  ChevronDown,
+  ChevronRight,
+  MapPin,
+  ExternalLink
 } from 'lucide-react';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 export default function IncubateHerLearning() {
+  const [expandedSections, setExpandedSections] = useState({});
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
@@ -53,13 +60,13 @@ export default function IncubateHerLearning() {
     enabled: !!user?.email && !!cohort?.id
   });
 
-  const { data: courses, isLoading } = useQuery({
-    queryKey: ['incubateher-courses'],
+  const { data: learningContent, isLoading } = useQuery({
+    queryKey: ['incubateher-learning'],
     queryFn: async () => {
       const content = await base44.entities.LearningContent.filter({
         incubateher_only: true
       });
-      return content.sort((a, b) => (a.order || 0) - (b.order || 0));
+      return content;
     }
   });
 
@@ -85,6 +92,17 @@ export default function IncubateHerLearning() {
     },
     enabled: !!user?.email
   });
+
+  const toggleSection = (sectionId) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
+  };
+
+  const getLinkedContent = (sectionId) => {
+    return learningContent?.filter(content => content.agenda_section === sectionId) || [];
+  };
 
   if (!enrollment) {
     return (
@@ -113,14 +131,144 @@ export default function IncubateHerLearning() {
     );
   }
 
+  const isCULObserver = enrollment?.role === 'cul_observer';
   const completedCourses = userProgress?.filter(p => p.is_completed) || [];
-  const totalCourses = courses?.length || 0;
+  const totalCourses = learningContent?.length || 0;
   const completionPercent = totalCourses > 0 ? Math.round((completedCourses.length / totalCourses) * 100) : 0;
   const totalPoints = enrollment?.gamification_points || 0;
 
-  const getCourseProgress = (courseId) => {
-    return userProgress?.find(p => p.content_id === courseId);
-  };
+  const sessionDays = [
+    {
+      date: 'Monday – March 2',
+      time: '5:30–7:30 PM (Virtual – Google Meet)',
+      totalMinutes: 120,
+      sections: [
+        {
+          id: 'intro',
+          title: 'Program Orientation & Funding Foundations',
+          duration: '30 minutes',
+          topics: [
+            'Welcome & expectations',
+            'Completion requirements',
+            'Consultation cap explanation',
+            'Overview of grants, proposals, and contracts',
+            'Understanding funding landscapes for early-stage vs. growth-phase businesses'
+          ]
+        },
+        {
+          id: 'legal',
+          title: 'Legal Structure & Organizational Compliance',
+          duration: '45 minutes',
+          topics: [
+            'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
+            'Formation vs. readiness',
+            'Required documentation basics',
+            'Insurance, governance (if applicable), compliance realities',
+            'Common structural mistakes'
+          ]
+        },
+        {
+          id: 'intro',
+          title: 'Funding Readiness Reality Check',
+          duration: '45 minutes',
+          topics: [
+            'What "ready" actually means',
+            'Assessing documentation gaps',
+            'Capacity alignment',
+            'When NOT to pursue funding',
+            'Pre-assessment reflection'
+          ]
+        }
+      ]
+    },
+    {
+      date: 'Thursday – March 5',
+      time: '5:30–7:30 PM (Virtual – Google Meet)',
+      totalMinutes: 120,
+      sections: [
+        {
+          id: 'financial',
+          title: 'Financial Management & Budget Development',
+          duration: '60 minutes',
+          topics: [
+            'Basic financial systems for entrepreneurs',
+            'Budget building fundamentals',
+            'Revenue vs. reimbursement',
+            'Indirect costs (simple explanation)',
+            'Cash flow awareness',
+            'Common financial red flags'
+          ]
+        },
+        {
+          id: 'grants',
+          title: 'Grants, Proposals & RFP Fundamentals',
+          duration: '60 minutes',
+          topics: [
+            'How to find opportunities',
+            'Reading guidelines correctly',
+            'Grants vs. competitive proposals',
+            'RFP structure overview',
+            'Deliverables vs. outcomes',
+            'Avoiding common application mistakes'
+          ]
+        }
+      ]
+    },
+    {
+      date: 'Saturday – March 7',
+      time: '9:00 AM–12:00 PM (In Person)',
+      location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
+      totalMinutes: 180,
+      sections: [
+        {
+          id: 'grants',
+          title: 'Deep Dive: Grant Writing Fundamentals',
+          duration: '60 minutes',
+          topics: [
+            'Narrative components',
+            'Problem statements',
+            'Goals & measurable outcomes',
+            'Logic model basics (simple)',
+            'Alignment language'
+          ]
+        },
+        {
+          id: 'contracts',
+          title: 'RFPs & Contract Proposals in Practice',
+          duration: '45 minutes',
+          topics: [
+            'Competitive positioning',
+            'Pricing considerations',
+            'Capability statements',
+            'Past performance documentation',
+            'Evaluating bid feasibility'
+          ]
+        },
+        {
+          id: 'strategy',
+          title: 'Funding Strategy & Long-Term Sustainability',
+          duration: '30 minutes',
+          topics: [
+            'Diversified funding portfolio',
+            'Contracts vs. grants in growth strategy',
+            'Relationship building',
+            'Grant lifecycle awareness'
+          ]
+        },
+        {
+          id: 'consultation',
+          title: 'Consultation Preparation Lab',
+          duration: '30 minutes',
+          topics: [
+            'What to bring to your 1:1',
+            'Document checklist',
+            'How to maximize advisory time',
+            'Booking instructions'
+          ]
+        }
+      ]
+    }
+  ];
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
@@ -130,225 +278,238 @@ export default function IncubateHerLearning() {
       />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Progress Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card style={{ borderColor: BRAND_COLORS.culRed, borderWidth: 2 }}>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <Trophy className="w-8 h-8" style={{ color: BRAND_COLORS.eisGold }} />
-                <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.culRed }}>
-                  {totalPoints}
-                </span>
+        {/* CUL Observer Badge */}
+        {isCULObserver && (
+          <Card className="mb-6" style={{ backgroundColor: BRAND_COLORS.eisGold + '15', borderColor: BRAND_COLORS.eisGold }}>
+            <CardContent className="py-4">
+              <div className="flex items-center gap-3">
+                <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
+                  CUL Observer
+                </Badge>
+                <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                  You have observer access. You can participate and access all materials, but completion is not required.
+                </p>
               </div>
-              <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                Total Points Earned
-              </p>
             </CardContent>
           </Card>
+        )}
 
-          <Card style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <CheckCircle2 className="w-8 h-8" style={{ color: BRAND_COLORS.eisGold }} />
-                <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisGold }}>
-                  {completedCourses.length}/{totalCourses}
-                </span>
+        {/* Progress Overview - Hide for CUL Observers */}
+        {!isCULObserver && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card style={{ borderColor: BRAND_COLORS.culRed, borderWidth: 2 }}>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <Trophy className="w-8 h-8" style={{ color: BRAND_COLORS.eisGold }} />
+                  <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.culRed }}>
+                    {totalPoints}
+                  </span>
+                </div>
+                <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
+                  Total Points Earned
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <CheckCircle2 className="w-8 h-8" style={{ color: BRAND_COLORS.eisGold }} />
+                  <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisGold }}>
+                    {completedCourses.length}/{totalCourses}
+                  </span>
+                </div>
+                <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
+                  Courses Completed
+                </p>
+                <Progress value={completionPercent} className="mt-2" />
+              </CardContent>
+            </Card>
+
+            <Card style={{ borderColor: BRAND_COLORS.eisNavy, borderWidth: 2 }}>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <Award className="w-8 h-8" style={{ color: BRAND_COLORS.eisNavy }} />
+                  <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
+                    {badges?.length || 0}
+                  </span>
+                </div>
+                <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
+                  Badges Earned
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Gamification Notice - Hide for CUL Observers */}
+        {!isCULObserver && (
+          <Card className="mb-8" style={{ backgroundColor: BRAND_COLORS.eisGold + '15', borderColor: BRAND_COLORS.eisGold }}>
+            <CardContent className="py-6">
+              <div className="flex items-start gap-4">
+                <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
+                <div>
+                  <h3 className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+                    How to Earn Points & Badges
+                  </h3>
+                  <ul className="space-y-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                    <li>• Complete each course section: <strong>+10 points</strong></li>
+                    <li>• Complete a full course: <strong>+50 bonus points</strong></li>
+                    <li>• Unlock special badges at milestones (1, 3, and 6 courses completed)</li>
+                    <li>• Complete all courses to be eligible for the program giveaway</li>
+                  </ul>
+                </div>
               </div>
-              <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                Courses Completed
-              </p>
-              <Progress value={completionPercent} className="mt-2" />
             </CardContent>
           </Card>
+        )}
 
-          <Card style={{ borderColor: BRAND_COLORS.eisNavy, borderWidth: 2 }}>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <Award className="w-8 h-8" style={{ color: BRAND_COLORS.eisNavy }} />
-                <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
-                  {badges?.length || 0}
-                </span>
-              </div>
-              <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                Badges Earned
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Gamification Notice */}
-        <Card className="mb-8" style={{ backgroundColor: BRAND_COLORS.eisGold + '15', borderColor: BRAND_COLORS.eisGold }}>
-          <CardContent className="py-6">
-            <div className="flex items-start gap-4">
-              <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
-              <div>
-                <h3 className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
-                  How to Earn Points & Badges
-                </h3>
-                <ul className="space-y-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                  <li>• Complete each course section: <strong>+10 points</strong></li>
-                  <li>• Complete a full course: <strong>+50 bonus points</strong></li>
-                  <li>• Unlock special badges at milestones (1, 3, and 6 courses completed)</li>
-                  <li>• Complete all courses to be eligible for the program giveaway</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Course Curriculum */}
-        <Card>
+        {/* Program Schedule Overview */}
+        <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-2xl" style={{ color: BRAND_COLORS.culRed }}>
-              <BookOpen className="w-6 h-6 inline mr-2" />
-              Program Curriculum
+            <CardTitle className="flex items-center gap-2" style={{ color: BRAND_COLORS.culRed }}>
+              <Clock className="w-5 h-5" />
+              Program Schedule Overview
             </CardTitle>
-            <p className="text-slate-600 mt-2">
-              Work through each module at your own pace. All content is available immediately.
-            </p>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {isLoading ? (
-                <div className="text-center py-12 text-slate-500">
-                  Loading courses...
+            <p className="text-slate-700 mb-4">
+              The IncubateHer program is structured across three sessions with a total of 7 hours of instruction plus individual consultations.
+            </p>
+            <div className="space-y-2">
+              {sessionDays.map((day, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }} className="mt-1">
+                    {idx + 1}
+                  </Badge>
+                  <div>
+                    <p className="font-medium text-slate-900">{day.date}</p>
+                    <p className="text-sm text-slate-600">{day.time}</p>
+                    {day.location && (
+                      <p className="text-sm text-slate-600 flex items-center gap-1 mt-1">
+                        <MapPin className="w-3 h-3" />
+                        {day.location}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              ) : courses && courses.length > 0 ? (
-                courses.map((course, index) => {
-                  const progress = getCourseProgress(course.id);
-                  const isCompleted = progress?.is_completed;
-                  const progressPercent = progress?.progress_percentage || 0;
-
-                  return (
-                    <motion.div
-                      key={course.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Card className="hover:shadow-lg transition-all">
-                        <CardContent className="p-6">
-                          <div className="flex items-start gap-6">
-                            {/* Course Number Badge */}
-                            <div 
-                              className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 text-2xl font-bold"
-                              style={{ 
-                                backgroundColor: isCompleted ? BRAND_COLORS.eisGold : BRAND_COLORS.neutralLight,
-                                color: isCompleted ? 'white' : BRAND_COLORS.eisNavy
-                              }}
-                            >
-                              {isCompleted ? <CheckCircle2 className="w-8 h-8" /> : (index + 1)}
-                            </div>
-
-                            {/* Course Info */}
-                            <div className="flex-1">
-                              <div className="flex items-start justify-between mb-2">
-                                <div>
-                                  <h3 className="text-xl font-semibold mb-1" style={{ color: BRAND_COLORS.culRed }}>
-                                    {course.title}
-                                  </h3>
-                                  <p className="text-sm mb-3" style={{ color: BRAND_COLORS.eisNavy }}>
-                                    {course.description}
-                                  </p>
-                                  <div className="flex items-center gap-4 mb-3 flex-wrap">
-                                    <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
-                                      {course.funding_lane}
-                                    </Badge>
-                                    {course.duration_minutes && (
-                                      <div className="flex items-center gap-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                        <Clock className="w-4 h-4" />
-                                        {course.duration_minutes} min
-                                      </div>
-                                    )}
-                                    {course.curriculum_sections && (
-                                      <div className="flex items-center gap-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                        <Target className="w-4 h-4" />
-                                        {course.curriculum_sections.length} sections
-                                      </div>
-                                    )}
-                                    {course.handouts && course.handouts.length > 0 && (
-                                      <div className="flex items-center gap-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                        <FileText className="w-4 h-4" />
-                                        {course.handouts.length} handouts
-                                      </div>
-                                    )}
-                                    {course.curriculum_sections?.some(s => s.video_url || s.presentation_url) && (
-                                      <div className="flex items-center gap-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                                        <Video className="w-4 h-4" />
-                                        Media included
-                                      </div>
-                                    )}
-                                  </div>
-                                  {progress && (
-                                    <div className="mb-3">
-                                      <div className="flex items-center justify-between mb-1">
-                                        <span className="text-xs font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                                          Progress
-                                        </span>
-                                        <span className="text-xs font-bold" style={{ color: BRAND_COLORS.eisGold }}>
-                                          {progressPercent}%
-                                        </span>
-                                      </div>
-                                      <Progress value={progressPercent} className="h-2" />
-                                    </div>
-                                  )}
-
-                                  {/* Quick Access to Resources */}
-                                  {(course.handouts?.length > 0 || course.curriculum_sections?.some(s => s.video_url || s.presentation_url)) && (
-                                    <div className="flex gap-2 mb-3 flex-wrap">
-                                      {course.handouts?.slice(0, 3).map((handout, idx) => (
-                                        <a 
-                                          key={idx}
-                                          href={handout.file_url} 
-                                          target="_blank" 
-                                          rel="noopener noreferrer"
-                                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80 transition-opacity"
-                                          style={{ backgroundColor: BRAND_COLORS.neutralLight, color: BRAND_COLORS.eisNavy }}
-                                        >
-                                          <Download className="w-3 h-3" />
-                                          {handout.title.length > 20 ? handout.title.substring(0, 20) + '...' : handout.title}
-                                        </a>
-                                      ))}
-                                      {course.handouts?.length > 3 && (
-                                        <span className="inline-flex items-center px-3 py-1 text-xs" style={{ color: BRAND_COLORS.eisNavy }}>
-                                          +{course.handouts.length - 3} more
-                                        </span>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                              <Button
-                                asChild
-                                style={{ 
-                                  backgroundColor: isCompleted ? BRAND_COLORS.eisGold : BRAND_COLORS.culRed,
-                                  color: 'white'
-                                }}
-                                className="hover:opacity-90"
-                              >
-                                <a href={createPageUrl('IncubateHerCourse') + '?id=' + course.id + '&from=learning'}>
-                                  <Play className="w-4 h-4 mr-2" />
-                                  {isCompleted ? 'Review Course' : progressPercent > 0 ? 'Continue Learning' : 'Start Course'}
-                                </a>
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  );
-                })
-              ) : (
-                <div className="text-center py-12 text-slate-500">
-                  No courses available yet. Check back soon!
-                </div>
-              )}
+              ))}
             </div>
           </CardContent>
         </Card>
 
-        {/* Completion Status */}
-        {completionPercent === 100 && (
+        {/* Day-by-Day Curriculum */}
+        {sessionDays.map((day, dayIdx) => (
+          <div key={dayIdx} className="mb-6">
+            <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white mb-4">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-2xl mb-1">{day.date}</CardTitle>
+                    <div className="flex items-center gap-3 text-white/90">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {day.time}
+                      </span>
+                      {day.location && (
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-4 h-4" />
+                          {day.location}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <Badge className="bg-white text-[#143A50]">
+                    {day.totalMinutes} minutes
+                  </Badge>
+                </div>
+              </CardHeader>
+            </Card>
+
+            {day.sections.map((section, sectionIdx) => (
+              <Card key={`${dayIdx}-${sectionIdx}`} className="overflow-hidden ml-4 mb-3">
+                <CardHeader 
+                  className="cursor-pointer hover:bg-slate-50 transition-colors"
+                  onClick={() => toggleSection(`${dayIdx}-${section.id}-${sectionIdx}`)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {expandedSections[`${dayIdx}-${section.id}-${sectionIdx}`] ? (
+                        <ChevronDown className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
+                      ) : (
+                        <ChevronRight className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
+                      )}
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
+                            {sectionIdx + 1}
+                          </Badge>
+                          <CardTitle className="text-lg">{section.title}</CardTitle>
+                        </div>
+                        <Badge variant="outline" className="mt-1">
+                          {section.duration}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                {expandedSections[`${dayIdx}-${section.id}-${sectionIdx}`] && (
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-slate-700 mb-2">Topics Covered:</h4>
+                      <ul className="space-y-1">
+                        {section.topics.map((topic, idx) => (
+                          <li key={idx} className="text-slate-600 flex items-start gap-2">
+                            <span style={{ color: BRAND_COLORS.eisGold }} className="mt-1">•</span>
+                            <span>{topic}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <h4 className="font-semibold text-blue-900 flex items-center gap-2 mb-3">
+                        <BookOpen className="w-4 h-4" />
+                        Learning Resources
+                      </h4>
+                      {getLinkedContent(section.id).length > 0 ? (
+                        <div className="space-y-2">
+                          {getLinkedContent(section.id).map(content => (
+                            <div key={content.id} className="flex items-center justify-between p-3 bg-white rounded border border-blue-100">
+                              <div className="flex items-center gap-3 flex-1">
+                                <Badge variant="outline" className="text-xs">
+                                  {content.duration_minutes}min
+                                </Badge>
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium text-slate-900">{content.title}</p>
+                                  <p className="text-xs text-slate-600 mt-1">{content.description}</p>
+                                </div>
+                              </div>
+                              <Link to={createPageUrl('IncubateHerCourse') + '?id=' + content.id + '&from=learning'}>
+                                <Button 
+                                  size="sm" 
+                                  style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-slate-600 italic">No courses linked yet</p>
+                      )}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            ))}
+          </div>
+        ))}
+
+        {/* Completion Status - Hide for CUL Observers */}
+        {!isCULObserver && completionPercent === 100 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
