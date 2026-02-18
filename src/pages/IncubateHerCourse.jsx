@@ -108,6 +108,17 @@ export default function IncubateHerCourse() {
     enabled: !!enrollment?.id && !!courseId
   });
 
+  // Get all courses from the same program for navigation
+  const { data: allCourses } = useQuery({
+    queryKey: ['all-incubateher-courses'],
+    queryFn: async () => {
+      const content = await base44.entities.LearningContent.filter({
+        incubateher_only: true
+      });
+      return content.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
+  });
+
   useEffect(() => {
     if (userActivity?.notes) {
       setUserNotes(userActivity.notes);
@@ -334,18 +345,7 @@ export default function IncubateHerCourse() {
   const sections = course.curriculum_sections || [];
   const currentSectionData = sections[currentSection];
   const progressPercent = sections.length > 0 ? Math.round((completedSections.length / sections.length) * 100) : 0;
-
-  // Get all courses from the same program for navigation
-  const { data: allCourses } = useQuery({
-    queryKey: ['all-incubateher-courses'],
-    queryFn: async () => {
-      const content = await base44.entities.LearningContent.filter({
-        incubateher_only: true
-      });
-      return content.sort((a, b) => (a.order || 0) - (b.order || 0));
-    }
-  });
-
+  
   const currentCourseIndex = allCourses?.findIndex(c => c.id === courseId) || 0;
   const previousCourse = allCourses?.[currentCourseIndex - 1];
   const nextCourse = allCourses?.[currentCourseIndex + 1];
