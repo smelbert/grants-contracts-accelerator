@@ -517,5 +517,3 @@ export default function ProfessionalLayoutPreview({ layout, colors }) {
     </div>
   );
 }
-
-export { professionalLayouts };
