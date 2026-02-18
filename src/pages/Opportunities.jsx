@@ -83,7 +83,24 @@ export default function OpportunitiesPage() {
     return savedOpportunities.some(s => s.opportunity_id === opportunityId);
   };
 
-  const filteredOpportunities = opportunities.filter(opp => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const activeOpportunities = opportunities.filter(opp => {
+    if (opp.rolling_deadline) return true;
+    const deadline = opp.deadline || opp.deadline_full;
+    if (!deadline) return true;
+    return new Date(deadline) >= today;
+  });
+
+  const expiredOpportunities = opportunities.filter(opp => {
+    if (opp.rolling_deadline) return false;
+    const deadline = opp.deadline || opp.deadline_full;
+    if (!deadline) return false;
+    return new Date(deadline) < today;
+  });
+
+  const filteredOpportunities = activeOpportunities.filter(opp => {
     const matchesSearch = !searchTerm || 
       opp.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       opp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,7 +112,19 @@ export default function OpportunitiesPage() {
     return matchesSearch && matchesType && matchesLane;
   });
 
-  const savedOpps = filteredOpportunities.filter(opp => isSaved(opp.id));
+  const filteredExpired = expiredOpportunities.filter(opp => {
+    const matchesSearch = !searchTerm || 
+      opp.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      opp.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      opp.funder_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesType = selectedType === 'all' || opp.type === selectedType;
+    const matchesLane = selectedFundingLane === 'all' || opp.funding_lane === selectedFundingLane;
+    
+    return matchesSearch && matchesType && matchesLane;
+  });
+
+  const savedOpps = activeOpportunities.filter(opp => isSaved(opp.id) && filteredOpportunities.includes(opp));
 
   if (isLoading) {
     return (
@@ -177,6 +206,9 @@ export default function OpportunitiesPage() {
               <BookmarkCheck className="w-4 h-4 mr-2" />
               Saved ({savedOpps.length})
             </TabsTrigger>
+            <TabsTrigger value="expired">
+              Past Deadlines ({filteredExpired.length})
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="all" className="space-y-3">
@@ -247,6 +279,48 @@ export default function OpportunitiesPage() {
               </>
             )}
           </TabsContent>
+
+          <TabsContent value="expired" className="space-y-3">
+            {filteredExpired.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-16 text-center">
+                  <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <p className="text-lg font-medium text-slate-900 mb-1">No expired opportunities</p>
+                  <p className="text-sm text-slate-500">
+                    Opportunities that have passed their deadline will appear here
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                  <p className="text-sm text-amber-900">
+                    <strong>Note:</strong> These opportunities have passed their deadline. Save them to track for next year's funding cycle.
+                  </p>
+                </div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-slate-600">
+                    <span className="font-semibold text-slate-900">{filteredExpired.length}</span> expired {filteredExpired.length === 1 ? 'opportunity' : 'opportunities'}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {filteredExpired.map((opp) => (
+                    <OpportunityCard
+                      key={opp.id}
+                      opportunity={opp}
+                      isSaved={isSaved(opp.id)}
+                      onSave={() => saveOpportunityMutation.mutate(opp)}
+                      onUnsave={() => unsaveOpportunityMutation.mutate(opp.id)}
+                      onClick={() => setSelectedOpportunity(opp)}
+                      isExpired={true}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </TabsContent>
         </Tabs>
 
         {/* Detail Modal */}
@@ -270,7 +344,7 @@ export default function OpportunitiesPage() {
   );
 }
 
-function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
+function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick, isExpired = false }) {
   const laneColors = {
     grants: 'from-emerald-500 to-green-600',
     contracts: 'from-blue-500 to-indigo-600',
@@ -288,9 +362,9 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
   };
 
   return (
-    <Card className="group hover:shadow-xl hover:border-emerald-200 transition-all duration-300 cursor-pointer overflow-hidden">
+    <Card className={`group hover:shadow-xl hover:border-emerald-200 transition-all duration-300 cursor-pointer overflow-hidden ${isExpired ? 'opacity-75' : ''}`}>
       {/* Color accent bar */}
-      <div className={`h-1.5 bg-gradient-to-r ${laneColors[opportunity.funding_lane] || 'from-slate-400 to-slate-500'}`} />
+      <div className={`h-1.5 bg-gradient-to-r ${isExpired ? 'from-slate-400 to-slate-500' : laneColors[opportunity.funding_lane] || 'from-slate-400 to-slate-500'}`} />
       
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
@@ -302,6 +376,11 @@ function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, onClick }) {
               {opportunity.funding_lane && (
                 <Badge variant="outline" className="border-slate-200 text-slate-600">
                   {opportunity.funding_lane}
+                </Badge>
+              )}
+              {isExpired && (
+                <Badge className="bg-amber-100 text-amber-800 border-amber-200">
+                  Expired
                 </Badge>
               )}
             </div>
@@ -486,10 +565,10 @@ function OpportunityDetailModal({ opportunity, isSaved, onClose, onSave, onUnsav
                 </>
               )}
             </Button>
-            {opportunity.application_url && (
+            {(opportunity.application_url || opportunity.source_url) && (
               <Button variant="outline" size="lg" asChild>
-                <a href={opportunity.application_url} target="_blank" rel="noopener noreferrer">
-                  Visit Application Page
+                <a href={opportunity.application_url || opportunity.source_url} target="_blank" rel="noopener noreferrer">
+                  Visit Opportunity Website
                   <ExternalLink className="w-5 h-5 ml-2" />
                 </a>
               </Button>
