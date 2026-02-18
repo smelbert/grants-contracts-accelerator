@@ -692,12 +692,22 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
     content: '',
     video_url: '',
     presentation_url: '',
-    embed_code: ''
+    embed_code: '',
+    show_content: true,
+    show_video: false,
+    show_presentation: false,
+    show_embed: false
   });
 
   useEffect(() => {
     if (section) {
-      setFormData(section);
+      setFormData({
+        ...section,
+        show_content: section.show_content ?? true,
+        show_video: section.show_video ?? false,
+        show_presentation: section.show_presentation ?? false,
+        show_embed: section.show_embed ?? false
+      });
     } else {
       setFormData({
         title: '',
@@ -706,7 +716,11 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
         content: '',
         video_url: '',
         presentation_url: '',
-        embed_code: ''
+        embed_code: '',
+        show_content: true,
+        show_video: false,
+        show_presentation: false,
+        show_embed: false
       });
     }
   }, [section, open]);
@@ -763,12 +777,54 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
             />
           </div>
 
+          <div className="border rounded-lg p-4 bg-slate-50 mb-4">
+            <Label className="text-sm font-semibold mb-3 block">What should display in this section?</Label>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.show_content}
+                  onChange={(e) => setFormData({ ...formData, show_content: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-sm">Content (HTML/Text)</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.show_video}
+                  onChange={(e) => setFormData({ ...formData, show_video: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-sm">Video</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.show_presentation}
+                  onChange={(e) => setFormData({ ...formData, show_presentation: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-sm">Presentation/PowerPoint</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.show_embed}
+                  onChange={(e) => setFormData({ ...formData, show_embed: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-sm">Embed Code (iframe)</span>
+              </label>
+            </div>
+          </div>
+
           <Tabs defaultValue="content" className="w-full">
             <TabsList>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="video">Video</TabsTrigger>
-              <TabsTrigger value="presentation">Presentation</TabsTrigger>
-              <TabsTrigger value="embed">Embed Code</TabsTrigger>
+              {formData.show_content && <TabsTrigger value="content">Content</TabsTrigger>}
+              {formData.show_video && <TabsTrigger value="video">Video</TabsTrigger>}
+              {formData.show_presentation && <TabsTrigger value="presentation">Presentation</TabsTrigger>}
+              {formData.show_embed && <TabsTrigger value="embed">Embed Code</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="content" className="space-y-2">
