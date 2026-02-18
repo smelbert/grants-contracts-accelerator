@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MessageSquare, Heart, Pin, Plus, TrendingUp, Clock } from 'lucide-react';
+import { MessageSquare, Heart, Pin, Plus, TrendingUp, Clock, Search, Home, ChevronRight, Filter } from 'lucide-react';
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import CreateDiscussionForm from '@/components/discussions/CreateDiscussionForm';
 import DiscussionReplies from '@/components/discussions/DiscussionReplies';
 import { hasPermission, PERMISSIONS } from '@/components/lib/permissions';
@@ -17,7 +20,21 @@ export default function DiscussionsPage() {
   const [showNewPostForm, setShowNewPostForm] = useState(false);
   const [sortBy, setSortBy] = useState('recent');
   const [expandedDiscussion, setExpandedDiscussion] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
+
+  // Parse URL parameters for space filter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const spaceSlug = params.get('space');
+    if (spaceSlug) {
+      const space = communitySpaces.find(s => s.slug === spaceSlug);
+      if (space) {
+        setSelectedSpace(space.id);
+      }
+    }
+  }, []);
 
   const { data: discussions = [] } = useQuery({
     queryKey: ['discussions'],
@@ -48,7 +65,10 @@ export default function DiscussionsPage() {
   let filteredDiscussions = discussions.filter(d => {
     const categoryMatch = selectedCategory === 'all' || d.category === selectedCategory;
     const spaceMatch = selectedSpace === 'all' || d.space_id === selectedSpace;
-    return categoryMatch && spaceMatch;
+    const searchMatch = !searchQuery || 
+      d.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.content.toLowerCase().includes(searchQuery.toLowerCase());
+    return categoryMatch && spaceMatch && searchMatch;
   });
 
   if (sortBy === 'recent') {
@@ -68,80 +88,183 @@ export default function DiscussionsPage() {
   const pinnedPosts = filteredDiscussions.filter(d => d.is_pinned);
   const regularPosts = filteredDiscussions.filter(d => !d.is_pinned);
 
+  const categories = ['general', 'grants', 'contracts', 'donors', 'strategy'];
+  const selectedSpaceData = communitySpaces.find(s => s.id === selectedSpace);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-purple-50/20">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#143A50] via-[#1E4F58] to-[#143A50] text-white">
-        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#143A50]/90 via-transparent to-transparent" />
-        
-        <div className="relative max-w-7xl mx-auto px-6 py-16">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex-1">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-[#E5C089] bg-clip-text text-transparent">
-                Community Discussions
-              </h1>
-              <p className="text-lg text-blue-100 mb-6">
-                Ask questions, share knowledge, and connect with fellow changemakers
-              </p>
-              <div className="flex flex-wrap gap-3 text-sm">
-                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <MessageSquare className="w-4 h-4" />
-                  <span>{discussions.length} discussions</span>
-                </div>
-                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <TrendingUp className="w-4 h-4" />
-                  <span>{discussions.reduce((sum, d) => sum + (d.total_replies || 0), 0)} replies</span>
-                </div>
-              </div>
-            </div>
-            {canCreateDiscussions && (
-              <Button 
-                onClick={() => setShowNewPostForm(true)} 
-                size="lg"
-                className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 shadow-xl"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Start Discussion
-              </Button>
+    <div className="min-h-screen bg-slate-50">
+      {/* Breadcrumb Navigation */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-6 py-3">
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Link to={createPageUrl('Community')} className="hover:text-[#143A50] flex items-center gap-1">
+              <Home className="w-4 h-4" />
+              Community
+            </Link>
+            <ChevronRight className="w-4 h-4" />
+            <span className="text-slate-900 font-medium">Discussions</span>
+            {selectedSpaceData && (
+              <>
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-[#143A50] font-medium">{selectedSpaceData.space_name}</span>
+              </>
             )}
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Filters */}
-        <Card className="mb-6 border-none shadow-lg bg-white/80 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-slate-700 mb-3">Filter by Space</p>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant={selectedSpace === 'all' ? 'default' : 'outline'}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-6">
+              {/* Create Button - Mobile */}
+              {canCreateDiscussions && (
+                <Button 
+                  onClick={() => setShowNewPostForm(true)} 
+                  className="w-full lg:hidden bg-[#143A50] hover:bg-[#1E4F58]"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Discussion
+                </Button>
+              )}
+
+              {/* Spaces Filter */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Community Spaces</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <button
                     onClick={() => setSelectedSpace('all')}
-                    size="sm"
-                    className={selectedSpace === 'all' ? 'bg-[#143A50] hover:bg-[#1E4F58]' : ''}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                      selectedSpace === 'all' 
+                        ? 'bg-[#143A50] text-white' 
+                        : 'hover:bg-slate-100'
+                    }`}
                   >
                     All Spaces
-                  </Button>
+                  </button>
                   {communitySpaces.map(space => (
-                    <Button
+                    <button
                       key={space.id}
-                      variant={selectedSpace === space.id ? 'default' : 'outline'}
                       onClick={() => setSelectedSpace(space.id)}
-                      size="sm"
-                      className={selectedSpace === space.id ? 'bg-[#143A50] hover:bg-[#1E4F58]' : ''}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                        selectedSpace === space.id 
+                          ? 'bg-[#143A50] text-white' 
+                          : 'hover:bg-slate-100'
+                      }`}
                     >
-                      {space.space_name}
-                    </Button>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">{space.space_name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {space.content_count || 0}
+                        </Badge>
+                      </div>
+                    </button>
                   ))}
+                </CardContent>
+              </Card>
+
+              {/* Categories Filter */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Categories</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                      selectedCategory === 'all' 
+                        ? 'bg-[#143A50] text-white' 
+                        : 'hover:bg-slate-100'
+                    }`}
+                  >
+                    All Categories
+                  </button>
+                  {categories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition capitalize ${
+                        selectedCategory === cat 
+                          ? 'bg-[#143A50] text-white' 
+                          : 'hover:bg-slate-100'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Stats */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Community Stats</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600">Discussions</span>
+                    <span className="font-semibold text-[#143A50]">{discussions.length}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600">Total Replies</span>
+                    <span className="font-semibold text-[#143A50]">
+                      {discussions.reduce((sum, d) => sum + (d.total_replies || 0), 0)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600">Active Today</span>
+                    <span className="font-semibold text-green-600">
+                      {discussions.filter(d => {
+                        const today = new Date().toDateString();
+                        return new Date(d.created_date).toDateString() === today;
+                      }).length}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            {/* Header */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-3xl font-bold text-slate-900">
+                    {selectedSpaceData ? selectedSpaceData.space_name : 'All Discussions'}
+                  </h1>
+                  <p className="text-slate-600 mt-1">
+                    {selectedSpaceData?.description || 'Browse all community discussions'}
+                  </p>
                 </div>
+                {canCreateDiscussions && (
+                  <Button 
+                    onClick={() => setShowNewPostForm(true)} 
+                    className="hidden lg:flex bg-[#143A50] hover:bg-[#1E4F58]"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Discussion
+                  </Button>
+                )}
               </div>
-              <div className="lg:w-48">
-                <p className="text-sm font-medium text-slate-700 mb-3">Sort By</p>
+
+              {/* Search and Sort */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Input
+                    placeholder="Search discussions..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full sm:w-48">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -166,61 +289,102 @@ export default function DiscussionsPage() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Pinned Posts */}
-        {pinnedPosts.length > 0 && (
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <Pin className="w-5 h-5 text-[#E5C089]" />
-              Pinned Discussions
-            </h2>
+              {/* Active Filters Display */}
+              {(selectedCategory !== 'all' || selectedSpace !== 'all' || searchQuery) && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <span className="text-sm text-slate-600">Active filters:</span>
+                  {selectedCategory !== 'all' && (
+                    <Badge variant="outline" className="capitalize">
+                      {selectedCategory}
+                      <button onClick={() => setSelectedCategory('all')} className="ml-2">×</button>
+                    </Badge>
+                  )}
+                  {selectedSpace !== 'all' && selectedSpaceData && (
+                    <Badge variant="outline">
+                      {selectedSpaceData.space_name}
+                      <button onClick={() => setSelectedSpace('all')} className="ml-2">×</button>
+                    </Badge>
+                  )}
+                  {searchQuery && (
+                    <Badge variant="outline">
+                      Search: "{searchQuery}"
+                      <button onClick={() => setSearchQuery('')} className="ml-2">×</button>
+                    </Badge>
+                  )}
+                  <button
+                    onClick={() => {
+                      setSelectedCategory('all');
+                      setSelectedSpace('all');
+                      setSearchQuery('');
+                    }}
+                    className="text-xs text-[#143A50] hover:underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Pinned Posts */}
+            {pinnedPosts.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                  <Pin className="w-5 h-5 text-[#E5C089]" />
+                  Pinned Discussions
+                </h2>
+                <div className="space-y-4">
+                  {pinnedPosts.map(discussion => (
+                    <DiscussionCard 
+                      key={discussion.id} 
+                      discussion={discussion} 
+                      user={user}
+                      isPinned
+                      isExpanded={expandedDiscussion === discussion.id}
+                      onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
+                      onLike={() => likeDiscussionMutation.mutate(discussion)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Regular Posts */}
             <div className="space-y-4">
-              {pinnedPosts.map(discussion => (
-                <DiscussionCard 
-                  key={discussion.id} 
-                  discussion={discussion} 
-                  user={user}
-                  isPinned
-                  isExpanded={expandedDiscussion === discussion.id}
-                  onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
-                  onLike={() => likeDiscussionMutation.mutate(discussion)}
-                />
-              ))}
+              {regularPosts.length > 0 ? (
+                regularPosts.map(discussion => (
+                  <DiscussionCard 
+                    key={discussion.id} 
+                    discussion={discussion}
+                    user={user}
+                    isExpanded={expandedDiscussion === discussion.id}
+                    onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
+                    onLike={() => likeDiscussionMutation.mutate(discussion)}
+                  />
+                ))
+              ) : (
+                <Card>
+                  <CardContent className="p-12 text-center">
+                    <MessageSquare className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                      {searchQuery ? 'No discussions found' : 'No discussions yet'}
+                    </h3>
+                    <p className="text-slate-600 mb-4">
+                      {searchQuery 
+                        ? 'Try adjusting your search or filters' 
+                        : 'Be the first to start a conversation!'}
+                    </p>
+                    {canCreateDiscussions && !searchQuery && (
+                      <Button onClick={() => setShowNewPostForm(true)} className="bg-[#143A50] hover:bg-[#1E4F58]">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Create First Post
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
-        )}
-
-        {/* Regular Posts */}
-        <div className="space-y-4">
-          {regularPosts.length > 0 ? (
-            regularPosts.map(discussion => (
-              <DiscussionCard 
-                key={discussion.id} 
-                discussion={discussion}
-                user={user}
-                isExpanded={expandedDiscussion === discussion.id}
-                onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
-                onLike={() => likeDiscussionMutation.mutate(discussion)}
-              />
-            ))
-          ) : (
-            <Card className="border-none shadow-lg">
-              <CardContent className="p-12 text-center">
-                <MessageSquare className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">No discussions yet</h3>
-                <p className="text-slate-600 mb-4">Be the first to start a conversation!</p>
-                {canCreateDiscussions && (
-                  <Button onClick={() => setShowNewPostForm(true)} className="bg-[#143A50] hover:bg-[#1E4F58]">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create First Post
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          )}
         </div>
 
         <CreateDiscussionForm
@@ -245,7 +409,7 @@ function DiscussionCard({ discussion, user, isPinned, isExpanded, onToggleExpand
   };
 
   return (
-    <Card className={`border-none shadow-lg hover:shadow-xl transition-all duration-300 ${isPinned ? 'ring-2 ring-[#E5C089] bg-gradient-to-br from-amber-50/50 to-white' : 'bg-white/80 backdrop-blur-sm'}`}>
+    <Card className={`hover:shadow-lg transition-all duration-300 ${isPinned ? 'border-2 border-[#E5C089] bg-amber-50/30' : ''}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
