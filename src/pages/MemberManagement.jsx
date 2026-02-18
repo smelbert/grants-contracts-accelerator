@@ -38,16 +38,16 @@ export default function MemberManagement() {
   });
 
   const updateRoleMutation = useMutation({
-    mutationFn: async ({ userId, newRole }) => {
-      return await base44.asServiceRole.entities.User.update(userId, { role: newRole });
+    mutationFn: async ({ userId, updates }) => {
+      return await base44.asServiceRole.entities.User.update(userId, updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['allUsers']);
-      toast.success('Role updated successfully');
+      toast.success('Permissions updated successfully');
       setNewRole('');
     },
     onError: () => {
-      toast.error('Failed to update role');
+      toast.error('Failed to update permissions');
     }
   });
 
@@ -254,62 +254,66 @@ export default function MemberManagement() {
                 </div>
 
                 {canManageRoles && currentUser.id !== selectedMember.id && (
-                  <div className="space-y-3">
-                    <Label>Update Role</Label>
-                    <Select value={newRole} onValueChange={setNewRole}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(ROLE_LABELS).map(([role, label]) => (
-                          <SelectItem key={role} value={role}>
-                            <div className="flex items-center gap-2">
-                              <Badge className={getRoleColor(role)} variant="outline">
-                                {label}
-                              </Badge>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="mb-2 block">Roles (Select Multiple)</Label>
+                      <div className="space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
+                        {['admin', 'coach', 'facilitator', 'content_creator', 'community_moderator', 'mentor', 'contractor', 'user'].map(role => {
+                          const userRoles = Array.isArray(selectedMember.role) ? selectedMember.role : [selectedMember.role];
+                          const isChecked = userRoles.includes(role);
+                          return (
+                            <label key={role} className="flex items-center gap-2 p-2 hover:bg-slate-50 rounded cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={(e) => {
+                                  const newRoles = e.target.checked
+                                    ? [...userRoles, role]
+                                    : userRoles.filter(r => r !== role);
+                                  updateRoleMutation.mutate({
+                                    userId: selectedMember.id,
+                                    updates: { role: newRoles.length > 0 ? newRoles : ['user'] }
+                                  });
+                                  setSelectedMember({ ...selectedMember, role: newRoles.length > 0 ? newRoles : ['user'] });
+                                }}
+                                className="rounded"
+                              />
+                              <span className="capitalize text-sm">{role.replace('_', ' ')}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
 
-                    {newRole && newRole !== selectedMember.role && (
-                      <>
-                        <div className="p-3 bg-slate-50 rounded-lg">
-                          <p className="text-sm font-medium text-slate-900 mb-1">
-                            {ROLE_LABELS[newRole]} Role
-                          </p>
-                          <p className="text-xs text-slate-600 mb-3">
-                            {ROLE_DESCRIPTIONS[newRole]}
-                          </p>
-                          <details className="text-xs">
-                            <summary className="cursor-pointer text-slate-700 font-medium">
-                              View {ROLE_PERMISSIONS[newRole]?.length || 0} permissions
-                            </summary>
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {ROLE_PERMISSIONS[newRole]?.map(perm => (
-                                <Badge key={perm} variant="outline" className="text-xs">
-                                  {perm.replace(/_/g, ' ')}
-                                </Badge>
-                              ))}
-                            </div>
-                          </details>
-                        </div>
-
-                        <Button
-                          onClick={() => {
-                            updateRoleMutation.mutate({
-                              userId: selectedMember.id,
-                              newRole
-                            });
-                          }}
-                          disabled={updateRoleMutation.isPending}
-                          className="w-full bg-[#143A50] hover:bg-[#1E4F58]"
-                        >
-                          {updateRoleMutation.isPending ? 'Updating...' : 'Update Role'}
-                        </Button>
-                      </>
-                    )}
+                    <div>
+                      <Label className="mb-2 block">Access Levels (Select Multiple)</Label>
+                      <div className="space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
+                        {['learning_hub', 'resource_library', 'community', 'boutique_services', 'ai_tools', 'workbook', 'incubateher_program', 'coaching_portal', 'admin_portal', 'full_platform'].map(access => {
+                          const userAccess = selectedMember.access_levels || [];
+                          const isChecked = userAccess.includes(access);
+                          return (
+                            <label key={access} className="flex items-center gap-2 p-2 hover:bg-slate-50 rounded cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={(e) => {
+                                  const newAccess = e.target.checked
+                                    ? [...userAccess, access]
+                                    : userAccess.filter(a => a !== access);
+                                  updateRoleMutation.mutate({
+                                    userId: selectedMember.id,
+                                    updates: { access_levels: newAccess }
+                                  });
+                                  setSelectedMember({ ...selectedMember, access_levels: newAccess });
+                                }}
+                                className="rounded"
+                              />
+                              <span className="capitalize text-sm">{access.replace(/_/g, ' ')}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 )}
 
