@@ -95,7 +95,7 @@ const getUserPortalNav = () => [
     groupName: 'Community',
     items: [
       { name: 'Community Spaces', page: 'Community', icon: Users },
-      { name: 'Direct Messages', page: 'Chat', icon: MessageCircle },
+      { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
       { name: 'My Mentorship', page: 'MyMentorship', icon: Target },
     ]
   },
@@ -196,6 +196,8 @@ const getAdminPortalNav = () => [
       { name: 'Agenda & Courses Editor', page: 'IncubateHerAgenda', icon: FileText },
       { name: 'Workbook Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
       { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
+      { name: 'Program Announcements', page: 'ProgramAnnouncements', icon: Bell },
+      { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
       { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
       { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
     ]

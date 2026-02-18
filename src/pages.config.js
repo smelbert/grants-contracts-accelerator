@@ -63,6 +63,7 @@ import BrandingSettings from './pages/BrandingSettings';
 import BudgetBuilder from './pages/BudgetBuilder';
 import Calendar from './pages/Calendar';
 import CaseForSupport from './pages/CaseForSupport';
+import CertificateTemplates from './pages/CertificateTemplates';
 import Chat from './pages/Chat';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachIntakeAssessment from './pages/CoachIntakeAssessment';
@@ -118,6 +119,7 @@ import IncubateHerSchedule from './pages/IncubateHerSchedule';
 import IncubateHerVideoLibrary from './pages/IncubateHerVideoLibrary';
 import IncubateHerWorkbook from './pages/IncubateHerWorkbook';
 import IncubateHerWorkbookEditor from './pages/IncubateHerWorkbookEditor';
+import IssuedCertificates from './pages/IssuedCertificates';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
 import LearningContentManagement from './pages/LearningContentManagement';
@@ -147,6 +149,7 @@ import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramCalendar from './pages/ProgramCalendar';
 import ProgramManagement from './pages/ProgramManagement';
+import ProgramModuleManager from './pages/ProgramModuleManager';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import PromotionGateConfig from './pages/PromotionGateConfig';
@@ -178,14 +181,13 @@ import TestimonialManagement from './pages/TestimonialManagement';
 import TrainingFramework from './pages/TrainingFramework';
 import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
 import UserProfile from './pages/UserProfile';
+import VerifyCertificate from './pages/VerifyCertificate';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import ProgramModuleManager from './pages/ProgramModuleManager';
-import CertificateTemplates from './pages/CertificateTemplates';
-import IssuedCertificates from './pages/IssuedCertificates';
-import VerifyCertificate from './pages/VerifyCertificate';
+import ProgramAnnouncements from './pages/ProgramAnnouncements';
+import ProgramMessaging from './pages/ProgramMessaging';
 import __Layout from './Layout.jsx';
 
 
@@ -206,6 +208,7 @@ export const PAGES = {
     "BudgetBuilder": BudgetBuilder,
     "Calendar": Calendar,
     "CaseForSupport": CaseForSupport,
+    "CertificateTemplates": CertificateTemplates,
     "Chat": Chat,
     "CoachDashboard": CoachDashboard,
     "CoachIntakeAssessment": CoachIntakeAssessment,
@@ -261,6 +264,7 @@ export const PAGES = {
     "IncubateHerVideoLibrary": IncubateHerVideoLibrary,
     "IncubateHerWorkbook": IncubateHerWorkbook,
     "IncubateHerWorkbookEditor": IncubateHerWorkbookEditor,
+    "IssuedCertificates": IssuedCertificates,
     "Landing": Landing,
     "Learning": Learning,
     "LearningContentManagement": LearningContentManagement,
@@ -290,6 +294,7 @@ export const PAGES = {
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramCalendar": ProgramCalendar,
     "ProgramManagement": ProgramManagement,
+    "ProgramModuleManager": ProgramModuleManager,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
     "PromotionGateConfig": PromotionGateConfig,
@@ -321,14 +326,13 @@ export const PAGES = {
     "TrainingFramework": TrainingFramework,
     "TrainingFrameworkEditor": TrainingFrameworkEditor,
     "UserProfile": UserProfile,
+    "VerifyCertificate": VerifyCertificate,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "ProgramModuleManager": ProgramModuleManager,
-    "CertificateTemplates": CertificateTemplates,
-    "IssuedCertificates": IssuedCertificates,
-    "VerifyCertificate": VerifyCertificate,
+    "ProgramAnnouncements": ProgramAnnouncements,
+    "ProgramMessaging": ProgramMessaging,
 }
 
 export const pagesConfig = {
