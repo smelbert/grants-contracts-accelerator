@@ -1451,11 +1451,17 @@ export const getPagesBySection = (section) => {
 };
 
 // Helper to get all sections
-export const getSections = () => {
+export const getSections = (customHeaders = []) => {
   const sections = [...new Set(WORKBOOK_PAGES.map(page => page.section))];
-  return sections.map(section => ({
-    id: section,
-    name: section.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-    pages: getPagesBySection(section)
-  }));
+  return sections.map(section => {
+    const customHeader = customHeaders.find(h => h.section_id === section && h.is_active);
+    const defaultName = section.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
+    return {
+      id: section,
+      name: customHeader?.display_name || defaultName,
+      pages: getPagesBySection(section),
+      order: customHeader?.display_order ?? 999
+    };
+  }).sort((a, b) => a.order - b.order);
 };

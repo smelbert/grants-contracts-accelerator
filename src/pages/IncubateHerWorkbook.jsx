@@ -77,6 +77,11 @@ export default function IncubateHerWorkbook() {
     queryFn: () => base44.entities.WorkbookPageContent.list(),
   });
 
+  const { data: customHeaders = [] } = useQuery({
+    queryKey: ['workbook-section-headers'],
+    queryFn: () => base44.entities.WorkbookSectionHeader.list(),
+  });
+
   useEffect(() => {
     const unsubscribe = base44.entities.WorkbookPageContent.subscribe(() => {
       queryClient.invalidateQueries({ queryKey: ['workbook-custom-pages'] });
@@ -303,7 +308,7 @@ export default function IncubateHerWorkbook() {
   };
 
   const currentPage = WORKBOOK_PAGES[currentPageIndex];
-  const sections = getSections();
+  const sections = getSections(customHeaders);
 
   const goToPage = (index) => {
     if (index >= 0 && index < WORKBOOK_PAGES.length) {
@@ -319,13 +324,14 @@ export default function IncubateHerWorkbook() {
         subtitle="Your comprehensive funding readiness guide"
       />
 
-      <div className="max-w-7xl mx-auto py-8 px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="max-w-[1600px] mx-auto py-8 px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-1 hidden lg:block">
             <div className="sticky top-4">
               <WorkbookProgressTracker
                 responses={allResponses}
                 currentPageId={currentPage.id}
+                customHeaders={customHeaders}
                 onPageSelect={(pageId) => {
                   const idx = WORKBOOK_PAGES.findIndex(p => p.id === pageId);
                   if (idx >= 0) goToPage(idx);
@@ -334,7 +340,7 @@ export default function IncubateHerWorkbook() {
             </div>
           </div>
 
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-4 space-y-6">
             <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#E5C089]">
               <CardContent className="py-4">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -358,7 +364,7 @@ export default function IncubateHerWorkbook() {
                       <SelectContent>
                         {sections.map((section) => (
                           <div key={section.id}>
-                            <div className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase">
+                            <div className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">
                               {section.name}
                             </div>
                             {section.pages.map((page) => {

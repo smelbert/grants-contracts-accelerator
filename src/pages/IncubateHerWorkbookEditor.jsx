@@ -206,9 +206,19 @@ Return only the HTML content, no explanations.`,
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Workbook Content Editor</h1>
-          <p className="text-slate-600">Customize workbook pages with AI assistance or manual editing</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">Workbook Content Editor</h1>
+            <p className="text-slate-600">Customize workbook pages and section headers with AI assistance or manual editing</p>
+          </div>
+          <Button
+            onClick={() => window.location.href = '/pages/WorkbookSectionEditor'}
+            variant="outline"
+            className="gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            Edit Section Headers
+          </Button>
         </div>
 
         <div className="grid grid-cols-12 gap-6">

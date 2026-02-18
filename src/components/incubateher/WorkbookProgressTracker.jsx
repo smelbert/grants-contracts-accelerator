@@ -4,8 +4,8 @@ import { Progress } from '@/components/ui/progress';
 import { CheckCircle2, Circle, ChevronRight } from 'lucide-react';
 import { WORKBOOK_PAGES, getSections } from './workbookContent';
 
-export default function WorkbookProgressTracker({ responses, currentPageId, onPageSelect }) {
-  const sections = [...new Set(WORKBOOK_PAGES.map(page => page.section))];
+export default function WorkbookProgressTracker({ responses, currentPageId, onPageSelect, customHeaders = [] }) {
+  const sections = getSections(customHeaders);
   
   const calculateProgress = () => {
     const totalPages = WORKBOOK_PAGES.filter(p => p.fields && p.fields.length > 0).length;
@@ -24,8 +24,8 @@ export default function WorkbookProgressTracker({ responses, currentPageId, onPa
     };
   };
 
-  const calculateSectionProgress = (section) => {
-    const sectionPages = WORKBOOK_PAGES.filter(p => p.section === section && p.fields && p.fields.length > 0);
+  const calculateSectionProgress = (sectionId) => {
+    const sectionPages = WORKBOOK_PAGES.filter(p => p.section === sectionId && p.fields && p.fields.length > 0);
     const completedPages = sectionPages.filter(p => {
       return p.fields.every(field => {
         const response = responses?.[p.id]?.[field.id];
@@ -66,13 +66,13 @@ export default function WorkbookProgressTracker({ responses, currentPageId, onPa
       <CardContent className="p-4 max-h-[600px] overflow-y-auto">
         <div className="space-y-4">
           {sections.map((section) => {
-            const sectionProgress = calculateSectionProgress(section);
-            const sectionPages = WORKBOOK_PAGES.filter(p => p.section === section);
+            const sectionProgress = calculateSectionProgress(section.id);
+            const sectionPages = section.pages;
             
             return (
-              <div key={section} className="border-b border-slate-200 pb-4 last:border-b-0">
+              <div key={section.id} className="border-b border-slate-200 pb-4 last:border-b-0">
                 <div className="mb-2">
-                  <h4 className="text-sm font-semibold text-[#143A50] mb-1">{section}</h4>
+                  <h4 className="text-sm font-semibold text-[#143A50] mb-1 uppercase tracking-wide">{section.name}</h4>
                   <div className="flex items-center gap-2">
                     <Progress value={sectionProgress.percentage} className="h-2 flex-1" />
                     <span className="text-xs text-slate-600 whitespace-nowrap">{sectionProgress.percentage}%</span>
