@@ -209,9 +209,9 @@ export default function TemplateLibraryPage() {
             <div>
               <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
                 <BookOpen className="w-8 h-8 text-purple-600" />
-                Template & Resource Library
+                Template & Resource Library (Admin)
               </h1>
-              <p className="text-slate-600 mt-2">Stage-based, lane-specific templates built for real funders</p>
+              <p className="text-slate-600 mt-2">Manage templates and resources for the user-facing Resource Library</p>
             </div>
             {isAdmin && (
               <Button onClick={() => setShowNewTemplate(true)}>
