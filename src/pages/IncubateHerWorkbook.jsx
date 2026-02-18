@@ -324,7 +324,7 @@ export default function IncubateHerWorkbook() {
         subtitle="Your comprehensive funding readiness guide"
       />
 
-      <div className="max-w-[1600px] mx-auto py-8 px-4">
+      <div className="max-w-[1920px] mx-auto py-8 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-1 hidden lg:block">
             <div className="sticky top-4">
