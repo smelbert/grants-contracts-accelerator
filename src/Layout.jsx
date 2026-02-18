@@ -209,6 +209,7 @@ const getAdminPortalNav = () => [
     groupName: 'Program Setup',
     items: [
       { name: 'Program Management', page: 'ProgramManagement', icon: Settings },
+      { name: 'Program Modules', page: 'ProgramModuleManager', icon: BookOpen },
     ]
   },
   {

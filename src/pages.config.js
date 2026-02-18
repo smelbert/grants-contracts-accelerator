@@ -132,8 +132,10 @@ import MentorDashboard from './pages/MentorDashboard';
 import MentorManagement from './pages/MentorManagement';
 import MyClassroom from './pages/MyClassroom';
 import MyMentorship from './pages/MyMentorship';
+import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
 import Opportunities from './pages/Opportunities';
+import OpportunityReports from './pages/OpportunityReports';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
 import PaymentCancelled from './pages/PaymentCancelled';
@@ -143,6 +145,7 @@ import PlatformSettings from './pages/PlatformSettings';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
+import ProgramCalendar from './pages/ProgramCalendar';
 import ProgramManagement from './pages/ProgramManagement';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
@@ -177,11 +180,9 @@ import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
 import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
-import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
-import MyProfile from './pages/MyProfile';
-import ProgramCalendar from './pages/ProgramCalendar';
-import OpportunityReports from './pages/OpportunityReports';
+import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import ProgramModuleManager from './pages/ProgramModuleManager';
 import __Layout from './Layout.jsx';
 
 
@@ -271,8 +272,10 @@ export const PAGES = {
     "MentorManagement": MentorManagement,
     "MyClassroom": MyClassroom,
     "MyMentorship": MyMentorship,
+    "MyProfile": MyProfile,
     "Notifications": Notifications,
     "Opportunities": Opportunities,
+    "OpportunityReports": OpportunityReports,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
     "PaymentCancelled": PaymentCancelled,
@@ -282,6 +285,7 @@ export const PAGES = {
     "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
+    "ProgramCalendar": ProgramCalendar,
     "ProgramManagement": ProgramManagement,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
@@ -316,11 +320,9 @@ export const PAGES = {
     "UserProfile": UserProfile,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
-    "WorkflowsAutomation": WorkflowsAutomation,
     "WorkbookSectionEditor": WorkbookSectionEditor,
-    "MyProfile": MyProfile,
-    "ProgramCalendar": ProgramCalendar,
-    "OpportunityReports": OpportunityReports,
+    "WorkflowsAutomation": WorkflowsAutomation,
+    "ProgramModuleManager": ProgramModuleManager,
 }
 
 export const pagesConfig = {
