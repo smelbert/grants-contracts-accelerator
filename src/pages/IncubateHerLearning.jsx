@@ -400,7 +400,11 @@ export default function IncubateHerLearning() {
 
         {/* Day-by-Day Curriculum */}
         {sessionDays.map((day, dayIdx) => {
-          const dayTotal = day.sections?.reduce((total, section) => total + (section.duration_minutes || 0), 0) || 0;
+          const dayTotal = day.sections?.reduce((total, section) => {
+            const linkedContent = getLinkedContent(section.id);
+            const sectionDuration = linkedContent.reduce((sum, content) => sum + (content.duration_minutes || 0), 0) || section.duration_minutes;
+            return total + sectionDuration;
+          }, 0) || 0;
           
           return (
           <div key={dayIdx} className="mb-6">
@@ -441,7 +445,11 @@ export default function IncubateHerLearning() {
               </CardHeader>
             </Card>
 
-            {day.sections.map((section, sectionIdx) => (
+            {day.sections.map((section, sectionIdx) => {
+              const linkedContent = getLinkedContent(section.id);
+              const sectionDuration = linkedContent.reduce((total, content) => total + (content.duration_minutes || 0), 0) || section.duration_minutes;
+              
+              return (
               <Card key={`${dayIdx}-${sectionIdx}`} className="overflow-hidden ml-4 mb-3">
                 <CardHeader 
                   className="cursor-pointer hover:bg-slate-50 transition-colors"
@@ -462,7 +470,7 @@ export default function IncubateHerLearning() {
                           <CardTitle className="text-lg">{section.title}</CardTitle>
                         </div>
                         <Badge variant="outline" className="mt-1">
-                          {section.duration_minutes} minutes
+                          {sectionDuration} minutes
                         </Badge>
                       </div>
                     </div>
@@ -519,7 +527,8 @@ export default function IncubateHerLearning() {
                   </CardContent>
                 )}
               </Card>
-            ))}
+            );
+            })}
           </div>
         );
         })}
