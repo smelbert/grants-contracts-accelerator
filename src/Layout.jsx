@@ -137,8 +137,7 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
       { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
-      { name: 'Member Management', page: 'MemberManagement', icon: Users },
-      { name: 'Role Management', page: 'RoleManagement', icon: Shield },
+      { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
       { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
     ]
   },
