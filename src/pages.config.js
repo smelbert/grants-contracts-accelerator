@@ -183,6 +183,8 @@ import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import ProgramModuleManager from './pages/ProgramModuleManager';
+import CertificateTemplates from './pages/CertificateTemplates';
+import IssuedCertificates from './pages/IssuedCertificates';
 import __Layout from './Layout.jsx';
 
 
@@ -323,6 +325,8 @@ export const PAGES = {
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
     "ProgramModuleManager": ProgramModuleManager,
+    "CertificateTemplates": CertificateTemplates,
+    "IssuedCertificates": IssuedCertificates,
 }
 
 export const pagesConfig = {
