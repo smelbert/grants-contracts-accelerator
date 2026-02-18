@@ -10,8 +10,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Sparkles, Copy, Eye, Trash2, Edit, Wand2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+
+const ACCESS_COMPONENTS = [
+  { id: 'learning_hub', label: 'Learning Hub', description: 'Access to all courses and training materials' },
+  { id: 'resource_library', label: 'Resource Library', description: 'Downloadable templates and guides' },
+  { id: 'community', label: 'Community Spaces', description: 'Discussion forums and networking' },
+  { id: 'boutique_services', label: 'Boutique Services', description: 'Premium consulting services' },
+  { id: 'ai_tools', label: 'AI Tools', description: 'Document review and AI assistance' },
+  { id: 'workbook', label: 'Program Workbook', description: 'Interactive program workbook' },
+  { id: 'projects', label: 'Projects Workspace', description: 'Grant and proposal projects' },
+  { id: 'opportunities', label: 'Funding Opportunities', description: 'Curated funding database' },
+  { id: 'program_calendar', label: 'Program Calendar', description: 'Live sessions and events' },
+];
 
 export default function RegistrationBuilder() {
   const [isCreating, setIsCreating] = useState(false);
@@ -26,8 +39,8 @@ export default function RegistrationBuilder() {
     hero_image_url: '',
     offering_details: {},
     pricing: { type: 'free', amount: 0, currency: 'USD' },
-    access_level: 'community_only',
-    community_space_id: '',
+    access_grants: [],
+    community_space_ids: [],
     requires_intake_form: false,
     custom_questions: [],
     post_registration_survey_enabled: true,
@@ -84,13 +97,31 @@ export default function RegistrationBuilder() {
       hero_image_url: '',
       offering_details: {},
       pricing: { type: 'free', amount: 0, currency: 'USD' },
-      access_level: 'community_only',
-      community_space_id: '',
+      access_grants: [],
+      community_space_ids: [],
       requires_intake_form: false,
       custom_questions: [],
       post_registration_survey_enabled: true,
       is_active: true
     });
+  };
+
+  const toggleAccessGrant = (componentId) => {
+    const current = formData.access_grants || [];
+    if (current.includes(componentId)) {
+      setFormData({ ...formData, access_grants: current.filter(id => id !== componentId) });
+    } else {
+      setFormData({ ...formData, access_grants: [...current, componentId] });
+    }
+  };
+
+  const toggleCommunitySpace = (spaceId) => {
+    const current = formData.community_space_ids || [];
+    if (current.includes(spaceId)) {
+      setFormData({ ...formData, community_space_ids: current.filter(id => id !== spaceId) });
+    } else {
+      setFormData({ ...formData, community_space_ids: [...current, spaceId] });
+    }
   };
 
   const generateSlug = (name) => {
@@ -389,41 +420,50 @@ Keep the tone professional, empowering, and focused on outcomes. Emphasize EIS's
                   )}
                 </TabsContent>
 
-                <TabsContent value="access" className="space-y-4 mt-4">
+                <TabsContent value="access" className="space-y-6 mt-4">
                   <div>
-                    <Label>Access Level After Registration</Label>
-                    <Select
-                      value={formData.access_level}
-                      onValueChange={(value) => setFormData({ ...formData, access_level: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="community_only">Community Only</SelectItem>
-                        <SelectItem value="coaching_portal">Coaching Portal</SelectItem>
-                        <SelectItem value="full_platform">Full Platform</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label className="text-base font-semibold">Portal Access Components</Label>
+                    <p className="text-sm text-slate-500 mb-4">Select which portal components users can access after registration</p>
+                    <div className="space-y-3 border rounded-lg p-4 bg-slate-50">
+                      {ACCESS_COMPONENTS.map((component) => (
+                        <div key={component.id} className="flex items-start space-x-3 p-3 bg-white rounded-lg border hover:border-[#143A50] transition">
+                          <Checkbox
+                            id={component.id}
+                            checked={(formData.access_grants || []).includes(component.id)}
+                            onCheckedChange={() => toggleAccessGrant(component.id)}
+                          />
+                          <div className="flex-1">
+                            <Label htmlFor={component.id} className="font-medium cursor-pointer">
+                              {component.label}
+                            </Label>
+                            <p className="text-xs text-slate-500 mt-0.5">{component.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <div>
-                    <Label>Assign to Community Space</Label>
-                    <Select
-                      value={formData.community_space_id}
-                      onValueChange={(value) => setFormData({ ...formData, community_space_id: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select space..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {communitySpaces.map((space) => (
-                          <SelectItem key={space.id} value={space.id}>
-                            {space.space_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label className="text-base font-semibold">Community Spaces</Label>
+                    <p className="text-sm text-slate-500 mb-4">Assign users to specific community spaces</p>
+                    <div className="space-y-2 border rounded-lg p-4 bg-slate-50">
+                      {communitySpaces.length === 0 ? (
+                        <p className="text-sm text-slate-500 text-center py-4">No community spaces available</p>
+                      ) : (
+                        communitySpaces.map((space) => (
+                          <div key={space.id} className="flex items-center space-x-3 p-3 bg-white rounded-lg border hover:border-[#143A50] transition">
+                            <Checkbox
+                              id={`space-${space.id}`}
+                              checked={(formData.community_space_ids || []).includes(space.id)}
+                              onCheckedChange={() => toggleCommunitySpace(space.id)}
+                            />
+                            <Label htmlFor={`space-${space.id}`} className="font-medium cursor-pointer flex-1">
+                              {space.space_name}
+                            </Label>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -506,8 +546,18 @@ Keep the tone professional, empowering, and focused on outcomes. Emphasize EIS's
                 <p className="text-sm text-slate-600 mb-4 line-clamp-2">{page.description}</p>
                 
                 <div className="space-y-2 text-xs text-slate-500 mb-4">
-                  <div>Access: {page.access_level}</div>
-                  <div>Pricing: {page.pricing.type === 'free' ? 'Free' : `$${page.pricing.amount}`}</div>
+                  <div>
+                    <span className="font-medium">Access: </span>
+                    {(page.access_grants || []).length > 0 ? (
+                      <span>{page.access_grants.length} components</span>
+                    ) : (
+                      <span className="text-slate-400">None selected</span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="font-medium">Pricing: </span>
+                    {page.pricing.type === 'free' ? 'Free' : `$${page.pricing.amount}`}
+                  </div>
                   {page.max_registrations && (
                     <div>Spots: {page.current_registrations || 0}/{page.max_registrations}</div>
                   )}
