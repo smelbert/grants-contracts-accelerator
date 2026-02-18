@@ -258,6 +258,7 @@ export default function SpaceManagement() {
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   placeholder="e.g., general-discussion"
                 />
+                <p className="text-xs text-slate-500 mt-1">Used in URLs - no spaces or special characters</p>
               </div>
 
               <div>
@@ -268,6 +269,38 @@ export default function SpaceManagement() {
                   placeholder="Describe what this space is for..."
                   rows={3}
                 />
+              </div>
+
+              <div>
+                <Label>Icon Name</Label>
+                <Input
+                  value={formData.icon}
+                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  placeholder="e.g., Building2, Users, Target, GraduationCap"
+                />
+                <p className="text-xs text-slate-500 mt-1">
+                  Common: Building2, Briefcase, Rocket, GraduationCap, MessageCircle, Users, Target
+                </p>
+              </div>
+
+              <div>
+                <Label>Cover Image URL (optional)</Label>
+                <Input
+                  value={formData.cover_image_url}
+                  onChange={(e) => setFormData({ ...formData, cover_image_url: e.target.value })}
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div>
+                <Label>Display Order</Label>
+                <Input
+                  type="number"
+                  value={formData.display_order || 0}
+                  onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
+                  placeholder="0"
+                />
+                <p className="text-xs text-slate-500 mt-1">Lower numbers appear first</p>
               </div>
 
               <div>
@@ -282,6 +315,14 @@ export default function SpaceManagement() {
                     <SelectItem value="private">Private - Invite only</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 pb-2 border-t">
+                <Label>Active Status</Label>
+                <Switch
+                  checked={formData.is_active ?? true}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
               </div>
 
               <div className="space-y-4">
