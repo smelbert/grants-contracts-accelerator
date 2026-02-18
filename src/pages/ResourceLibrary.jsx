@@ -125,7 +125,11 @@ export default function ResourceLibrary() {
   );
 
   const handleDownload = (resource) => {
-    // Create a blob from the template content and download as PDF-like HTML
+    toast.success('Opening print dialog...');
+    window.open(createPageUrl('CreateProject') + '?template=' + resource.id, '_blank');
+  };
+  
+  const handleDirectDownload = (resource) => {
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
       <html>
@@ -144,7 +148,6 @@ export default function ResourceLibrary() {
       </html>
     `);
     printWindow.document.close();
-    toast.success('Opening print dialog...');
   };
 
   const handlePreview = (resource) => {
@@ -493,7 +496,7 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
                 className="flex-1 bg-[#143A50] hover:bg-[#1E4F58]"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Download
+                Create Project
               </Button>
             </div>
             <Button

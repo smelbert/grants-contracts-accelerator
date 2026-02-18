@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import AIOnboardingAssistant from '@/components/onboarding/AIOnboardingAssistant';
 import IncubateHerOnboarding from '@/components/incubateher/IncubateHerOnboarding';
+import NotificationBell from '@/components/notifications/NotificationBell';
 import { 
   LayoutDashboard, 
   Search, 
@@ -467,9 +468,7 @@ export default function Layout({ children, currentPageName }) {
             />
           </Link>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="w-5 h-5" />
-            </Button>
+            <NotificationBell userEmail={user?.email} />
             <Button variant="ghost" size="icon">
               <HelpCircle className="w-5 h-5" />
             </Button>

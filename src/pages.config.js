@@ -177,6 +177,7 @@ import UserProfile from './pages/UserProfile';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import Notifications from './pages/Notifications';
 import __Layout from './Layout.jsx';
 
 
@@ -311,6 +312,7 @@ export const PAGES = {
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "Notifications": Notifications,
 }
 
 export const pagesConfig = {
