@@ -31,7 +31,8 @@ const iconMap = {
   Rocket,
   GraduationCap,
   MessageCircle,
-  Users
+  Users,
+  Target: Sparkles
 };
 
 export default function CommunityPage() {
@@ -81,6 +82,10 @@ export default function CommunityPage() {
   
   const engagementSpaces = spaces.filter(s => 
     ['GraduationCap', 'MessageCircle'].includes(s.icon)
+  );
+
+  const incubateHerSpaces = spaces.filter(s => 
+    s.icon === 'Target' || s.slug === 'incubateher-program'
   );
 
   return (
@@ -137,10 +142,105 @@ export default function CommunityPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs defaultValue="organization" className="w-full">
           <TabsList className="mb-6">
+            <TabsTrigger value="incubateher">IncubateHer Program</TabsTrigger>
             <TabsTrigger value="organization">Organization Types</TabsTrigger>
             <TabsTrigger value="engagement">Learning & Coaching</TabsTrigger>
             <TabsTrigger value="all">All Spaces</TabsTrigger>
           </TabsList>
+
+          {/* IncubateHer Tab */}
+          <TabsContent value="incubateher">
+            {incubateHerSpaces.length > 0 ? (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white rounded-xl p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Sparkles className="w-8 h-8 text-[#E5C089]" />
+                    <h2 className="text-2xl font-bold">IncubateHer Community</h2>
+                  </div>
+                  <p className="text-white/90 max-w-2xl">
+                    Connect with fellow IncubateHer participants, share your progress, ask questions, and build lasting relationships with entrepreneurs on the same journey.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6">
+                  {incubateHerSpaces.map((space, idx) => {
+                    const Icon = iconMap[space.icon] || Sparkles;
+                    return (
+                      <motion.div
+                        key={space.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                      >
+                        <Card className="hover:shadow-xl transition-all border-2 border-[#AC1A5B]/30">
+                          <CardHeader>
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[#AC1A5B] to-[#A65D40] flex items-center justify-center">
+                                  <Icon className="w-8 h-8 text-white" />
+                                </div>
+                                <div>
+                                  <CardTitle className="text-2xl">{space.space_name}</CardTitle>
+                                  <Badge className="bg-[#E5C089] text-[#143A50] mt-2">
+                                    {space.visibility === 'members_only' ? 'Members Only' : 'Open'}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <Badge variant="outline" className="text-[#AC1A5B]">
+                                {space.member_count || 0} members
+                              </Badge>
+                            </div>
+                            <CardDescription className="text-base leading-relaxed">
+                              {space.description}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex gap-3">
+                              <Link to={createPageUrl('Discussions', `?space=${space.slug}`)} className="flex-1">
+                                <Button className="w-full bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90 text-lg py-6">
+                                  <MessageSquare className="w-5 h-5 mr-2" />
+                                  Enter Community Space
+                                  <ArrowRight className="w-5 h-5 ml-2" />
+                                </Button>
+                              </Link>
+                            </div>
+                            <div className="flex items-center justify-around mt-4 pt-4 border-t">
+                              <div className="text-center">
+                                <p className="text-2xl font-bold text-[#AC1A5B]">{space.content_count || 0}</p>
+                                <p className="text-sm text-slate-600">Discussions</p>
+                              </div>
+                              <div className="text-center">
+                                <p className="text-2xl font-bold text-[#AC1A5B]">{space.member_count || 0}</p>
+                                <p className="text-sm text-slate-600">Members</p>
+                              </div>
+                              <div className="text-center flex items-center gap-1">
+                                <TrendingUp className="w-5 h-5 text-green-600" />
+                                <p className="text-sm text-slate-600">Active</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* AI Discussion Prompts for IncubateHer */}
+                {incubateHerSpaces.length > 0 && (
+                  <AIDiscussionPrompts 
+                    spaceType="posts"
+                    spaceName="IncubateHer Program"
+                  />
+                )}
+              </div>
+            ) : (
+              <Card className="p-12 text-center">
+                <Sparkles className="w-16 h-16 mx-auto text-slate-300 mb-4" />
+                <h3 className="text-xl font-semibold text-slate-700 mb-2">IncubateHer Space Coming Soon</h3>
+                <p className="text-slate-500">The IncubateHer community space will be available to program participants.</p>
+              </Card>
+            )}
+          </TabsContent>
 
           {/* Organization Types Tab */}
           <TabsContent value="organization">
