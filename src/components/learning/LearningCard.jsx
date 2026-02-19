@@ -22,7 +22,7 @@ const LANE_COLORS = {
   general: { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200' },
 };
 
-export default function LearningCard({ content, isPremium = false, hasAccess = true, onStart }) {
+export default function LearningCard({ content, isPremium = false, hasAccess = true, onStart, hideDuration = false }) {
   const TypeIcon = TYPE_CONFIG[content.content_type]?.icon || BookOpen;
   const laneColor = LANE_COLORS[content.funding_lane] || LANE_COLORS.general;
 
@@ -77,7 +77,7 @@ export default function LearningCard({ content, isPremium = false, hasAccess = t
         )}
 
         <div className="flex items-center justify-between">
-          {content.duration_minutes && (
+          {!hideDuration && content.duration_minutes && (
             <div className="flex items-center text-sm text-slate-500">
               <Clock className="w-4 h-4 mr-1" />
               {content.duration_minutes} min

@@ -327,6 +327,7 @@ export default function LearningPage() {
                           isPremium={false}
                           hasAccess={true}
                           onStart={handleStartContent}
+                          hideDuration={true}
                         />
                       </motion.div>
                     ))}
