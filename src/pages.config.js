@@ -201,6 +201,7 @@ import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import IncubateHerDocuments from './pages/IncubateHerDocuments';
 import DocumentTemplateEditor from './pages/DocumentTemplateEditor';
+import IncubateHerProgramControl from './pages/IncubateHerProgramControl';
 import __Layout from './Layout.jsx';
 
 
@@ -359,6 +360,7 @@ export const PAGES = {
     "WorkflowsAutomation": WorkflowsAutomation,
     "IncubateHerDocuments": IncubateHerDocuments,
     "DocumentTemplateEditor": DocumentTemplateEditor,
+    "IncubateHerProgramControl": IncubateHerProgramControl,
 }
 
 export const pagesConfig = {

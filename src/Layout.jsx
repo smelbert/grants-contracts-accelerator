@@ -195,11 +195,8 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
       { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
-      { name: 'Access Control', page: 'IncubateHerAccessControl', icon: Shield },
+      { name: 'Program Control', page: 'IncubateHerProgramControl', icon: Settings },
       { name: 'Participant Workbooks', page: 'IncubateHerParticipantWorkbooks', icon: BookOpen },
-      { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: CheckCircle2 },
-      { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users },
-      { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings },
       { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
       { name: 'Template Editor', page: 'DocumentTemplateEditor', icon: FileText },
       { name: 'Agenda & Courses Editor', page: 'IncubateHerAgenda', icon: FileText },
