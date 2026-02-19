@@ -555,8 +555,7 @@ export default function IncubateHerProgramControl() {
                   </CardContent>
                 </Card>
               ) : (
-                <>
-                  {enrollments.map(enrollment => {
+                enrollments.map(enrollment => {
                 const userAccess = userAccessLevels.find(a => a.user_email === enrollment.participant_email);
                 const featureUnlocks = userAccess?.feature_unlocks || {};
                 const isEditing = editingUser === enrollment.participant_email;
@@ -622,8 +621,8 @@ export default function IncubateHerProgramControl() {
                       )}
                     </CardContent>
                   </Card>
-                  })}
-                </>
+                );
+              })
               )}
             </div>
           </TabsContent>
