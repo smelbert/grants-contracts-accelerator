@@ -200,6 +200,7 @@ const getAdminPortalNav = () => [
       { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: CheckCircle2 },
       { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users },
       { name: 'Admin Console', page: 'IncubateHerAdminConsole', icon: Settings },
+      { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
       { name: 'Agenda & Courses Editor', page: 'IncubateHerAgenda', icon: FileText },
       { name: 'Workbook Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
       { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
