@@ -1063,6 +1063,127 @@ export const WORKBOOK_PAGES = [
       }
     ]
   },
+  {
+    id: 'daily_reflection',
+    section: 'back_matter',
+    title: 'Daily Reflection',
+    subtitle: 'Use this same page at the end of each session. Keep it consistent so it becomes ritual.',
+    type: 'worksheet',
+    content: `
+      <div class="bg-gradient-to-r from-[#1E4F58] to-[#143A50] text-white p-6 rounded-lg mb-6 -mx-3">
+        <h2 class="text-2xl font-bold mb-2">INCUBATEHER | Funding Readiness Reflection</h2>
+        <p class="text-sm text-[#E5C089]">Delivered by Elbert Innovative Solutions</p>
+        <p class="text-sm text-[#E5C089]">Funded by Columbus Urban League</p>
+      </div>
+      
+      <div class="border-b-2 border-[#E5C089] mb-6"></div>
+      
+      <div class="space-y-6 text-sm">
+        <div class="bg-[#E5C089]/10 p-4 rounded-lg border-l-4 border-[#E5C089]">
+          <p class="font-semibold text-[#143A50] mb-2">💡 Reminder:</p>
+          <p class="text-slate-700">Funding should strengthen your business — not destabilize it. Structure first. Submission second.</p>
+        </div>
+      </div>
+    `,
+    fields: [
+      {
+        id: 'session_name',
+        type: 'input',
+        label: '🧠 Today\'s Session:',
+        placeholder: 'e.g., Legal Foundations, Financial Systems...'
+      },
+      {
+        id: 'session_date',
+        type: 'input',
+        label: 'Date:',
+        placeholder: 'MM/DD/YYYY'
+      },
+      {
+        id: 'what_shifted',
+        type: 'textarea',
+        label: '1️⃣ What Shifted for Me Today?',
+        placeholder: 'What belief, assumption, or misconception changed during this session?',
+        rows: 4
+      },
+      {
+        id: 'where_strong',
+        type: 'checkboxes',
+        label: '2️⃣ Where Am I Strong?',
+        sublabel: 'What did I realize I already have in place?',
+        options: [
+          { value: 'legal', label: 'Legal structure clarity' },
+          { value: 'financial', label: 'Financial systems' },
+          { value: 'documentation', label: 'Documentation' },
+          { value: 'services', label: 'Defined services/programs' },
+          { value: 'outcomes', label: 'Clear outcomes' },
+          { value: 'capacity', label: 'Capacity awareness' }
+        ]
+      },
+      {
+        id: 'where_strong_other',
+        type: 'input',
+        label: 'Other strength:',
+        placeholder: 'Specify...'
+      },
+      {
+        id: 'where_strong_notes',
+        type: 'textarea',
+        label: 'Brief notes on strengths:',
+        rows: 2
+      },
+      {
+        id: 'not_ready_yet',
+        type: 'textarea',
+        label: '3️⃣ Where Am I Not Ready Yet?',
+        placeholder: 'Be honest. Readiness is not a judgment — it\'s information.',
+        rows: 4
+      },
+      {
+        id: 'one_action',
+        type: 'textarea',
+        label: '4️⃣ One Action I Will Take Within 7 Days',
+        placeholder: 'Keep it realistic.',
+        rows: 3
+      },
+      {
+        id: 'action_completion_date',
+        type: 'input',
+        label: 'Target completion date:',
+        placeholder: 'MM/DD/YYYY'
+      },
+      {
+        id: 'red_flags',
+        type: 'checkboxes',
+        label: '5️⃣ Red Flag Awareness Check',
+        sublabel: 'Did I identify any risky funding behaviors I need to avoid?',
+        options: [
+          { value: 'too_early', label: 'Applying too early' },
+          { value: 'hiring_not_ready', label: 'Hiring support before I\'m ready' },
+          { value: 'unclear_opps', label: 'Paying for unclear opportunities' },
+          { value: 'overpromising', label: 'Overpromising capacity' }
+        ]
+      },
+      {
+        id: 'red_flags_other',
+        type: 'input',
+        label: 'Other red flag:',
+        placeholder: 'Specify...'
+      },
+      {
+        id: 'consultation_question',
+        type: 'textarea',
+        label: '6️⃣ Consultation Prep Note (If Applicable)',
+        placeholder: 'One question I want answered during my 1:1:',
+        rows: 2
+      },
+      {
+        id: 'consultation_document',
+        type: 'textarea',
+        label: 'One document I need to improve before meeting:',
+        rows: 2
+      }
+    ]
+  },
 
   // ADDENDUM: GRANT READINESS TOOLKIT
   {
