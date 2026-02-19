@@ -24,6 +24,7 @@ import { createPageUrl } from '@/utils';
 import AIMemberConnections from '@/components/community/AIMemberConnections';
 import AIDiscussionPrompts from '@/components/community/AIDiscussionPrompts';
 import SuggestSpaceButton from '@/components/community/SuggestSpaceButton';
+import CommunityAIRecommendations from '@/components/incubateher/CommunityAIRecommendations';
 
 const iconMap = {
   Building2,
@@ -66,6 +67,19 @@ export default function CommunityPage() {
       10
     ),
     enabled: !!user,
+  });
+
+  const { data: incubateHerEnrollment } = useQuery({
+    queryKey: ['incubateher-enrollment', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const enrollments = await base44.entities.ProgramEnrollment.filter({
+        participant_email: user.email,
+        role: 'participant'
+      });
+      return enrollments.find(e => e.cohort_id);
+    },
+    enabled: !!user?.email
   });
 
   if (isLoading) {
@@ -225,12 +239,9 @@ export default function CommunityPage() {
                   })}
                 </div>
 
-                {/* AI Discussion Prompts for IncubateHer */}
-                {incubateHerSpaces.length > 0 && (
-                  <AIDiscussionPrompts 
-                    spaceType="posts"
-                    spaceName="IncubateHer Program"
-                  />
+                {/* AI-Powered Recommendations for IncubateHer */}
+                {incubateHerSpaces.length > 0 && incubateHerEnrollment && user && (
+                  <CommunityAIRecommendations userEmail={user.email} />
                 )}
               </div>
             ) : (
