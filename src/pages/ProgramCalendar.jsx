@@ -205,6 +205,8 @@ export default function ProgramCalendar() {
   };
 
   const downloadICS = (event) => {
+    if (!event.date) return;
+    
     const startDate = format(event.date, "yyyyMMdd'T'HHmmss");
     const endDate = format(addDays(event.date, 0), "yyyyMMdd'T'HHmmss");
     
@@ -312,12 +314,14 @@ export default function ProgramCalendar() {
                       </div>
                       
                       <div className="space-y-1 text-sm text-slate-600">
-                        <div className="flex items-center gap-2">
-                          <CalendarIcon className="w-4 h-4" />
-                          <span className="font-medium">
-                            {format(event.date, 'EEEE, MMMM d, yyyy')}
-                          </span>
-                        </div>
+                       {event.date && (
+                         <div className="flex items-center gap-2">
+                           <CalendarIcon className="w-4 h-4" />
+                           <span className="font-medium">
+                             {format(event.date, 'EEEE, MMMM d, yyyy')}
+                           </span>
+                         </div>
+                       )}
                         
                         {event.time && (
                           <div className="flex items-center gap-2">

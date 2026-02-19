@@ -127,9 +127,11 @@ import IncubateHerWorkbookEditor from './pages/IncubateHerWorkbookEditor';
 import IssuedCertificates from './pages/IssuedCertificates';
 import Landing from './pages/Landing';
 import Learning from './pages/Learning';
+import LearningAnalytics from './pages/LearningAnalytics';
 import LearningContentManagement from './pages/LearningContentManagement';
 import LearningHubAccess from './pages/LearningHubAccess';
 import LearningModule from './pages/LearningModule';
+import LearningPathManager from './pages/LearningPathManager';
 import LearningProgress from './pages/LearningProgress';
 import LiveRoomManagement from './pages/LiveRoomManagement';
 import LiveSessionManagement from './pages/LiveSessionManagement';
@@ -193,8 +195,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import LearningPathManager from './pages/LearningPathManager';
-import LearningAnalytics from './pages/LearningAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -279,9 +279,11 @@ export const PAGES = {
     "IssuedCertificates": IssuedCertificates,
     "Landing": Landing,
     "Learning": Learning,
+    "LearningAnalytics": LearningAnalytics,
     "LearningContentManagement": LearningContentManagement,
     "LearningHubAccess": LearningHubAccess,
     "LearningModule": LearningModule,
+    "LearningPathManager": LearningPathManager,
     "LearningProgress": LearningProgress,
     "LiveRoomManagement": LiveRoomManagement,
     "LiveSessionManagement": LiveSessionManagement,
@@ -345,8 +347,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "LearningPathManager": LearningPathManager,
-    "LearningAnalytics": LearningAnalytics,
 }
 
 export const pagesConfig = {
