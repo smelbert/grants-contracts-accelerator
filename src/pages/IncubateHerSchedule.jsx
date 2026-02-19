@@ -11,6 +11,132 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Video, MapPin, Users, CheckCircle, FileText, Upload, Play } from 'lucide-react';
 import { toast } from 'sonner';
 
+const PROGRAM_SCHEDULE = [
+  {
+    date: 'Monday, March 2, 2026',
+    time: '5:30–7:30 PM',
+    duration: '2 Hours',
+    format: 'Virtual – Google Meet',
+    location: 'Google Meet',
+    sessionTitle: 'Session 1: Funding Foundations & Readiness',
+    topics: [
+      {
+        section: 'Program Orientation & Expectations',
+        items: [
+          'Completion requirements',
+          'Consultation cap explanation',
+          'Pre- & post-assessment overview',
+          'How this series supports early-stage and growth-phase businesses'
+        ]
+      },
+      {
+        section: 'Understanding Funding Pathways',
+        items: [
+          'Grants vs. Proposals vs. Contracts',
+          'Revenue vs. reimbursement models',
+          'Public vs. private funding realities'
+        ]
+      },
+      {
+        section: 'Legal Structure & Organizational Readiness',
+        items: [
+          'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
+          'Formation vs. operational readiness',
+          'Required documentation fundamentals',
+          'Compliance basics and common structural mistakes'
+        ]
+      },
+      {
+        section: 'Funding Readiness Reality Check',
+        items: [
+          'What "ready" actually means',
+          'Identifying documentation gaps',
+          'Capacity alignment',
+          'When NOT to pursue funding'
+        ]
+      }
+    ]
+  },
+  {
+    date: 'Thursday, March 5, 2026',
+    time: '5:30–7:30 PM',
+    duration: '2 Hours',
+    format: 'Virtual – Google Meet',
+    location: 'Google Meet',
+    sessionTitle: 'Session 2: Financial Systems & Funding Mechanics',
+    topics: [
+      {
+        section: 'Financial Management & Budget Development',
+        items: [
+          'Basic financial systems for entrepreneurs',
+          'Budget building fundamentals',
+          'Cash flow awareness',
+          'Indirect cost concepts (simplified)',
+          'Common financial red flags'
+        ]
+      },
+      {
+        section: 'Grants, Proposals & RFP Fundamentals',
+        items: [
+          'How to find funding opportunities',
+          'Reading guidelines correctly',
+          'RFP structure overview',
+          'Deliverables vs. measurable outcomes',
+          'Avoiding common application mistakes'
+        ]
+      }
+    ]
+  },
+  {
+    date: 'Saturday, March 7, 2026',
+    time: '9:00 AM–12:00 PM',
+    duration: '3 Hours',
+    format: 'In Person',
+    location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
+    sessionTitle: 'Session 3: Application Strategy & Integration',
+    topics: [
+      {
+        section: 'Grant Writing Fundamentals (Applied)',
+        items: [
+          'Narrative components',
+          'Writing strong problem statements',
+          'Goals & measurable outcomes',
+          'Logic model basics (practical)',
+          'Alignment language'
+        ]
+      },
+      {
+        section: 'RFPs & Contract Proposals in Practice',
+        items: [
+          'Competitive positioning',
+          'Pricing considerations',
+          'Capability statements',
+          'Past performance documentation',
+          'Evaluating bid feasibility'
+        ]
+      },
+      {
+        section: 'Funding Strategy & Sustainability',
+        items: [
+          'Diversified funding portfolios',
+          'Contracts vs. grants in growth strategy',
+          'Relationship building',
+          'Understanding the grant lifecycle'
+        ]
+      },
+      {
+        section: 'Consultation Preparation Lab',
+        items: [
+          'What to bring to your 1:1',
+          'Document checklist',
+          'How to maximize advisory time',
+          'Booking instructions'
+        ]
+      }
+    ]
+  }
+];
+
 export default function IncubateHerSchedule() {
   const [editingSession, setEditingSession] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
