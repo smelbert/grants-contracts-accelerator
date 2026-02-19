@@ -37,17 +37,21 @@ export default function LearningContentManagement() {
 
   const saveMutation = useMutation({
     mutationFn: async (courseData) => {
-      if (editingContent) {
+      if (editingContent?.id) {
         return await base44.entities.LearningContent.update(editingContent.id, courseData);
       } else {
         return await base44.entities.LearningContent.create(courseData);
       }
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries(['learning-content-admin']);
+      const wasEditing = !!editingContent?.id;
       setBuilderMode(false);
       setEditingContent(null);
-      toast.success(editingContent ? 'Course updated successfully' : 'Course created successfully');
+      toast.success(wasEditing ? 'Course updated successfully' : 'Course created successfully');
+    },
+    onError: (error) => {
+      toast.error(`Failed to save course: ${error.message}`);
     }
   });
 
