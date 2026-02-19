@@ -357,7 +357,6 @@ export default function LearningPage() {
                 <AIContentRecommendations
                   user={user}
                   organization={organization}
-                  userProgress={userProgress}
                   allContent={browseContent}
                 />
                 <AILearningRecommendations
