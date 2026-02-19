@@ -15,10 +15,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { 
   Lock, Unlock, Calendar, Users, Save, X, Filter, CheckCircle2, 
   XCircle, AlertCircle, FileText, Settings, Download, Gift, Award,
-  Search
+  Search, Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export default function IncubateHerProgramControl() {
   const queryClient = useQueryClient();
@@ -43,12 +54,40 @@ export default function IncubateHerProgramControl() {
     internal_notes: ''
   });
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
 
-  const { data: cohort } = useQuery({
+  // Role check
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-[#143A50] mx-auto mb-4" />
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6">
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="py-12 text-center">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Admin Access Required</h3>
+            <p className="text-slate-600">This page is only accessible to program administrators.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const { data: cohort, isLoading: cohortLoading } = useQuery({
     queryKey: ['admin-cohort'],
     queryFn: async () => {
       const cohorts = await base44.entities.ProgramCohort.filter({
@@ -58,25 +97,27 @@ export default function IncubateHerProgramControl() {
     }
   });
 
-  const { data: enrollments = [] } = useQuery({
+  const { data: enrollments = [], isLoading: enrollmentsLoading } = useQuery({
     queryKey: ['incubateher-enrollments'],
     queryFn: () => base44.entities.ProgramEnrollment.filter({ role: 'participant' })
   });
 
-  const { data: userAccessLevels = [] } = useQuery({
+  const { data: userAccessLevels = [], isLoading: accessLoading } = useQuery({
     queryKey: ['user-access-levels'],
     queryFn: () => base44.entities.UserAccessLevel.filter({ entry_point: 'incubateher_program' })
   });
 
-  const { data: sessions = [] } = useQuery({
+  const { data: sessions = [], isLoading: sessionsLoading } = useQuery({
     queryKey: ['program-sessions'],
     queryFn: () => base44.entities.ProgramSession.list('-session_date')
   });
 
-  const { data: allAttendance = [] } = useQuery({
+  const { data: allAttendance = [], isLoading: attendanceLoading } = useQuery({
     queryKey: ['session-attendance'],
     queryFn: () => base44.entities.SessionAttendance.list()
   });
+
+  const isLoading = cohortLoading || enrollmentsLoading || accessLoading || sessionsLoading || attendanceLoading;
 
   // Access Control Mutations
   const updateAccessMutation = useMutation({
@@ -265,6 +306,110 @@ export default function IncubateHerProgramControl() {
   const totalEnrolled = enrollments.length;
   const eligibleCount = enrollments.filter(e => e.giveaway_eligible).length;
 
+  const handleExportAttendance = async () => {
+    try {
+      const csvData = [
+        ['Participant', 'Email', ...sessions.map(s => new Date(s.session_date).toLocaleDateString()), 'Attendance Rate'],
+        ...enrollments.map(e => [
+          e.participant_name,
+          e.participant_email,
+          ...sessions.map(s => isAttended(e.id, s.id) ? '✓' : '✗'),
+          `${calculateAttendanceRate(e.id)}%`
+        ])
+      ];
+      
+      const csv = csvData.map(row => row.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `incubateher-attendance-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      toast.success('Attendance report downloaded');
+    } catch (error) {
+      toast.error('Failed to export attendance');
+    }
+  };
+
+  const handleExportAssessments = async () => {
+    try {
+      const csvData = [
+        ['Participant', 'Email', 'Pre-Assessment', 'Post-Assessment', 'Consultation', 'Documents'],
+        ...enrollments.map(e => [
+          e.participant_name,
+          e.participant_email,
+          e.pre_assessment_completed ? 'Complete' : 'Pending',
+          e.post_assessment_completed ? 'Complete' : 'Pending',
+          e.consultation_completed ? 'Complete' : 'Pending',
+          e.documents_uploaded ? 'Uploaded' : 'Missing'
+        ])
+      ];
+      
+      const csv = csvData.map(row => row.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `incubateher-assessments-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      toast.success('Assessment report downloaded');
+    } catch (error) {
+      toast.error('Failed to export assessments');
+    }
+  };
+
+  const handleExportMetrics = async () => {
+    try {
+      const avgAttendance = Math.round(
+        enrollments.reduce((sum, e) => sum + calculateAttendanceRate(e.id), 0) / (enrollments.length || 1)
+      );
+      
+      const csvData = [
+        ['Metric', 'Value'],
+        ['Total Enrolled', totalEnrolled],
+        ['Completed', completedCount],
+        ['Completion Rate', `${totalEnrolled > 0 ? Math.round((completedCount / totalEnrolled) * 100) : 0}%`],
+        ['Average Attendance', `${avgAttendance}%`],
+        ['Pre-Assessments Complete', enrollments.filter(e => e.pre_assessment_completed).length],
+        ['Post-Assessments Complete', enrollments.filter(e => e.post_assessment_completed).length],
+        ['Consultations Complete', enrollments.filter(e => e.consultation_completed).length],
+        ['Documents Uploaded', enrollments.filter(e => e.documents_uploaded).length],
+        ['Giveaway Eligible', eligibleCount]
+      ];
+      
+      const csv = csvData.map(row => row.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `incubateher-metrics-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      toast.success('Metrics report downloaded');
+    } catch (error) {
+      toast.error('Failed to export metrics');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-[#143A50] mx-auto mb-4" />
+          <p className="text-slate-600">Loading program data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -360,16 +505,35 @@ export default function IncubateHerProgramControl() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {restrictedFeatures.map(feature => (
-                      <Button
-                        key={feature.page}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => bulkUnlockMutation.mutate({ feature: feature.page, unlockDate: bulkUnlockDate })}
-                        disabled={!bulkUnlockDate}
-                      >
-                        <Unlock className="w-4 h-4 mr-2" />
-                        Unlock {feature.label}
-                      </Button>
+                      <AlertDialog key={feature.page}>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={!bulkUnlockDate || bulkUnlockMutation.isPending}
+                          >
+                            <Unlock className="w-4 h-4 mr-2" />
+                            Unlock {feature.label}
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Confirm Bulk Unlock</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This will unlock "{feature.label}" for all {enrollments.length} participants on {format(new Date(bulkUnlockDate), 'PPP p')}. This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => bulkUnlockMutation.mutate({ feature: feature.page, unlockDate: bulkUnlockDate })}
+                              className="bg-[#143A50]"
+                            >
+                              Confirm Unlock
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     ))}
                   </div>
                 </div>
@@ -383,7 +547,15 @@ export default function IncubateHerProgramControl() {
                 Participants ({enrollments.length})
               </h2>
 
-              {enrollments.map(enrollment => {
+              {enrollments.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600">No participants enrolled yet</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                enrollments.map(enrollment => {
                 const userAccess = userAccessLevels.find(a => a.user_email === enrollment.participant_email);
                 const featureUnlocks = userAccess?.feature_unlocks || {};
                 const isEditing = editingUser === enrollment.participant_email;
@@ -449,8 +621,8 @@ export default function IncubateHerProgramControl() {
                       )}
                     </CardContent>
                   </Card>
-                );
-              })}
+                })
+              )}
             </div>
           </TabsContent>
 
@@ -696,16 +868,30 @@ export default function IncubateHerProgramControl() {
                                   />
                                 </div>
                                 <Button
-                                  onClick={() => submitConsultationRecapMutation.mutate({
-                                    enrollment_id: enrollment.id,
-                                    participant_email: enrollment.participant_email,
-                                    consultant_email: user?.email,
-                                    consultation_date: new Date().toISOString(),
-                                    ...consultationRecap
-                                  })}
+                                  onClick={() => {
+                                    if (!consultationRecap.strengths || !consultationRecap.gaps || !consultationRecap.readiness_level || !consultationRecap.next_steps) {
+                                      toast.error('Please fill in all required fields');
+                                      return;
+                                    }
+                                    submitConsultationRecapMutation.mutate({
+                                      enrollment_id: enrollment.id,
+                                      participant_email: enrollment.participant_email,
+                                      consultant_email: user?.email,
+                                      consultation_date: new Date().toISOString(),
+                                      ...consultationRecap
+                                    });
+                                  }}
                                   className="w-full bg-[#143A50]"
+                                  disabled={submitConsultationRecapMutation.isPending}
                                 >
-                                  Save Consultation Recap
+                                  {submitConsultationRecapMutation.isPending ? (
+                                    <>
+                                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                      Saving...
+                                    </>
+                                  ) : (
+                                    'Save Consultation Recap'
+                                  )}
                                 </Button>
                               </div>
                             </DialogContent>
@@ -792,14 +978,35 @@ export default function IncubateHerProgramControl() {
                 </div>
 
                 {eligibleCount > 0 && !enrollments.some(e => e.giveaway_winner) && (
-                  <Button
-                    onClick={() => drawWinnerMutation.mutate()}
-                    size="lg"
-                    className="w-full bg-[#E5C089] hover:bg-[#d4af78] text-[#143A50]"
-                  >
-                    <Gift className="w-5 h-5 mr-2" />
-                    Draw Random Winner
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        size="lg"
+                        className="w-full bg-[#E5C089] hover:bg-[#d4af78] text-[#143A50]"
+                        disabled={drawWinnerMutation.isPending}
+                      >
+                        <Gift className="w-5 h-5 mr-2" />
+                        {drawWinnerMutation.isPending ? 'Drawing...' : 'Draw Random Winner'}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Winner Selection</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will randomly select one winner from {eligibleCount} eligible participants. This action is permanent and cannot be undone. Are you sure you want to proceed?
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => drawWinnerMutation.mutate()}
+                          className="bg-[#E5C089] hover:bg-[#d4af78] text-[#143A50]"
+                        >
+                          Draw Winner
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 )}
               </CardContent>
             </Card>
@@ -815,9 +1022,9 @@ export default function IncubateHerProgramControl() {
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">Attendance Report</h4>
                   <p className="text-sm text-slate-600 mb-3">
-                    Export attendance records for all sessions
+                    Export attendance records for all sessions (CSV format)
                   </p>
-                  <Button variant="outline">
+                  <Button variant="outline" onClick={handleExportAttendance} disabled={enrollments.length === 0}>
                     <Download className="w-4 h-4 mr-2" />
                     Export Attendance
                   </Button>
@@ -826,9 +1033,9 @@ export default function IncubateHerProgramControl() {
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">Assessment Summary</h4>
                   <p className="text-sm text-slate-600 mb-3">
-                    Aggregate pre/post assessment scores and deltas
+                    Aggregate pre/post assessment scores and completion status (CSV format)
                   </p>
-                  <Button variant="outline">
+                  <Button variant="outline" onClick={handleExportAssessments} disabled={enrollments.length === 0}>
                     <Download className="w-4 h-4 mr-2" />
                     Export Assessments
                   </Button>
@@ -837,9 +1044,9 @@ export default function IncubateHerProgramControl() {
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">Completion Metrics</h4>
                   <p className="text-sm text-slate-600 mb-3">
-                    Completion rates, consultation counts, document submission rates
+                    Completion rates, consultation counts, document submission rates (CSV format)
                   </p>
-                  <Button variant="outline">
+                  <Button variant="outline" onClick={handleExportMetrics} disabled={enrollments.length === 0}>
                     <Download className="w-4 h-4 mr-2" />
                     Export Metrics
                   </Button>
