@@ -1,0 +1,414 @@
+import React, { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { FileText, Users, Calendar, Download, Eye, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import moment from 'moment';
+
+export default function AssessmentSurveyAdmin() {
+  const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Fetch all assessment types
+  const { data: grantWritingAssessments = [] } = useQuery({
+    queryKey: ['all-grant-assessments'],
+    queryFn: () => base44.entities.GrantWritingAssessment.list('-assessment_date')
+  });
+
+  const { data: eventSurveys = [] } = useQuery({
+    queryKey: ['all-event-surveys'],
+    queryFn: () => base44.entities.EventSurveyResponse.list('-submitted_date')
+  });
+
+  const { data: competencyAssessments = [] } = useQuery({
+    queryKey: ['all-competency-assessments'],
+    queryFn: () => base44.entities.CompetencyAssessment.list('-created_date')
+  });
+
+  const { data: coachIntakes = [] } = useQuery({
+    queryKey: ['all-coach-intakes'],
+    queryFn: () => base44.entities.CoachIntakeAssessment.list('-created_date')
+  });
+
+  const { data: readinessAssessments = [] } = useQuery({
+    queryKey: ['all-readiness-assessments'],
+    queryFn: () => base44.entities.FundingReadinessAssessment.list('-created_date')
+  });
+
+  const updateGrantAssessmentMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.GrantWritingAssessment.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['all-grant-assessments']);
+      toast.success('Assessment updated');
+      setSelectedAssessment(null);
+      setEditMode(false);
+    }
+  });
+
+  const deleteGrantAssessmentMutation = useMutation({
+    mutationFn: (id) => base44.entities.GrantWritingAssessment.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['all-grant-assessments']);
+      toast.success('Assessment deleted');
+      setSelectedAssessment(null);
+    }
+  });
+
+  const handleExportCSV = (data, filename) => {
+    if (data.length === 0) {
+      toast.error('No data to export');
+      return;
+    }
+
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => headers.map(header => JSON.stringify(row[header] || '')).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  };
+
+  const preAssessments = grantWritingAssessments.filter(a => a.assessment_type === 'pre');
+  const postAssessments = grantWritingAssessments.filter(a => a.assessment_type === 'post');
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Assessment & Survey Management</h1>
+            <p className="text-slate-600">View, edit, and manage all assessments and surveys</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Training Assessments</p>
+                  <p className="text-2xl font-bold text-slate-900">{grantWritingAssessments.length}</p>
+                </div>
+                <FileText className="w-8 h-8 text-blue-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Event Surveys</p>
+                  <p className="text-2xl font-bold text-slate-900">{eventSurveys.length}</p>
+                </div>
+                <Calendar className="w-8 h-8 text-purple-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Competency Assessments</p>
+                  <p className="text-2xl font-bold text-slate-900">{competencyAssessments.length}</p>
+                </div>
+                <Users className="w-8 h-8 text-green-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Readiness Assessments</p>
+                  <p className="text-2xl font-bold text-slate-900">{readinessAssessments.length}</p>
+                </div>
+                <FileText className="w-8 h-8 text-amber-500" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs defaultValue="training">
+          <TabsList>
+            <TabsTrigger value="training">Training Pre/Post</TabsTrigger>
+            <TabsTrigger value="events">Event Surveys</TabsTrigger>
+            <TabsTrigger value="competency">Competency</TabsTrigger>
+            <TabsTrigger value="readiness">Readiness</TabsTrigger>
+            <TabsTrigger value="coach">Coach Intakes</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="training" className="mt-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Training Pre/Post Assessments</CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleExportCSV(grantWritingAssessments.map(a => ({
+                      email: a.user_email,
+                      name: a.user_name,
+                      type: a.assessment_type,
+                      date: a.assessment_date,
+                      completed: a.completed
+                    })), 'training-assessments.csv')}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Export CSV
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <h3 className="font-semibold mb-3">Pre-Assessments ({preAssessments.length})</h3>
+                    <div className="space-y-2">
+                      {preAssessments.slice(0, 10).map((assessment) => (
+                        <div key={assessment.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium text-slate-900">{assessment.user_name}</p>
+                              <p className="text-sm text-slate-600">{assessment.user_email}</p>
+                              <p className="text-xs text-slate-500">{moment(assessment.assessment_date).format('MMM D, YYYY')}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(assessment)}>
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => {
+                                setSelectedAssessment(assessment);
+                                setEditMode(true);
+                              }}>
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold mb-3">Post-Assessments ({postAssessments.length})</h3>
+                    <div className="space-y-2">
+                      {postAssessments.slice(0, 10).map((assessment) => (
+                        <div key={assessment.id} className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium text-slate-900">{assessment.user_name}</p>
+                              <p className="text-sm text-slate-600">{assessment.user_email}</p>
+                              <p className="text-xs text-slate-500">{moment(assessment.assessment_date).format('MMM D, YYYY')}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(assessment)}>
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => {
+                                setSelectedAssessment(assessment);
+                                setEditMode(true);
+                              }}>
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="events" className="mt-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Event Survey Responses</CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleExportCSV(eventSurveys.map(s => ({
+                      email: s.user_email,
+                      name: s.user_name,
+                      event_id: s.event_id,
+                      rating: s.overall_rating,
+                      date: s.submitted_date
+                    })), 'event-surveys.csv')}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Export CSV
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {eventSurveys.map((survey) => (
+                  <div key={survey.id} className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-slate-900">{survey.user_name}</p>
+                        <p className="text-sm text-slate-600">{survey.user_email}</p>
+                        <p className="text-xs text-slate-500">{moment(survey.submitted_date).format('MMM D, YYYY')}</p>
+                        <Badge className="mt-2">Rating: {survey.overall_rating}/5</Badge>
+                      </div>
+                      <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(survey)}>
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="competency" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Consultant Competency Assessments</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {competencyAssessments.map((assessment) => (
+                  <div key={assessment.id} className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-slate-900">{assessment.assessment_title}</p>
+                        <p className="text-sm text-slate-600">{assessment.consultant_email}</p>
+                        <Badge className="mt-2">{assessment.status}</Badge>
+                      </div>
+                      <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(assessment)}>
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="readiness" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Funding Readiness Assessments</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {readinessAssessments.map((assessment) => (
+                  <div key={assessment.id} className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-slate-900">{assessment.user_email}</p>
+                        <p className="text-sm text-slate-600">Score: {assessment.overall_score}%</p>
+                      </div>
+                      <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(assessment)}>
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="coach" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Coach Intake Assessments</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {coachIntakes.map((intake) => (
+                  <div key={intake.id} className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-slate-900">{intake.coach_email}</p>
+                        <p className="text-sm text-slate-600">{moment(intake.created_date).format('MMM D, YYYY')}</p>
+                      </div>
+                      <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(intake)}>
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        {selectedAssessment && (
+          <Dialog open onOpenChange={() => {
+            setSelectedAssessment(null);
+            setEditMode(false);
+          }}>
+            <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editMode ? 'Edit Assessment' : 'Assessment Details'}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <pre className="text-xs bg-slate-50 p-4 rounded-lg overflow-x-auto">
+                  {JSON.stringify(selectedAssessment, null, 2)}
+                </pre>
+                {editMode && selectedAssessment.assessment_type && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Notes/Comments</Label>
+                      <Textarea
+                        defaultValue={selectedAssessment.reviewer_notes || ''}
+                        rows={4}
+                        id="notes"
+                      />
+                    </div>
+                    <div className="flex justify-between">
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          if (confirm('Are you sure you want to delete this assessment?')) {
+                            deleteGrantAssessmentMutation.mutate(selectedAssessment.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </Button>
+                      <div className="flex gap-3">
+                        <Button variant="outline" onClick={() => setEditMode(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={() => {
+                          const notes = document.getElementById('notes').value;
+                          updateGrantAssessmentMutation.mutate({
+                            id: selectedAssessment.id,
+                            data: { reviewer_notes: notes }
+                          });
+                        }}>
+                          Save Changes
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -212,6 +212,7 @@ const getAdminPortalNav = () => [
     groupName: 'Analytics & Reporting',
     items: [
       { name: 'Program Analytics', page: 'ProgramAnalytics', icon: TrendingUp },
+      { name: 'All Assessments & Surveys', page: 'AssessmentSurveyAdmin', icon: FileText },
     ]
   },
   {

@@ -198,6 +198,7 @@ import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import TrainingPreAssessment from './pages/TrainingPreAssessment';
 import TrainingPostAssessment from './pages/TrainingPostAssessment';
+import AssessmentSurveyAdmin from './pages/AssessmentSurveyAdmin';
 import __Layout from './Layout.jsx';
 
 
@@ -353,6 +354,7 @@ export const PAGES = {
     "WorkflowsAutomation": WorkflowsAutomation,
     "TrainingPreAssessment": TrainingPreAssessment,
     "TrainingPostAssessment": TrainingPostAssessment,
+    "AssessmentSurveyAdmin": AssessmentSurveyAdmin,
 }
 
 export const pagesConfig = {
