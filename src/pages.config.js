@@ -79,6 +79,7 @@ import Community from './pages/Community';
 import ConsultantOnboarding from './pages/ConsultantOnboarding';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
+import DocumentTemplateEditor from './pages/DocumentTemplateEditor';
 import Documents from './pages/Documents';
 import DonorStewardshipPlanner from './pages/DonorStewardshipPlanner';
 import DynamicRegistration from './pages/DynamicRegistration';
@@ -109,6 +110,7 @@ import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
 import IncubateHerCourse from './pages/IncubateHerCourse';
+import IncubateHerDocuments from './pages/IncubateHerDocuments';
 import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
 import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
 import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
@@ -119,6 +121,7 @@ import IncubateHerParticipantWorkbooks from './pages/IncubateHerParticipantWorkb
 import IncubateHerParticipants from './pages/IncubateHerParticipants';
 import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
+import IncubateHerProgramControl from './pages/IncubateHerProgramControl';
 import IncubateHerPublic from './pages/IncubateHerPublic';
 import IncubateHerRegistration from './pages/IncubateHerRegistration';
 import IncubateHerReport from './pages/IncubateHerReport';
@@ -157,12 +160,12 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
-import Projects from './pages/Projects';
 import ProgramCalendar from './pages/ProgramCalendar';
 import ProgramManagement from './pages/ProgramManagement';
 import ProgramMessaging from './pages/ProgramMessaging';
 import ProgramModuleManager from './pages/ProgramModuleManager';
 import ProjectDetail from './pages/ProjectDetail';
+import Projects from './pages/Projects';
 import PromotionGateConfig from './pages/PromotionGateConfig';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
 import ProposalWorkflows from './pages/ProposalWorkflows';
@@ -199,9 +202,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerDocuments from './pages/IncubateHerDocuments';
-import DocumentTemplateEditor from './pages/DocumentTemplateEditor';
-import IncubateHerProgramControl from './pages/IncubateHerProgramControl';
 import __Layout from './Layout.jsx';
 
 
@@ -238,6 +238,7 @@ export const PAGES = {
     "ConsultantOnboarding": ConsultantOnboarding,
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
+    "DocumentTemplateEditor": DocumentTemplateEditor,
     "Documents": Documents,
     "DonorStewardshipPlanner": DonorStewardshipPlanner,
     "DynamicRegistration": DynamicRegistration,
@@ -268,6 +269,7 @@ export const PAGES = {
     "IncubateHerCompletion": IncubateHerCompletion,
     "IncubateHerConsultations": IncubateHerConsultations,
     "IncubateHerCourse": IncubateHerCourse,
+    "IncubateHerDocuments": IncubateHerDocuments,
     "IncubateHerEmailTemplates": IncubateHerEmailTemplates,
     "IncubateHerEvaluation": IncubateHerEvaluation,
     "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
@@ -278,6 +280,7 @@ export const PAGES = {
     "IncubateHerParticipants": IncubateHerParticipants,
     "IncubateHerPostAssessment": IncubateHerPostAssessment,
     "IncubateHerPreAssessment": IncubateHerPreAssessment,
+    "IncubateHerProgramControl": IncubateHerProgramControl,
     "IncubateHerPublic": IncubateHerPublic,
     "IncubateHerRegistration": IncubateHerRegistration,
     "IncubateHerReport": IncubateHerReport,
@@ -316,12 +319,12 @@ export const PAGES = {
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
-    "Projects": Projects,
     "ProgramCalendar": ProgramCalendar,
     "ProgramManagement": ProgramManagement,
     "ProgramMessaging": ProgramMessaging,
     "ProgramModuleManager": ProgramModuleManager,
     "ProjectDetail": ProjectDetail,
+    "Projects": Projects,
     "PromotionGateConfig": PromotionGateConfig,
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
     "ProposalWorkflows": ProposalWorkflows,
@@ -358,9 +361,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerDocuments": IncubateHerDocuments,
-    "DocumentTemplateEditor": DocumentTemplateEditor,
-    "IncubateHerProgramControl": IncubateHerProgramControl,
 }
 
 export const pagesConfig = {
