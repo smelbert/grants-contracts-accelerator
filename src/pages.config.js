@@ -98,6 +98,7 @@ import GrantSubmission from './pages/GrantSubmission';
 import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
 import GrantWritingPreAssessment from './pages/GrantWritingPreAssessment';
 import Home from './pages/Home';
+import IncubateHerAccessControl from './pages/IncubateHerAccessControl';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
 import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
 import IncubateHerAgenda from './pages/IncubateHerAgenda';
@@ -156,8 +157,8 @@ import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
 import ProgramCalendar from './pages/ProgramCalendar';
-import ProgramManagement from './pages/ProgramManagement';
 import ProgramMessaging from './pages/ProgramMessaging';
+import ProgramManagement from './pages/ProgramManagement';
 import ProgramModuleManager from './pages/ProgramModuleManager';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
@@ -195,7 +196,8 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerAccessControl from './pages/IncubateHerAccessControl';
+import TrainingPreAssessment from './pages/TrainingPreAssessment';
+import TrainingPostAssessment from './pages/TrainingPostAssessment';
 import __Layout from './Layout.jsx';
 
 
@@ -251,6 +253,7 @@ export const PAGES = {
     "GrantWritingPostAssessment": GrantWritingPostAssessment,
     "GrantWritingPreAssessment": GrantWritingPreAssessment,
     "Home": Home,
+    "IncubateHerAccessControl": IncubateHerAccessControl,
     "IncubateHerAdmin": IncubateHerAdmin,
     "IncubateHerAdminConsole": IncubateHerAdminConsole,
     "IncubateHerAgenda": IncubateHerAgenda,
@@ -309,8 +312,8 @@ export const PAGES = {
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
     "ProgramCalendar": ProgramCalendar,
-    "ProgramManagement": ProgramManagement,
     "ProgramMessaging": ProgramMessaging,
+    "ProgramManagement": ProgramManagement,
     "ProgramModuleManager": ProgramModuleManager,
     "ProjectDetail": ProjectDetail,
     "Projects": Projects,
@@ -348,7 +351,8 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerAccessControl": IncubateHerAccessControl,
+    "TrainingPreAssessment": TrainingPreAssessment,
+    "TrainingPostAssessment": TrainingPostAssessment,
 }
 
 export const pagesConfig = {
