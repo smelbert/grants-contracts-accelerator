@@ -1,8 +1,11 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, FileText, CheckCircle2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const DOCUMENT_TEMPLATES = {
   day1: [
@@ -151,9 +154,18 @@ export default function DocumentTemplates({ day }) {
   const templates = DOCUMENT_TEMPLATES[day] || [];
   const gatherDocs = DOCUMENTS_TO_GATHER[day];
 
+  const { data: customTemplates = [] } = useQuery({
+    queryKey: ['document-templates'],
+    queryFn: () => base44.entities.DocumentTemplate.filter({ day })
+  });
+
   const handleDownload = (templateId) => {
-    // Placeholder for download functionality
-    console.log(`Downloading template: ${templateId}`);
+    const customTemplate = customTemplates.find(t => t.template_id === templateId);
+    if (customTemplate?.file_url) {
+      window.open(customTemplate.file_url, '_blank');
+    } else {
+      toast.error('Template file not yet uploaded');
+    }
   };
 
   return (

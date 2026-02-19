@@ -200,6 +200,7 @@ import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import IncubateHerDocuments from './pages/IncubateHerDocuments';
+import DocumentTemplateEditor from './pages/DocumentTemplateEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -357,6 +358,7 @@ export const PAGES = {
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
     "IncubateHerDocuments": IncubateHerDocuments,
+    "DocumentTemplateEditor": DocumentTemplateEditor,
 }
 
 export const pagesConfig = {
