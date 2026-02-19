@@ -211,6 +211,81 @@ export default function IncubateHerSchedule() {
           <p className="text-slate-600">View sessions, watch recordings, and track attendance</p>
         </div>
 
+        {/* Program Schedule Overview */}
+        <Card className="mb-8 border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/5 to-[#E5C089]/5">
+          <CardHeader>
+            <CardTitle className="text-2xl text-[#143A50] flex items-center gap-2">
+              📅 PROGRAM SCHEDULE OVERVIEW
+            </CardTitle>
+            <p className="text-slate-600 mt-2">
+              The IncubateHer Funding Readiness Series is delivered across three structured sessions combining virtual instruction and in-person application.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {PROGRAM_SCHEDULE.map((session, idx) => (
+              <div key={idx} className="bg-white p-6 rounded-lg border border-slate-200">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-[#143A50]">{session.date}</h3>
+                    <p className="text-lg text-slate-700 mt-1">{session.time}</p>
+                    <div className="flex items-center gap-4 mt-2 text-sm">
+                      <Badge className="bg-[#E5C089] text-[#143A50]">
+                        {session.duration}
+                      </Badge>
+                      <Badge variant="outline" className="border-[#AC1A5B] text-[#AC1A5B]">
+                        {session.format}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-slate-600 mb-4">
+                  <strong>Location:</strong> {session.location}
+                </p>
+
+                <h4 className="font-semibold text-[#AC1A5B] mb-3 text-lg">
+                  {session.sessionTitle}
+                </h4>
+
+                <div className="space-y-4">
+                  {session.topics.map((topic, topicIdx) => (
+                    <div key={topicIdx} className="pl-4 border-l-2 border-[#E5C089]">
+                      <h5 className="font-semibold text-slate-900 mb-2">{topic.section}</h5>
+                      <ul className="space-y-1">
+                        {topic.items.map((item, itemIdx) => (
+                          <li key={itemIdx} className="text-sm text-slate-600 flex items-start gap-2">
+                            <span className="text-[#E5C089] mt-1">•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Summary */}
+            <div className="bg-[#143A50] text-white p-6 rounded-lg">
+              <h4 className="text-lg font-bold mb-3">⏱ Program Summary</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-semibold text-[#E5C089] mb-1">Instructional Total: 7 Hours</p>
+                  <ul className="space-y-1 ml-4">
+                    <li>• Monday: 2 Hours</li>
+                    <li>• Thursday: 2 Hours</li>
+                    <li>• Saturday: 3 Hours</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#E5C089] mb-1">Individual Consultations</p>
+                  <p>45–60 Minutes (first 20 eligible participants)</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="schedule">
           <TabsList>
             <TabsTrigger value="schedule">Schedule</TabsTrigger>
