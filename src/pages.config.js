@@ -56,6 +56,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssessmentAnalytics from './pages/AssessmentAnalytics';
 import AssessmentManagement from './pages/AssessmentManagement';
+import AssessmentSurveyAdmin from './pages/AssessmentSurveyAdmin';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import AuditLogs from './pages/AuditLogs';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
@@ -156,12 +157,12 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
+import Projects from './pages/Projects';
 import ProgramCalendar from './pages/ProgramCalendar';
-import ProgramMessaging from './pages/ProgramMessaging';
 import ProgramManagement from './pages/ProgramManagement';
+import ProgramMessaging from './pages/ProgramMessaging';
 import ProgramModuleManager from './pages/ProgramModuleManager';
 import ProjectDetail from './pages/ProjectDetail';
-import Projects from './pages/Projects';
 import PromotionGateConfig from './pages/PromotionGateConfig';
 import ProposalWorkflowDetail from './pages/ProposalWorkflowDetail';
 import ProposalWorkflows from './pages/ProposalWorkflows';
@@ -190,15 +191,15 @@ import Templates from './pages/Templates';
 import TestimonialManagement from './pages/TestimonialManagement';
 import TrainingFramework from './pages/TrainingFramework';
 import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
+import TrainingPostAssessment from './pages/TrainingPostAssessment';
+import TrainingPreAssessment from './pages/TrainingPreAssessment';
 import UserProfile from './pages/UserProfile';
 import VerifyCertificate from './pages/VerifyCertificate';
 import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import TrainingPreAssessment from './pages/TrainingPreAssessment';
-import TrainingPostAssessment from './pages/TrainingPostAssessment';
-import AssessmentSurveyAdmin from './pages/AssessmentSurveyAdmin';
+import IncubateHerDocuments from './pages/IncubateHerDocuments';
 import __Layout from './Layout.jsx';
 
 
@@ -212,6 +213,7 @@ export const PAGES = {
     "ApplicationTracker": ApplicationTracker,
     "AssessmentAnalytics": AssessmentAnalytics,
     "AssessmentManagement": AssessmentManagement,
+    "AssessmentSurveyAdmin": AssessmentSurveyAdmin,
     "AssignedOrganizations": AssignedOrganizations,
     "AuditLogs": AuditLogs,
     "BoilerplateBuilder": BoilerplateBuilder,
@@ -312,12 +314,12 @@ export const PAGES = {
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
+    "Projects": Projects,
     "ProgramCalendar": ProgramCalendar,
-    "ProgramMessaging": ProgramMessaging,
     "ProgramManagement": ProgramManagement,
+    "ProgramMessaging": ProgramMessaging,
     "ProgramModuleManager": ProgramModuleManager,
     "ProjectDetail": ProjectDetail,
-    "Projects": Projects,
     "PromotionGateConfig": PromotionGateConfig,
     "ProposalWorkflowDetail": ProposalWorkflowDetail,
     "ProposalWorkflows": ProposalWorkflows,
@@ -346,15 +348,15 @@ export const PAGES = {
     "TestimonialManagement": TestimonialManagement,
     "TrainingFramework": TrainingFramework,
     "TrainingFrameworkEditor": TrainingFrameworkEditor,
+    "TrainingPostAssessment": TrainingPostAssessment,
+    "TrainingPreAssessment": TrainingPreAssessment,
     "UserProfile": UserProfile,
     "VerifyCertificate": VerifyCertificate,
     "VideoFeedback": VideoFeedback,
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "TrainingPreAssessment": TrainingPreAssessment,
-    "TrainingPostAssessment": TrainingPostAssessment,
-    "AssessmentSurveyAdmin": AssessmentSurveyAdmin,
+    "IncubateHerDocuments": IncubateHerDocuments,
 }
 
 export const pagesConfig = {
