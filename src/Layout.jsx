@@ -190,6 +190,7 @@ const getAdminPortalNav = () => [
     items: [
       { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
       { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
+      { name: 'Access Control', page: 'IncubateHerAccessControl', icon: Shield },
       { name: 'Participant Workbooks', page: 'IncubateHerParticipantWorkbooks', icon: BookOpen },
       { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: CheckCircle2 },
       { name: 'Facilitator Console', page: 'IncubateHerFacilitatorConsole', icon: Users },
