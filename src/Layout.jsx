@@ -57,17 +57,16 @@ const getUserPortalNav = () => [
     groupName: 'Workspace',
     items: [
       { name: 'Funding Readiness', page: 'FundingReadinessAssessment', icon: CheckCircle2 },
-      { name: 'AI Document Review', page: 'AIDocumentReview', icon: Sparkles },
-      { name: 'Projects', page: 'Projects', icon: FileText },
-      { name: 'Documents', page: 'Documents', icon: FileText },
-
-      { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
+      { name: 'AI Document Review', page: 'AIDocumentReview', icon: Sparkles, hideForIncubateHer: true },
+      { name: 'Projects', page: 'Projects', icon: FileText, hideForIncubateHer: true },
+      { name: 'Documents', page: 'Documents', icon: FileText, hideForIncubateHer: true },
+      { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp, hideForIncubateHer: true },
     ]
   },
   {
     groupName: 'Premium Services',
     items: [
-      { name: 'Boutique Services', page: 'BoutiqueServices', icon: Sparkles },
+      { name: 'Boutique Services', page: 'BoutiqueServices', icon: Sparkles, hideForIncubateHer: true },
     ]
   },
   {
@@ -94,10 +93,10 @@ const getUserPortalNav = () => [
   {
     groupName: 'Community',
     items: [
-      { name: 'Community Spaces', page: 'Community', icon: Users },
-      { name: 'Events', page: 'Events', icon: Calendar },
+      { name: 'Community Spaces', page: 'Community', icon: Users, hideForIncubateHer: true },
+      { name: 'Events', page: 'Events', icon: Calendar, hideForIncubateHer: true },
       { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
-      { name: 'My Mentorship', page: 'MyMentorship', icon: Target },
+      { name: 'My Mentorship', page: 'MyMentorship', icon: Target, hideForIncubateHer: true },
     ]
   },
   {
@@ -247,7 +246,7 @@ const getAdminPortalNav = () => [
   },
 ];
 
-const getNavItems = (portalView, userAccess, userRole) => {
+const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) => {
   // All portals now return grouped arrays
   if (portalView === 'coach') {
     const items = getCoachPortalNav();
@@ -256,6 +255,9 @@ const getNavItems = (portalView, userAccess, userRole) => {
   if (portalView === 'admin') {
     return getAdminPortalNav();
   }
+  
+  // Check if user is an IncubateHer participant with restricted access
+  const isIncubateHerParticipant = incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program';
   
   // Filter user portal items based on access and role
   const userNav = getUserPortalNav();
@@ -269,6 +271,19 @@ const getNavItems = (portalView, userAccess, userRole) => {
       // Filter out admin-only items
       if (item.requiresRole === 'admin' && userRole !== 'admin') {
         return false;
+      }
+      // Hide items for IncubateHer participants
+      if (item.hideForIncubateHer && isIncubateHerParticipant) {
+        // Check if feature has been unlocked
+        const featureUnlocks = userAccess?.feature_unlocks || {};
+        const unlockDate = featureUnlocks[item.page];
+        
+        if (!unlockDate) return false; // Not unlocked yet
+        
+        // Check if unlock date has passed
+        const now = new Date();
+        const unlock = new Date(unlockDate);
+        if (now < unlock) return false; // Not unlocked yet
       }
       return true;
     })
@@ -319,7 +334,7 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
-  const navItems = getNavItems(effectiveRole, userAccess, user?.role);
+  const navItems = getNavItems(effectiveRole, userAccess, user?.role, incubateHerEnrollment);
 
   // Show onboarding flow for all users
   const showOnboardingFlow = user && currentPageName !== 'CoachProfileSetup';
