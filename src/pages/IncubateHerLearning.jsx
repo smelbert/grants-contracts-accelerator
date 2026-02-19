@@ -400,12 +400,6 @@ export default function IncubateHerLearning() {
 
         {/* Day-by-Day Curriculum */}
         {sessionDays.map((day, dayIdx) => {
-          const dayTotal = day.sections?.reduce((total, section) => {
-            const linkedContent = getLinkedContent(section.id);
-            const sectionDuration = linkedContent.reduce((sum, content) => sum + (content.duration_minutes || 0), 0) || section.duration_minutes;
-            return total + sectionDuration;
-          }, 0) || 0;
-          
           return (
           <div key={dayIdx} className="mb-6">
             <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white mb-4">
@@ -438,16 +432,12 @@ export default function IncubateHerLearning() {
                       </a>
                     )}
                   </div>
-                  <Badge className="bg-white text-[#143A50]">
-                    {dayTotal} minutes
-                  </Badge>
                 </div>
               </CardHeader>
             </Card>
 
             {day.sections.map((section, sectionIdx) => {
               const linkedContent = getLinkedContent(section.id);
-              const sectionDuration = linkedContent.reduce((total, content) => total + (content.duration_minutes || 0), 0) || section.duration_minutes;
               
               return (
               <Card key={`${dayIdx}-${sectionIdx}`} className="overflow-hidden ml-4 mb-3">
@@ -469,9 +459,6 @@ export default function IncubateHerLearning() {
                           </Badge>
                           <CardTitle className="text-lg">{section.title}</CardTitle>
                         </div>
-                        <Badge variant="outline" className="mt-1">
-                          {sectionDuration} minutes
-                        </Badge>
                       </div>
                     </div>
                   </div>
@@ -499,16 +486,13 @@ export default function IncubateHerLearning() {
                       {getLinkedContent(section.id).length > 0 ? (
                         <div className="space-y-2">
                           {getLinkedContent(section.id).map(content => (
-                            <div key={content.id} className="flex items-center justify-between p-3 bg-white rounded border border-blue-100">
-                              <div className="flex items-center gap-3 flex-1">
-                                <Badge variant="outline" className="text-xs">
-                                  {content.duration_minutes}min
-                                </Badge>
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium text-slate-900">{content.title}</p>
-                                  <p className="text-xs text-slate-600 mt-1">{content.description}</p>
-                                </div>
-                              </div>
+                           <div key={content.id} className="flex items-center justify-between p-3 bg-white rounded border border-blue-100">
+                             <div className="flex items-center gap-3 flex-1">
+                               <div className="flex-1">
+                                 <p className="text-sm font-medium text-slate-900">{content.title}</p>
+                                 <p className="text-xs text-slate-600 mt-1">{content.description}</p>
+                               </div>
+                             </div>
                               <Link to={createPageUrl('IncubateHerCourse') + '?id=' + content.id + '&from=learning'}>
                                 <Button 
                                   size="sm" 
