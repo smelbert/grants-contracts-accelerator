@@ -161,7 +161,7 @@ Elbert Innovative Solutions Team`
           <p className="text-xl mb-8 max-w-3xl mx-auto" style={{ color: BRAND_COLORS.eisNavy }}>
             An intensive program helping entrepreneurs—especially women of color building nonprofit and for-profit businesses—understand what funders need to see before they say yes.
           </p>
-          <a href={createPageUrl('IncubateHerRegistration')}>
+          <a href="https://form.jotform.com/260497242186058" target="_blank" rel="noopener noreferrer">
             <Button
               size="lg"
               className="text-white text-lg px-8 py-6"
@@ -272,7 +272,7 @@ Elbert Innovative Solutions Team`
             <p className="text-lg mb-6 opacity-90">
               This free program is funded by Columbus Urban League and delivered by Elbert Innovative Solutions
             </p>
-            <a href={createPageUrl('IncubateHerRegistration')}>
+            <a href="https://form.jotform.com/260497242186058" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
                 className="text-lg px-8 py-6"

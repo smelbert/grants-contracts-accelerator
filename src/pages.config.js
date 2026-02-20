@@ -123,7 +123,6 @@ import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
 import IncubateHerProgramControl from './pages/IncubateHerProgramControl';
 import IncubateHerPublic from './pages/IncubateHerPublic';
-import IncubateHerRegistration from './pages/IncubateHerRegistration';
 import IncubateHerReport from './pages/IncubateHerReport';
 import IncubateHerSchedule from './pages/IncubateHerSchedule';
 import IncubateHerVideoLibrary from './pages/IncubateHerVideoLibrary';
@@ -282,7 +281,6 @@ export const PAGES = {
     "IncubateHerPreAssessment": IncubateHerPreAssessment,
     "IncubateHerProgramControl": IncubateHerProgramControl,
     "IncubateHerPublic": IncubateHerPublic,
-    "IncubateHerRegistration": IncubateHerRegistration,
     "IncubateHerReport": IncubateHerReport,
     "IncubateHerSchedule": IncubateHerSchedule,
     "IncubateHerVideoLibrary": IncubateHerVideoLibrary,
