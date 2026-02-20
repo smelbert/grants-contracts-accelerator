@@ -4,14 +4,26 @@ import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, FileText, CheckCircle2, Edit } from 'lucide-react';
+import { AlertCircle, FileText, CheckCircle2, Edit, Upload, Download, Sparkles, Trash2, FolderOpen } from 'lucide-react';
 import DocumentTemplates from '@/components/incubateher/DocumentTemplates';
 
 export default function IncubateHerDocuments() {
   const [selectedDay, setSelectedDay] = useState('day1');
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [aiEnhanceDialogOpen, setAiEnhanceDialogOpen] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  const [uploadFile, setUploadFile] = useState(null);
+  const [uploadCategory, setUploadCategory] = useState('');
+  const [uploadName, setUploadName] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -36,6 +48,116 @@ export default function IncubateHerDocuments() {
       program_cohort_id: 'incubateher'
     }, 'order')
   });
+
+  const { data: userDocuments = [], refetch: refetchDocs } = useQuery({
+    queryKey: ['user-documents', user?.email],
+    queryFn: async () => {
+      const docs = await base44.entities.DocumentSubmission.filter({
+        user_email: user.email,
+        program_id: 'incubateher'
+      }, '-created_date');
+      return docs;
+    },
+    enabled: !!user?.email
+  });
+
+  const handleFileUpload = async (e) => {
+    e.preventDefault();
+    if (!uploadFile || !uploadCategory || !uploadName) return;
+
+    setIsUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: uploadFile });
+      
+      await base44.entities.DocumentSubmission.create({
+        user_email: user.email,
+        program_id: 'incubateher',
+        document_name: uploadName,
+        document_category: uploadCategory,
+        file_url: file_url,
+        file_type: uploadFile.type,
+        status: 'submitted'
+      });
+
+      await refetchDocs();
+      setUploadDialogOpen(false);
+      setUploadFile(null);
+      setUploadName('');
+      setUploadCategory('');
+    } catch (error) {
+      alert('Upload failed: ' + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleAIEnhance = async () => {
+    if (!selectedDoc) return;
+
+    setIsEnhancing(true);
+    try {
+      const response = await fetch(selectedDoc.file_url);
+      const text = await response.text();
+
+      const enhanced = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are an expert grant writer and funding readiness advisor. Review and enhance the following document for funding readiness. Improve clarity, professionalism, and alignment with funder expectations while maintaining the original intent.
+
+Document Category: ${selectedDoc.document_category}
+Document Name: ${selectedDoc.document_name}
+
+Content:
+${text}
+
+Provide an enhanced version that is more compelling, clear, and professional.`,
+        response_json_schema: null
+      });
+
+      const blob = new Blob([enhanced], { type: 'text/plain' });
+      const file = new File([blob], selectedDoc.document_name + '_enhanced.txt', { type: 'text/plain' });
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+
+      await base44.entities.DocumentSubmission.create({
+        user_email: user.email,
+        program_id: 'incubateher',
+        document_name: selectedDoc.document_name + ' (AI Enhanced)',
+        document_category: selectedDoc.document_category,
+        file_url: file_url,
+        file_type: 'text/plain',
+        status: 'submitted',
+        notes: 'AI-enhanced version of original document'
+      });
+
+      await refetchDocs();
+      setAiEnhanceDialogOpen(false);
+      setSelectedDoc(null);
+    } catch (error) {
+      alert('Enhancement failed: ' + error.message);
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
+
+  const handleDelete = async (docId) => {
+    if (!confirm('Are you sure you want to delete this document?')) return;
+    
+    try {
+      await base44.entities.DocumentSubmission.delete(docId);
+      await refetchDocs();
+    } catch (error) {
+      alert('Delete failed: ' + error.message);
+    }
+  };
+
+  const categories = [
+    'Organizational Overview',
+    'Budget & Financial',
+    'Program Description',
+    'Impact & Evaluation',
+    'Case for Support',
+    'Logic Model',
+    'Capability Statement',
+    'Other'
+  ];
 
   if (!enrollment) {
     return (
@@ -92,7 +214,7 @@ export default function IncubateHerDocuments() {
         </Card>
 
         <Tabs value={selectedDay} onValueChange={setSelectedDay}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="day1" className="flex flex-col gap-1 py-3">
               <span className="text-lg">🟢 Day 1</span>
               <span className="text-xs">Structure & Eligibility</span>
@@ -104,6 +226,10 @@ export default function IncubateHerDocuments() {
             <TabsTrigger value="day3" className="flex flex-col gap-1 py-3">
               <span className="text-lg">🟣 Day 3</span>
               <span className="text-xs">Strategy & Positioning</span>
+            </TabsTrigger>
+            <TabsTrigger value="mydocs" className="flex flex-col gap-1 py-3">
+              <span className="text-lg">📁 My Documents</span>
+              <span className="text-xs">Upload & Manage</span>
             </TabsTrigger>
           </TabsList>
 
@@ -181,6 +307,104 @@ export default function IncubateHerDocuments() {
 
             <DocumentTemplates day="day3" />
           </TabsContent>
+
+          <TabsContent value="mydocs" className="mt-8">
+            <Card className="mb-6">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-2xl mb-2 flex items-center gap-2">
+                      <FolderOpen className="w-6 h-6 text-[#143A50]" />
+                      My Documents
+                    </CardTitle>
+                    <p className="text-slate-600">
+                      Upload, enhance with AI, and manage your funding readiness documents
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => setUploadDialogOpen(true)}
+                    className="bg-[#143A50] hover:bg-[#1E4F58] text-white"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Document
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {userDocuments.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FolderOpen className="w-16 h-16 mx-auto text-slate-300 mb-4" />
+                    <p className="text-slate-500 mb-4">No documents uploaded yet</p>
+                    <Button
+                      onClick={() => setUploadDialogOpen(true)}
+                      variant="outline"
+                    >
+                      Upload Your First Document
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {categories.map(category => {
+                      const docsInCategory = userDocuments.filter(d => d.document_category === category);
+                      if (docsInCategory.length === 0) return null;
+                      
+                      return (
+                        <div key={category} className="space-y-2">
+                          <h3 className="font-semibold text-[#143A50] flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[#E5C089]"></span>
+                            {category}
+                          </h3>
+                          <div className="space-y-2">
+                            {docsInCategory.map(doc => (
+                              <div
+                                key={doc.id}
+                                className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                              >
+                                <div className="flex items-center gap-3 flex-1">
+                                  <FileText className="w-5 h-5 text-[#143A50]" />
+                                  <div>
+                                    <p className="font-medium text-slate-900">{doc.document_name}</p>
+                                    <p className="text-xs text-slate-500">
+                                      Uploaded {new Date(doc.created_date).toLocaleDateString()}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                      setSelectedDoc(doc);
+                                      setAiEnhanceDialogOpen(true);
+                                    }}
+                                  >
+                                    <Sparkles className="w-4 h-4 mr-1" />
+                                    AI Enhance
+                                  </Button>
+                                  <a href={doc.file_url} download target="_blank" rel="noopener noreferrer">
+                                    <Button size="sm" variant="outline">
+                                      <Download className="w-4 h-4" />
+                                    </Button>
+                                  </a>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleDelete(doc.id)}
+                                  >
+                                    <Trash2 className="w-4 h-4 text-red-500" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
 
         {/* Final Outcome Card */}
@@ -233,6 +457,107 @@ export default function IncubateHerDocuments() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Upload Dialog */}
+      <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Upload Document</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleFileUpload} className="space-y-4">
+            <div>
+              <Label>Document Name *</Label>
+              <Input
+                value={uploadName}
+                onChange={(e) => setUploadName(e.target.value)}
+                placeholder="e.g., 2024 Budget Draft"
+                required
+              />
+            </div>
+            <div>
+              <Label>Category *</Label>
+              <Select value={uploadCategory} onValueChange={setUploadCategory} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(cat => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>File *</Label>
+              <Input
+                type="file"
+                onChange={(e) => setUploadFile(e.target.files[0])}
+                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+                required
+              />
+              <p className="text-xs text-slate-500 mt-1">
+                Accepted formats: PDF, Word, Excel, Text
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setUploadDialogOpen(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isUploading}
+                className="flex-1 bg-[#143A50] hover:bg-[#1E4F58] text-white"
+              >
+                {isUploading ? 'Uploading...' : 'Upload'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* AI Enhance Dialog */}
+      <Dialog open={aiEnhanceDialogOpen} onOpenChange={setAiEnhanceDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[#E5C089]" />
+              AI Document Enhancement
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-600">
+              Our AI will review and enhance your document to improve clarity, professionalism, and alignment with funder expectations.
+            </p>
+            {selectedDoc && (
+              <div className="p-3 bg-slate-50 rounded-lg">
+                <p className="text-sm font-medium text-slate-900">{selectedDoc.document_name}</p>
+                <p className="text-xs text-slate-500">{selectedDoc.document_category}</p>
+              </div>
+            )}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setAiEnhanceDialogOpen(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAIEnhance}
+                disabled={isEnhancing}
+                className="flex-1 bg-[#E5C089] hover:bg-[#B5A698] text-[#143A50]"
+              >
+                {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
