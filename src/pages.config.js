@@ -201,6 +201,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import __Layout from './Layout.jsx';
 
 
@@ -359,6 +360,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "OpportunityScannerAdmin": OpportunityScannerAdmin,
 }
 
 export const pagesConfig = {
