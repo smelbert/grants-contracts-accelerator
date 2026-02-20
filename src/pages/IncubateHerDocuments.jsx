@@ -64,19 +64,9 @@ export default function IncubateHerDocuments() {
       {/* Header */}
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white py-12">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <FileText className="w-10 h-10 text-[#E5C089]" />
-              <h1 className="text-4xl font-bold">Document Templates & Modules</h1>
-            </div>
-            {user?.role === 'admin' && (
-              <Link to={createPageUrl('DocumentTemplateEditor')}>
-                <Button className="bg-white text-[#143A50] hover:bg-[#E5C089]">
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Templates
-                </Button>
-              </Link>
-            )}
+          <div className="flex items-center gap-3 mb-4">
+            <FileText className="w-10 h-10 text-[#E5C089]" />
+            <h1 className="text-4xl font-bold">Document Templates & Modules</h1>
           </div>
           <p className="text-lg text-[#E5C089]/80 max-w-3xl">
             Three-day structure to build complete funding readiness with templates you can use immediately
