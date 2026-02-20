@@ -314,7 +314,7 @@ export default function ProgramCalendar() {
                       </div>
                       
                       <div className="space-y-1 text-sm text-slate-600">
-                       {event.date && (
+                       {event.date && event.date instanceof Date && !isNaN(event.date) && (
                          <div className="flex items-center gap-2">
                            <CalendarIcon className="w-4 h-4" />
                            <span className="font-medium">
