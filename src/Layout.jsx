@@ -57,10 +57,10 @@ const getUserPortalNav = () => [
     groupName: 'Workspace',
     items: [
       { name: 'Funding Readiness', page: 'FundingReadinessAssessment', icon: CheckCircle2 },
-      { name: 'AI Document Review', page: 'AIDocumentReview', icon: Sparkles, hideForIncubateHer: true },
-      { name: 'Projects', page: 'Projects', icon: FileText, hideForIncubateHer: true },
-      { name: 'Documents', page: 'Documents', icon: FileText, hideForIncubateHer: true },
-      { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp, hideForIncubateHer: true },
+      { name: 'AI Document Review', page: 'AIDocumentReview', icon: Sparkles },
+      { name: 'Projects', page: 'Projects', icon: FileText },
+      { name: 'Documents', page: 'Documents', icon: FileText },
+      { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
     ]
   },
   {
@@ -72,9 +72,9 @@ const getUserPortalNav = () => [
   {
     groupName: 'Learning',
     items: [
-      { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning', requiresAccess: 'learning_hub' },
-      { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText },
-      { name: 'Program Calendar', page: 'ProgramCalendar', icon: Calendar },
+      { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning', requiresAccess: 'learning_hub', hideForIncubateHer: true },
+      { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText, hideForIncubateHer: true },
+      { name: 'Program Calendar', page: 'ProgramCalendar', icon: Calendar, hideForIncubateHer: true },
     ]
   },
   {
@@ -94,7 +94,7 @@ const getUserPortalNav = () => [
   {
     groupName: 'Community',
     items: [
-      { name: 'Community Spaces', page: 'Community', icon: Users, hideForIncubateHer: true },
+      { name: 'Community Spaces', page: 'Community', icon: Users },
       { name: 'Events', page: 'Events', icon: Calendar, hideForIncubateHer: true },
       { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
       { name: 'My Mentorship', page: 'MyMentorship', icon: Target, hideForIncubateHer: true },
