@@ -203,6 +203,7 @@ import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
+import OpportunityMatchingProfile from './pages/OpportunityMatchingProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -363,6 +364,7 @@ export const PAGES = {
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
     "OpportunitiesDirectory": OpportunitiesDirectory,
+    "OpportunityMatchingProfile": OpportunityMatchingProfile,
 }
 
 export const pagesConfig = {
