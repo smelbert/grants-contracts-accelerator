@@ -24,6 +24,11 @@ export default function DiscussionsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   const { data: userAccess } = useQuery({
     queryKey: ['userAccess', user?.email],
     queryFn: async () => {
@@ -75,11 +80,6 @@ export default function DiscussionsPage() {
   const { data: discussions = [] } = useQuery({
     queryKey: ['discussions'],
     queryFn: () => base44.entities.Discussion.list('-created_date'),
-  });
-
-  const { data: user } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
   });
 
   const likeDiscussionMutation = useMutation({
