@@ -149,6 +149,7 @@ import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
 import Opportunities from './pages/Opportunities';
 import OpportunityReports from './pages/OpportunityReports';
+import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
 import PaymentCancelled from './pages/PaymentCancelled';
@@ -201,7 +202,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
+import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
 import __Layout from './Layout.jsx';
 
 
@@ -308,6 +309,7 @@ export const PAGES = {
     "Notifications": Notifications,
     "Opportunities": Opportunities,
     "OpportunityReports": OpportunityReports,
+    "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
     "PaymentCancelled": PaymentCancelled,
@@ -360,7 +362,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "OpportunityScannerAdmin": OpportunityScannerAdmin,
+    "OpportunitiesDirectory": OpportunitiesDirectory,
 }
 
 export const pagesConfig = {
