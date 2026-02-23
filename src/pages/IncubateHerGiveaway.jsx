@@ -43,19 +43,65 @@ export default function IncubateHerGiveaway() {
       <div className="min-h-screen bg-slate-50">
         <CoBrandedHeader 
           title="Program Giveaway"
-          subtitle="Opportunity for program completers"
+          subtitle="Exclusive opportunity for program completers"
         />
 
-        <div className="max-w-4xl mx-auto p-6">
-          <Card className="text-center py-12">
+        <div className="max-w-4xl mx-auto p-6 space-y-6">
+          <Card className="text-center py-12 border-2 border-dashed border-[#E5C089] bg-gradient-to-br from-[#E5C089]/10 to-white">
             <CardContent>
-              <Gift className="w-16 h-16 mx-auto text-slate-300 mb-4" />
-              <h3 className="text-xl font-semibold text-slate-700 mb-2">
-                Giveaway Not Yet Revealed
+              <div className="relative inline-block mb-6">
+                <Gift className="w-20 h-20 text-[#AC1A5B] animate-pulse" />
+                <div className="absolute -top-2 -right-2">
+                  <span className="flex h-6 w-6">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#AC1A5B] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-6 w-6 bg-[#AC1A5B]"></span>
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-2xl font-bold text-[#143A50] mb-3">
+                Something Special is Coming...
               </h3>
-              <p className="text-slate-600">
-                Details about the program giveaway will be shared by your facilitator during the final session.
+              <p className="text-slate-700 text-lg mb-4">
+                An exciting giveaway opportunity awaits! 
               </p>
+              <p className="text-slate-600 max-w-lg mx-auto">
+                Details will be revealed during your final program session. Focus on completing all program requirements to ensure your eligibility!
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="w-5 h-5" />
+                Get Ready to Compete!
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                <p className="text-slate-700">
+                  To be eligible for the giveaway, make sure you complete:
+                </p>
+                <div className="grid gap-3">
+                  {[
+                    'Attend all program sessions',
+                    'Complete pre & post assessments',
+                    'Finish your one-on-one consultation',
+                    'Submit all required documents',
+                    'Complete the workbook exercises'
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                      <CheckCircle2 className="w-5 h-5 text-[#143A50] flex-shrink-0" />
+                      <span className="text-slate-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 p-4 bg-[#E5C089]/20 border border-[#E5C089] rounded-lg">
+                  <p className="text-sm text-[#143A50] font-semibold text-center">
+                    🌟 Stay engaged and complete the program to maximize your chances! 🌟
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -97,71 +143,110 @@ export default function IncubateHerGiveaway() {
 
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         {isWinner && (
-          <Card className="border-l-4 border-l-yellow-500 bg-gradient-to-r from-yellow-50 to-white">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-yellow-900">
-                <Trophy className="w-6 h-6" />
-                Congratulations! You're the Winner!
+          <Card className="border-4 border-yellow-400 bg-gradient-to-br from-yellow-50 via-white to-yellow-50 shadow-xl">
+            <CardHeader className="text-center pb-4">
+              <div className="relative inline-block mx-auto mb-4">
+                <Trophy className="w-24 h-24 text-yellow-500 drop-shadow-lg" />
+                <div className="absolute inset-0 animate-ping">
+                  <Trophy className="w-24 h-24 text-yellow-400 opacity-50" />
+                </div>
+              </div>
+              <CardTitle className="text-3xl font-bold text-yellow-900">
+                🎉 CONGRATULATIONS! 🎉
               </CardTitle>
+              <p className="text-xl text-yellow-800 font-semibold mt-2">
+                You're the Grand Prize Winner!
+              </p>
             </CardHeader>
-            <CardContent>
-              <p className="text-yellow-800 mb-4">
-                You have been selected as the winner of the {cohort?.giveaway_prize_description || 'program giveaway'}!
-              </p>
-              <p className="text-yellow-800">
-                An EIS team member will contact you shortly with next steps.
-              </p>
+            <CardContent className="space-y-4">
+              <div className="bg-white border-2 border-yellow-300 rounded-lg p-6">
+                <h4 className="font-bold text-yellow-900 text-lg mb-3">🏆 Your Prize:</h4>
+                <p className="text-yellow-800 text-lg mb-4 leading-relaxed">
+                  {cohort?.giveaway_prize_description || 'Comprehensive grant writing support for a non-federal funding opportunity, including personalized funder research, narrative development, budget preparation, and submission guidance.'}
+                </p>
+              </div>
+              
+              <div className="bg-[#143A50] text-white rounded-lg p-4 text-center">
+                <p className="font-semibold text-lg mb-2">📧 Next Steps</p>
+                <p>
+                  An EIS team member will contact you within 48 hours to schedule your first strategy session and begin your grant writing journey!
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 text-yellow-700 text-sm mt-4">
+                <span className="animate-pulse">🌟</span>
+                <span>You earned this through your dedication and hard work!</span>
+                <span className="animate-pulse">🌟</span>
+              </div>
             </CardContent>
           </Card>
         )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Gift className="w-5 h-5 text-[#143A50]" />
-              About the Giveaway
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
+            <CardTitle className="flex items-center gap-2 text-2xl">
+              <Gift className="w-6 h-6" />
+              About the Grand Prize
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="pt-6 space-y-6">
             <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-2">Prize Description</h4>
-                <p className="text-slate-700">
+              <div className="bg-gradient-to-br from-[#143A50]/5 to-[#E5C089]/10 border-2 border-[#E5C089] rounded-xl p-6">
+                <h4 className="font-bold text-[#143A50] text-xl mb-3 flex items-center gap-2">
+                  <Trophy className="w-6 h-6 text-[#AC1A5B]" />
+                  The Prize
+                </h4>
+                <p className="text-slate-800 text-lg leading-relaxed">
                   {cohort?.giveaway_prize_description || 'One lucky program completer will receive comprehensive grant writing support for a non-federal funding opportunity. This includes personalized assistance in identifying suitable funders, developing a compelling narrative, and completing the full application process.'}
                 </p>
               </div>
 
-              <div className="bg-[#E5C089]/10 border border-[#E5C089]/30 rounded-lg p-4">
-                <h4 className="font-semibold text-[#143A50] mb-2">What's Included:</h4>
-                <ul className="space-y-1 text-slate-700 text-sm">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
-                    <span>Personalized funder research and opportunity identification</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
-                    <span>One-on-one strategy session with EIS grant writing expert</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
-                    <span>Full grant narrative development and review</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
-                    <span>Budget preparation and justification support</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
-                    <span>Final application review and submission guidance</span>
-                  </li>
-                </ul>
+              <div className="bg-white border-2 border-[#E5C089] rounded-lg p-6">
+                <h4 className="font-bold text-[#143A50] mb-4 text-lg">✨ What's Included:</h4>
+                <div className="grid gap-3">
+                  <div className="flex items-start gap-3 p-3 bg-[#E5C089]/10 rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-slate-900">Personalized Funder Research</p>
+                      <p className="text-sm text-slate-600">Identify the perfect funding opportunities for your organization</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-[#E5C089]/10 rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-slate-900">Expert Strategy Session</p>
+                      <p className="text-sm text-slate-600">One-on-one consultation with EIS grant writing specialist</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-[#E5C089]/10 rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-slate-900">Full Narrative Development</p>
+                      <p className="text-sm text-slate-600">Compelling grant narrative crafted with your unique story</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-[#E5C089]/10 rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-slate-900">Budget Preparation & Justification</p>
+                      <p className="text-sm text-slate-600">Professional budget with detailed justifications</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-[#E5C089]/10 rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-slate-900">Submission Guidance</p>
+                      <p className="text-sm text-slate-600">Final review and step-by-step submission support</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             
-            <Alert>
-              <AlertCircle className="w-4 h-4" />
-              <AlertDescription>
-                <strong>Important:</strong> Federal grants are excluded from this opportunity. This giveaway is for non-federal funding opportunities only (state/local government, foundations, corporate giving, etc.).
+            <Alert className="border-[#AC1A5B] bg-[#AC1A5B]/5">
+              <AlertCircle className="w-5 h-5 text-[#AC1A5B]" />
+              <AlertDescription className="text-slate-800">
+                <strong className="text-[#AC1A5B]">Important Note:</strong> This prize is for non-federal funding opportunities only (state/local government, foundations, corporate giving, etc.). Federal grants are not included.
               </AlertDescription>
             </Alert>
           </CardContent>
