@@ -81,6 +81,7 @@ const getUserPortalNav = () => [
     groupName: 'IncubateHer Program',
     items: [
       { name: 'Program Overview', page: 'IncubateHerOverview', icon: Target },
+      { name: 'My Profile', page: 'IncubateHerProfileIntake', icon: User },
       { name: 'Learning Hub', page: 'IncubateHerLearning', icon: BookOpen },
       { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
       { name: 'Schedule & Videos', page: 'IncubateHerSchedule', icon: Calendar },

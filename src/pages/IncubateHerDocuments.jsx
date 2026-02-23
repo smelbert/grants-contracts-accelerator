@@ -69,6 +69,33 @@ export default function IncubateHerDocuments() {
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: uploadFile });
       
+      // Try to extract data from uploaded file if it's a document
+      let extractedData = null;
+      if (uploadFile.type.includes('pdf') || uploadFile.type.includes('document') || uploadFile.type.includes('word')) {
+        try {
+          const extraction = await base44.integrations.Core.ExtractDataFromUploadedFile({
+            file_url,
+            json_schema: {
+              type: 'object',
+              properties: {
+                organization_name: { type: 'string' },
+                mission_statement: { type: 'string' },
+                programs_offered: { type: 'string' },
+                budget: { type: 'string' },
+                contact_info: { type: 'string' }
+              }
+            }
+          });
+          
+          if (extraction.status === 'success' && extraction.output) {
+            extractedData = extraction.output;
+            toast.success('Document uploaded and data extracted!');
+          }
+        } catch (err) {
+          // Extraction failed, just upload the file
+        }
+      }
+      
       await base44.entities.DocumentSubmission.create({
         user_email: user.email,
         program_id: 'incubateher',
@@ -76,7 +103,8 @@ export default function IncubateHerDocuments() {
         document_category: uploadCategory,
         file_url: file_url,
         file_type: uploadFile.type,
-        status: 'submitted'
+        status: 'submitted',
+        extracted_data: extractedData
       });
 
       await refetchDocs();
@@ -84,8 +112,12 @@ export default function IncubateHerDocuments() {
       setUploadFile(null);
       setUploadName('');
       setUploadCategory('');
+      
+      if (!extractedData) {
+        toast.success('Document uploaded successfully!');
+      }
     } catch (error) {
-      alert('Upload failed: ' + error.message);
+      toast.error('Upload failed: ' + error.message);
     } finally {
       setIsUploading(false);
     }
