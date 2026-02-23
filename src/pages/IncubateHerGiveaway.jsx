@@ -252,54 +252,72 @@ export default function IncubateHerGiveaway() {
           </CardContent>
         </Card>
 
-        <Card className={isEligible ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-slate-300'}>
-          <CardHeader>
+        <Card className={isEligible ? 'border-4 border-green-500 shadow-lg' : 'border-2 border-slate-300'}>
+          <CardHeader className={isEligible ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-slate-50'}>
             <div className="flex items-center justify-between">
-              <CardTitle>Your Eligibility Status</CardTitle>
+              <CardTitle className={isEligible ? 'text-white text-xl' : 'text-slate-900 text-xl'}>
+                Your Eligibility Status
+              </CardTitle>
               {isEligible ? (
-                <Badge className="bg-green-600">
-                  <CheckCircle2 className="w-4 h-4 mr-1" />
-                  Eligible
+                <Badge className="bg-white text-green-600 text-base px-4 py-2">
+                  <CheckCircle2 className="w-5 h-5 mr-2" />
+                  ✨ Eligible for Drawing!
                 </Badge>
               ) : (
-                <Badge variant="outline" className="text-slate-600">
-                  <XCircle className="w-4 h-4 mr-1" />
-                  Not Yet Eligible
+                <Badge variant="outline" className="text-slate-600 text-base px-4 py-2">
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  In Progress
                 </Badge>
               )}
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="space-y-3">
               {eligibilityRequirements.map((req, idx) => (
-                <div key={idx} className="flex items-start gap-3">
+                <div 
+                  key={idx} 
+                  className={`flex items-start gap-3 p-3 rounded-lg ${
+                    req.met ? 'bg-green-50 border border-green-200' : 'bg-slate-50 border border-slate-200'
+                  }`}
+                >
                   {req.met ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-6 h-6 text-green-600 mt-0.5 flex-shrink-0" />
                   ) : (
-                    <XCircle className="w-5 h-5 text-slate-300 mt-0.5 flex-shrink-0" />
+                    <div className="w-6 h-6 rounded-full border-2 border-slate-300 mt-0.5 flex-shrink-0" />
                   )}
-                  <span className={req.met ? 'text-slate-700' : 'text-slate-500'}>
+                  <span className={req.met ? 'text-slate-800 font-medium' : 'text-slate-600'}>
                     {req.requirement}
                   </span>
                 </div>
               ))}
             </div>
 
-            {!isEligible && (
-              <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+            {isEligible ? (
+              <div className="mt-6 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-center">
+                <p className="text-lg font-bold mb-2">🎉 You're Entered in the Drawing! 🎉</p>
+                <p className="text-sm opacity-90">
+                  The winner will be announced during the final session. Good luck!
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6 p-4 bg-[#AC1A5B]/10 border-2 border-[#AC1A5B] rounded-lg">
+                <p className="text-[#AC1A5B] font-semibold mb-2 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
+                  Complete the remaining requirements
+                </p>
                 <p className="text-slate-700 text-sm">
-                  Complete the items above to become eligible for the giveaway drawing.
+                  Finish all requirements above to become eligible for the giveaway drawing and increase your chances of winning!
                 </p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Giveaway Rules & Criteria</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
+            <CardTitle className="text-xl">📋 Official Giveaway Rules</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="pt-6 space-y-6">
             <div>
               <h4 className="font-semibold text-slate-900 mb-3">Eligibility Requirements</h4>
               <ul className="space-y-2 text-slate-600">
