@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, FileText, CheckCircle2 } from 'lucide-react';
+import { Download, FileText, CheckCircle2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
+import EditableDocumentTemplate from './EditableDocumentTemplate';
 
 const DOCUMENT_TEMPLATES = {
   day1: [
@@ -153,19 +154,99 @@ const DOCUMENTS_TO_GATHER = {
 export default function DocumentTemplates({ day }) {
   const templates = DOCUMENT_TEMPLATES[day] || [];
   const gatherDocs = DOCUMENTS_TO_GATHER[day];
+  const [editingTemplate, setEditingTemplate] = useState(null);
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: enrollment } = useQuery({
+    queryKey: ['incubateher-enrollment', user?.email],
+    queryFn: async () => {
+      const enrollments = await base44.entities.ProgramEnrollment.filter({
+        participant_email: user.email
+      });
+      return enrollments[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: organizationProfile } = useQuery({
+    queryKey: ['organization-profile', enrollment?.id],
+    queryFn: async () => {
+      if (!enrollment?.id) return null;
+      const profiles = await base44.entities.Organization.filter({
+        enrollment_id: enrollment.id
+      });
+      return profiles[0];
+    },
+    enabled: !!enrollment?.id
+  });
 
   const { data: customTemplates = [] } = useQuery({
     queryKey: ['document-templates'],
     queryFn: () => base44.entities.DocumentTemplate.filter({ day })
   });
 
-  const handleDownload = (templateId) => {
-    const customTemplate = customTemplates.find(t => t.template_id === templateId);
-    if (customTemplate?.file_url) {
-      window.open(customTemplate.file_url, '_blank');
-    } else {
-      toast.error('Template file not yet uploaded');
-    }
+  const handleEdit = (template) => {
+    // Add predefined fields based on template type
+    const templateWithFields = {
+      ...template,
+      fields: getTemplateFields(template.id)
+    };
+    setEditingTemplate(templateWithFields);
+  };
+
+  const getTemplateFields = (templateId) => {
+    const fieldMappings = {
+      'org-overview': [
+        { id: 'organization_name', label: 'Organization Name', type: 'input', required: true, placeholder: 'Enter organization name' },
+        { id: 'mission', label: 'Mission Statement', type: 'textarea', required: true, rows: 3, placeholder: 'Your mission statement', aiPrompt: 'Write a compelling mission statement' },
+        { id: 'target_population', label: 'Target Population', type: 'textarea', required: true, rows: 2, placeholder: 'Who do you serve?' },
+        { id: 'programs', label: 'Services/Programs Offered', type: 'textarea', required: true, rows: 3, placeholder: 'Describe your programs' },
+        { id: 'service_area', label: 'Geographic Area Served', type: 'input', required: true, placeholder: 'e.g., Franklin County, Ohio' },
+        { id: 'years_operating', label: 'Years in Operation', type: 'input', placeholder: 'e.g., Since 2015' },
+        { id: 'executive_director', label: 'Executive Director/CEO', type: 'input', placeholder: 'Name' },
+        { id: 'phone', label: 'Contact Phone', type: 'input', placeholder: '(555) 123-4567' },
+        { id: 'address', label: 'Mailing Address', type: 'textarea', rows: 2, placeholder: 'Full address' }
+      ],
+      'capability-statement': [
+        { id: 'organization_name', label: 'Organization Name', type: 'input', required: true },
+        { id: 'core_competencies', label: 'Core Competencies', type: 'textarea', required: true, rows: 4, aiPrompt: 'List 3-5 core competencies and capabilities' },
+        { id: 'differentiators', label: 'What Sets You Apart', type: 'textarea', required: true, rows: 3, aiPrompt: 'Describe unique differentiators' },
+        { id: 'past_performance', label: 'Past Performance Examples', type: 'textarea', required: true, rows: 4, aiPrompt: 'Describe 2-3 relevant past projects or contracts' },
+        { id: 'certifications', label: 'Certifications & Registrations', type: 'textarea', rows: 2, placeholder: 'e.g., MBE, WBE, SAM.gov UEI' },
+        { id: 'contact_info', label: 'Contact Information', type: 'textarea', rows: 2, placeholder: 'Phone, email, website' }
+      ],
+      'program-description': [
+        { id: 'program_name', label: 'Program Name', type: 'input', required: true },
+        { id: 'problem_addressed', label: 'Problem/Need Addressed', type: 'textarea', required: true, rows: 4, aiPrompt: 'Describe the community problem this program addresses' },
+        { id: 'target_population', label: 'Target Population', type: 'textarea', required: true, rows: 2 },
+        { id: 'activities', label: 'Program Activities', type: 'textarea', required: true, rows: 4, aiPrompt: 'Describe key program activities and how they work' },
+        { id: 'outcomes', label: 'Intended Outcomes', type: 'textarea', required: true, rows: 3, aiPrompt: 'List measurable outcomes this program will achieve' }
+      ],
+      'logic-model': [
+        { id: 'program_name', label: 'Program Name', type: 'input', required: true },
+        { id: 'inputs', label: 'Inputs (Resources)', type: 'textarea', required: true, rows: 3, placeholder: 'Staff, funding, space, equipment' },
+        { id: 'activities', label: 'Activities (What You Do)', type: 'textarea', required: true, rows: 3, placeholder: 'Services provided, actions taken' },
+        { id: 'outputs', label: 'Outputs (Direct Results)', type: 'textarea', required: true, rows: 3, placeholder: 'Number served, sessions held, materials distributed' },
+        { id: 'outcomes', label: 'Outcomes (Changes)', type: 'textarea', required: true, rows: 3, placeholder: 'Knowledge, skills, behaviors changed' },
+        { id: 'impact', label: 'Long-Term Impact', type: 'textarea', required: true, rows: 2, placeholder: 'Community-level change' }
+      ],
+      'sustainability-plan': [
+        { id: 'organization_name', label: 'Organization Name', type: 'input', required: true },
+        { id: 'revenue_mix', label: 'Revenue Diversification Strategy', type: 'textarea', required: true, rows: 4, aiPrompt: 'Describe how you will diversify funding sources over 3 years' },
+        { id: 'renewal_strategy', label: 'Funder Renewal Strategy', type: 'textarea', required: true, rows: 3, aiPrompt: 'How will you maintain relationships with current funders?' },
+        { id: 'partnerships', label: 'Strategic Partnerships', type: 'textarea', required: true, rows: 3, aiPrompt: 'Identify potential partners to strengthen sustainability' },
+        { id: 'cost_containment', label: 'Cost Containment Measures', type: 'textarea', required: true, rows: 3, aiPrompt: 'How will you control costs and operate efficiently?' }
+      ]
+    };
+
+    return fieldMappings[templateId] || [
+      { id: 'organization_name', label: 'Organization Name', type: 'input', required: true },
+      { id: 'content', label: 'Document Content', type: 'textarea', required: true, rows: 10 }
+    ];
   };
 
   return (
@@ -199,11 +280,11 @@ export default function DocumentTemplates({ day }) {
                   </ul>
                 </div>
                 <Button 
-                  onClick={() => handleDownload(template.id)}
+                  onClick={() => handleEdit(template)}
                   className="w-full bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90"
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Template
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit & Download
                 </Button>
               </CardContent>
             </Card>
@@ -275,6 +356,16 @@ export default function DocumentTemplates({ day }) {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Editable Template Dialog */}
+      {editingTemplate && (
+        <EditableDocumentTemplate
+          template={editingTemplate}
+          open={!!editingTemplate}
+          onOpenChange={(open) => !open && setEditingTemplate(null)}
+          organizationProfile={organizationProfile}
+        />
       )}
     </div>
   );
