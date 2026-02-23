@@ -297,11 +297,11 @@ export default function IncubateHerSchedule() {
                   <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="text-2xl mb-2">{sessionData?.sessionTitle || day.date}</CardTitle>
+                        <CardTitle className="text-2xl mb-2">{sessionData?.date || day.date}</CardTitle>
                         <div className="flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
-                            <span>{sessionData?.date || day.date}</span>
+                            <span>{sessionData?.time || day.time}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Video className="w-4 h-4" />
@@ -314,6 +314,13 @@ export default function IncubateHerSchedule() {
 
                   <CardContent className="p-6">
                     <div className="space-y-6">
+                      {/* Session Title - Fuchsia Header */}
+                      <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#A65D40]/10 border-l-4 border-[#AC1A5B] p-4 rounded-lg">
+                        <h2 className="text-xl font-bold text-[#AC1A5B]">
+                          {sessionData?.sessionTitle || 'Session Recording'}
+                        </h2>
+                      </div>
+
                       {/* Session Recording */}
                       <div>
                         <div className="bg-slate-900 rounded-lg overflow-hidden">

@@ -9,45 +9,60 @@ import { CheckCircle2, Download, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 
-export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile }) {
+export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {} }) {
   const [formData, setFormData] = useState({});
   const [generating, setGenerating] = useState(false);
 
-  // Auto-fill from organization profile
+  // Auto-fill from organization profile AND workbook responses
   useEffect(() => {
-    if (organizationProfile && open) {
+    if (open) {
       const prefillData = {};
       
-      // Map organization profile fields to template fields
-      const fieldMappings = {
-        'organization_name': organizationProfile.organization_name,
-        'org_name': organizationProfile.organization_name,
-        'mission': organizationProfile.mission_statement,
-        'mission_statement': organizationProfile.mission_statement,
-        'vision': organizationProfile.vision_statement,
-        'programs': organizationProfile.programs_offered,
-        'target_population': organizationProfile.target_population,
-        'service_area': organizationProfile.geographic_service_area,
-        'ein': organizationProfile.ein,
-        'phone': organizationProfile.phone,
-        'address': organizationProfile.mailing_address,
-        'website': organizationProfile.website,
-        'executive_director': organizationProfile.executive_director,
-        'board_chair': organizationProfile.board_chair,
-        'staff_count': organizationProfile.staff_count,
-        'annual_budget': organizationProfile.annual_budget
-      };
+      // First, map organization profile fields
+      if (organizationProfile) {
+        const profileMappings = {
+          'organization_name': organizationProfile.organization_name,
+          'org_name': organizationProfile.organization_name,
+          'mission': organizationProfile.mission_statement,
+          'mission_statement': organizationProfile.mission_statement,
+          'vision': organizationProfile.vision_statement,
+          'programs': organizationProfile.programs_offered,
+          'target_population': organizationProfile.target_population,
+          'service_area': organizationProfile.geographic_service_area,
+          'ein': organizationProfile.ein,
+          'phone': organizationProfile.phone,
+          'address': organizationProfile.mailing_address,
+          'website': organizationProfile.website,
+          'executive_director': organizationProfile.executive_director,
+          'board_chair': organizationProfile.board_chair,
+          'staff_count': organizationProfile.staff_count,
+          'annual_budget': organizationProfile.annual_budget,
+          'funding_sources': organizationProfile.funding_sources,
+          'years_operating': organizationProfile.founding_year ? `Since ${organizationProfile.founding_year}` : ''
+        };
 
-      // Pre-fill based on template field IDs
-      template.fields?.forEach(field => {
-        if (fieldMappings[field.id] && fieldMappings[field.id]) {
-          prefillData[field.id] = fieldMappings[field.id];
-        }
-      });
+        template.fields?.forEach(field => {
+          if (profileMappings[field.id]) {
+            prefillData[field.id] = profileMappings[field.id];
+          }
+        });
+      }
+
+      // Then, overlay workbook responses (they take priority as they're more specific)
+      if (workbookResponses) {
+        Object.entries(workbookResponses).forEach(([pageId, responses]) => {
+          Object.entries(responses).forEach(([fieldId, value]) => {
+            // Map workbook field IDs to template field IDs
+            if (value && typeof value === 'string' && value.trim()) {
+              prefillData[fieldId] = value;
+            }
+          });
+        });
+      }
 
       setFormData(prefillData);
     }
-  }, [organizationProfile, open, template]);
+  }, [organizationProfile, workbookResponses, open, template]);
 
   const handleChange = (fieldId, value) => {
     setFormData(prev => ({
@@ -141,10 +156,12 @@ Provide a professional, concise response suitable for funding applications (2-3 
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {organizationProfile && (
+          {(organizationProfile || Object.keys(workbookResponses).length > 0) && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
               <CheckCircle2 className="w-4 h-4 inline mr-2" />
-              Fields below have been auto-filled from your organization profile
+              Fields below have been auto-filled from your {organizationProfile && 'profile'}
+              {organizationProfile && Object.keys(workbookResponses).length > 0 && ' and '}
+              {Object.keys(workbookResponses).length > 0 && 'workbook responses'}
             </div>
           )}
 

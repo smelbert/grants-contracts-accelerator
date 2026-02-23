@@ -184,6 +184,22 @@ export default function DocumentTemplates({ day }) {
     enabled: !!enrollment?.id
   });
 
+  const { data: workbookResponses = [] } = useQuery({
+    queryKey: ['workbook-responses', enrollment?.id],
+    queryFn: async () => {
+      if (!enrollment?.id) return [];
+      return await base44.entities.WorkbookResponse.filter({
+        enrollment_id: enrollment.id
+      });
+    },
+    enabled: !!enrollment?.id
+  });
+
+  // Merge all workbook responses into one object
+  const allWorkbookData = workbookResponses.reduce((acc, resp) => {
+    return { ...acc, [resp.page_id]: resp.responses };
+  }, {});
+
   const { data: customTemplates = [] } = useQuery({
     queryKey: ['document-templates'],
     queryFn: () => base44.entities.DocumentTemplate.filter({ day })
@@ -365,6 +381,7 @@ export default function DocumentTemplates({ day }) {
           open={!!editingTemplate}
           onOpenChange={(open) => !open && setEditingTemplate(null)}
           organizationProfile={organizationProfile}
+          workbookResponses={allWorkbookData}
         />
       )}
     </div>
