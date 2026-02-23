@@ -82,6 +82,18 @@ export default function IncubateHerWorkbook() {
     queryFn: () => base44.entities.WorkbookSectionHeader.list(),
   });
 
+  const { data: organizationProfile } = useQuery({
+    queryKey: ['organization-profile', enrollment?.id],
+    queryFn: async () => {
+      if (!enrollment?.id) return null;
+      const profiles = await base44.entities.Organization.filter({
+        enrollment_id: enrollment.id
+      });
+      return profiles[0];
+    },
+    enabled: !!enrollment?.id
+  });
+
   useEffect(() => {
     const unsubscribe = base44.entities.WorkbookPageContent.subscribe(() => {
       queryClient.invalidateQueries({ queryKey: ['workbook-custom-pages'] });
@@ -436,6 +448,7 @@ export default function IncubateHerWorkbook() {
               onResponseChange={handleResponseChange}
               assessmentResults={assessmentResults}
               customContent={customPages.find(p => p.page_id === currentPage.id)}
+              organizationProfile={organizationProfile}
             />
 
             <div className="flex justify-between items-center mt-6">

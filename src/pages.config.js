@@ -148,6 +148,8 @@ import MyMentorship from './pages/MyMentorship';
 import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
 import Opportunities from './pages/Opportunities';
+import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
+import OpportunityMatchingProfile from './pages/OpportunityMatchingProfile';
 import OpportunityReports from './pages/OpportunityReports';
 import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import OrganizationSettings from './pages/OrganizationSettings';
@@ -202,8 +204,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
-import OpportunityMatchingProfile from './pages/OpportunityMatchingProfile';
+import IncubateHerProfileIntake from './pages/IncubateHerProfileIntake';
 import __Layout from './Layout.jsx';
 
 
@@ -309,6 +310,8 @@ export const PAGES = {
     "MyProfile": MyProfile,
     "Notifications": Notifications,
     "Opportunities": Opportunities,
+    "OpportunitiesDirectory": OpportunitiesDirectory,
+    "OpportunityMatchingProfile": OpportunityMatchingProfile,
     "OpportunityReports": OpportunityReports,
     "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "OrganizationSettings": OrganizationSettings,
@@ -363,8 +366,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "OpportunitiesDirectory": OpportunitiesDirectory,
-    "OpportunityMatchingProfile": OpportunityMatchingProfile,
+    "IncubateHerProfileIntake": IncubateHerProfileIntake,
 }
 
 export const pagesConfig = {

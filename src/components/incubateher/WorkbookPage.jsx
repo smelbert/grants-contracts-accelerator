@@ -38,7 +38,7 @@ const PageTypeBadge = ({ type }) => {
   );
 };
 
-export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null }) {
+export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null, organizationProfile = null }) {
   const [activeAIField, setActiveAIField] = useState(null);
   const [activeCollabField, setActiveCollabField] = useState(null);
 
@@ -58,6 +58,48 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
     : page;
   const handleFieldChange = (fieldId, value) => {
     onResponseChange(page.id, fieldId, value);
+  };
+
+  // Auto-fill logic: Check if field can be populated from profile
+  const getPrefilledValue = (fieldId) => {
+    if (!organizationProfile) return '';
+    
+    // Map common field IDs to organization profile fields
+    const fieldMappings = {
+      'organization_name': 'organization_name',
+      'org_name': 'organization_name',
+      'mission': 'mission_statement',
+      'mission_statement': 'mission_statement',
+      'vision': 'vision_statement',
+      'vision_statement': 'vision_statement',
+      'values': 'organizational_values',
+      'programs': 'programs_offered',
+      'programs_offered': 'programs_offered',
+      'target_population': 'target_population',
+      'service_area': 'geographic_service_area',
+      'geographic_area': 'geographic_service_area',
+      'annual_budget': 'annual_budget',
+      'budget': 'annual_budget',
+      'funding_sources': 'funding_sources',
+      'staff_count': 'staff_count',
+      'board_size': 'board_size',
+      'executive_director': 'executive_director',
+      'ed_name': 'executive_director',
+      'board_chair': 'board_chair',
+      'phone': 'phone',
+      'address': 'mailing_address',
+      'mailing_address': 'mailing_address',
+      'website': 'website',
+      'ein': 'ein',
+      'tax_id': 'ein'
+    };
+
+    const profileField = fieldMappings[fieldId];
+    if (profileField && organizationProfile[profileField]) {
+      return organizationProfile[profileField];
+    }
+    
+    return '';
   };
 
   const getVideoEmbedUrl = (url) => {
@@ -290,6 +332,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
 
                   switch (field.type) {
                 case 'textarea':
+                  const prefilledTextValue = !fieldValue && getPrefilledValue(field.id);
                   return (
                     <div key={field.id} className="space-y-3">
                       <div className="bg-white rounded-lg p-3 border border-slate-300">
@@ -298,6 +341,17 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                             {field.label}
                           </Label>
                           <div className="flex gap-2">
+                            {prefilledTextValue && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleFieldChange(field.id, prefilledTextValue)}
+                                className="text-green-600 hover:text-green-700 h-7 px-2"
+                              >
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                Use Profile
+                              </Button>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"
@@ -320,6 +374,11 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                         </div>
                         {field.description && (
                           <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
+                        )}
+                        {prefilledTextValue && !fieldValue && (
+                          <div className="mb-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
+                            💡 We have this info from your profile. Click "Use Profile" to auto-fill.
+                          </div>
                         )}
                         <Textarea
                           value={fieldValue}
@@ -347,13 +406,32 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                   );
 
                 case 'input':
+                  const prefilledInputValue = !fieldValue && getPrefilledValue(field.id);
                   return (
                     <div key={field.id} className="bg-white rounded-lg p-3 border border-slate-300">
-                      <Label className="text-sm mb-1.5 block font-semibold text-[#143A50]">
-                        {field.label}
-                      </Label>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <Label className="text-sm block font-semibold text-[#143A50]">
+                          {field.label}
+                        </Label>
+                        {prefilledInputValue && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleFieldChange(field.id, prefilledInputValue)}
+                            className="text-green-600 hover:text-green-700 h-7 px-2"
+                          >
+                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                            Use Profile
+                          </Button>
+                        )}
+                      </div>
                       {field.description && (
                         <p className="text-sm text-slate-600 mb-3 italic">{field.description}</p>
+                      )}
+                      {prefilledInputValue && !fieldValue && (
+                        <div className="mb-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
+                          💡 Available from profile: {prefilledInputValue.substring(0, 50)}...
+                        </div>
                       )}
                       <Input
                         value={fieldValue}
