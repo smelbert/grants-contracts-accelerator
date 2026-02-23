@@ -195,9 +195,29 @@ export default function DocumentTemplates({ day }) {
     enabled: !!enrollment?.id
   });
 
+  const { data: uploadedDocs = [] } = useQuery({
+    queryKey: ['uploaded-docs', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return await base44.entities.DocumentSubmission.filter({
+        user_email: user.email,
+        program_id: 'incubateher'
+      });
+    },
+    enabled: !!user?.email
+  });
+
   // Merge all workbook responses into one object
   const allWorkbookData = workbookResponses.reduce((acc, resp) => {
     return { ...acc, [resp.page_id]: resp.responses };
+  }, {});
+
+  // Merge extracted data from uploaded documents
+  const extractedDocData = uploadedDocs.reduce((acc, doc) => {
+    if (doc.extracted_data) {
+      return { ...acc, ...doc.extracted_data };
+    }
+    return acc;
   }, {});
 
   const { data: customTemplates = [] } = useQuery({
@@ -382,6 +402,7 @@ export default function DocumentTemplates({ day }) {
           onOpenChange={(open) => !open && setEditingTemplate(null)}
           organizationProfile={organizationProfile}
           workbookResponses={allWorkbookData}
+          uploadedDocsData={extractedDocData}
         />
       )}
     </div>

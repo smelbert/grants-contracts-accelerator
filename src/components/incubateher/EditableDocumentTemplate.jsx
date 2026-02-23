@@ -9,11 +9,11 @@ import { CheckCircle2, Download, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 
-export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {} }) {
+export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {}, uploadedDocsData = {} }) {
   const [formData, setFormData] = useState({});
   const [generating, setGenerating] = useState(false);
 
-  // Auto-fill from organization profile AND workbook responses
+  // Auto-fill from profile, workbook, AND uploaded documents
   useEffect(() => {
     if (open) {
       const prefillData = {};
@@ -38,7 +38,9 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
           'staff_count': organizationProfile.staff_count,
           'annual_budget': organizationProfile.annual_budget,
           'funding_sources': organizationProfile.funding_sources,
-          'years_operating': organizationProfile.founding_year ? `Since ${organizationProfile.founding_year}` : ''
+          'years_operating': organizationProfile.founding_year ? `Since ${organizationProfile.founding_year}` : '',
+          'contact_info': organizationProfile.phone && organizationProfile.website ? 
+            `Phone: ${organizationProfile.phone}\nWebsite: ${organizationProfile.website}` : ''
         };
 
         template.fields?.forEach(field => {
@@ -48,11 +50,19 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
         });
       }
 
-      // Then, overlay workbook responses (they take priority as they're more specific)
+      // Second, overlay data from uploaded documents
+      if (uploadedDocsData) {
+        Object.entries(uploadedDocsData).forEach(([key, value]) => {
+          if (value && typeof value === 'string' && value.trim()) {
+            prefillData[key] = value;
+          }
+        });
+      }
+
+      // Third, overlay workbook responses (highest priority)
       if (workbookResponses) {
         Object.entries(workbookResponses).forEach(([pageId, responses]) => {
           Object.entries(responses).forEach(([fieldId, value]) => {
-            // Map workbook field IDs to template field IDs
             if (value && typeof value === 'string' && value.trim()) {
               prefillData[fieldId] = value;
             }
@@ -62,7 +72,7 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
 
       setFormData(prefillData);
     }
-  }, [organizationProfile, workbookResponses, open, template]);
+  }, [organizationProfile, workbookResponses, uploadedDocsData, open, template]);
 
   const handleChange = (fieldId, value) => {
     setFormData(prev => ({
@@ -156,12 +166,16 @@ Provide a professional, concise response suitable for funding applications (2-3 
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {(organizationProfile || Object.keys(workbookResponses).length > 0) && (
+          {(organizationProfile || Object.keys(workbookResponses).length > 0 || Object.keys(uploadedDocsData).length > 0) && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
               <CheckCircle2 className="w-4 h-4 inline mr-2" />
-              Fields below have been auto-filled from your {organizationProfile && 'profile'}
-              {organizationProfile && Object.keys(workbookResponses).length > 0 && ' and '}
-              {Object.keys(workbookResponses).length > 0 && 'workbook responses'}
+              Fields auto-filled from: {
+                [
+                  organizationProfile && 'profile',
+                  Object.keys(uploadedDocsData).length > 0 && 'uploaded documents',
+                  Object.keys(workbookResponses).length > 0 && 'workbook'
+                ].filter(Boolean).join(', ')
+              }
             </div>
           )}
 
