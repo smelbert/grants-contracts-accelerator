@@ -286,157 +286,100 @@ export default function IncubateHerSchedule() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="schedule">
-          <TabsList>
-            <TabsTrigger value="schedule">Schedule</TabsTrigger>
-            <TabsTrigger value="recordings">Recordings</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="schedule" className="mt-6">
-            <div className="space-y-6">
-              {sessionDays.length === 0 ? (
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                    <p className="text-slate-600">No sessions scheduled yet</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                sessionDays.map((day, dayIndex) => {
-                  const hasVideo = day.video_url;
-                  const isVirtual = day.time?.toLowerCase().includes('virtual');
-                  
-                  return (
-                    <Card key={dayIndex} className="overflow-hidden">
-                      <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <CardTitle className="text-2xl mb-2">{day.date}</CardTitle>
-                            <div className="flex items-center gap-4 text-sm">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
-                                <span>{day.time}</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {isVirtual ? (
-                                  <>
-                                    <Video className="w-4 h-4" />
-                                    <span>Virtual</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <MapPin className="w-4 h-4" />
-                                    <span>In Person</span>
-                                  </>
-                                )}
-                              </div>
-                            </div>
+        {/* Session Recordings Section */}
+        {sessionDays.length > 0 && sessionDays.some(day => day.video_url) && (
+          <div className="space-y-6">
+            {sessionDays.filter(day => day.video_url).map((day, dayIndex) => {
+              const sessionData = PROGRAM_SCHEDULE[dayIndex];
+              
+              return (
+                <Card key={dayIndex} className="overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-2xl mb-2">{sessionData?.sessionTitle || day.date}</CardTitle>
+                        <div className="flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4" />
+                            <span>{sessionData?.date || day.date}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Video className="w-4 h-4" />
+                            <span>Recording Available</span>
                           </div>
                         </div>
-                      </CardHeader>
-
-                      <CardContent className="p-6">
-                        <div className="space-y-6">
-                          {/* Topics Covered */}
-                          <div>
-                            <h3 className="font-semibold text-lg mb-3">Topics Covered</h3>
-                            <div className="space-y-3">
-                              {day.sections?.map((section, idx) => (
-                                <div key={idx} className="border-l-4 border-[#E5C089] pl-4">
-                                  <div className="flex items-start gap-3">
-                                    <Badge variant="outline" className="mt-1">
-                                      {idx + 1}
-                                    </Badge>
-                                    <div className="flex-1">
-                                      <p className="font-medium text-lg">{section.title}</p>
-                                      <p className="text-sm text-slate-500 mb-2">{section.duration_minutes} minutes</p>
-                                      {section.topics && (
-                                        <ul className="space-y-1 mt-2">
-                                          {section.topics.map((topic, topicIdx) => (
-                                            <li key={topicIdx} className="text-sm text-slate-600 flex items-start gap-2">
-                                              <span className="text-[#AC1A5B] mt-1">•</span>
-                                              <span>{topic}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Video Recording */}
-                          {hasVideo && (
-                            <div>
-                              <h3 className="font-semibold text-lg mb-3">Session Recording</h3>
-                              <div className="bg-slate-900 rounded-lg overflow-hidden">
-                                <video
-                                  controls
-                                  className="w-full"
-                                  src={day.video_url}
-                                >
-                                  Your browser does not support video playback.
-                                </video>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Join/Access Info */}
-                          {day.meeting_link && (
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                              <Button
-                                className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
-                                onClick={() => window.open(day.meeting_link, '_blank')}
-                              >
-                                <Video className="w-4 h-4 mr-2" />
-                                Join Virtual Session
-                              </Button>
-                            </div>
-                          )}
-
-                          {day.location && (
-                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                              <div className="flex items-start gap-3">
-                                <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
-                                <div>
-                                  <p className="font-semibold text-amber-900">In-Person Location</p>
-                                  <p className="text-sm text-amber-800 mt-1">{day.location}</p>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="recordings" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sessionDays.filter(day => day.video_url).map((day, index) => (
-                <Card key={index} className="cursor-pointer hover:shadow-lg transition">
-                  <CardContent className="p-4">
-                    <div className="aspect-video bg-slate-900 rounded-lg mb-3 relative overflow-hidden">
-                      <video src={day.video_url} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition">
-                        <Play className="w-12 h-12 text-white" />
                       </div>
                     </div>
-                    <h3 className="font-semibold mb-1">{day.date}</h3>
-                    <p className="text-sm text-slate-600">{day.time}</p>
+                  </CardHeader>
+
+                  <CardContent className="p-6">
+                    <div className="space-y-6">
+                      {/* Session Recording */}
+                      <div>
+                        <div className="bg-slate-900 rounded-lg overflow-hidden">
+                          <video
+                            controls
+                            className="w-full"
+                            src={day.video_url}
+                          >
+                            Your browser does not support video playback.
+                          </video>
+                        </div>
+                      </div>
+
+                      {/* Topics Covered - from original schedule */}
+                      {sessionData?.topics && (
+                        <div>
+                          <h3 className="font-semibold text-[#AC1A5B] text-lg mb-3">Topics Covered</h3>
+                          <div className="space-y-4">
+                            {sessionData.topics.map((topic, topicIdx) => (
+                              <div key={topicIdx} className="pl-4 border-l-2 border-[#E5C089]">
+                                <h5 className="font-semibold text-slate-900 mb-2">{topic.section}</h5>
+                                <ul className="space-y-1">
+                                  {topic.items.map((item, itemIdx) => (
+                                    <li key={itemIdx} className="text-sm text-slate-600 flex items-start gap-2">
+                                      <span className="text-[#E5C089] mt-1">•</span>
+                                      <span>{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Join/Access Info */}
+                      {day.meeting_link && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                          <Button
+                            className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
+                            onClick={() => window.open(day.meeting_link, '_blank')}
+                          >
+                            <Video className="w-4 h-4 mr-2" />
+                            Join Virtual Session
+                          </Button>
+                        </div>
+                      )}
+
+                      {day.location && (
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                          <div className="flex items-start gap-3">
+                            <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
+                            <div>
+                              <p className="font-semibold text-amber-900">In-Person Location</p>
+                              <p className="text-sm text-amber-800 mt-1">{day.location}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-
-        </Tabs>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
