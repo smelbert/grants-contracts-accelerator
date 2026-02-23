@@ -84,11 +84,12 @@ export default function IncubateHerGiveaway() {
                 </p>
                 <div className="grid gap-3">
                   {[
-                    'Attend all program sessions',
-                    'Complete pre & post assessments',
-                    'Finish your one-on-one consultation',
-                    'Submit all required documents',
-                    'Complete the workbook exercises'
+                    'Attend all 3 program sessions (Day 1, Day 2, Day 3)',
+                    'Complete pre-assessment',
+                    'Complete post-assessment',
+                    'Complete program evaluation',
+                    'Complete 50% of workbook exercises',
+                    'Verify all required documents are completed'
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                       <CheckCircle2 className="w-5 h-5 text-[#143A50] flex-shrink-0" />
@@ -331,19 +332,27 @@ export default function IncubateHerGiveaway() {
               <ul className="space-y-2 text-slate-600">
                 <li className="flex items-start gap-2">
                   <span className="text-[#143A50] font-bold mt-1">✓</span>
-                  <span>Complete all three program sessions with at least 80% attendance</span>
+                  <span>Attend all three program sessions (Day 1, Day 2, and Day 3)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#143A50] font-bold mt-1">✓</span>
-                  <span>Successfully complete both pre-assessment and post-assessment</span>
+                  <span>Complete the pre-assessment before the program begins</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#143A50] font-bold mt-1">✓</span>
-                  <span>Participate in your scheduled one-on-one consultation with EIS staff</span>
+                  <span>Complete the post-assessment at the end of the program</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#143A50] font-bold mt-1">✓</span>
-                  <span>Submit all required documents (organizational overview, budget, case for support, etc.)</span>
+                  <span>Complete the program evaluation survey</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#143A50] font-bold mt-1">✓</span>
+                  <span>Complete at least 50% of the workbook exercises</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#143A50] font-bold mt-1">✓</span>
+                  <span>Verify that all required documents have been completed</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#143A50] font-bold mt-1">✓</span>
