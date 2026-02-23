@@ -291,35 +291,40 @@ export default function IncubateHerSchedule() {
           <div className="space-y-6">
             {sessionDays.filter(day => day.video_url).map((day, dayIndex) => {
               const sessionData = PROGRAM_SCHEDULE[dayIndex];
+              const isVirtual = sessionData?.location?.toLowerCase().includes('virtual');
               
               return (
                 <Card key={dayIndex} className="overflow-hidden">
-                  <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl mb-2">{sessionData?.date || day.date}</CardTitle>
-                        <div className="flex items-center gap-4 text-sm">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            <span>{sessionData?.time || day.time}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
+                  {/* Fuchsia Header with Session Info */}
+                  <div className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white p-6">
+                    <h2 className="text-2xl font-bold mb-3">{sessionData?.sessionTitle || day.date}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>{sessionData?.date || day.date}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Video className="w-4 h-4" />
+                        <span>{sessionData?.time || day.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isVirtual ? (
+                          <>
                             <Video className="w-4 h-4" />
-                            <span>Recording Available</span>
-                          </div>
-                        </div>
+                            <span>Virtual</span>
+                          </>
+                        ) : (
+                          <>
+                            <MapPin className="w-4 h-4" />
+                            <span>{sessionData?.location || 'In-Person'}</span>
+                          </>
+                        )}
                       </div>
                     </div>
-                  </CardHeader>
+                  </div>
 
                   <CardContent className="p-6">
                     <div className="space-y-6">
-                      {/* Session Title - Fuchsia Header */}
-                      <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#A65D40]/10 border-l-4 border-[#AC1A5B] p-4 rounded-lg">
-                        <h2 className="text-xl font-bold text-[#AC1A5B]">
-                          {sessionData?.sessionTitle || 'Session Recording'}
-                        </h2>
-                      </div>
 
                       {/* Session Recording */}
                       <div>

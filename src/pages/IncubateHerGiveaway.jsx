@@ -117,20 +117,28 @@ export default function IncubateHerGiveaway() {
 
   const eligibilityRequirements = [
     {
-      requirement: 'Complete all program sessions',
-      met: enrollment?.attendance_complete || false
+      requirement: 'Attend all 3 program sessions (Day 1, Day 2, Day 3)',
+      met: enrollment?.day1_attended && enrollment?.day2_attended && enrollment?.day3_attended
     },
     {
-      requirement: 'Complete pre and post assessments',
-      met: (enrollment?.pre_assessment_completed && enrollment?.post_assessment_completed) || false
+      requirement: 'Complete pre-assessment',
+      met: enrollment?.pre_assessment_completed || false
     },
     {
-      requirement: 'Complete one-on-one consultation',
-      met: enrollment?.consultation_completed || false
+      requirement: 'Complete post-assessment',
+      met: enrollment?.post_assessment_completed || false
     },
     {
-      requirement: 'Submit required documents',
-      met: enrollment?.documents_uploaded || false
+      requirement: 'Complete program evaluation',
+      met: enrollment?.program_evaluation_completed || false
+    },
+    {
+      requirement: 'Complete at least 50% of workbook exercises',
+      met: enrollment?.workbook_progress >= 50
+    },
+    {
+      requirement: 'Verify all required documents are completed',
+      met: enrollment?.documents_verified || false
     }
   ];
 
