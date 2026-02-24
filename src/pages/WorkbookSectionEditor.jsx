@@ -162,7 +162,7 @@ export default function WorkbookSectionEditor() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-2">Workbook Section Editor</h1>
