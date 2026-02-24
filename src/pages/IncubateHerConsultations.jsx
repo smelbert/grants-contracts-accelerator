@@ -525,7 +525,7 @@ export default function IncubateHerConsultations() {
                             duration: meetingDuration,
                             documentLink,
                             notes,
-                            facilitatorEmail: 'charles.watterson@elbertinnovativesolutions.org'
+                            facilitatorEmail: 'charles@elbertinnovativesolutions.org'
                           });
 
                           toast.success('Consultation request submitted! Charles will contact you soon to confirm.');
