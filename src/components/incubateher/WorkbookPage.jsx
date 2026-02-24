@@ -12,6 +12,7 @@ import AIFeedbackPanel from '../workbook/AIFeedbackPanel';
 import CollaborationPanel from '../workbook/CollaborationPanel';
 import TableEditor from '../shared/TableEditor';
 import ChartBuilder from '../shared/ChartBuilder';
+import LegalFooter from '../legal/LegalFooter';
 
 const PageTypeIcon = ({ type }) => {
   const icons = {
