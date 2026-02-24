@@ -26,8 +26,13 @@ import {
   Clock,
   AlertCircle,
   FileText,
-  DollarSign
+  DollarSign,
+  Sparkles,
+  Crown,
+  Check
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function MyProfile() {
   const { data: user } = useQuery({
@@ -301,17 +306,75 @@ export default function MyProfile() {
                     </Alert>
 
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">Manage Subscription</Button>
+                      <Button variant="outline" size="sm" onClick={() => window.location.href = createPageUrl('SubscriptionPlans')}>
+                        Change Plan
+                      </Button>
                       <Button variant="outline" size="sm">Update Payment Method</Button>
+                      <Button variant="outline" size="sm" onClick={() => window.location.href = 'mailto:support@elbertinnovativesolutions.org'}>
+                        Cancel Subscription
+                      </Button>
                     </div>
                   </div>
                 ) : (
                   <div className="text-center py-8">
                     <CreditCard className="w-16 h-16 mx-auto mb-4 text-slate-300" />
                     <p className="text-slate-500 mb-4">No active subscription</p>
-                    <Button className="bg-[#143A50]">View Plans</Button>
+                    <Button 
+                      className="bg-[#143A50]"
+                      onClick={() => window.location.href = createPageUrl('SubscriptionPlans')}
+                    >
+                      View Plans
+                    </Button>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* Subscription Plans */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5" />
+                  Available Plans
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { tier: 'base', name: 'Base Tier', price: 25, icon: Star, color: 'emerald', features: ['Funding readiness dashboard', 'Limited opportunity feed', 'Basic AI tools', 'Core templates'] },
+                    { tier: 'mid', name: 'Mid Tier', price: 149, icon: Sparkles, color: 'blue', features: ['Everything in Base', 'Advanced templates', 'Live trainings', 'Group coaching labs'] },
+                    { tier: 'premium', name: 'Premium', price: 299, icon: Crown, color: 'violet', features: ['Everything in Mid', 'Document review', 'Grant development', 'Contract writing support'] }
+                  ].map((plan) => {
+                    const Icon = plan.icon;
+                    const isCurrent = subscription?.tier === plan.tier;
+                    return (
+                      <Card key={plan.tier} className={isCurrent ? 'border-2 border-[#143A50]' : ''}>
+                        <CardHeader>
+                          <Icon className={`w-6 h-6 text-${plan.color}-600 mb-2`} />
+                          <CardTitle className="text-base">{plan.name}</CardTitle>
+                          <p className="text-2xl font-bold">${plan.price}<span className="text-sm font-normal text-slate-500">/mo</span></p>
+                        </CardHeader>
+                        <CardContent>
+                          <ul className="space-y-2 mb-4">
+                            {plan.features.map((feature, i) => (
+                              <li key={i} className="flex items-start gap-2 text-xs">
+                                <Check className={`w-3 h-3 text-${plan.color}-600 mt-0.5 flex-shrink-0`} />
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                          {isCurrent ? (
+                            <Badge className="w-full justify-center">Current Plan</Badge>
+                          ) : (
+                            <Button size="sm" className="w-full" onClick={() => window.location.href = createPageUrl('SubscriptionPlans')}>
+                              {subscription ? 'Switch Plan' : 'Subscribe'}
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
               </CardContent>
             </Card>
 
@@ -325,6 +388,29 @@ export default function MyProfile() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
+                  {userProgress.filter(p => p.is_started).map((progress) => {
+                    const content = allLearningContent.find(c => c.id === progress.content_id);
+                    if (!content) return null;
+                    return (
+                      <div key={progress.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-[#E5C089]/20 rounded-lg flex items-center justify-center">
+                            <BookOpen className="w-6 h-6 text-[#143A50]" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">{content.title}</h4>
+                            <p className="text-xs text-slate-500">
+                              {progress.progress_percentage}% complete
+                            </p>
+                          </div>
+                        </div>
+                        <Link to={createPageUrl('Learning')}>
+                          <Button size="sm" variant="outline">Continue</Button>
+                        </Link>
+                      </div>
+                    );
+                  })}
+
                   {enrollments.map((enrollment) => (
                     <div key={enrollment.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition">
                       <div className="flex items-center gap-3">
@@ -338,15 +424,19 @@ export default function MyProfile() {
                           </p>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline">Access</Button>
+                      <Link to={createPageUrl('IncubateHerOverview')}>
+                        <Button size="sm" variant="outline">Access</Button>
+                      </Link>
                     </div>
                   ))}
 
-                  {enrollments.length === 0 && (
+                  {userProgress.filter(p => p.is_started).length === 0 && enrollments.length === 0 && (
                     <div className="text-center py-8">
                       <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-slate-300" />
                       <p className="text-slate-500 mb-4">No digital products purchased yet</p>
-                      <Button variant="outline">Browse Learning Hub</Button>
+                      <Link to={createPageUrl('Learning')}>
+                        <Button variant="outline">Browse Learning Hub</Button>
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -441,7 +531,9 @@ export default function MyProfile() {
                     <div className="text-center py-8">
                       <Video className="w-16 h-16 mx-auto mb-4 text-slate-300" />
                       <p className="text-slate-500 mb-4">No coaching sessions booked yet</p>
-                      <Button variant="outline">Book a Session</Button>
+                      <Link to={createPageUrl('BoutiqueServices')}>
+                        <Button variant="outline">Book a Session</Button>
+                      </Link>
                     </div>
                   )}
                 </div>
@@ -524,7 +616,13 @@ export default function MyProfile() {
                     For questions about billing, refunds, or cancellations, please contact our support team. 
                     We're here to help ensure you have the best experience possible.
                   </p>
-                  <Button size="sm" className="mt-3 bg-amber-700 hover:bg-amber-800">Contact Support</Button>
+                  <Button 
+                    size="sm" 
+                    className="mt-3 bg-amber-700 hover:bg-amber-800"
+                    onClick={() => window.location.href = 'mailto:support@elbertinnovativesolutions.org'}
+                  >
+                    Contact Support
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -696,13 +794,14 @@ export default function MyProfile() {
           <TabsContent value="activity" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Recent Learning Activity</CardTitle>
+                <CardTitle>Recent Activity</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
+                  {/* Learning Activity */}
                   {userProgress
                     .sort((a, b) => new Date(b.updated_date) - new Date(a.updated_date))
-                    .slice(0, 10)
+                    .slice(0, 5)
                     .map((progress) => {
                       const content = allLearningContent.find(c => c.id === progress.content_id);
                       if (!content) return null;
@@ -729,8 +828,44 @@ export default function MyProfile() {
                         </div>
                       );
                     })}
+
+                  {/* Enrollment Activity */}
+                  {enrollments
+                    .sort((a, b) => new Date(b.updated_date) - new Date(a.updated_date))
+                    .slice(0, 3)
+                    .map((enrollment) => (
+                      <div key={enrollment.id} className="flex items-center gap-4 p-3 bg-purple-50 rounded-lg">
+                        <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                          <Award className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">Program Enrollment</h4>
+                          <p className="text-xs text-slate-500">
+                            Joined {new Date(enrollment.enrollment_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+
+                  {/* Badge Activity */}
+                  {badges
+                    .sort((a, b) => new Date(b.earned_date) - new Date(a.earned_date))
+                    .slice(0, 3)
+                    .map((badge) => (
+                      <div key={badge.id} className="flex items-center gap-4 p-3 bg-amber-50 rounded-lg">
+                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                          <Award className="w-5 h-5 text-amber-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{badge.badge_name} Badge Earned</h4>
+                          <p className="text-xs text-slate-500">
+                            Earned {new Date(badge.earned_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   
-                  {userProgress.length === 0 && (
+                  {userProgress.length === 0 && enrollments.length === 0 && badges.length === 0 && (
                     <p className="text-center text-slate-500 py-8">
                       No activity yet. Start learning to see your activity here!
                     </p>
