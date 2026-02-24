@@ -4,8 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
 import { ArrowLeft, Calendar, User, Share2, ArrowRight } from 'lucide-react';
 import moment from 'moment';
 import { toast } from 'sonner';
@@ -23,6 +21,19 @@ export default function BlogPost() {
     enabled: !!slug
   });
 
+  const { data: relatedPosts = [] } = useQuery({
+    queryKey: ['related-posts', post?.category],
+    queryFn: async () => {
+      if (!post?.category) return [];
+      const related = await base44.entities.BlogPost.filter({ 
+        status: 'published',
+        category: post.category 
+      });
+      return related.filter(p => p.id !== post.id).slice(0, 3);
+    },
+    enabled: !!post?.category
+  });
+
   const handleShare = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
@@ -31,13 +42,10 @@ export default function BlogPost() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-slate-200 rounded w-3/4"></div>
-            <div className="h-4 bg-slate-200 rounded w-1/2"></div>
-            <div className="h-64 bg-slate-200 rounded"></div>
-          </div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-8 h-8 border-4 border-[#143A50] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-slate-600">Loading article...</p>
         </div>
       </div>
     );
@@ -45,18 +53,15 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-slate-50 p-6">
-        <div className="max-w-4xl mx-auto">
-          <Card className="p-12 text-center">
-            <h2 className="text-2xl font-bold mb-4">Blog Post Not Found</h2>
-            <p className="text-slate-600 mb-6">The post you're looking for doesn't exist or has been removed.</p>
-            <Link to={createPageUrl('Blog')}>
-              <Button>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blog
-              </Button>
-            </Link>
-          </Card>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Blog Post Not Found</h2>
+          <Link to={createPageUrl('Blog')}>
+            <Button>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Blog
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -65,23 +70,21 @@ export default function BlogPost() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link to={createPageUrl('PublicHome')}>
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
                 alt="Elbert Innovative Solutions" 
                 className="h-12 w-auto"
               />
-            </div>
+            </Link>
             <div className="hidden md:flex items-center gap-8">
               <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-[#143A50] font-medium">Home</Link>
               <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-[#143A50] font-medium">About</Link>
-              <Link to={createPageUrl('Blog')} className="text-slate-700 hover:text-[#143A50] font-medium">Blog</Link>
-              <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] hover:text-[#9A1826] font-semibold">
-                IncubateHer
-              </Link>
+              <Link to={createPageUrl('Blog')} className="text-[#143A50] font-semibold">Blog</Link>
+              <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] hover:text-[#9A1826] font-semibold">IncubateHer</Link>
               <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
               <Link to={createPageUrl('Register')}>
                 <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
@@ -91,65 +94,63 @@ export default function BlogPost() {
         </div>
       </nav>
 
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#E5C089]/10 via-[#B5A698]/10 to-white py-12">
-        <div className="max-w-4xl mx-auto px-6">
-          <Link to={createPageUrl('Blog')}>
-            <Button variant="ghost" size="sm" className="text-slate-700 hover:text-[#143A50] mb-6">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Blog
-            </Button>
-          </Link>
-          
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.category && (
-              <Badge className="bg-[#E5C089] text-[#143A50]">
-                {post.category}
-              </Badge>
-            )}
-            {post.tags?.map((tag, idx) => (
-              <Badge key={idx} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-          
-          <h1 className="text-5xl font-bold mb-6 text-slate-900 leading-tight">{post.title}</h1>
-          
-          <div className="flex items-center gap-6 text-slate-600">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span>{post.author_name || 'Anonymous'}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              <span>{moment(post.published_date).format('MMMM D, YYYY')}</span>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleShare}
-              className="text-slate-600 hover:text-[#143A50]"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Featured Image */}
-      {post.featured_image && (
-        <div className="max-w-5xl mx-auto px-6 py-8">
-          <div className="rounded-xl overflow-hidden shadow-2xl">
+      {/* Hero Image with Title Overlay */}
+      <div className="relative">
+        <div className="h-[500px] relative overflow-hidden">
+          {post.featured_image ? (
             <img 
               src={post.featured_image} 
               alt={post.title}
-              className="w-full h-[500px] object-cover"
+              className="w-full h-full object-cover"
             />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[#143A50] via-[#1E4F58] to-[#143A50]" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+          
+          <div className="absolute bottom-0 left-0 right-0">
+            <div className="max-w-4xl mx-auto px-6 pb-12">
+              <Link 
+                to={createPageUrl('Blog')}
+                className="inline-flex items-center gap-2 text-white hover:text-[#E5C089] mb-4 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="font-medium">Back to Blog</span>
+              </Link>
+
+              {post.category && (
+                <span className="inline-block px-4 py-1 bg-[#FFD700] text-[#143A50] text-sm font-bold rounded mb-4">
+                  {post.category}
+                </span>
+              )}
+
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                {post.title}
+              </h1>
+
+              <div className="flex items-center gap-6 text-white/90">
+                <div className="flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  <span className="font-medium">{post.author_name || 'EIS Team'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  <span>{moment(post.published_date).format('MMMM D, YYYY')}</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleShare}
+                  className="text-white hover:text-[#E5C089] hover:bg-white/10"
+                >
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
@@ -299,45 +300,91 @@ export default function BlogPost() {
 
         {/* Author Bio */}
         {post.author_name && (
-          <Card className="mt-12 p-8 bg-[#E5C089]/10 border-[#E5C089]">
-            <div className="flex items-start gap-6">
-              <div className="w-20 h-20 rounded-full bg-[#143A50] flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
-                {post.author_name[0]}
+          <div className="border-t border-slate-200 pt-8 mt-12">
+            <div className="flex items-start gap-4 bg-slate-50 rounded-xl p-6">
+              <div className="w-16 h-16 bg-[#143A50] rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                {post.author_name.charAt(0)}
               </div>
               <div>
-                <h3 className="font-bold text-xl mb-2 text-slate-900">About {post.author_name}</h3>
+                <h3 className="text-xl font-bold text-[#143A50] mb-2">About the Author</h3>
+                <p className="text-slate-600 font-semibold mb-1">{post.author_name}</p>
                 <p className="text-slate-600">
-                  Contributing writer at Elbert Innovative Solutions, sharing expert insights on grant writing, fundraising, and organizational development.
+                  Contributing writer at Elbert Innovative Solutions, specializing in nonprofit capacity building and strategic funding.
                 </p>
               </div>
             </div>
-          </Card>
+          </div>
         )}
+      </div>
 
-        {/* CTA Section */}
-        <div className="mt-12 p-8 bg-gradient-to-br from-[#143A50] to-[#1E4F58] rounded-xl text-white text-center">
-          <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Funding Strategy?</h3>
-          <p className="text-white/90 mb-6 max-w-2xl mx-auto">
-            Join hundreds of organizations who have successfully secured sustainable funding with EIS expert guidance.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to={createPageUrl('Register')}>
-              <Button size="lg" className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90">
-                Get Started Today
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-            <Link to={createPageUrl('Blog')}>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Read More Articles
-              </Button>
-            </Link>
+      {/* Related Posts */}
+      {relatedPosts.length > 0 && (
+        <div className="bg-slate-50 py-16">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="text-3xl font-bold text-[#143A50] mb-8">Related Posts</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {relatedPosts.map((relatedPost) => (
+                <Link key={relatedPost.id} to={createPageUrl('BlogPost') + '?slug=' + relatedPost.slug}>
+                  <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300 group h-full">
+                    <div className="aspect-[16/10] relative overflow-hidden">
+                      {relatedPost.featured_image ? (
+                        <img 
+                          src={relatedPost.featured_image} 
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#143A50] to-[#1E4F58]" />
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-bold text-[#143A50] group-hover:text-[#AC1A5B] transition-colors line-clamp-2 mb-2">
+                        {relatedPost.title}
+                      </h3>
+                      {relatedPost.excerpt && (
+                        <p className="text-sm text-slate-600 line-clamp-2 mb-3">
+                          {relatedPost.excerpt}
+                        </p>
+                      )}
+                      <p className="text-xs text-slate-500">
+                        {moment(relatedPost.published_date).format('MMM d, yyyy')}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CTA Section */}
+      <div className="bg-white py-16">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="bg-gradient-to-br from-[#143A50] to-[#1E4F58] rounded-2xl p-12 text-white text-center">
+            <h3 className="text-3xl font-bold mb-4">Ready to Transform Your Funding Strategy?</h3>
+            <p className="text-slate-200 mb-8 max-w-2xl mx-auto text-lg">
+              Partner with Elbert Innovative Solutions to secure the funding your organization needs to make lasting impact.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link to={createPageUrl('Register')}>
+                <Button className="bg-[#FFD700] text-[#143A50] hover:bg-[#E5C089] font-semibold px-8 py-6 text-lg">
+                  Get Started Today
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+              <Link to={createPageUrl('AboutEIS')}>
+                <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg">
+                  Learn More About EIS
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#143A50] text-slate-400 py-12 mt-20">
+      <footer className="bg-[#143A50] text-slate-400 py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
