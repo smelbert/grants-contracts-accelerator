@@ -9,6 +9,7 @@ import { CheckCircle2, Download, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import LegalFooter from '../legal/LegalFooter';
+import SignatureAndDate from '../forms/SignatureAndDate';
 
 export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {}, uploadedDocsData = {} }) {
   const [formData, setFormData] = useState({});
@@ -225,6 +226,13 @@ Provide a professional, concise response suitable for funding applications (2-3 
               )}
             </div>
           ))}
+
+          <SignatureAndDate
+            signature={formData.signature || ''}
+            date={formData.signature_date || ''}
+            onSignatureChange={(value) => handleChange('signature', value)}
+            onDateChange={(value) => handleChange('signature_date', value)}
+          />
 
           <div className="flex items-center justify-between pt-6 border-t">
             <div>
