@@ -121,6 +121,7 @@ import IncubateHerParticipantWorkbooks from './pages/IncubateHerParticipantWorkb
 import IncubateHerParticipants from './pages/IncubateHerParticipants';
 import IncubateHerPostAssessment from './pages/IncubateHerPostAssessment';
 import IncubateHerPreAssessment from './pages/IncubateHerPreAssessment';
+import IncubateHerProfileIntake from './pages/IncubateHerProfileIntake';
 import IncubateHerProgramControl from './pages/IncubateHerProgramControl';
 import IncubateHerPublic from './pages/IncubateHerPublic';
 import IncubateHerReport from './pages/IncubateHerReport';
@@ -154,11 +155,11 @@ import OpportunityReports from './pages/OpportunityReports';
 import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
+import Pricing from './pages/Pricing';
 import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformManagement from './pages/PlatformManagement';
 import PlatformSettings from './pages/PlatformSettings';
-import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
@@ -204,7 +205,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerProfileIntake from './pages/IncubateHerProfileIntake';
+import TermsOfService from './pages/TermsOfService';
 import __Layout from './Layout.jsx';
 
 
@@ -283,6 +284,7 @@ export const PAGES = {
     "IncubateHerParticipants": IncubateHerParticipants,
     "IncubateHerPostAssessment": IncubateHerPostAssessment,
     "IncubateHerPreAssessment": IncubateHerPreAssessment,
+    "IncubateHerProfileIntake": IncubateHerProfileIntake,
     "IncubateHerProgramControl": IncubateHerProgramControl,
     "IncubateHerPublic": IncubateHerPublic,
     "IncubateHerReport": IncubateHerReport,
@@ -316,11 +318,11 @@ export const PAGES = {
     "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
+    "Pricing": Pricing,
     "PaymentCancelled": PaymentCancelled,
     "PaymentSuccess": PaymentSuccess,
     "PlatformManagement": PlatformManagement,
     "PlatformSettings": PlatformSettings,
-    "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
@@ -366,7 +368,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerProfileIntake": IncubateHerProfileIntake,
+    "TermsOfService": TermsOfService,
 }
 
 export const pagesConfig = {

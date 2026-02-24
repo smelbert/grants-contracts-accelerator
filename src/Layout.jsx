@@ -10,6 +10,7 @@ import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import AIOnboardingAssistant from '@/components/onboarding/AIOnboardingAssistant';
 import IncubateHerOnboarding from '@/components/incubateher/IncubateHerOnboarding';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import LegalAcknowledgement from '@/components/legal/LegalAcknowledgement';
 import { 
   LayoutDashboard, 
   Search, 
@@ -301,6 +302,7 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLegalAcknowledgement, setShowLegalAcknowledgement] = useState(false);
   const [portalView, setPortalView] = useState(() => {
     return localStorage.getItem('portalView') || 'auto';
   });
@@ -310,7 +312,7 @@ export default function Layout({ children, currentPageName }) {
     queryFn: () => base44.auth.me(),
   });
 
-  const { data: userAccess } = useQuery({
+  const { data: userAccess, refetch: refetchAccess } = useQuery({
     queryKey: ['userAccess', user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
@@ -321,6 +323,42 @@ export default function Layout({ children, currentPageName }) {
     },
     enabled: !!user?.email
   });
+
+  // Check if user needs to acknowledge legal terms
+  React.useEffect(() => {
+    if (user && userAccess !== undefined) {
+      if (!userAccess) {
+        // No access record exists, show legal acknowledgement
+        setShowLegalAcknowledgement(true);
+      } else if (!userAccess.legal_acknowledged) {
+        // Access exists but hasn't acknowledged
+        setShowLegalAcknowledgement(true);
+      }
+    }
+  }, [user, userAccess]);
+
+  const handleLegalAccept = async () => {
+    if (!user?.email) return;
+    
+    if (userAccess?.id) {
+      // Update existing record
+      await base44.entities.UserAccessLevel.update(userAccess.id, {
+        legal_acknowledged: true,
+        legal_acknowledged_date: new Date().toISOString()
+      });
+    } else {
+      // Create new record
+      await base44.entities.UserAccessLevel.create({
+        user_email: user.email,
+        access_level: 'community_only',
+        legal_acknowledged: true,
+        legal_acknowledged_date: new Date().toISOString()
+      });
+    }
+    
+    setShowLegalAcknowledgement(false);
+    refetchAccess();
+  };
 
   const { data: incubateHerEnrollment } = useQuery({
     queryKey: ['incubateher-enrollment', user?.email],
@@ -638,6 +676,14 @@ export default function Layout({ children, currentPageName }) {
       <main className="lg:pl-64">
         {children}
       </main>
+
+      {/* Legal Acknowledgement */}
+      {user && (
+        <LegalAcknowledgement
+          open={showLegalAcknowledgement}
+          onAccept={handleLegalAccept}
+        />
+      )}
 
       {/* IncubateHer Onboarding */}
       {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && (
