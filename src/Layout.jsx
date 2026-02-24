@@ -103,6 +103,12 @@ const getUserPortalNav = () => [
     ]
   },
   {
+    groupName: 'Resources',
+    items: [
+      { name: 'Blog', page: 'Blog', icon: BookOpen },
+    ]
+  },
+  {
     groupName: 'Settings',
     items: [
       { name: 'My Profile', page: 'MyProfile', icon: User },
