@@ -59,6 +59,8 @@ import AssessmentManagement from './pages/AssessmentManagement';
 import AssessmentSurveyAdmin from './pages/AssessmentSurveyAdmin';
 import AssignedOrganizations from './pages/AssignedOrganizations';
 import AuditLogs from './pages/AuditLogs';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import BoilerplateBuilder from './pages/BoilerplateBuilder';
 import BoutiqueServices from './pages/BoutiqueServices';
 import BrandingSettings from './pages/BrandingSettings';
@@ -155,11 +157,11 @@ import OpportunityReports from './pages/OpportunityReports';
 import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
-import Pricing from './pages/Pricing';
 import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformManagement from './pages/PlatformManagement';
 import PlatformSettings from './pages/PlatformSettings';
+import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
@@ -206,8 +208,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
 import __Layout from './Layout.jsx';
 
 
@@ -224,6 +224,8 @@ export const PAGES = {
     "AssessmentSurveyAdmin": AssessmentSurveyAdmin,
     "AssignedOrganizations": AssignedOrganizations,
     "AuditLogs": AuditLogs,
+    "Blog": Blog,
+    "BlogPost": BlogPost,
     "BoilerplateBuilder": BoilerplateBuilder,
     "BoutiqueServices": BoutiqueServices,
     "BrandingSettings": BrandingSettings,
@@ -320,11 +322,11 @@ export const PAGES = {
     "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
-    "Pricing": Pricing,
     "PaymentCancelled": PaymentCancelled,
     "PaymentSuccess": PaymentSuccess,
     "PlatformManagement": PlatformManagement,
     "PlatformSettings": PlatformSettings,
+    "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
@@ -371,8 +373,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "Blog": Blog,
-    "BlogPost": BlogPost,
 }
 
 export const pagesConfig = {

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
-import { Search, Calendar, User } from 'lucide-react';
+import { Search, Calendar, User, BookOpen } from 'lucide-react';
 import moment from 'moment';
 
 export default function Blog() {
@@ -207,7 +207,7 @@ export default function Blog() {
                     to={createPageUrl('BlogPost') + '?slug=' + post.slug}
                     className="flex gap-3 group"
                   >
-                    <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                    <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-[#E5C089] to-[#B5A698]">
                       {post.featured_image ? (
                         <img 
                           src={post.featured_image} 
@@ -215,7 +215,9 @@ export default function Blog() {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#143A50] to-[#1E4F58]" />
+                        <div className="w-full h-full flex items-center justify-center">
+                          <BookOpen className="w-8 h-8 text-white/60" />
+                        </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
