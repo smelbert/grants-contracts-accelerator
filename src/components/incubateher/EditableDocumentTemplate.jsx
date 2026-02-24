@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { CheckCircle2, Download, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
+import LegalFooter from '../legal/LegalFooter';
 
 export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {}, uploadedDocsData = {} }) {
   const [formData, setFormData] = useState({});
