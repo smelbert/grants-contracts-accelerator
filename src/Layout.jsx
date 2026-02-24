@@ -677,6 +677,33 @@ export default function Layout({ children, currentPageName }) {
         {children}
       </main>
 
+      {/* Footer */}
+      <footer className="lg:pl-64 bg-white border-t border-slate-200 mt-auto">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-center md:text-left">
+              <p className="text-sm font-semibold text-slate-900">
+                ©{new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.
+              </p>
+              <p className="text-xs text-slate-600 mt-1">
+                Proprietary content protected by intellectual property law.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <Link to={createPageUrl('TermsOfService')} className="text-slate-600 hover:text-[#143A50]">
+                Terms of Service
+              </Link>
+              <Link to={createPageUrl('AboutEIS')} className="text-slate-600 hover:text-[#143A50]">
+                About EIS
+              </Link>
+              <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-[#143A50]">
+                Visit Our Website
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
       {/* Legal Acknowledgement */}
       {user && (
         <LegalAcknowledgement
