@@ -17,7 +17,8 @@ import {
   Loader2, 
   Plus,
   Undo,
-  CheckCircle2
+  CheckCircle2,
+  Trash2
 } from 'lucide-react';
 import { WORKBOOK_PAGES } from '@/components/incubateher/workbookContent';
 import { toast } from 'sonner';
@@ -25,12 +26,13 @@ import ReactMarkdown from 'react-markdown';
 
 export default function IncubateHerWorkbookEditor() {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('pages');
   const [selectedPageId, setSelectedPageId] = useState(null);
   const [editMode, setEditMode] = useState('preview');
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Form state
+  // Form state for pages
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [content, setContent] = useState('');
@@ -39,6 +41,12 @@ export default function IncubateHerWorkbookEditor() {
   const [takeaways, setTakeaways] = useState([]);
   const [actionItems, setActionItems] = useState([]);
   const [requiredForConsultation, setRequiredForConsultation] = useState(false);
+
+  // Form state for section headers
+  const [selectedSection, setSelectedSection] = useState(null);
+  const [sectionTitle, setSectionTitle] = useState('');
+  const [sectionDescription, setSectionDescription] = useState('');
+  const [sectionOrder, setSectionOrder] = useState(0);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -49,6 +57,15 @@ export default function IncubateHerWorkbookEditor() {
   const { data: customPages = [] } = useQuery({
     queryKey: ['workbook-custom-pages'],
     queryFn: () => base44.entities.WorkbookPageContent.list(),
+  });
+
+  // Fetch section headers
+  const { data: sections = [] } = useQuery({
+    queryKey: ['workbook-sections'],
+    queryFn: async () => {
+      const results = await base44.entities.WorkbookSectionHeader.list();
+      return results.sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
   });
 
   // Get selected page data
@@ -73,6 +90,15 @@ export default function IncubateHerWorkbookEditor() {
       setRequiredForConsultation(pageData?.required_for_consultation || false);
     }
   }, [selectedPageId, customPages]);
+
+  // Load section data when selected
+  React.useEffect(() => {
+    if (selectedSection) {
+      setSectionTitle(selectedSection.title || '');
+      setSectionDescription(selectedSection.description || '');
+      setSectionOrder(selectedSection.order || 0);
+    }
+  }, [selectedSection]);
 
   // Save mutation
   const saveMutation = useMutation({
@@ -138,6 +164,47 @@ export default function IncubateHerWorkbookEditor() {
       required_for_consultation: requiredForConsultation,
       last_edited_by: user?.email
     });
+  };
+
+  const saveSectionMutation = useMutation({
+    mutationFn: async (data) => {
+      if (selectedSection?.id) {
+        return base44.entities.WorkbookSectionHeader.update(selectedSection.id, data);
+      } else {
+        return base44.entities.WorkbookSectionHeader.create(data);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['workbook-sections']);
+      toast.success('Section saved!');
+      setSelectedSection(null);
+    }
+  });
+
+  const deleteSectionMutation = useMutation({
+    mutationFn: async (id) => {
+      return base44.entities.WorkbookSectionHeader.delete(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['workbook-sections']);
+      toast.success('Section deleted!');
+      setSelectedSection(null);
+    }
+  });
+
+  const handleSaveSection = () => {
+    saveSectionMutation.mutate({
+      title: sectionTitle,
+      description: sectionDescription,
+      order: sectionOrder
+    });
+  };
+
+  const handleNewSection = () => {
+    setSelectedSection({ new: true });
+    setSectionTitle('');
+    setSectionDescription('');
+    setSectionOrder(sections.length);
   };
 
   const handleAIGenerate = async () => {
@@ -207,21 +274,25 @@ Return only the HTML content, no explanations.`,
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">Workbook Content Editor</h1>
-            <p className="text-slate-600">Customize workbook pages and section headers with AI assistance or manual editing</p>
-          </div>
-          <Button
-            onClick={() => window.location.href = '/pages/WorkbookSectionEditor'}
-            variant="outline"
-            className="gap-2"
-          >
-            <FileText className="w-4 h-4" />
-            Edit Section Headers
-          </Button>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Workbook Content Editor</h1>
+          <p className="text-slate-600">Customize workbook pages and section headers with AI assistance or manual editing</p>
         </div>
 
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList>
+            <TabsTrigger value="pages">
+              <FileText className="w-4 h-4 mr-2" />
+              Page Content
+            </TabsTrigger>
+            <TabsTrigger value="headers">
+              <FileText className="w-4 h-4 mr-2" />
+              Section Headers
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {activeTab === 'pages' && (
         <div className="grid grid-cols-12 gap-6">
           {/* Page List */}
           <div className="col-span-3">
@@ -540,6 +611,113 @@ Return only the HTML content, no explanations.`,
             )}
           </div>
         </div>
+        )}
+
+        {activeTab === 'headers' && (
+        <div className="grid grid-cols-12 gap-6">
+          {/* Section List */}
+          <div className="col-span-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Section Headers</CardTitle>
+                <Button size="sm" onClick={handleNewSection}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  New
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => setSelectedSection(section)}
+                    className={`w-full text-left p-3 rounded-lg text-sm transition ${
+                      selectedSection?.id === section.id
+                        ? 'bg-[#143A50] text-white'
+                        : 'hover:bg-slate-100 border border-slate-200'
+                    }`}
+                  >
+                    <div className="font-medium">{section.title}</div>
+                    <div className="text-xs opacity-80 mt-1">Order: {section.order}</div>
+                  </button>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Section Editor */}
+          <div className="col-span-8">
+            {selectedSection ? (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>
+                      {selectedSection.new ? 'New Section Header' : 'Edit Section Header'}
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      {!selectedSection.new && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => {
+                            if (confirm('Delete this section header?')) {
+                              deleteSectionMutation.mutate(selectedSection.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                      <Button onClick={handleSaveSection} className="bg-[#143A50] hover:bg-[#1E4F58]">
+                        <Save className="w-4 h-4 mr-2" />
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Section Title</label>
+                    <Input
+                      value={sectionTitle}
+                      onChange={(e) => setSectionTitle(e.target.value)}
+                      placeholder="e.g., Program Overview"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Description</label>
+                    <Textarea
+                      value={sectionDescription}
+                      onChange={(e) => setSectionDescription(e.target.value)}
+                      placeholder="Brief description of this section"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Display Order</label>
+                    <Input
+                      type="number"
+                      value={sectionOrder}
+                      onChange={(e) => setSectionOrder(parseInt(e.target.value))}
+                      min="0"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="flex items-center justify-center h-96">
+                  <div className="text-center text-slate-400">
+                    <FileText className="w-12 h-12 mx-auto mb-3" />
+                    <p>Select a section header or create a new one</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+        )}
       </div>
     </div>
   );

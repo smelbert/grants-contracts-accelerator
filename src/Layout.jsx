@@ -202,7 +202,7 @@ const getAdminPortalNav = () => [
       { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
       { name: 'Template Editor', page: 'DocumentTemplateEditor', icon: FileText },
       { name: 'Agenda & Courses Editor', page: 'IncubateHerAgenda', icon: FileText },
-      { name: 'Workbook Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
+      { name: 'Workbook Content Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
       { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
       { name: 'Program Announcements', page: 'ProgramAnnouncements', icon: Bell },
       { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
