@@ -181,6 +181,24 @@ Provide a professional, concise response suitable for funding applications (2-3 
             </div>
           )}
 
+          {/* Show HTML content if available */}
+          {template.content_html && (
+            <div className="p-6 bg-white border rounded-lg">
+              <div
+                className="prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: template.content_html }}
+              />
+            </div>
+          )}
+
+          {/* Show instructions if available */}
+          {template.instructions && (
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h4 className="font-semibold text-sm mb-2 text-blue-900">Instructions:</h4>
+              <p className="text-sm text-blue-800 whitespace-pre-wrap">{template.instructions}</p>
+            </div>
+          )}
+
           {template.fields?.map((field) => (
             <div key={field.id} className="space-y-2">
               {field.type === 'signature' ? (

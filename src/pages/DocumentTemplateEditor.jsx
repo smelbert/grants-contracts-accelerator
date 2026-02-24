@@ -212,7 +212,7 @@ export default function DocumentTemplateEditor() {
                               <Textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Brief description of this template"
+                                placeholder="Brief description of this template - shown to users"
                                 rows={2}
                               />
                             </div>
@@ -222,13 +222,28 @@ export default function DocumentTemplateEditor() {
                               <Textarea
                                 value={instructions}
                                 onChange={(e) => setInstructions(e.target.value)}
-                                placeholder="Instructions for completing this template"
+                                placeholder="Instructions for completing this template - shown to users before content"
                                 rows={4}
                               />
                             </div>
 
                             <div>
+                              <label className="text-sm font-medium mb-2 block">Web Template (HTML)</label>
+                              <p className="text-xs text-slate-600 mb-2">
+                                Add HTML content that will be displayed to users. This will show in the template preview along with name, description, and instructions.
+                              </p>
+                              <Textarea
+                                value={contentHtml}
+                                onChange={(e) => setContentHtml(e.target.value)}
+                                placeholder="<div><h3>Section Title</h3><p>Content here...</p></div>"
+                                rows={15}
+                                className="font-mono text-xs"
+                              />
+                            </div>
+
+                            <div>
                               <label className="text-sm font-medium mb-2 block">File Upload (PDF, DOCX, XLSX)</label>
+                              <p className="text-xs text-slate-600 mb-2">Optional downloadable file users can download</p>
                               <div className="flex gap-3">
                                 <input
                                   type="file"
@@ -251,17 +266,6 @@ export default function DocumentTemplateEditor() {
                                   </a>
                                 )}
                               </div>
-                            </div>
-
-                            <div>
-                              <label className="text-sm font-medium mb-2 block">Web Template (HTML)</label>
-                              <Textarea
-                                value={contentHtml}
-                                onChange={(e) => setContentHtml(e.target.value)}
-                                placeholder="HTML content for web-based fillable template"
-                                rows={15}
-                                className="font-mono text-xs"
-                              />
                             </div>
                           </TabsContent>
 

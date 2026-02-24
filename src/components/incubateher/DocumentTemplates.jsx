@@ -226,12 +226,25 @@ export default function DocumentTemplates({ day }) {
   });
 
   const handleEdit = (template) => {
-    // Add predefined fields based on template type
-    const templateWithFields = {
-      ...template,
-      fields: getTemplateFields(template.id)
-    };
-    setEditingTemplate(templateWithFields);
+    // Check if custom template exists from admin
+    const customTemplate = customTemplates.find(ct => ct.template_id === template.id);
+    
+    if (customTemplate) {
+      // Use custom template with fields from admin or fallback to predefined
+      const templateWithFields = {
+        ...template,
+        ...customTemplate,
+        fields: customTemplate.fields || getTemplateFields(template.id)
+      };
+      setEditingTemplate(templateWithFields);
+    } else {
+      // Use predefined template structure
+      const templateWithFields = {
+        ...template,
+        fields: getTemplateFields(template.id)
+      };
+      setEditingTemplate(templateWithFields);
+    }
   };
 
   const getTemplateFields = (templateId) => {
