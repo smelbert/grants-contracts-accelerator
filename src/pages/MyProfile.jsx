@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   User, 
   Mail, 
@@ -15,7 +18,15 @@ import {
   TrendingUp,
   Calendar,
   Building2,
-  Star
+  Star,
+  ShoppingBag,
+  CreditCard,
+  Download,
+  Video,
+  Clock,
+  AlertCircle,
+  FileText,
+  DollarSign
 } from 'lucide-react';
 
 export default function MyProfile() {
@@ -70,6 +81,51 @@ export default function MyProfile() {
         primary_contact_email: user.email
       });
       return orgs[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: subscription } = useQuery({
+    queryKey: ['user-subscription', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const subs = await base44.entities.Subscription.filter({
+        created_by: user.email
+      });
+      return subs[0];
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: invoices = [] } = useQuery({
+    queryKey: ['user-invoices', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return await base44.entities.Invoice.filter({
+        created_by: user.email
+      });
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: coachingBookings = [] } = useQuery({
+    queryKey: ['coaching-bookings', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return await base44.entities.ConsultationBooking.filter({
+        client_email: user.email
+      });
+    },
+    enabled: !!user?.email
+  });
+
+  const { data: boutiquePurchases = [] } = useQuery({
+    queryKey: ['boutique-purchases', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      return await base44.entities.BoutiqueServiceBooking.filter({
+        client_email: user.email
+      });
     },
     enabled: !!user?.email
   });
@@ -172,8 +228,12 @@ export default function MyProfile() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="progress" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="portal" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="portal">
+              <ShoppingBag className="w-4 h-4 mr-2" />
+              Customer Portal
+            </TabsTrigger>
             <TabsTrigger value="progress">
               <TrendingUp className="w-4 h-4 mr-2" />
               Learning Progress
@@ -187,6 +247,288 @@ export default function MyProfile() {
               Recent Activity
             </TabsTrigger>
           </TabsList>
+
+          {/* Customer Portal Tab */}
+          <TabsContent value="portal" className="space-y-6">
+            {/* Subscription Status */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Subscription Status
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {subscription ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-lg">
+                      <div>
+                        <div className="text-sm opacity-90">Current Plan</div>
+                        <div className="text-2xl font-bold capitalize">{subscription.tier} Tier</div>
+                        <div className="text-sm opacity-90 mt-1">
+                          ${subscription.monthly_cost}/month
+                        </div>
+                      </div>
+                      <Badge className={subscription.status === 'active' ? 'bg-green-600' : 'bg-red-600'}>
+                        {subscription.status}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-slate-500">Billing Cycle Start:</span>
+                        <div className="font-medium">{new Date(subscription.billing_cycle_start).toLocaleDateString()}</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Next Billing Date:</span>
+                        <div className="font-medium">{new Date(subscription.billing_cycle_end).toLocaleDateString()}</div>
+                      </div>
+                      {subscription.payment_method_last4 && (
+                        <div>
+                          <span className="text-slate-500">Payment Method:</span>
+                          <div className="font-medium">{subscription.payment_method_brand} •••• {subscription.payment_method_last4}</div>
+                        </div>
+                      )}
+                    </div>
+
+                    <Alert>
+                      <AlertCircle className="w-4 h-4" />
+                      <AlertDescription className="text-xs">
+                        <strong>Subscription Policy:</strong> All subscriptions renew automatically unless canceled prior to renewal. 
+                        No pro-rated refunds or credits for partial months or unused access. By purchasing, you agree to these terms 
+                        and authorize recurring charges until canceled.
+                      </AlertDescription>
+                    </Alert>
+
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">Manage Subscription</Button>
+                      <Button variant="outline" size="sm">Update Payment Method</Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <CreditCard className="w-16 h-16 mx-auto mb-4 text-slate-300" />
+                    <p className="text-slate-500 mb-4">No active subscription</p>
+                    <Button className="bg-[#143A50]">View Plans</Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Digital Products & Courses */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Download className="w-5 h-5" />
+                  My Digital Products
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {enrollments.map((enrollment) => (
+                    <div key={enrollment.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-[#E5C089]/20 rounded-lg flex items-center justify-center">
+                          <BookOpen className="w-6 h-6 text-[#143A50]" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Program Access</h4>
+                          <p className="text-xs text-slate-500">
+                            Enrolled {new Date(enrollment.enrollment_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                      <Button size="sm" variant="outline">Access</Button>
+                    </div>
+                  ))}
+
+                  {enrollments.length === 0 && (
+                    <div className="text-center py-8">
+                      <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-slate-300" />
+                      <p className="text-slate-500 mb-4">No digital products purchased yet</p>
+                      <Button variant="outline">Browse Learning Hub</Button>
+                    </div>
+                  )}
+                </div>
+
+                <Alert className="mt-4">
+                  <FileText className="w-4 h-4" />
+                  <AlertDescription className="text-xs">
+                    <strong>Digital Products Policy:</strong> Due to the digital nature of products and immediate access to content, 
+                    once payment has been rendered, all sales are final and no refunds will be given. Please make sure you are certain 
+                    before making your purchase.
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+
+            {/* Coaching Sessions */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Video className="w-5 h-5" />
+                  My Coaching Sessions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {coachingBookings.map((booking) => (
+                    <div key={booking.id} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="font-medium">{booking.service_type}</h4>
+                          <div className="flex items-center gap-2 text-sm text-slate-600 mt-1">
+                            <Clock className="w-4 h-4" />
+                            {booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleString() : 'Not scheduled'}
+                          </div>
+                        </div>
+                        <Badge variant={
+                          booking.status === 'completed' ? 'default' : 
+                          booking.status === 'scheduled' ? 'outline' : 
+                          'secondary'
+                        }>
+                          {booking.status}
+                        </Badge>
+                      </div>
+
+                      {booking.status === 'scheduled' && (
+                        <Alert className="mb-3">
+                          <AlertCircle className="w-4 h-4" />
+                          <AlertDescription className="text-xs">
+                            <strong>Cancellation Policy:</strong> Cancellations made less than 48 hours before your scheduled session 
+                            will be considered a no-show. No refunds or credits will be issued for no-shows.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      <div className="flex gap-2">
+                        {booking.status === 'scheduled' && (
+                          <>
+                            <Button size="sm" variant="outline">Join Session</Button>
+                            <Button size="sm" variant="outline">Reschedule</Button>
+                          </>
+                        )}
+                        {booking.status === 'pending' && (
+                          <Button size="sm">Schedule Now</Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  {boutiquePurchases.map((purchase) => (
+                    <div key={purchase.id} className="p-4 border rounded-lg bg-gradient-to-br from-purple-50 to-pink-50">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="font-medium">{purchase.service_name}</h4>
+                          <div className="text-sm text-slate-600 mt-1">
+                            {purchase.service_type} • ${purchase.total_paid}
+                          </div>
+                        </div>
+                        <Badge className="bg-purple-600">{purchase.status}</Badge>
+                      </div>
+                      
+                      <Alert>
+                        <AlertCircle className="w-4 h-4" />
+                        <AlertDescription className="text-xs">
+                          <strong>Boutique Service Policy:</strong> Services include upfront planning and team costs. 
+                          Deposits are non-refundable. Cancellations before service date may receive partial refund minus 20% administrative fee.
+                        </AlertDescription>
+                      </Alert>
+                    </div>
+                  ))}
+
+                  {(coachingBookings.length === 0 && boutiquePurchases.length === 0) && (
+                    <div className="text-center py-8">
+                      <Video className="w-16 h-16 mx-auto mb-4 text-slate-300" />
+                      <p className="text-slate-500 mb-4">No coaching sessions booked yet</p>
+                      <Button variant="outline">Book a Session</Button>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Billing History */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Billing History
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {invoices.map((invoice) => (
+                    <div key={invoice.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <div className="font-medium">${invoice.amount.toFixed(2)}</div>
+                        <div className="text-xs text-slate-500">
+                          {new Date(invoice.invoice_date).toLocaleDateString()} • 
+                          {' '}{new Date(invoice.period_start).toLocaleDateString()} - {new Date(invoice.period_end).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={invoice.status === 'paid' ? 'default' : invoice.status === 'pending' ? 'secondary' : 'destructive'}>
+                          {invoice.status}
+                        </Badge>
+                        {invoice.invoice_pdf_url && (
+                          <Button size="sm" variant="ghost">
+                            <Download className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  {invoices.length === 0 && (
+                    <p className="text-center text-slate-500 py-8">No billing history available</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Refund & Policies Info */}
+            <Card className="border-2 border-amber-200 bg-amber-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-amber-900">
+                  <AlertCircle className="w-5 h-5" />
+                  Important Policies
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm">
+                <div>
+                  <h4 className="font-semibold mb-2 text-amber-900">Chargeback Protection</h4>
+                  <p className="text-amber-800">
+                    By completing your purchase, you agree to our refund policy and understand that initiating a chargeback 
+                    or payment dispute violates these terms. We reserve the right to deny refund requests if materials were 
+                    accessed, downloaded, or used prior to the request.
+                  </p>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-semibold mb-2 text-amber-900">Payment Plan Agreement</h4>
+                  <p className="text-amber-800">
+                    If you select a payment plan, you are responsible for completing all payments. Failure to complete scheduled 
+                    payments will result in suspension of access to the program. This is not a 'pay-as-you-go' program. By signing 
+                    this agreement, you acknowledge you are fully responsible for the full cost of the program.
+                  </p>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-semibold mb-2 text-amber-900">Need Help?</h4>
+                  <p className="text-amber-800">
+                    For questions about billing, refunds, or cancellations, please contact our support team. 
+                    We're here to help ensure you have the best experience possible.
+                  </p>
+                  <Button size="sm" className="mt-3 bg-amber-700 hover:bg-amber-800">Contact Support</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Learning Progress Tab */}
           <TabsContent value="progress" className="space-y-6">

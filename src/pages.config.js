@@ -194,6 +194,7 @@ import TeachingContent from './pages/TeachingContent';
 import TeamCollaboration from './pages/TeamCollaboration';
 import TemplateLibrary from './pages/TemplateLibrary';
 import Templates from './pages/Templates';
+import TermsOfService from './pages/TermsOfService';
 import TestimonialManagement from './pages/TestimonialManagement';
 import TrainingFramework from './pages/TrainingFramework';
 import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
@@ -205,7 +206,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import TermsOfService from './pages/TermsOfService';
 import __Layout from './Layout.jsx';
 
 
@@ -357,6 +357,7 @@ export const PAGES = {
     "TeamCollaboration": TeamCollaboration,
     "TemplateLibrary": TemplateLibrary,
     "Templates": Templates,
+    "TermsOfService": TermsOfService,
     "TestimonialManagement": TestimonialManagement,
     "TrainingFramework": TrainingFramework,
     "TrainingFrameworkEditor": TrainingFrameworkEditor,
@@ -368,7 +369,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "TermsOfService": TermsOfService,
 }
 
 export const pagesConfig = {
