@@ -7,7 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, CheckCircle2, AlertCircle, Upload, ExternalLink } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Calendar, CheckCircle2, AlertCircle, Upload, ExternalLink, Clock, Video, MapPin } from 'lucide-react';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { toast } from 'sonner';
@@ -21,6 +23,11 @@ export default function IncubateHerConsultations() {
   });
   const [documentLink, setDocumentLink] = useState('');
   const [notes, setNotes] = useState('');
+  const [availabilityOption1, setAvailabilityOption1] = useState({ date: '', time: '' });
+  const [availabilityOption2, setAvailabilityOption2] = useState({ date: '', time: '' });
+  const [availabilityOption3, setAvailabilityOption3] = useState({ date: '', time: '' });
+  const [meetingPreference, setMeetingPreference] = useState('online');
+  const [meetingDuration, setMeetingDuration] = useState('60');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -362,9 +369,12 @@ export default function IncubateHerConsultations() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Book Your Consultation</CardTitle>
+                <CardTitle>Request Your Consultation</CardTitle>
+                <CardDescription>
+                  Submit your availability and our team will reach out to confirm your appointment
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {!allChecklistComplete ? (
                   <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg text-center">
                     <AlertCircle className="w-8 h-8 mx-auto text-slate-400 mb-2" />
@@ -382,26 +392,163 @@ export default function IncubateHerConsultations() {
                   </div>
                 ) : (
                   <>
-                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle2 className="w-5 h-5 text-green-600" />
-                        <p className="font-semibold text-green-900">You're Ready to Schedule!</p>
-                      </div>
-                      <p className="text-sm text-green-800">
-                        All checklist items are complete. Click below to book your consultation with Dr. Elbert.
-                      </p>
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <h4 className="font-semibold text-blue-900 mb-2">How It Works</h4>
+                      <ul className="space-y-1 text-blue-800 text-sm">
+                        <li>• Submit 3 date/time options that work for you</li>
+                        <li>• Charles Watterson will review your availability and Dr. Elbert's calendar</li>
+                        <li>• You'll receive confirmation or alternative options via email</li>
+                        <li>• Meeting details will be sent once confirmed</li>
+                      </ul>
                     </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-base font-semibold mb-3 block">Meeting Duration</Label>
+                        <Select value={meetingDuration} onValueChange={setMeetingDuration}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="45">
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4" />
+                                45 minutes
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="60">
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4" />
+                                60 minutes (1 hour)
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label className="text-base font-semibold mb-3 block">Meeting Preference</Label>
+                        <Select value={meetingPreference} onValueChange={setMeetingPreference}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="online">
+                              <div className="flex items-center gap-2">
+                                <Video className="w-4 h-4" />
+                                Online (Video Call)
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="in-person">
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-4 h-4" />
+                                In-Person / Face-to-Face
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label className="text-base font-semibold mb-3 block">
+                          Your Availability (provide 3 options)
+                        </Label>
+                        <div className="space-y-4">
+                          {[
+                            { state: availabilityOption1, setState: setAvailabilityOption1, label: 'Option 1' },
+                            { state: availabilityOption2, setState: setAvailabilityOption2, label: 'Option 2' },
+                            { state: availabilityOption3, setState: setAvailabilityOption3, label: 'Option 3' }
+                          ].map(({ state, setState, label }) => (
+                            <div key={label} className="p-4 border rounded-lg bg-slate-50">
+                              <Label className="font-medium mb-2 block">{label}</Label>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                  <Label className="text-sm text-slate-600 mb-1 block">Date</Label>
+                                  <Input
+                                    type="date"
+                                    value={state.date}
+                                    onChange={(e) => setState({ ...state, date: e.target.value })}
+                                    min={new Date().toISOString().split('T')[0]}
+                                  />
+                                </div>
+                                <div>
+                                  <Label className="text-sm text-slate-600 mb-1 block">Time</Label>
+                                  <Input
+                                    type="time"
+                                    value={state.time}
+                                    onChange={(e) => setState({ ...state, time: e.target.value })}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
                     <Button 
                       size="lg" 
                       className="w-full bg-[#143A50]"
+                      disabled={!availabilityOption1.date || !availabilityOption1.time ||
+                                !availabilityOption2.date || !availabilityOption2.time ||
+                                !availabilityOption3.date || !availabilityOption3.time}
                       onClick={async () => {
-                        await saveChecklistMutation.mutateAsync();
-                        window.open('https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation', '_blank');
+                        try {
+                          // Save checklist
+                          await saveChecklistMutation.mutateAsync();
+
+                          // Create consultation booking request
+                          await base44.entities.ConsultationBooking.create({
+                            enrollment_id: enrollment.id,
+                            participant_email: user.email,
+                            participant_name: user.full_name,
+                            meeting_duration: parseInt(meetingDuration),
+                            meeting_preference: meetingPreference,
+                            availability_option_1: `${availabilityOption1.date} ${availabilityOption1.time}`,
+                            availability_option_2: `${availabilityOption2.date} ${availabilityOption2.time}`,
+                            availability_option_3: `${availabilityOption3.date} ${availabilityOption3.time}`,
+                            document_link: documentLink,
+                            notes: notes,
+                            status: 'pending_confirmation'
+                          });
+
+                          // Send notification to Charles Watterson
+                          await base44.functions.invoke('sendConsultationRequest', {
+                            participantEmail: user.email,
+                            participantName: user.full_name,
+                            availability: [
+                              `${availabilityOption1.date} at ${availabilityOption1.time}`,
+                              `${availabilityOption2.date} at ${availabilityOption2.time}`,
+                              `${availabilityOption3.date} at ${availabilityOption3.time}`
+                            ],
+                            preference: meetingPreference,
+                            duration: meetingDuration,
+                            documentLink,
+                            notes,
+                            facilitatorEmail: 'charles.watterson@elbertinnovativesolutions.org'
+                          });
+
+                          toast.success('Consultation request submitted! Charles will contact you soon to confirm.');
+                          
+                          // Reset form
+                          setAvailabilityOption1({ date: '', time: '' });
+                          setAvailabilityOption2({ date: '', time: '' });
+                          setAvailabilityOption3({ date: '', time: '' });
+                          setDocumentLink('');
+                          setNotes('');
+                        } catch (error) {
+                          toast.error('Failed to submit request. Please try again.');
+                          console.error(error);
+                        }
                       }}
                     >
                       <Calendar className="w-5 h-5 mr-2" />
-                      Schedule on Calendly
+                      Submit Consultation Request
                     </Button>
+
+                    <p className="text-xs text-slate-500 text-center">
+                      Charles Watterson will review your request and reach out within 1-2 business days to confirm your consultation time.
+                    </p>
                   </>
                 )}
               </CardContent>

@@ -48,16 +48,25 @@ export default function DiscussionsPage() {
 
   // Filter spaces based on user access
   const communitySpaces = allSpaces.filter(space => {
-    // If user is admin, show all spaces
-    if (user?.role === 'admin' || user?.role === 'owner') return true;
+    // If user is admin/owner/coach, show all spaces
+    if (user?.role === 'admin' || user?.role === 'owner' || user?.role === 'coach') return true;
     
     // Check if space is for IncubateHer program
     if (space.slug === 'incubateher-program' || space.icon === 'Target') {
       return userAccess?.entry_point === 'incubateher_program';
     }
     
-    // For other spaces, show if user has community access
-    return userAccess?.community_access;
+    // Check if user has specific space access in allowed_community_spaces
+    if (userAccess?.allowed_community_spaces?.includes(space.id)) {
+      return true;
+    }
+    
+    // For open spaces, allow if user has general community access
+    if (space.visibility === 'public') {
+      return true;
+    }
+    
+    return false;
   });
 
   // Parse URL parameters for space filter
@@ -99,7 +108,11 @@ export default function DiscussionsPage() {
     const searchMatch = !searchQuery || 
       d.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.content.toLowerCase().includes(searchQuery.toLowerCase());
-    return categoryMatch && spaceMatch && searchMatch;
+    
+    // Only show discussions from spaces user has access to
+    const hasSpaceAccess = communitySpaces.some(s => s.id === d.space_id) || !d.space_id;
+    
+    return categoryMatch && spaceMatch && searchMatch && hasSpaceAccess;
   });
 
   if (sortBy === 'recent') {
@@ -269,7 +282,7 @@ export default function DiscussionsPage() {
                     {selectedSpaceData ? selectedSpaceData.space_name : 'All Discussions'}
                   </h1>
                   <p className="text-slate-600 mt-1">
-                    {selectedSpaceData?.description || 'Browse all community discussions'}
+                    {selectedSpaceData?.welcome_message || selectedSpaceData?.description || 'Browse all community discussions'}
                   </p>
                 </div>
                 {canCreateDiscussions && (
