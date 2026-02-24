@@ -109,6 +109,58 @@ Provide a professional, concise response suitable for funding applications (2-3 
     }
   };
 
+  const processHtmlTemplate = (html, data) => {
+    if (!html) return '';
+    
+    let processed = html;
+    
+    // Handle certifications list
+    if (data.certifications) {
+      const certs = data.certifications.split('\n').filter(c => c.trim());
+      const certsList = certs.map(cert => `<li>${cert}</li>`).join('');
+      processed = processed.replace('{{certifications_list}}', certsList);
+    }
+    
+    // Handle core competencies
+    if (data.core_competencies) {
+      const comps = data.core_competencies.split('\n').filter(c => c.trim());
+      const compItems = comps.map(comp => `<span class="cap-competency">${comp}</span>`).join('');
+      processed = processed.replace('{{core_competencies_items}}', compItems);
+    }
+    
+    // Handle past performance projects
+    for (let i = 1; i <= 3; i++) {
+      const title = data[`past_performance_${i}_title`];
+      const client = data[`past_performance_${i}_client`];
+      const location = data[`past_performance_${i}_location`];
+      const duration = data[`past_performance_${i}_duration`];
+      const description = data[`past_performance_${i}_description`];
+      
+      if (title || client) {
+        const projectHtml = `
+          <div class="cap-project">
+            <div class="cap-project-title">Project Title: ${title || 'N/A'}</div>
+            <div class="cap-project-meta"><strong>Client:</strong> ${client || 'N/A'}</div>
+            <div class="cap-project-meta"><strong>Location:</strong> ${location || 'N/A'}</div>
+            <div class="cap-project-meta"><strong>Duration:</strong> ${duration || 'N/A'}</div>
+            <div class="cap-project-meta" style="margin-top: 8px;"><strong>Description:</strong> ${description || 'N/A'}</div>
+          </div>
+        `;
+        processed = processed.replace(`{{project_${i}}}`, projectHtml);
+      } else {
+        processed = processed.replace(`{{project_${i}}}`, '');
+      }
+    }
+    
+    // Replace all other placeholders
+    Object.entries(data).forEach(([key, value]) => {
+      const placeholder = `{{${key}}}`;
+      processed = processed.replace(new RegExp(placeholder, 'g'), value || '');
+    });
+    
+    return processed;
+  };
+
   const handleDownload = () => {
     const doc = new jsPDF('p', 'mm', 'letter');
     const pageWidth = 216;
@@ -186,7 +238,7 @@ Provide a professional, concise response suitable for funding applications (2-3 
             <div className="p-6 bg-white border rounded-lg">
               <div
                 className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: template.content_html }}
+                dangerouslySetInnerHTML={{ __html: processHtmlTemplate(template.content_html, formData) }}
               />
             </div>
           )}
