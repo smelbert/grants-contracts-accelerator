@@ -7,10 +7,16 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, User, Share2, ArrowRight } from 'lucide-react';
 import moment from 'moment';
 import { toast } from 'sonner';
+import CommentSection from '@/components/blog/CommentSection';
 
 export default function BlogPost() {
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get('slug');
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me().catch(() => null)
+  });
 
   const { data: post, isLoading } = useQuery({
     queryKey: ['blog-post', slug],
@@ -315,6 +321,14 @@ export default function BlogPost() {
             </div>
           </div>
         )}
+
+        {/* Comments Section */}
+        <CommentSection 
+          postId={post.id} 
+          postAuthorEmail={post.author_email}
+          user={user}
+          isAdmin={user?.role === 'admin' || user?.role === 'owner'}
+        />
       </div>
 
       {/* Related Posts */}
