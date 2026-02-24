@@ -10,6 +10,98 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { FileText, Save, Upload, Eye, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+const DEFAULT_HTML_TEMPLATES = {
+  'capability-statement': `<style>
+  .cap-statement { font-family: Arial, sans-serif; max-width: 850px; margin: 0 auto; }
+  .cap-header { background: #5A7C8A; color: white; padding: 40px 30px; margin-bottom: 30px; }
+  .cap-title { font-size: 32px; font-weight: bold; margin: 0; letter-spacing: 1px; }
+  .cap-info-box { background: white; border: 2px solid #5A7C8A; padding: 20px; margin: 20px 0; }
+  .cap-info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #ddd; }
+  .cap-info-label { font-weight: bold; color: #333; }
+  .cap-section { margin: 30px 0; }
+  .cap-section-title { background: #E8EDEF; padding: 12px 20px; font-weight: bold; margin-bottom: 15px; font-size: 14px; letter-spacing: 0.5px; }
+  .cap-content { padding: 0 20px; line-height: 1.6; }
+  .cap-list { list-style: none; padding: 0; }
+  .cap-list li { padding: 8px 0; padding-left: 25px; position: relative; }
+  .cap-list li:before { content: "✓"; position: absolute; left: 0; color: #5A7C8A; font-weight: bold; }
+  .cap-competency { display: inline-block; background: #F0F4F5; padding: 8px 15px; margin: 5px; border-radius: 4px; font-size: 14px; }
+  .cap-project { background: #F9FAFB; padding: 20px; margin: 15px 0; border-left: 4px solid #5A7C8A; }
+  .cap-project-title { font-weight: bold; color: #333; margin-bottom: 8px; }
+  .cap-project-meta { color: #666; font-size: 13px; margin: 3px 0; }
+  .cap-footer { margin-top: 40px; padding: 20px; background: #F5F5F5; text-align: center; font-size: 13px; }
+</style>
+
+<div class="cap-statement">
+  <div class="cap-header">
+    <div class="cap-title">CAPABILITY STATEMENT</div>
+  </div>
+
+  <div class="cap-info-box">
+    <div class="cap-info-row">
+      <span class="cap-info-label">DUNS:</span>
+      <span>{{duns}}</span>
+    </div>
+    <div class="cap-info-row">
+      <span class="cap-info-label">CAGE:</span>
+      <span>{{cage}}</span>
+    </div>
+  </div>
+
+  <div class="cap-section">
+    <div class="cap-section-title">NAICS CODES</div>
+    <div class="cap-content">
+      <div style="white-space: pre-line;">{{naics_codes}}</div>
+    </div>
+  </div>
+
+  <div class="cap-section">
+    <div class="cap-section-title">CERTIFICATIONS</div>
+    <div class="cap-content">
+      <ul class="cap-list">
+        {{certifications_list}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="cap-section">
+    <div class="cap-section-title">ABOUT US</div>
+    <div class="cap-content">
+      <p style="white-space: pre-line;">{{about_us}}</p>
+    </div>
+  </div>
+
+  <div class="cap-section">
+    <div class="cap-section-title">CORE COMPETENCIES</div>
+    <div class="cap-content">
+      {{core_competencies_items}}
+    </div>
+  </div>
+
+  <div class="cap-section">
+    <div class="cap-section-title">DIFFERENTIATORS</div>
+    <div class="cap-content">
+      <div style="white-space: pre-line;">{{differentiators}}</div>
+    </div>
+  </div>
+
+  <div class="cap-section">
+    <div class="cap-section-title">PAST PERFORMANCE</div>
+    <div class="cap-content">
+      {{project_1}}
+      {{project_2}}
+      {{project_3}}
+    </div>
+  </div>
+
+  <div class="cap-footer">
+    <strong>{{organization_name}}</strong><br>
+    {{website}}<br>
+    {{address}}<br>
+    P: {{phone}} | E: {{email}}
+  </div>
+</div>`,
+};
+
 const TEMPLATE_DEFINITIONS = {
   day1: [
     { id: 'org-overview', name: 'One-Page Organizational Overview' },
@@ -72,7 +164,7 @@ export default function DocumentTemplateEditor() {
         setTemplateName(defaultDef.name);
         setDescription('');
         setInstructions('');
-        setContentHtml('');
+        setContentHtml(DEFAULT_HTML_TEMPLATES[selectedTemplateId] || '');
         setFileUrl('');
       }
     }
@@ -230,15 +322,18 @@ export default function DocumentTemplateEditor() {
                             <div>
                               <label className="text-sm font-medium mb-2 block">Web Template (HTML)</label>
                               <p className="text-xs text-slate-600 mb-2">
-                                Add HTML content that will be displayed to users. This will show in the template preview along with name, description, and instructions.
+                                Add HTML content that will be displayed to users. Use placeholders like {`{{field_name}}`} to insert user data.
                               </p>
                               <Textarea
                                 value={contentHtml}
                                 onChange={(e) => setContentHtml(e.target.value)}
-                                placeholder="<div><h3>Section Title</h3><p>Content here...</p></div>"
+                                placeholder="<div><h3>Section Title</h3><p>{{organization_name}}</p></div>"
                                 rows={15}
                                 className="font-mono text-xs"
                               />
+                              <p className="text-xs text-slate-500 mt-2">
+                                Tip: A default HTML template is provided for Capability Statement. Edit as needed.
+                              </p>
                             </div>
 
                             <div>
