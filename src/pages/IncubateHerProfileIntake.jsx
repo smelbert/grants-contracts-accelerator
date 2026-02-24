@@ -25,6 +25,7 @@ import {
 import { toast } from 'sonner';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
+import SignatureField from '@/components/legal/SignatureField';
 
 export default function IncubateHerProfileIntake() {
   const queryClient = useQueryClient();
@@ -697,7 +698,7 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
                   What are you hoping to achieve through IncubateHer?
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <Label>Funding Goals</Label>
@@ -744,6 +745,14 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
                     rows={4}
                   />
                 </div>
+
+                {/* Signature Field */}
+                <SignatureField
+                  value={formData.signature || {}}
+                  onChange={(value) => handleChange('signature', value)}
+                  required={true}
+                  label="Profile Certification & Acknowledgement"
+                />
               </CardContent>
             </Card>
           </TabsContent>
