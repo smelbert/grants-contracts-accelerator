@@ -547,6 +547,8 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         <div>Page {page.order || 1}</div>
       </div>
     </div>
+
+    <LegalFooter />
     </>
   );
 }

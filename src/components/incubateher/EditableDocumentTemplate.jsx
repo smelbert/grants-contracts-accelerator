@@ -244,6 +244,8 @@ Provide a professional, concise response suitable for funding applications (2-3 
             </Button>
           </div>
         </div>
+
+        <LegalFooter />
       </DialogContent>
     </Dialog>
   );
