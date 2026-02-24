@@ -540,14 +540,6 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
             </div>
           </div>
         )}
-
-        {/* Signature and Date */}
-        <SignatureAndDate
-          signature={responses?.signature || ''}
-          date={responses?.signature_date || ''}
-          onSignatureChange={(value) => handleFieldChange('signature', value)}
-          onDateChange={(value) => handleFieldChange('signature_date', value)}
-        />
       </div>
 
       {/* Footer Band */}
