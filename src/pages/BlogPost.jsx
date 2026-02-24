@@ -6,7 +6,7 @@ import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Share2, ArrowRight } from 'lucide-react';
 import moment from 'moment';
 import { toast } from 'sonner';
 
