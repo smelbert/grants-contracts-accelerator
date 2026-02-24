@@ -9,6 +9,7 @@ import { CheckCircle2, Download, Sparkles, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import LegalFooter from '../legal/LegalFooter';
+import SignatureField from '../legal/SignatureField';
 
 export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {}, uploadedDocsData = {} }) {
   const [formData, setFormData] = useState({});
@@ -182,46 +183,57 @@ Provide a professional, concise response suitable for funding applications (2-3 
 
           {template.fields?.map((field) => (
             <div key={field.id} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label className="text-base font-semibold text-[#143A50]">
-                  {field.label} {field.required && <span className="text-red-500">*</span>}
-                </Label>
-                {!formData[field.id] && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleAIComplete(field.id, field.aiPrompt || field.label)}
-                    disabled={generating}
-                  >
-                    {generating ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-1" />
-                        AI Complete
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
-              {field.description && (
-                <p className="text-sm text-slate-600">{field.description}</p>
-              )}
-              {field.type === 'textarea' ? (
-                <Textarea
-                  value={formData[field.id] || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  placeholder={field.placeholder}
-                  rows={field.rows || 4}
-                  className="w-full"
+              {field.type === 'signature' ? (
+                <SignatureField
+                  value={formData[field.id] || {}}
+                  onChange={(value) => handleChange(field.id, value)}
+                  required={field.required}
+                  label={field.label}
                 />
               ) : (
-                <Input
-                  value={formData[field.id] || ''}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  placeholder={field.placeholder}
-                  className="w-full"
-                />
+                <>
+                  <div className="flex items-center justify-between">
+                    <Label className="text-base font-semibold text-[#143A50]">
+                      {field.label} {field.required && <span className="text-red-500">*</span>}
+                    </Label>
+                    {!formData[field.id] && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleAIComplete(field.id, field.aiPrompt || field.label)}
+                        disabled={generating}
+                      >
+                        {generating ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 mr-1" />
+                            AI Complete
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                  {field.description && (
+                    <p className="text-sm text-slate-600">{field.description}</p>
+                  )}
+                  {field.type === 'textarea' ? (
+                    <Textarea
+                      value={formData[field.id] || ''}
+                      onChange={(e) => handleChange(field.id, e.target.value)}
+                      placeholder={field.placeholder}
+                      rows={field.rows || 4}
+                      className="w-full"
+                    />
+                  ) : (
+                    <Input
+                      value={formData[field.id] || ''}
+                      onChange={(e) => handleChange(field.id, e.target.value)}
+                      placeholder={field.placeholder}
+                      className="w-full"
+                    />
+                  )}
+                </>
               )}
             </div>
           ))}

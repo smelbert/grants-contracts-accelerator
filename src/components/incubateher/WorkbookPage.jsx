@@ -13,6 +13,7 @@ import CollaborationPanel from '../workbook/CollaborationPanel';
 import TableEditor from '../shared/TableEditor';
 import ChartBuilder from '../shared/ChartBuilder';
 import LegalFooter from '../legal/LegalFooter';
+import SignatureField from '../legal/SignatureField';
 
 const PageTypeIcon = ({ type }) => {
   const icons = {
@@ -528,6 +529,18 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                       <ChartBuilder
                         value={fieldValue || {}}
                         onChange={(value) => handleFieldChange(field.id, value)}
+                      />
+                    </div>
+                  );
+
+                case 'signature':
+                  return (
+                    <div key={field.id}>
+                      <SignatureField
+                        value={fieldValue || {}}
+                        onChange={(value) => handleFieldChange(field.id, value)}
+                        required={field.required}
+                        label={field.label}
                       />
                     </div>
                   );
