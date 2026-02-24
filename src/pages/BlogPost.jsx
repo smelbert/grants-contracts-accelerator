@@ -153,24 +153,148 @@ export default function BlogPost() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
-        <article>
-          <div 
-            className="prose prose-lg prose-slate max-w-none
-              prose-headings:text-[#143A50]
-              prose-h1:text-4xl prose-h1:font-bold prose-h1:mb-8 prose-h1:mt-8
-              prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-12 prose-h2:mb-6
-              prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-4
-              prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg
-              prose-ul:my-6 prose-ul:ml-6 prose-ul:space-y-2
-              prose-ol:my-6 prose-ol:ml-6 prose-ol:space-y-2
-              prose-li:text-slate-700 prose-li:text-lg prose-li:leading-relaxed
-              prose-strong:text-[#143A50] prose-strong:font-semibold
-              prose-a:text-[#AC1A5B] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
-              prose-blockquote:border-l-4 prose-blockquote:border-[#E5C089] prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-slate-600
-              prose-hr:my-12 prose-hr:border-slate-200
-              prose-code:text-[#AC1A5B] prose-code:bg-slate-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+        <article className="bg-white">
+          <style>{`
+            article h1 {
+              font-size: 2.5rem;
+              font-weight: 700;
+              color: #143A50;
+              margin-top: 3rem;
+              margin-bottom: 1.5rem;
+              line-height: 1.2;
+              border-bottom: 3px solid #E5C089;
+              padding-bottom: 0.75rem;
+            }
+            
+            article h2 {
+              font-size: 2rem;
+              font-weight: 700;
+              color: #143A50;
+              margin-top: 3rem;
+              margin-bottom: 1.25rem;
+              line-height: 1.3;
+              padding-left: 1rem;
+              border-left: 4px solid #AC1A5B;
+            }
+            
+            article h3 {
+              font-size: 1.5rem;
+              font-weight: 600;
+              color: #1E4F58;
+              margin-top: 2rem;
+              margin-bottom: 1rem;
+              line-height: 1.4;
+            }
+            
+            article p {
+              font-size: 1.125rem;
+              line-height: 1.8;
+              color: #334155;
+              margin-bottom: 1.5rem;
+            }
+            
+            article ul, article ol {
+              margin: 1.5rem 0;
+              padding-left: 2rem;
+            }
+            
+            article li {
+              font-size: 1.125rem;
+              line-height: 1.8;
+              color: #334155;
+              margin-bottom: 0.75rem;
+            }
+            
+            article strong {
+              font-weight: 600;
+              color: #143A50;
+            }
+            
+            article em {
+              font-style: italic;
+              color: #475569;
+            }
+            
+            article a {
+              color: #AC1A5B;
+              text-decoration: none;
+              font-weight: 500;
+              border-bottom: 1px solid transparent;
+              transition: border-color 0.2s;
+            }
+            
+            article a:hover {
+              border-bottom-color: #AC1A5B;
+            }
+            
+            article blockquote {
+              border-left: 4px solid #E5C089;
+              padding-left: 1.5rem;
+              margin: 2rem 0;
+              font-style: italic;
+              color: #64748b;
+              background: #F8F9FA;
+              padding: 1.5rem;
+              border-radius: 0.5rem;
+            }
+            
+            article hr {
+              margin: 3rem 0;
+              border: none;
+              border-top: 2px solid #E2E8F0;
+            }
+            
+            article code {
+              background: #F1F5F9;
+              color: #AC1A5B;
+              padding: 0.2rem 0.4rem;
+              border-radius: 0.25rem;
+              font-size: 0.9em;
+              font-family: 'Monaco', 'Courier New', monospace;
+            }
+            
+            article pre {
+              background: #1E293B;
+              color: #E2E8F0;
+              padding: 1.5rem;
+              border-radius: 0.5rem;
+              overflow-x: auto;
+              margin: 2rem 0;
+            }
+            
+            article pre code {
+              background: transparent;
+              color: inherit;
+              padding: 0;
+            }
+            
+            article img {
+              max-width: 100%;
+              height: auto;
+              border-radius: 0.5rem;
+              margin: 2rem 0;
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+            
+            article table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 2rem 0;
+            }
+            
+            article th, article td {
+              border: 1px solid #E2E8F0;
+              padding: 0.75rem;
+              text-align: left;
+            }
+            
+            article th {
+              background: #F8F9FA;
+              font-weight: 600;
+              color: #143A50;
+            }
+          `}</style>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </article>
 
         {/* Author Bio */}
