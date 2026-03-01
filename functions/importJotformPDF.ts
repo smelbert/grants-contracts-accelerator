@@ -119,7 +119,24 @@ Deno.serve(async (req) => {
         data.funding_barrier && `Funding Barrier: ${data.funding_barrier}`,
         data.existing_items && `Existing Items: ${data.existing_items}`,
         data.submission_date && `Submitted: ${data.submission_date}`,
-      ].filter(Boolean).join(' | ')
+      ].filter(Boolean).join(' | '),
+      jotform_data: {
+        submission_date: data.submission_date || '',
+        cohort: data.cohort || '',
+        participation_plan: data.participation_plan || '',
+        attend_in_person: data.attend_in_person || '',
+        interested_in_consultation: data.interested_in_consultation || '',
+        documents_needed: data.documents_needed || '',
+        funding_barrier: data.funding_barrier || '',
+        existing_items: data.existing_items || '',
+        goals: data.goals || '',
+        org_type: data.org_type || '',
+        years_in_business: data.years_in_business || '',
+        annual_revenue: data.annual_revenue || '',
+        employees: data.employees || '',
+        grant_experience: data.grant_experience || '',
+        how_heard: data.how_heard || ''
+      }
     };
 
     if (existingEnrollments.length === 0) {
