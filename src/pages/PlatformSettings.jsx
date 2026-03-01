@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Settings, CreditCard, Bell, Shield, User } from 'lucide-react';
+import { Settings, CreditCard, Bell, Shield, User, Users } from 'lucide-react';
+import UserAccessManager from '@/components/admin/UserAccessManager';
 import { toast } from 'sonner';
 
 export default function PlatformSettings() {
