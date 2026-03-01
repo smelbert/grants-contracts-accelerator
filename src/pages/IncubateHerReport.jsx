@@ -417,6 +417,7 @@ CHECKLIST FOR CUL SUBMISSION:
       <Tabs defaultValue="participant_overview" className="space-y-6">
         <TabsList className="flex w-full overflow-x-auto h-auto flex-wrap gap-1 justify-start bg-muted p-1">
           <TabsTrigger value="participant_overview" className="whitespace-nowrap">Participant Overview</TabsTrigger>
+          <TabsTrigger value="registration_insights" className="whitespace-nowrap">Registration Insights</TabsTrigger>
           <TabsTrigger value="section1" className="whitespace-nowrap">Program Overview</TabsTrigger>
           <TabsTrigger value="section2" className="whitespace-nowrap">Outputs</TabsTrigger>
           <TabsTrigger value="section3" className="whitespace-nowrap">Outcomes</TabsTrigger>
@@ -428,6 +429,11 @@ CHECKLIST FOR CUL SUBMISSION:
         {/* Participant Overview Tab */}
         <TabsContent value="participant_overview">
           <ParticipantOverviewReport enrollments={enrollments || []} />
+        </TabsContent>
+
+        {/* Registration Insights Brief */}
+        <TabsContent value="registration_insights">
+          <RegistrationInsightsBrief />
         </TabsContent>
 
         {/* Section 1: Overview */}
