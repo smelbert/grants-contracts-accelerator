@@ -237,6 +237,13 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
           </CardContent>
         </Card>
 
+        {/* JotForm Registration Data */}
+        {enrollment && (enrollment.jotform_data || enrollment.enrollment_notes) && (
+          <div className="mb-6">
+            <JotFormProfile enrollment={enrollment} />
+          </div>
+        )}
+
         {/* Alert: Why this matters */}
         <Card className="mb-6 bg-blue-50 border-2 border-blue-200">
           <CardContent className="py-4">
