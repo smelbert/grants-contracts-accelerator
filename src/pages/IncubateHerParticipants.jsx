@@ -192,6 +192,16 @@ export default function IncubateHerParticipants() {
           </CardContent>
         </Card>
 
+        {/* Aggregates */}
+        {enrollments.length > 0 && (
+          <ParticipantAggregates
+            enrollments={enrollments}
+            onFilter={handleFilter}
+            activeFilters={activeFilters}
+            onClearFilters={handleClearFilters}
+          />
+        )}
+
         {/* Search */}
         <Card className="mb-6">
           <CardContent className="pt-6">
