@@ -11,6 +11,58 @@ import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, Che
 
 export default function IncubateHerParticipants() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [uploadQueue, setUploadQueue] = useState([]); // [{file, status, result, error}]
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef(null);
+  const queryClient = useQueryClient();
+
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
+    const newItems = files.map(file => ({ file, status: 'pending', result: null, error: null }));
+    setUploadQueue(prev => [...prev, ...newItems]);
+    e.target.value = '';
+  };
+
+  const processQueue = async () => {
+    setIsProcessing(true);
+    const pending = uploadQueue.filter(item => item.status === 'pending');
+
+    for (let i = 0; i < pending.length; i++) {
+      const item = pending[i];
+      const idx = uploadQueue.findIndex(q => q.file === item.file);
+
+      // Mark as processing
+      setUploadQueue(prev => prev.map((q, j) => 
+        q.file === item.file ? { ...q, status: 'processing' } : q
+      ));
+
+      try {
+        // Upload to storage first
+        const { file_url } = await base44.integrations.Core.UploadFile({ file: item.file });
+
+        // Process via backend function
+        const response = await base44.functions.invoke('importJotformPDF', {
+          file_url,
+          file_name: item.file.name
+        });
+
+        setUploadQueue(prev => prev.map(q =>
+          q.file === item.file ? { ...q, status: 'success', result: response.data } : q
+        ));
+      } catch (err) {
+        setUploadQueue(prev => prev.map(q =>
+          q.file === item.file ? { ...q, status: 'error', error: err.message } : q
+        ));
+      }
+    }
+
+    setIsProcessing(false);
+    queryClient.invalidateQueries({ queryKey: ['all-enrollments'] });
+  };
+
+  const removeFromQueue = (file) => {
+    setUploadQueue(prev => prev.filter(q => q.file !== file));
+  };
 
   const { data: cohort } = useQuery({
     queryKey: ['incubateher-cohort'],
