@@ -50,7 +50,7 @@ export default function RegistrationAttachments({ submission, onUpdated }) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" onClick={e => e.stopPropagation()}>
       <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1">
         <Paperclip className="w-3 h-3" /> Attachments ({attachments.length})
       </p>
