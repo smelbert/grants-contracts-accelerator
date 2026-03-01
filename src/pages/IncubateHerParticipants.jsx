@@ -64,25 +64,19 @@ export default function IncubateHerParticipants() {
     setUploadQueue(prev => prev.filter(q => q.file !== file));
   };
 
-  const { data: cohort } = useQuery({
-    queryKey: ['incubateher-cohort'],
-    queryFn: async () => {
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
-      });
-      return cohorts[0];
-    }
-  });
-
   const { data: enrollments = [] } = useQuery({
     queryKey: ['all-enrollments'],
     queryFn: async () => {
-      if (!cohort?.id) return [];
-      return await base44.entities.ProgramEnrollment.filter({
-        cohort_id: cohort.id
+      // Load all enrollments for IncubateHer cohorts
+      const cohorts = await base44.entities.ProgramCohort.filter({
+        program_code: 'incubateher-2024'
       });
-    },
-    enabled: !!cohort?.id
+      if (cohorts.length === 0) return [];
+      const allEnrollments = await Promise.all(
+        cohorts.map(c => base44.entities.ProgramEnrollment.filter({ cohort_id: c.id }))
+      );
+      return allEnrollments.flat();
+    }
   });
 
   const filteredEnrollments = enrollments.filter(e => 
