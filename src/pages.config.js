@@ -208,6 +208,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import BlogManagement from './pages/BlogManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -373,6 +374,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "BlogManagement": BlogManagement,
 }
 
 export const pagesConfig = {
