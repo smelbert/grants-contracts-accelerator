@@ -379,7 +379,7 @@ export default function WorkbookSectionEditor() {
                             </div>
                           </div>
                         </CardHeader>
-                        <CardContent className="space-y-4">
+                        <CardContent className="space-y-4 max-h-96 overflow-y-auto">
                           <div>
                             <label className="text-sm font-medium mb-2 block">Page Title</label>
                             <Input
