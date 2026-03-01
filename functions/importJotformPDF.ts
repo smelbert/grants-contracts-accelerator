@@ -15,17 +15,24 @@ Deno.serve(async (req) => {
       json_schema: {
         type: "object",
         properties: {
-          full_name: { type: "string" },
-          email: { type: "string" },
-          phone: { type: "string" },
-          cohort: { type: "string" },
-          participation_plan: { type: "string" },
-          attend_in_person: { type: "string" },
-          interested_in_consultation: { type: "string" },
-          documents_needed: { type: "string" },
-          funding_barrier: { type: "string" },
-          existing_items: { type: "string" },
-          submission_date: { type: "string" }
+          full_name: { type: "string", description: "Participant's full name" },
+          email: { type: "string", description: "Participant's email address" },
+          phone: { type: "string", description: "Phone number" },
+          cohort: { type: "string", description: "Cohort or organization name" },
+          submission_date: { type: "string", description: "Date form was submitted" },
+          participation_plan: { type: "string", description: "How they plan to participate (all sessions, most sessions, etc.)" },
+          attend_in_person: { type: "string", description: "Will they attend in person or virtually?" },
+          interested_in_consultation: { type: "string", description: "Interest in 1:1 consultation" },
+          documents_needed: { type: "string", description: "What documents they still need to gather" },
+          funding_barrier: { type: "string", description: "Primary barrier to accessing funding" },
+          existing_items: { type: "string", description: "Documents or items they already have" },
+          goals: { type: "string", description: "Goals or what they hope to get from the program" },
+          org_type: { type: "string", description: "Type of organization (nonprofit, LLC, etc.)" },
+          years_in_business: { type: "string", description: "How long in business" },
+          annual_revenue: { type: "string", description: "Annual revenue or budget" },
+          employees: { type: "string", description: "Number of employees or staff" },
+          grant_experience: { type: "string", description: "Previous grant writing or funding experience" },
+          how_heard: { type: "string", description: "How they heard about the program" }
         }
       }
     });
