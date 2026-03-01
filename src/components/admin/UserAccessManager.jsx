@@ -11,11 +11,60 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search, Users, ChevronDown, ChevronUp, Save } from 'lucide-react';
 import { toast } from 'sonner';
 
+// All nav tabs grouped by portal — mirrors what's in Layout.js
+const PORTAL_TABS = {
+  'User Portal': [
+    { page: 'Home', label: 'Dashboard' },
+    { page: 'FundingReadinessAssessment', label: 'Funding Readiness' },
+    { page: 'AIDocumentReview', label: 'AI Document Review' },
+    { page: 'Projects', label: 'Projects' },
+    { page: 'Documents', label: 'Documents' },
+    { page: 'Opportunities', label: 'Funding Opportunities' },
+    { page: 'BoutiqueServices', label: 'Boutique Services' },
+    { page: 'Learning', label: 'Learning Hub' },
+    { page: 'ResourceLibrary', label: 'Resource Library' },
+    { page: 'ProgramCalendar', label: 'Program Calendar' },
+    { page: 'Community', label: 'Community Spaces' },
+    { page: 'Events', label: 'Events' },
+    { page: 'ProgramMessaging', label: 'Program Messaging' },
+    { page: 'MyMentorship', label: 'My Mentorship' },
+    { page: 'Blog', label: 'Blog' },
+    { page: 'MyProfile', label: 'My Profile' },
+    { page: 'Profile', label: 'My Organization' },
+    { page: 'Settings', label: 'Settings' },
+  ],
+  'IncubateHer Program': [
+    { page: 'IncubateHerOverview', label: 'Program Overview' },
+    { page: 'IncubateHerProfileIntake', label: 'My Profile' },
+    { page: 'IncubateHerLearning', label: 'Learning Hub' },
+    { page: 'IncubateHerDocuments', label: 'Document Templates' },
+    { page: 'IncubateHerSchedule', label: 'Schedule & Videos' },
+    { page: 'IncubateHerWorkbook', label: 'Workbook' },
+    { page: 'IncubateHerAssessments', label: 'Assessments & Evaluations' },
+    { page: 'IncubateHerConsultations', label: 'Consultations' },
+    { page: 'IncubateHerCompletion', label: 'Completion Tracker' },
+    { page: 'IncubateHerGiveaway', label: 'Giveaway' },
+  ],
+  'Coach Portal': [
+    { page: 'CoachDashboard', label: 'Coach Dashboard' },
+    { page: 'CoachProfile', label: 'My Profile' },
+    { page: 'TrainingFramework', label: 'Training Framework' },
+    { page: 'MentorDashboard', label: 'Mentor Dashboard' },
+    { page: 'AssignedOrganizations', label: 'Assigned Organizations' },
+    { page: 'ReviewQueue', label: 'Review Queue' },
+    { page: 'VideoFeedback', label: 'Video Feedback' },
+    { page: 'TeachingContent', label: 'Teaching & Content' },
+    { page: 'FlagsNotes', label: 'Flags & Notes' },
+  ],
+};
+
+const accessOptions = ['community_only', 'coaching_portal', 'full_platform'];
+
 export default function UserAccessManager() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [expandedUser, setExpandedUser] = useState(null);
-  const [editingAccess, setEditingAccess] = useState({});
+  const [pendingChanges, setPendingChanges] = useState({});
 
   const { data: users = [] } = useQuery({
     queryKey: ['all-users'],
@@ -36,34 +85,42 @@ export default function UserAccessManager() {
         return base44.entities.UserAccessLevel.create({ user_email: userEmail, ...data });
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, { userEmail }) => {
       queryClient.invalidateQueries(['all-access-levels']);
+      setPendingChanges(prev => { const n = { ...prev }; delete n[userEmail]; return n; });
       toast.success('User access updated');
     }
   });
 
   const getUserAccess = (email) => accessLevels.find(a => a.user_email === email);
 
-  const handleEdit = (email, field, value) => {
-    setEditingAccess(prev => ({
+  const handleFieldChange = (email, field, value) => {
+    setPendingChanges(prev => ({
       ...prev,
       [email]: { ...prev[email], [field]: value }
     }));
   };
 
+  const handleTabToggle = (email, page, enabled, currentAccess) => {
+    const existing = { ...(currentAccess?.disabled_tabs || {}) };
+    if (!enabled) {
+      existing[page] = true;
+    } else {
+      delete existing[page];
+    }
+    handleFieldChange(email, 'disabled_tabs', existing);
+  };
+
   const handleSave = (email) => {
-    const changes = editingAccess[email];
+    const changes = pendingChanges[email];
     if (!changes) return;
     updateAccessMutation.mutate({ userEmail: email, data: changes });
-    setEditingAccess(prev => { const n = { ...prev }; delete n[email]; return n; });
   };
 
   const filteredUsers = users.filter(u =>
     u.email?.toLowerCase().includes(search.toLowerCase()) ||
     u.full_name?.toLowerCase().includes(search.toLowerCase())
   );
-
-  const accessOptions = ['community_only', 'coaching_portal', 'full_platform'];
 
   return (
     <div className="space-y-6">
@@ -72,7 +129,7 @@ export default function UserAccessManager() {
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" /> User Access Management
           </CardTitle>
-          <CardDescription>Control what each user can access across the platform</CardDescription>
+          <CardDescription>Control what each user can see across all portals. Toggle individual tabs on/off per user.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="relative mb-4">
@@ -88,23 +145,22 @@ export default function UserAccessManager() {
           <div className="space-y-2">
             {filteredUsers.map(user => {
               const access = getUserAccess(user.email);
-              const pending = editingAccess[user.email] || {};
+              const pending = pendingChanges[user.email] || {};
               const isExpanded = expandedUser === user.email;
+              const hasPending = !!pendingChanges[user.email];
 
-              const current = {
-                access_level: pending.access_level ?? access?.access_level ?? 'community_only',
-                learning_hub_access: pending.learning_hub_access ?? access?.learning_hub_access ?? false,
-                coaching_access: pending.coaching_access ?? access?.coaching_access ?? false,
-              };
+              const currentAccessLevel = pending.access_level ?? access?.access_level ?? 'community_only';
+              const disabledTabs = pending.disabled_tabs ?? access?.disabled_tabs ?? {};
 
               return (
                 <div key={user.email} className="border rounded-lg overflow-hidden">
+                  {/* User Row Header */}
                   <div
                     className="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-50"
                     onClick={() => setExpandedUser(isExpanded ? null : user.email)}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-sm font-medium text-slate-600">
+                      <div className="w-8 h-8 rounded-full bg-[#143A50]/10 flex items-center justify-center text-sm font-medium text-[#143A50]">
                         {(user.full_name?.[0] || user.email?.[0] || '?').toUpperCase()}
                       </div>
                       <div>
@@ -113,49 +169,57 @@ export default function UserAccessManager() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">{access?.access_level || 'community_only'}</Badge>
+                      <Badge variant="outline" className="text-xs capitalize">{currentAccessLevel.replace(/_/g, ' ')}</Badge>
+                      {hasPending && <Badge className="text-xs bg-amber-100 text-amber-700">Unsaved</Badge>}
                       {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                     </div>
                   </div>
 
+                  {/* Expanded Panel */}
                   {isExpanded && (
-                    <div className="border-t p-4 bg-slate-50 space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label className="text-xs mb-1 block">Access Level</Label>
-                          <Select
-                            value={current.access_level}
-                            onValueChange={v => handleEdit(user.email, 'access_level', v)}
-                          >
-                            <SelectTrigger className="h-8 text-sm">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {accessOptions.map(opt => (
-                                <SelectItem key={opt} value={opt}>{opt.replace(/_/g, ' ')}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <Label className="text-xs">Learning Hub Access</Label>
-                            <Switch
-                              checked={current.learning_hub_access}
-                              onCheckedChange={v => handleEdit(user.email, 'learning_hub_access', v)}
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <Label className="text-xs">Coaching Access</Label>
-                            <Switch
-                              checked={current.coaching_access}
-                              onCheckedChange={v => handleEdit(user.email, 'coaching_access', v)}
-                            />
-                          </div>
-                        </div>
+                    <div className="border-t p-4 bg-slate-50 space-y-6">
+                      {/* Access Level */}
+                      <div className="flex items-center gap-4">
+                        <Label className="text-sm font-semibold w-32">Access Level</Label>
+                        <Select
+                          value={currentAccessLevel}
+                          onValueChange={v => handleFieldChange(user.email, 'access_level', v)}
+                        >
+                          <SelectTrigger className="h-8 text-sm w-48">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {accessOptions.map(opt => (
+                              <SelectItem key={opt} value={opt}>{opt.replace(/_/g, ' ')}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                      {editingAccess[user.email] && (
-                        <Button size="sm" onClick={() => handleSave(user.email)} className="gap-1">
+
+                      {/* Per-Portal Tab Toggles */}
+                      {Object.entries(PORTAL_TABS).map(([portalName, tabs]) => (
+                        <div key={portalName}>
+                          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">{portalName}</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {tabs.map(({ page, label }) => {
+                              const isEnabled = !disabledTabs[page];
+                              return (
+                                <div key={page} className="flex items-center justify-between bg-white border rounded-md px-3 py-2">
+                                  <span className="text-sm text-slate-700">{label}</span>
+                                  <Switch
+                                    checked={isEnabled}
+                                    onCheckedChange={v => handleTabToggle(user.email, page, v, { ...access, disabled_tabs: disabledTabs })}
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Save */}
+                      {hasPending && (
+                        <Button size="sm" onClick={() => handleSave(user.email)} className="gap-1 bg-[#143A50] hover:bg-[#1E4F58]">
                           <Save className="w-3 h-3" /> Save Changes
                         </Button>
                       )}
