@@ -300,6 +300,8 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
         const unlock = new Date(unlockDate);
         if (now < unlock) return false; // Not unlocked yet
       }
+      // Hide tabs disabled by admin
+      if (userAccess?.disabled_tabs?.[item.page]) return false;
       return true;
     })
   })).filter(group => group.items.length > 0);
