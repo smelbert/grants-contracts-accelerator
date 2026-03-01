@@ -13,6 +13,7 @@ import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, Che
 
 export default function IncubateHerParticipants() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedProfiles, setExpandedProfiles] = useState({});
   const [uploadQueue, setUploadQueue] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeFilters, setActiveFilters] = useState({});
