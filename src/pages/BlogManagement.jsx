@@ -296,12 +296,57 @@ export default function BlogManagement() {
               </div>
 
               <div>
-                <Label>Featured Image URL</Label>
-                <Input
-                  value={editingPost.featured_image || ''}
-                  onChange={(e) => setEditingPost(prev => ({ ...prev, featured_image: e.target.value }))}
-                  placeholder="https://..."
-                />
+                <Label>Featured Image</Label>
+                <div className="space-y-2 mt-1">
+                  {editingPost.featured_image && (
+                    <div className="relative w-full h-40 rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                      <img
+                        src={editingPost.featured_image}
+                        alt="Featured"
+                        className="w-full h-full object-cover"
+                        onError={e => { e.target.style.display = 'none'; }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setEditingPost(prev => ({ ...prev, featured_image: '' }))}
+                        className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-50"
+                      >
+                        <X className="w-3 h-3 text-red-500" />
+                      </button>
+                    </div>
+                  )}
+                  <div className="flex gap-2 items-center">
+                    <label className="flex-1">
+                      <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                        <Upload className="w-4 h-4 text-slate-400" />
+                        <span className="text-sm text-slate-600">
+                          {editingPost._uploading ? 'Uploading...' : 'Upload image'}
+                        </span>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={editingPost._uploading}
+                        onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          setEditingPost(prev => ({ ...prev, _uploading: true }));
+                          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                          setEditingPost(prev => ({ ...prev, featured_image: file_url, _uploading: false }));
+                          toast.success('Image uploaded!');
+                        }}
+                      />
+                    </label>
+                    <span className="text-xs text-slate-400">or</span>
+                    <Input
+                      value={editingPost.featured_image || ''}
+                      onChange={(e) => setEditingPost(prev => ({ ...prev, featured_image: e.target.value }))}
+                      placeholder="Paste image URL..."
+                      className="flex-1 text-sm"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div>
