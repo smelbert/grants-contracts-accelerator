@@ -27,6 +27,7 @@ export default function BlogManagement() {
   const [search, setSearch] = useState('');
   const [editingPost, setEditingPost] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAIOpen, setIsAIOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: posts = [], isLoading } = useQuery({
