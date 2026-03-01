@@ -424,6 +424,11 @@ CHECKLIST FOR CUL SUBMISSION:
           <TabsTrigger value="section6">Incentive</TabsTrigger>
         </TabsList>
 
+        {/* Participant Overview Tab */}
+        <TabsContent value="participant_overview">
+          <ParticipantOverviewReport enrollments={enrollments || []} />
+        </TabsContent>
+
         {/* Section 1: Overview */}
         <TabsContent value="section1">
           <Card>
