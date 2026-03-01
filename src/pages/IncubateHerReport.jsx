@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileText, Download, Save, CheckCircle2, Sparkles } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import jsPDF from 'jspdf';
+import ParticipantOverviewReport from '@/components/incubateher/ParticipantOverviewReport';
 
 export default function IncubateHerReportPage() {
   const [reportData, setReportData] = useState({
