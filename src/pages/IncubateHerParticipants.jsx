@@ -12,10 +12,22 @@ import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, Che
 
 export default function IncubateHerParticipants() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [uploadQueue, setUploadQueue] = useState([]); // [{file, status, result, error}]
+  const [uploadQueue, setUploadQueue] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({});
+  const [filterExtractors, setFilterExtractors] = useState({});
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
+
+  const handleFilter = (key, val, extractor) => {
+    setActiveFilters(prev => ({ ...prev, [key]: val }));
+    setFilterExtractors(prev => ({ ...prev, [key]: extractor }));
+  };
+
+  const handleClearFilters = () => {
+    setActiveFilters({});
+    setFilterExtractors({});
+  };
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
