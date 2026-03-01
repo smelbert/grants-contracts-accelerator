@@ -266,6 +266,7 @@ export default function IncubateHerCULDashboard() {
             </div>
           </CardContent>
         </Card>
+          </div>
           </TabsContent>
         </Tabs>
       </div>
