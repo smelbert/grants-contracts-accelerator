@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
+import ParticipantAggregates from '@/components/incubateher/ParticipantAggregates';
 import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle } from 'lucide-react';
 
 export default function IncubateHerParticipants() {
