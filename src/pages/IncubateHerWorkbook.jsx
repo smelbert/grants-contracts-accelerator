@@ -449,6 +449,7 @@ export default function IncubateHerWorkbook() {
               assessmentResults={assessmentResults}
               customContent={customPages.find(p => p.page_id === currentPage.id)}
               organizationProfile={organizationProfile}
+              enrollment={enrollment}
             />
 
             <div className="flex justify-between items-center mt-6">
