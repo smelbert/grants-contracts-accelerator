@@ -234,12 +234,21 @@ export default function BlogManagement() {
 
       {/* Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={(open) => { if (!open) { setIsDialogOpen(false); setEditingPost(null); } }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex flex-row items-center justify-between">
             <DialogTitle>{editingPost?.id ? 'Edit Post' : 'New Post'}</DialogTitle>
+            <Button variant="outline" size="sm" onClick={() => setIsAIOpen(true)} className="gap-1">
+              <Sparkles className="w-4 h-4" /> AI Assistant
+            </Button>
           </DialogHeader>
           {editingPost && (
-            <div className="space-y-4 pt-2">
+            <Tabs defaultValue="basic" className="mt-4">
+              <TabsList>
+                <TabsTrigger value="basic">Basic</TabsTrigger>
+                <TabsTrigger value="seo">SEO & Sharing</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="basic" className="space-y-4 mt-4">
               <div>
                 <Label>Title *</Label>
                 <Input
