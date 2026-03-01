@@ -1,9 +1,9 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClient } from 'npm:@base44/sdk@0.8.6';
+
+const base44 = createClient({ appId: Deno.env.get("BASE44_APP_ID") });
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
-    
     // Parse the incoming JotForm submission
     const formData = await req.formData();
     const rawSubmission = formData.get('rawRequest');
@@ -14,40 +14,48 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No submission data' }, { status: 400 });
     }
 
-    console.log('JotForm submission received:', submission);
+    console.log('JotForm submission received:', JSON.stringify(submission).substring(0, 500));
 
-    // Extract form fields - adjust these field IDs based on your actual JotForm
     const answers = submission.answers || {};
     
-    // Common JotForm field mappings (you'll need to adjust based on your form)
     let email = '';
     let firstName = '';
     let lastName = '';
     let phone = '';
     let organization = '';
     
-    // Extract data from answers object
     Object.values(answers).forEach(answer => {
-      const text = answer.answer || answer.text || '';
+      const text = Array.isArray(answer.answer) ? answer.answer.join(' ') : (answer.answer || answer.text || '');
       const name = (answer.name || '').toLowerCase();
+      const type = (answer.type || '').toLowerCase();
       
-      if (name.includes('email') || answer.type === 'control_email') {
-        email = text;
-      } else if (name.includes('first') && name.includes('name')) {
-        firstName = text;
-      } else if (name.includes('last') && name.includes('name')) {
-        lastName = text;
+      if (name.includes('email') || type === 'control_email') {
+        email = typeof text === 'string' ? text.trim() : '';
+      } else if ((name.includes('first') && name.includes('name')) || name === 'firstname') {
+        firstName = typeof text === 'string' ? text.trim() : '';
+      } else if ((name.includes('last') && name.includes('name')) || name === 'lastname') {
+        lastName = typeof text === 'string' ? text.trim() : '';
+      } else if (name.includes('name') && !firstName && !lastName && type === 'control_fullname') {
+        // Handle full name field
+        if (answer.answer && typeof answer.answer === 'object') {
+          firstName = answer.answer.first || '';
+          lastName = answer.answer.last || '';
+        } else {
+          const parts = text.split(' ');
+          firstName = parts[0] || '';
+          lastName = parts.slice(1).join(' ') || '';
+        }
       } else if (name.includes('phone')) {
-        phone = text;
-      } else if (name.includes('organization') || name.includes('company')) {
-        organization = text;
+        phone = typeof text === 'string' ? text.trim() : '';
+      } else if (name.includes('organization') || name.includes('company') || name.includes('org')) {
+        organization = typeof text === 'string' ? text.trim() : '';
       }
     });
 
     const fullName = `${firstName} ${lastName}`.trim();
 
     if (!email) {
-      console.error('No email found in submission');
+      console.error('No email found in submission. Answers:', JSON.stringify(answers));
       return Response.json({ error: 'Email is required' }, { status: 400 });
     }
 
@@ -91,7 +99,11 @@ Deno.serve(async (req) => {
 
     // Invite user to the platform
     console.log(`Inviting user: ${email}`);
-    await base44.asServiceRole.users.inviteUser(email, 'user');
+    try {
+      await base44.asServiceRole.users.inviteUser(email, 'user');
+    } catch (inviteError) {
+      console.log('User invite error (may already exist):', inviteError.message);
+    }
 
     // Check if enrollment already exists
     const existingEnrollments = await base44.asServiceRole.entities.ProgramEnrollment.filter({
@@ -156,7 +168,7 @@ Deno.serve(async (req) => {
         subject: 'Welcome to the IncubateHER Program!',
         from_name: 'Elbert Innovative Solutions',
         body: `
-          <h2>Welcome to IncubateHER, ${firstName}!</h2>
+          <h2>Welcome to IncubateHER, ${firstName || fullName}!</h2>
           
           <p>We're thrilled to have you join the IncubateHER Program. Your journey to funding readiness starts now!</p>
           
@@ -182,7 +194,6 @@ Deno.serve(async (req) => {
       console.log('Welcome email sent');
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
-      // Don't fail the entire process if email fails
     }
 
     console.log('Enrollment completed successfully');
@@ -195,7 +206,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('JotForm webhook error:', error);
+    console.error('JotForm webhook error:', error.message, error.stack);
     return Response.json({ 
       error: error.message,
       details: error.stack
