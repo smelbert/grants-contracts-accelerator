@@ -143,10 +143,8 @@ Deno.serve(async (req) => {
       enrollment = await base44.asServiceRole.entities.ProgramEnrollment.create(enrollmentData);
     } else {
       enrollment = existingEnrollments[0];
-      await base44.asServiceRole.entities.ProgramEnrollment.update(enrollment.id, {
-        participant_name: fullName || enrollment.participant_name,
-        phone_number: data.phone || enrollment.phone_number
-      });
+      // Update with all extracted data including jotform_data
+      await base44.asServiceRole.entities.ProgramEnrollment.update(enrollment.id, enrollmentData);
     }
 
     // Set user access level
