@@ -41,7 +41,7 @@ const PageTypeBadge = ({ type }) => {
   );
 };
 
-export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null, organizationProfile = null }) {
+export default function WorkbookPage({ page, responses, onResponseChange, assessmentResults, customContent = null, organizationProfile = null, enrollment = null }) {
   const [activeAIField, setActiveAIField] = useState(null);
   const [activeCollabField, setActiveCollabField] = useState(null);
 
