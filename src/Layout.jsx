@@ -238,6 +238,7 @@ const getAdminPortalNav = () => [
       { name: 'Platform Hub', page: 'PlatformManagement', icon: LayoutDashboard },
       { name: 'SaaS Dashboard', page: 'SaaSAdminDashboard', icon: TrendingUp },
       { name: 'Opportunity Reports', page: 'OpportunityReports', icon: Flag },
+      { name: 'Blog Management', page: 'BlogManagement', icon: BookOpen },
       { name: 'Support Tickets', page: 'SupportTickets', icon: MessageSquare },
       { name: 'Testimonials', page: 'TestimonialManagement', icon: Target },
       { name: 'FAQ Management', page: 'FAQManagement', icon: HelpCircle },
