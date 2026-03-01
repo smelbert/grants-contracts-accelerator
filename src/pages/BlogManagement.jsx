@@ -102,6 +102,19 @@ export default function BlogManagement() {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   };
 
+  const handleAIResult = (result) => {
+    setEditingPost(prev => ({
+      ...prev,
+      title: result.title || prev.title,
+      excerpt: result.excerpt || prev.excerpt,
+      content: result.content || result.refined_content || prev.content,
+      seo_title: result.seo_title || prev.seo_title,
+      seo_description: result.seo_description || prev.seo_description,
+      tags: result.tags || result.suggested_tags || prev.tags,
+      category: result.category || prev.category,
+    }));
+  };
+
   const filtered = posts.filter(p =>
     p.title?.toLowerCase().includes(search.toLowerCase()) ||
     p.author_name?.toLowerCase().includes(search.toLowerCase()) ||
