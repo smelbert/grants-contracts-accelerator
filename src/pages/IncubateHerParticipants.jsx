@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
-import { CheckCircle2, XCircle, Search, Award } from 'lucide-react';
+import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle } from 'lucide-react';
 
 export default function IncubateHerParticipants() {
   const [searchTerm, setSearchTerm] = useState('');
