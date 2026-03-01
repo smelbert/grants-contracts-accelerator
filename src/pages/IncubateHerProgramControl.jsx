@@ -838,7 +838,7 @@ export default function IncubateHerProgramControl() {
                                 <div>
                                   <label className="text-sm font-medium mb-1 block">Readiness Level</label>
                                   <Select 
-                                    value={consultationRecap.readiness_level}
+                                    value={consultationRecap.readiness_level || ''}
                                     onValueChange={(val) => setConsultationRecap({...consultationRecap, readiness_level: val})}
                                   >
                                     <SelectTrigger>
