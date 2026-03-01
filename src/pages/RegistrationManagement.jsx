@@ -142,29 +142,50 @@ export default function RegistrationManagement() {
                 </thead>
                 <tbody>
                   {filteredSubmissions.map((submission) => (
-                    <tr key={submission.id} className="border-b hover:bg-slate-50">
-                      <td className="p-3 text-sm">{submission.user_name}</td>
-                      <td className="p-3 text-sm">{submission.user_email}</td>
-                      <td className="p-3 text-sm">{getPageName(submission.registration_page_id)}</td>
-                      <td className="p-3 text-sm">
-                        <Badge variant="outline">{submission.entry_point}</Badge>
-                      </td>
-                      <td className="p-3 text-sm">
-                        <Badge className={statusColors[submission.payment_status]}>
-                          {submission.payment_status}
-                        </Badge>
-                      </td>
-                      <td className="p-3 text-sm">
-                        {submission.survey_completed ? (
-                          <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <Clock className="w-4 h-4 text-slate-400" />
-                        )}
-                      </td>
-                      <td className="p-3 text-sm text-slate-600">
-                        {new Date(submission.created_date).toLocaleDateString()}
-                      </td>
-                    </tr>
+                    <React.Fragment key={submission.id}>
+                      <tr
+                        className="border-b hover:bg-slate-50 cursor-pointer"
+                        onClick={() => setExpandedRow(expandedRow === submission.id ? null : submission.id)}
+                      >
+                        <td className="p-3 text-sm">{submission.user_name}</td>
+                        <td className="p-3 text-sm">{submission.user_email}</td>
+                        <td className="p-3 text-sm">{getPageName(submission.registration_page_id)}</td>
+                        <td className="p-3 text-sm">
+                          <Badge variant="outline">{submission.entry_point}</Badge>
+                        </td>
+                        <td className="p-3 text-sm">
+                          <Badge className={statusColors[submission.payment_status]}>
+                            {submission.payment_status}
+                          </Badge>
+                        </td>
+                        <td className="p-3 text-sm">
+                          {submission.survey_completed ? (
+                            <CheckCircle2 className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <Clock className="w-4 h-4 text-slate-400" />
+                          )}
+                        </td>
+                        <td className="p-3 text-sm text-slate-600">
+                          {new Date(submission.created_date).toLocaleDateString()}
+                        </td>
+                        <td className="p-3 text-sm text-slate-500">
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs">{(submission.attachments || []).length} file(s)</span>
+                            {expandedRow === submission.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                          </div>
+                        </td>
+                      </tr>
+                      {expandedRow === submission.id && (
+                        <tr className="border-b bg-slate-50">
+                          <td colSpan={8} className="p-4">
+                            <RegistrationAttachments
+                              submission={submission}
+                              onUpdated={() => queryClient.invalidateQueries(['registrationSubmissions'])}
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
