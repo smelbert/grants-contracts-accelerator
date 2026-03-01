@@ -67,7 +67,8 @@ async function handleCheckoutCompleted(base44, session) {
     });
 
     if (submissions.length > 0) {
-      await base44.asServiceRole.entities.RegistrationSubmission.update(submissions[0].id, {
+      const submission = submissions[0];
+      await base44.asServiceRole.entities.RegistrationSubmission.update(submission.id, {
         payment_status: 'paid',
         stripe_payment_intent_id: session.payment_intent,
         access_granted: true,
@@ -90,6 +91,11 @@ async function handleCheckoutCompleted(base44, session) {
           entry_point: 'workshop',
         });
       }
+
+      // Send personalized welcome email for workshop/registration payment
+      const userName = submission.user_name || session.metadata?.user_name || 'Participant';
+      const entryPoint = submission.entry_point || 'workshop';
+      await sendRegistrationWelcomeEmail(base44, userEmail, userName, entryPoint);
     }
   }
 
