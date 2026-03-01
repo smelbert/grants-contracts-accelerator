@@ -10,6 +10,8 @@ import RegistrationAttachments from '@/components/incubateher/RegistrationAttach
 
 export default function RegistrationManagement() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedRow, setExpandedRow] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: registrationPages = [] } = useQuery({
     queryKey: ['registrationPages'],
