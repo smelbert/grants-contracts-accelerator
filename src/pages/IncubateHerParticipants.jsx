@@ -104,7 +104,7 @@ export default function IncubateHerParticipants() {
     });
 
     return matchesSearch && matchesFilters;
-  });
+  }).sort((a, b) => (a.participant_name || '').localeCompare(b.participant_name || ''));
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
