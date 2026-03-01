@@ -28,16 +28,32 @@ export default function BlogPost() {
   });
 
   const { data: relatedPosts = [] } = useQuery({
-    queryKey: ['related-posts', post?.category],
+    queryKey: ['related-posts', post?.id, post?.category, post?.tags],
     queryFn: async () => {
-      if (!post?.category) return [];
-      const related = await base44.entities.BlogPost.filter({ 
-        status: 'published',
-        category: post.category 
+      if (!post) return [];
+      const allPublished = await base44.entities.BlogPost.filter({ status: 'published' });
+      const others = allPublished.filter(p => p.id !== post.id);
+
+      // Score each post by relevance (category + tag overlap)
+      const scored = others.map(p => {
+        let score = 0;
+        if (post.category && p.category === post.category) score += 3;
+        const postTags = post.tags || [];
+        const pTags = p.tags || [];
+        const sharedTags = postTags.filter(t => pTags.includes(t));
+        score += sharedTags.length;
+        return { post: p, score };
       });
-      return related.filter(p => p.id !== post.id).slice(0, 3);
+
+      // Sort by score desc, then by date desc for ties
+      scored.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return new Date(b.post.published_date) - new Date(a.post.published_date);
+      });
+
+      return scored.filter(s => s.score > 0).slice(0, 3).map(s => s.post);
     },
-    enabled: !!post?.category
+    enabled: !!post
   });
 
   const handleShare = () => {
@@ -304,23 +320,21 @@ export default function BlogPost() {
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </article>
 
-        {/* Author Bio */}
-        {post.author_name && (
-          <div className="border-t border-slate-200 pt-8 mt-12">
-            <div className="flex items-start gap-4 bg-slate-50 rounded-xl p-6">
-              <div className="w-16 h-16 bg-[#143A50] rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                {post.author_name.charAt(0)}
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-[#143A50] mb-2">About the Author</h3>
-                <p className="text-slate-600 font-semibold mb-1">{post.author_name}</p>
-                <p className="text-slate-600">
-                  Contributing writer at Elbert Innovative Solutions, specializing in nonprofit capacity building and strategic funding.
-                </p>
-              </div>
+        {/* Author Bio - always Dr. Shawnte Elbert */}
+        <div className="border-t border-slate-200 pt-8 mt-12">
+          <div className="flex items-start gap-5 bg-gradient-to-r from-[#143A50]/5 to-[#E5C089]/10 rounded-xl p-6 border border-[#E5C089]/30">
+            <div className="w-20 h-20 bg-[#143A50] rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0 border-4 border-[#E5C089]">
+              SE
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#AC1A5B] mb-1">About the Author</p>
+              <h3 className="text-xl font-bold text-[#143A50] mb-2">Dr. Shawnte Elbert</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Founder & CEO of Elbert Innovative Solutions, Dr. Shawnte Elbert is a nationally recognized expert in nonprofit capacity building, strategic funding, and organizational development. With over two decades of experience, she empowers nonprofits and small businesses to secure sustainable funding and achieve lasting impact.
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Comments Section */}
         <CommentSection 
@@ -335,12 +349,15 @@ export default function BlogPost() {
       {relatedPosts.length > 0 && (
         <div className="bg-slate-50 py-16">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-3xl font-bold text-[#143A50] mb-8">Related Posts</h2>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-1 h-8 bg-[#AC1A5B] rounded-full" />
+              <h2 className="text-3xl font-bold text-[#143A50]">You May Also Like</h2>
+            </div>
             <div className="grid md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost) => (
                 <Link key={relatedPost.id} to={createPageUrl('BlogPost') + '?slug=' + relatedPost.slug}>
-                  <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300 group h-full">
-                    <div className="aspect-[16/10] relative overflow-hidden">
+                  <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
+                    <div className="aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-[#E5C089]/30 to-[#143A50]/20">
                       {relatedPost.featured_image ? (
                         <img 
                           src={relatedPost.featured_image} 
@@ -348,21 +365,36 @@ export default function BlogPost() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#143A50] to-[#1E4F58]" />
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-5xl font-black text-[#143A50]/10">EIS</span>
+                        </div>
+                      )}
+                      {relatedPost.category && (
+                        <span className="absolute top-3 left-3 px-2 py-1 bg-[#FFD700] text-[#143A50] text-xs font-bold rounded">
+                          {relatedPost.category}
+                        </span>
                       )}
                     </div>
-                    <div className="p-5">
-                      <h3 className="font-bold text-[#143A50] group-hover:text-[#AC1A5B] transition-colors line-clamp-2 mb-2">
+                    <div className="p-5 flex flex-col flex-1">
+                      <h3 className="font-bold text-[#143A50] group-hover:text-[#AC1A5B] transition-colors line-clamp-2 mb-2 text-lg leading-snug">
                         {relatedPost.title}
                       </h3>
                       {relatedPost.excerpt && (
-                        <p className="text-sm text-slate-600 line-clamp-2 mb-3">
+                        <p className="text-sm text-slate-600 line-clamp-2 mb-4 flex-1">
                           {relatedPost.excerpt}
                         </p>
                       )}
-                      <p className="text-xs text-slate-500">
-                        {moment(relatedPost.published_date).format('MMM d, yyyy')}
-                      </p>
+                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-100">
+                        <div>
+                          <p className="text-xs font-semibold text-[#143A50]">Dr. Shawnte Elbert</p>
+                          <p className="text-xs text-slate-500">
+                            {moment(relatedPost.published_date).format('MMM D, YYYY')}
+                          </p>
+                        </div>
+                        <span className="text-[#AC1A5B] group-hover:translate-x-1 transition-transform">
+                          <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </Link>
