@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp, Sparkles, Users } from 'lucide-react';
 import PersonalizedGuidance from './PersonalizedGuidance';
+import AIWorkbookGenerator from '../workbook/AIWorkbookGenerator';
 import AIFeedbackPanel from '../workbook/AIFeedbackPanel';
 import CollaborationPanel from '../workbook/CollaborationPanel';
 import TableEditor from '../shared/TableEditor';
