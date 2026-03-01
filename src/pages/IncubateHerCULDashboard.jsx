@@ -65,7 +65,8 @@ export default function IncubateHerCULDashboard() {
           <TabsContent value="insights">
             <RegistrationInsightsBrief />
           </TabsContent>
-          <TabsContent value="dashboard" className="space-y-6">
+          <TabsContent value="dashboard">
+          <div className="space-y-6">
         {/* Privacy Notice */}
         <Card className="border-l-4 border-l-[#AC1A5B]">
           <CardContent className="pt-6">
