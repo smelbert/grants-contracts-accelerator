@@ -325,6 +325,9 @@ export default function PlatformSettings() {
             </CardContent>
           </Card>
         </TabsContent>
+        <TabsContent value="user-access" className="mt-6">
+          <UserAccessManager />
+        </TabsContent>
       </Tabs>
     </div>
   );
