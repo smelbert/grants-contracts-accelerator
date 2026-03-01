@@ -92,10 +92,19 @@ export default function IncubateHerParticipants() {
     }
   });
 
-  const filteredEnrollments = enrollments.filter(e => 
-    e.participant_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    e.participant_email?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEnrollments = enrollments.filter(e => {
+    const matchesSearch = !searchTerm ||
+      e.participant_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      e.participant_email?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesFilters = Object.entries(activeFilters).every(([key, val]) => {
+      if (!val) return true;
+      const extractor = filterExtractors[key];
+      return extractor ? extractor(e) === val : true;
+    });
+
+    return matchesSearch && matchesFilters;
+  });
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
