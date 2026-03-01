@@ -138,6 +138,7 @@ export default function RegistrationManagement() {
                     <th className="text-left p-3 text-sm font-medium text-slate-600">Payment</th>
                     <th className="text-left p-3 text-sm font-medium text-slate-600">Survey</th>
                     <th className="text-left p-3 text-sm font-medium text-slate-600">Date</th>
+                    <th className="text-left p-3 text-sm font-medium text-slate-600">Attachments</th>
                   </tr>
                 </thead>
                 <tbody>
