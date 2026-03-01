@@ -517,10 +517,10 @@ export default function BlogManagement() {
               </Dialog>
 
               <BlogAIAssistant
-              isOpen={isAIOpen}
-              onOpenChange={setIsAIOpen}
-              onApplyResult={handleAIResult}
-              currentPost={editingPost}
+                isOpen={isAIOpen}
+                onOpenChange={setIsAIOpen}
+                onApplyResult={handleAIResult}
+                currentPost={editingPost}
               />
     </div>
   );
