@@ -414,14 +414,14 @@ CHECKLIST FOR CUL SUBMISSION:
       </div>
 
       <Tabs defaultValue="participant_overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="participant_overview">Participant Overview</TabsTrigger>
-          <TabsTrigger value="section1">Overview</TabsTrigger>
-          <TabsTrigger value="section2">Outputs</TabsTrigger>
-          <TabsTrigger value="section3">Outcomes</TabsTrigger>
-          <TabsTrigger value="section4">Equity</TabsTrigger>
-          <TabsTrigger value="section5">Compliance</TabsTrigger>
-          <TabsTrigger value="section6">Incentive</TabsTrigger>
+        <TabsList className="flex w-full overflow-x-auto h-auto flex-wrap gap-1 justify-start bg-muted p-1">
+          <TabsTrigger value="participant_overview" className="whitespace-nowrap">Participant Overview</TabsTrigger>
+          <TabsTrigger value="section1" className="whitespace-nowrap">Program Overview</TabsTrigger>
+          <TabsTrigger value="section2" className="whitespace-nowrap">Outputs</TabsTrigger>
+          <TabsTrigger value="section3" className="whitespace-nowrap">Outcomes</TabsTrigger>
+          <TabsTrigger value="section4" className="whitespace-nowrap">Equity</TabsTrigger>
+          <TabsTrigger value="section5" className="whitespace-nowrap">Compliance</TabsTrigger>
+          <TabsTrigger value="section6" className="whitespace-nowrap">Incentive</TabsTrigger>
         </TabsList>
 
         {/* Participant Overview Tab */}
