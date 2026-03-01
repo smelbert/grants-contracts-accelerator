@@ -12,6 +12,7 @@ import { FileText, Download, Save, CheckCircle2, Sparkles } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import jsPDF from 'jspdf';
 import ParticipantOverviewReport from '@/components/incubateher/ParticipantOverviewReport';
+import RegistrationInsightsBrief from '@/components/incubateher/RegistrationInsightsBrief';
 
 export default function IncubateHerReportPage() {
   const [reportData, setReportData] = useState({
