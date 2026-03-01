@@ -77,7 +77,7 @@ export default function PlatformSettings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="general">
             <User className="w-4 h-4 mr-2" />
             General
@@ -93,6 +93,10 @@ export default function PlatformSettings() {
           <TabsTrigger value="security">
             <Shield className="w-4 h-4 mr-2" />
             Security
+          </TabsTrigger>
+          <TabsTrigger value="user-access">
+            <Users className="w-4 h-4 mr-2" />
+            User Access
           </TabsTrigger>
         </TabsList>
 
