@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Edit, Trash2, Plus, Search, Eye, Save, X } from 'lucide-react';
+import { Edit, Trash2, Plus, Search, Eye, Save, X, Upload, ImageIcon } from 'lucide-react';
 import moment from 'moment';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
