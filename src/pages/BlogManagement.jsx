@@ -408,10 +408,120 @@ export default function BlogManagement() {
                   {saveMutation.isPending ? 'Saving...' : 'Save Post'}
                 </Button>
               </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+              </TabsContent>
+
+              <TabsContent value="seo" className="space-y-4 mt-4">
+                <div>
+                  <Label>SEO Meta Title (50-60 chars)</Label>
+                  <Input
+                    value={editingPost.seo_title || ''}
+                    onChange={(e) => setEditingPost(prev => ({ ...prev, seo_title: e.target.value.substring(0, 60) }))}
+                    placeholder="Shown in search results..."
+                    maxLength={60}
+                  />
+                  <p className="text-xs text-slate-400 mt-1">{(editingPost.seo_title || '').length}/60 characters</p>
+                </div>
+
+                <div>
+                  <Label>SEO Meta Description (155-160 chars)</Label>
+                  <Textarea
+                    value={editingPost.seo_description || ''}
+                    onChange={(e) => setEditingPost(prev => ({ ...prev, seo_description: e.target.value.substring(0, 160) }))}
+                    placeholder="Summary for search engines..."
+                    rows={2}
+                    maxLength={160}
+                  />
+                  <p className="text-xs text-slate-400 mt-1">{(editingPost.seo_description || '').length}/160 characters</p>
+                </div>
+
+                <div>
+                  <Label>Open Graph Image URL (for social sharing)</Label>
+                  <div className="space-y-2 mt-1">
+                    {editingPost.og_image_url && (
+                      <div className="relative w-full h-32 rounded-lg overflow-hidden border border-slate-200 bg-slate-50">
+                        <img
+                          src={editingPost.og_image_url}
+                          alt="OG"
+                          className="w-full h-full object-cover"
+                          onError={e => { e.target.style.display = 'none'; }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setEditingPost(prev => ({ ...prev, og_image_url: '' }))}
+                          className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-50"
+                        >
+                          <X className="w-3 h-3 text-red-500" />
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex gap-2 items-center">
+                      <label className="flex-1">
+                        <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors">
+                          <Upload className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm text-slate-600">
+                            {editingPost._ogUploading ? 'Uploading...' : 'Upload image'}
+                          </span>
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={editingPost._ogUploading}
+                          onChange={async (e) => {
+                            const file = e.target.files[0];
+                            if (!file) return;
+                            setEditingPost(prev => ({ ...prev, _ogUploading: true }));
+                            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                            setEditingPost(prev => ({ ...prev, og_image_url: file_url, _ogUploading: false }));
+                            toast.success('Image uploaded!');
+                          }}
+                        />
+                      </label>
+                      <span className="text-xs text-slate-400">or</span>
+                      <Input
+                        value={editingPost.og_image_url || ''}
+                        onChange={(e) => setEditingPost(prev => ({ ...prev, og_image_url: e.target.value }))}
+                        placeholder="Paste image URL..."
+                        className="flex-1 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Tags (comma-separated)</Label>
+                  <Input
+                    value={(editingPost.tags || []).join(', ')}
+                    onChange={(e) => setEditingPost(prev => ({ ...prev, tags: e.target.value.split(',').map(t => t.trim()).filter(t => t) }))}
+                    placeholder="grant-writing, nonprofits, funding"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+                  <Button variant="outline" onClick={() => { setIsDialogOpen(false); setEditingPost(null); }}>
+                    <X className="w-4 h-4 mr-1" /> Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSave}
+                    disabled={saveMutation.isPending}
+                    className="bg-[#143A50] hover:bg-[#1E4F58]"
+                  >
+                    <Save className="w-4 h-4 mr-1" />
+                    {saveMutation.isPending ? 'Saving...' : 'Save Post'}
+                  </Button>
+                </div>
+              </TabsContent>
+              </Tabs>
+              )}
+              </DialogContent>
+              </Dialog>
+
+              <BlogAIAssistant
+              isOpen={isAIOpen}
+              onOpenChange={setIsAIOpen}
+              onApplyResult={handleAIResult}
+              currentPost={editingPost}
+              />
     </div>
   );
 }
