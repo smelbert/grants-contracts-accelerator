@@ -1102,7 +1102,7 @@ function EditUserAccess({ userEmail, featureUnlocks, restrictedFeatures, onSave,
             {isEnabled && (
               <Input
                 type="datetime-local"
-                value={unlockDate ? format(new Date(unlockDate), "yyyy-MM-dd'T'HH:mm") : ''}
+                value={(() => { try { const d = new Date(unlockDate); return isNaN(d.getTime()) ? '' : format(d, "yyyy-MM-dd'T'HH:mm"); } catch { return ''; } })()}
                 onChange={(e) => handleUnlockChange(feature.page, e.target.value)}
                 className="max-w-xs"
               />
