@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, CheckCircle2, Clock, DollarSign, Search } from 'lucide-react';
+import { Users, CheckCircle2, Clock, DollarSign, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import RegistrationAttachments from '@/components/incubateher/RegistrationAttachments';
 
 export default function RegistrationManagement() {
   const [searchTerm, setSearchTerm] = useState('');
