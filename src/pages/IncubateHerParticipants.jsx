@@ -316,6 +316,23 @@ export default function IncubateHerParticipants() {
                     </div>
                   </div>
 
+                  {/* JotForm Profile Toggle */}
+                  <div className="mt-3">
+                    <button
+                      onClick={() => setExpandedProfiles(prev => ({ ...prev, [enrollment.id]: !prev[enrollment.id] }))}
+                      className="flex items-center gap-1 text-xs font-medium hover:underline"
+                      style={{ color: BRAND_COLORS.eisNavy }}
+                    >
+                      {expandedProfiles[enrollment.id] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      {expandedProfiles[enrollment.id] ? 'Hide' : 'View'} Registration Profile
+                    </button>
+                    {expandedProfiles[enrollment.id] && (
+                      <div className="mt-3">
+                        <JotFormProfile enrollment={enrollment} />
+                      </div>
+                    )}
+                  </div>
+
                   {/* Overall Status */}
                   <div className="mt-3 pt-3 border-t">
                     {enrollment.program_completed ? (
