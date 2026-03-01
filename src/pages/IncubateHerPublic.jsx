@@ -88,41 +88,60 @@ export default function IncubateHerPublic() {
         });
       }
 
-      // Send welcome email with session details
+      // Send personalized welcome email
       await base44.integrations.Core.SendEmail({
+        from_name: 'IncubateHer Program',
         to: data.email,
-        subject: 'Welcome to IncubateHer Funding Readiness Program',
-        body: `Hi ${data.name},
+        subject: `Welcome to IncubateHer! 🎉 Here's What to Do Next`,
+        body: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <div style="background-color: #143A50; padding: 30px; text-align: center;">
+              <h1 style="color: #E5C089; margin: 0;">Welcome to IncubateHer!</h1>
+            </div>
+            <div style="padding: 30px;">
+              <p>Hi ${data.name},</p>
+              <p>We are so excited to have you in the <strong>IncubateHer: Funding Readiness for Entrepreneurs</strong> program. Your enrollment is confirmed and your journey begins now!</p>
 
-Welcome to the IncubateHer Funding Readiness Program!
+              <h3 style="color: #143A50;">📋 Your Next Steps</h3>
+              <ol>
+                <li><strong>Check your email</strong> for your platform invitation and log in</li>
+                <li><strong>Complete your profile intake</strong> so we can personalize your experience</li>
+                <li><strong>Start your Pre-Assessment</strong> to help us understand your current readiness level</li>
+                <li><strong>Review the program schedule</strong> and mark your calendar for upcoming sessions</li>
+                <li><strong>Join the community</strong> — introduce yourself in the Community Spaces</li>
+              </ol>
 
-You're now enrolled in this transformative program funded by Columbus Urban League and delivered by Elbert Innovative Solutions.
+              <h3 style="color: #143A50;">📅 Program Schedule</h3>
+              <ul>
+                <li><strong>Monday, March 2 | 5:30–7:30 PM</strong> — Virtual (Google Meet)</li>
+                <li><strong>Thursday, March 5 | 5:30–7:30 PM</strong> — Virtual (Google Meet)</li>
+                <li><strong>Saturday, March 7 | 9:00 AM–12:00 PM</strong> — In-Person<br>
+                  Columbus Metropolitan Library, Shepard Location, Meeting Room 1</li>
+              </ul>
+              <p><em>You will receive the Google Meet link 24 hours before each virtual session.</em></p>
 
-SESSION SCHEDULE:
-• Monday, March 2 | 5:30–7:30 PM (Virtual – Google Meet)
-• Thursday, March 5 | 5:30–7:30 PM (Virtual – Google Meet)
-• Saturday, March 7 | 9:00 AM–12:00 PM (In-Person)
-  Columbus Metropolitan Library – Shepard Location, Meeting Room 1
+              <h3 style="color: #143A50;">🔗 Key Resources (after logging in)</h3>
+              <ul>
+                <li><a href="https://fundher.base44.app/IncubateHerOverview" style="color: #AC1A5B;">Program Overview</a></li>
+                <li><a href="https://fundher.base44.app/IncubateHerSchedule" style="color: #AC1A5B;">Schedule & Videos</a></li>
+                <li><a href="https://fundher.base44.app/IncubateHerWorkbook" style="color: #AC1A5B;">Your Workbook</a></li>
+                <li><a href="https://fundher.base44.app/IncubateHerPreAssessment" style="color: #AC1A5B;">Pre-Assessment</a></li>
+              </ul>
 
-You will receive the Google Meet link 24 hours before each virtual session.
+              <h3 style="color: #143A50;">📬 Questions?</h3>
+              <p><strong>Email:</strong> <a href="mailto:info@elbertinnovativesolutions.org" style="color: #AC1A5B;">info@elbertinnovativesolutions.org</a><br>
+              <strong>Website:</strong> <a href="https://www.elbertinnovativesolutions.org" style="color: #AC1A5B;">www.elbertinnovativesolutions.org</a></p>
 
-NEXT STEPS:
-1. Check your email for your platform invitation
-2. Set up your account and log in
-3. Complete your pre-assessment
-4. Access your program materials
-
-You now have full access to:
-• IncubateHer community space
-• Projects and documents workspace
-• Templates and resources
-• Funding opportunities library
-• Direct messaging
-
-We're excited to support your funding readiness journey!
-
-Best regards,
-Elbert Innovative Solutions Team`
+              <p>We are rooting for you!</p>
+              <p>Warm regards,<br>
+              <strong>Dr. Shawnté Elbert</strong><br>
+              Elbert Innovative Solutions</p>
+            </div>
+            <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 12px; color: #888;">
+              © ${new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.
+            </div>
+          </div>
+        `
       });
 
       return { success: true };
