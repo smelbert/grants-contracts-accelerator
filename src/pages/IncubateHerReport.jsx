@@ -413,8 +413,9 @@ CHECKLIST FOR CUL SUBMISSION:
         </Card>
       </div>
 
-      <Tabs defaultValue="section1" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+      <Tabs defaultValue="participant_overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="participant_overview">Participant Overview</TabsTrigger>
           <TabsTrigger value="section1">Overview</TabsTrigger>
           <TabsTrigger value="section2">Outputs</TabsTrigger>
           <TabsTrigger value="section3">Outcomes</TabsTrigger>
