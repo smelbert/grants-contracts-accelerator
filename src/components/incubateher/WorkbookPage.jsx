@@ -315,6 +315,16 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
           </div>
         )}
 
+        {/* AI Auto-Fill Generator */}
+        {page.fields && page.fields.length > 0 && (
+          <AIWorkbookGenerator
+            page={page}
+            enrollment={enrollment}
+            organizationProfile={organizationProfile}
+            onApply={(fieldId, value) => handleFieldChange(fieldId, value)}
+          />
+        )}
+
         {/* Interactive Fields with Educational Callout */}
         {page.fields && page.fields.length > 0 && (
           <div className="relative">
