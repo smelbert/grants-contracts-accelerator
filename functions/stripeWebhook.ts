@@ -230,3 +230,112 @@ async function handlePaymentFailed(base44, invoice) {
     });
   }
 }
+
+async function sendRegistrationWelcomeEmail(base44, userEmail, userName, entryPoint) {
+  const isIncubateHer = entryPoint === 'incubateher_program';
+
+  let subject, body;
+
+  if (isIncubateHer) {
+    subject = `Welcome to IncubateHer! 🎉 Here's What to Do Next`;
+    body = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+        <div style="background-color: #143A50; padding: 30px; text-align: center;">
+          <h1 style="color: #E5C089; margin: 0;">Welcome to IncubateHer!</h1>
+        </div>
+        <div style="padding: 30px;">
+          <p>Hi ${userName},</p>
+          <p>We are so excited to have you in the <strong>IncubateHer: Funding Readiness for Entrepreneurs</strong> program. Your enrollment is confirmed and your journey begins now!</p>
+
+          <h3 style="color: #143A50;">📋 Your Next Steps</h3>
+          <ol>
+            <li><strong>Log in to your portal</strong> and explore the Program Overview page</li>
+            <li><strong>Complete your profile intake</strong> so we can personalize your experience</li>
+            <li><strong>Start your Pre-Assessment</strong> to help us understand your current readiness level</li>
+            <li><strong>Review the program schedule</strong> and mark your calendar for upcoming sessions</li>
+            <li><strong>Join the community</strong> — introduce yourself in the Community Spaces</li>
+          </ol>
+
+          <h3 style="color: #143A50;">🔗 Key Resources</h3>
+          <ul>
+            <li><a href="https://fundher.base44.app/IncubateHerOverview" style="color: #AC1A5B;">Program Overview</a></li>
+            <li><a href="https://fundher.base44.app/IncubateHerSchedule" style="color: #AC1A5B;">Schedule & Videos</a></li>
+            <li><a href="https://fundher.base44.app/IncubateHerWorkbook" style="color: #AC1A5B;">Your Workbook</a></li>
+            <li><a href="https://fundher.base44.app/IncubateHerPreAssessment" style="color: #AC1A5B;">Pre-Assessment</a></li>
+          </ul>
+
+          <h3 style="color: #143A50;">📅 Program Schedule (Quick Reference)</h3>
+          <ul>
+            <li><strong>Session 1 – March 2:</strong> Virtual | 5:30–7:30 PM</li>
+            <li><strong>Session 2 – March 5:</strong> Virtual | 5:30–7:30 PM</li>
+            <li><strong>Session 3 – March 7:</strong> In-Person | 9:00 AM–12:00 PM (Columbus Metropolitan Library)</li>
+          </ul>
+
+          <h3 style="color: #143A50;">📬 Questions?</h3>
+          <p>Don't hesitate to reach out. We're here to support you every step of the way.</p>
+          <p><strong>Email:</strong> <a href="mailto:info@elbertinnovativesolutions.org" style="color: #AC1A5B;">info@elbertinnovativesolutions.org</a><br>
+          <strong>Website:</strong> <a href="https://www.elbertinnovativesolutions.org" style="color: #AC1A5B;">www.elbertinnovativesolutions.org</a></p>
+
+          <p>We are rooting for you!</p>
+          <p>Warm regards,<br>
+          <strong>Dr. Shawnté Elbert</strong><br>
+          Elbert Innovative Solutions</p>
+        </div>
+        <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 12px; color: #888;">
+          © ${new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.
+        </div>
+      </div>
+    `;
+  } else {
+    // Generic workshop/registration welcome
+    subject = `Welcome to Elbert Innovative Solutions! Here's What's Next`;
+    body = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+        <div style="background-color: #143A50; padding: 30px; text-align: center;">
+          <h1 style="color: #E5C089; margin: 0;">Welcome to EIS!</h1>
+        </div>
+        <div style="padding: 30px;">
+          <p>Hi ${userName},</p>
+          <p>Your registration is confirmed and payment received. We're thrilled to have you join the Elbert Innovative Solutions community!</p>
+
+          <h3 style="color: #143A50;">📋 Your Next Steps</h3>
+          <ol>
+            <li><strong>Log in to your portal</strong> to access your dashboard</li>
+            <li><strong>Complete your organization profile</strong> for a personalized experience</li>
+            <li><strong>Explore the Resource Library</strong> for tools to support your funding journey</li>
+            <li><strong>Check the Events calendar</strong> for upcoming workshops and webinars</li>
+          </ol>
+
+          <h3 style="color: #143A50;">🔗 Quick Links</h3>
+          <ul>
+            <li><a href="https://fundher.base44.app/Home" style="color: #AC1A5B;">Your Dashboard</a></li>
+            <li><a href="https://fundher.base44.app/ResourceLibrary" style="color: #AC1A5B;">Resource Library</a></li>
+            <li><a href="https://fundher.base44.app/Events" style="color: #AC1A5B;">Events & Workshops</a></li>
+            <li><a href="https://fundher.base44.app/Community" style="color: #AC1A5B;">Community Spaces</a></li>
+          </ul>
+
+          <h3 style="color: #143A50;">📬 Need Help?</h3>
+          <p><strong>Email:</strong> <a href="mailto:info@elbertinnovativesolutions.org" style="color: #AC1A5B;">info@elbertinnovativesolutions.org</a><br>
+          <strong>Website:</strong> <a href="https://www.elbertinnovativesolutions.org" style="color: #AC1A5B;">www.elbertinnovativesolutions.org</a></p>
+
+          <p>We look forward to supporting your mission!</p>
+          <p>Warm regards,<br>
+          <strong>Dr. Shawnté Elbert</strong><br>
+          Elbert Innovative Solutions</p>
+        </div>
+        <div style="background-color: #f5f5f5; padding: 15px; text-align: center; font-size: 12px; color: #888;">
+          © ${new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.
+        </div>
+      </div>
+    `;
+  }
+
+  await base44.integrations.Core.SendEmail({
+    from_name: 'Elbert Innovative Solutions',
+    to: userEmail,
+    subject,
+    body,
+  });
+
+  console.log(`Welcome email sent to ${userEmail} for entry point: ${entryPoint}`);
+}
