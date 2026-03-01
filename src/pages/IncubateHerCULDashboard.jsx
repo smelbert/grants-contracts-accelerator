@@ -57,6 +57,15 @@ export default function IncubateHerCULDashboard() {
       />
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
+        <Tabs defaultValue="dashboard" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="dashboard">Program Dashboard</TabsTrigger>
+            <TabsTrigger value="insights">Registration Insights Brief</TabsTrigger>
+          </TabsList>
+          <TabsContent value="insights">
+            <RegistrationInsightsBrief />
+          </TabsContent>
+          <TabsContent value="dashboard" className="space-y-6">
         {/* Privacy Notice */}
         <Card className="border-l-4 border-l-[#AC1A5B]">
           <CardContent className="pt-6">
