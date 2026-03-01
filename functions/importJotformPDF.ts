@@ -103,7 +103,16 @@ Deno.serve(async (req) => {
       enrollment_status: 'active',
       enrolled_date: new Date().toISOString(),
       phone_number: data.phone || '',
-      organization_name: data.cohort || ''
+      organization_name: data.cohort || '',
+      enrollment_notes: [
+        data.participation_plan && `Participation Plan: ${data.participation_plan}`,
+        data.attend_in_person && `In-Person: ${data.attend_in_person}`,
+        data.interested_in_consultation && `Consultation Interest: ${data.interested_in_consultation}`,
+        data.documents_needed && `Documents Needed: ${data.documents_needed}`,
+        data.funding_barrier && `Funding Barrier: ${data.funding_barrier}`,
+        data.existing_items && `Existing Items: ${data.existing_items}`,
+        data.submission_date && `Submitted: ${data.submission_date}`,
+      ].filter(Boolean).join(' | ')
     };
 
     if (existingEnrollments.length === 0) {
