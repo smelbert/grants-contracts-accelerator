@@ -188,7 +188,7 @@ export default function WorkbookSectionEditor() {
                       New
                     </Button>
                   </CardHeader>
-                  <CardContent className="space-y-2">
+                  <CardContent className="space-y-2 max-h-96 overflow-y-auto">
                     {sections.map((section) => (
                       <button
                         key={section.id}
