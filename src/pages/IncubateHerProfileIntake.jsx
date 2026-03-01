@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import SignatureField from '@/components/legal/SignatureField';
+import JotFormProfile from '@/components/incubateher/JotFormProfile';
 
 export default function IncubateHerProfileIntake() {
   const queryClient = useQueryClient();
