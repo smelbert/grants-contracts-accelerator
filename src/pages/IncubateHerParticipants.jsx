@@ -98,6 +98,84 @@ export default function IncubateHerParticipants() {
       />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
+
+        {/* PDF Upload Section */}
+        <Card className="mb-6 border-2 border-dashed border-slate-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2" style={{ color: BRAND_COLORS.eisNavy }}>
+              <Upload className="w-5 h-5" />
+              Import JotForm Registrations via PDF
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4 mb-4">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                accept="application/pdf"
+                multiple
+                className="hidden"
+              />
+              <Button
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-2"
+              >
+                <FileText className="w-4 h-4" />
+                Select PDF(s)
+              </Button>
+              {uploadQueue.some(q => q.status === 'pending') && (
+                <Button
+                  onClick={processQueue}
+                  disabled={isProcessing}
+                  style={{ backgroundColor: BRAND_COLORS.eisNavy, color: 'white' }}
+                >
+                  {isProcessing ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processing...</>
+                  ) : (
+                    `Import ${uploadQueue.filter(q => q.status === 'pending').length} File(s)`
+                  )}
+                </Button>
+              )}
+            </div>
+
+            {uploadQueue.length > 0 && (
+              <div className="space-y-2">
+                {uploadQueue.map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border">
+                    <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                    <span className="text-sm flex-1 truncate">{item.file.name}</span>
+                    {item.status === 'pending' && (
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">Pending</Badge>
+                        <button onClick={() => removeFromQueue(item.file)} className="text-slate-400 hover:text-red-500">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                    {item.status === 'processing' && (
+                      <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                    )}
+                    {item.status === 'success' && (
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <span className="text-xs text-green-600">{item.result?.name || item.result?.email} enrolled</span>
+                      </div>
+                    )}
+                    {item.status === 'error' && (
+                      <div className="flex items-center gap-2">
+                        <XCircle className="w-4 h-4 text-red-500" />
+                        <span className="text-xs text-red-500">{item.error}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Search */}
         <Card className="mb-6">
           <CardContent className="pt-6">
