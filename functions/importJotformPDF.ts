@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
 
     // Invite user
     try {
-      await base44.asServiceRole.users.inviteUser(email, 'user');
+      await base44.asServiceRole.users.invite(email, 'user');
       console.log(`Invited user: ${email}`);
     } catch (e) {
       console.log('Invite error (may already exist):', e.message);
