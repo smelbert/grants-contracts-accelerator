@@ -520,7 +520,7 @@ export default function IncubateHerProgramControl() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Confirm Bulk Unlock</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This will unlock "{feature.label}" for all {enrollments.length} participants on {format(new Date(bulkUnlockDate), 'PPP p')}. This action cannot be undone.
+                              This will unlock "{feature.label}" for all {enrollments.length} participants on {bulkUnlockDate ? format(new Date(bulkUnlockDate), 'PPP p') : 'the selected date'}. This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
