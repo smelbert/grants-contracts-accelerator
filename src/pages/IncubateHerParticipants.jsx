@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import ParticipantAggregates from '@/components/incubateher/ParticipantAggregates';
-import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle } from 'lucide-react';
+import JotFormProfile from '@/components/incubateher/JotFormProfile';
+import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function IncubateHerParticipants() {
   const [searchTerm, setSearchTerm] = useState('');
