@@ -206,6 +206,9 @@ export default function IncubateHerParticipants() {
                         {enrollment.participant_name}
                       </h3>
                       <p className="text-sm text-slate-600">{enrollment.participant_email}</p>
+                      {enrollment.phone_number && (
+                        <p className="text-sm text-slate-500">{enrollment.phone_number}</p>
+                      )}
                       <Badge className="mt-1" style={{ backgroundColor: BRAND_COLORS.eisNavy, color: BRAND_COLORS.neutralLight }}>
                         {enrollment.role}
                       </Badge>
@@ -218,6 +221,18 @@ export default function IncubateHerParticipants() {
                       </Badge>
                     )}
                   </div>
+
+                  {/* JotForm details */}
+                  {(enrollment.organization_name || enrollment.enrollment_notes) && (
+                    <div className="mb-3 p-3 rounded bg-white border text-xs text-slate-600 space-y-1">
+                      {enrollment.organization_name && (
+                        <p><span className="font-semibold">Cohort/Org:</span> {enrollment.organization_name}</p>
+                      )}
+                      {enrollment.enrollment_notes && (
+                        <p><span className="font-semibold">Notes:</span> {enrollment.enrollment_notes}</p>
+                      )}
+                    </div>
+                  )}
 
                   {/* Progress Checklist */}
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
