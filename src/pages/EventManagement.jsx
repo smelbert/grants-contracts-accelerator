@@ -380,6 +380,7 @@ export default function EventManagement() {
 
               <RecurringEventForm formData={formData} setFormData={setFormData} />
               <TicketingForm formData={formData} setFormData={setFormData} />
+              <EventDetailsForm formData={formData} setFormData={setFormData} />
               <PostEventSurveyForm formData={formData} setFormData={setFormData} />
 
               <div className="flex justify-end gap-3 pt-4 border-t">
