@@ -510,12 +510,15 @@ export default function EventManagement() {
                           </div>
 
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button variant="outline" size="sm" onClick={() => deleteEventMutation.mutate(event.id)}>
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                           <Button variant="outline" size="sm" onClick={() => setViewingEvent(event)}>
+                             View
+                           </Button>
+                           <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
+                             <Edit className="w-4 h-4" />
+                           </Button>
+                           <Button variant="outline" size="sm" onClick={() => deleteEventMutation.mutate(event.id)}>
+                             <Trash2 className="w-4 h-4" />
+                           </Button>
                           </div>
                         </div>
                       </CardContent>
