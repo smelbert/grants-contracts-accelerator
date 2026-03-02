@@ -149,7 +149,6 @@ const getAdminPortalNav = () => [
       { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
       { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
       { name: 'Event Management', page: 'EventManagement', icon: Calendar },
-      { name: 'Program Calendar', page: 'ProgramCalendar', icon: Calendar },
       { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
       { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
     ]
