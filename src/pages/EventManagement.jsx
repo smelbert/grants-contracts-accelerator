@@ -68,7 +68,7 @@ export default function EventManagement() {
   const createEventMutation = useMutation({
     mutationFn: (data) => base44.entities.Event.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['events']);
+      queryClient.invalidateQueries({ queryKey: ['events'] });
       toast.success('Event created successfully');
       setIsCreating(false);
       resetForm();
@@ -78,7 +78,7 @@ export default function EventManagement() {
   const updateEventMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Event.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['events']);
+      queryClient.invalidateQueries({ queryKey: ['events'] });
       toast.success('Event updated successfully');
       setEditingEvent(null);
       setIsCreating(false);
@@ -89,7 +89,7 @@ export default function EventManagement() {
   const deleteEventMutation = useMutation({
     mutationFn: (id) => base44.entities.Event.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['events']);
+      queryClient.invalidateQueries({ queryKey: ['events'] });
       toast.success('Event deleted');
     }
   });
