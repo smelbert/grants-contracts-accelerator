@@ -50,7 +50,7 @@ export default function Blog() {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-6 py-4">
+        <div className="max-w-[1280px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link to={createPageUrl('PublicHome')}>
               <img 
@@ -75,14 +75,14 @@ export default function Blog() {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[#143A50] via-[#1E4F58] to-[#143A50] text-white py-16">
-        <div className="max-w-[1600px] mx-auto px-6">
+        <div className="max-w-[1280px] mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">EIS Insights</h1>
           <p className="text-lg text-slate-200">Expert guidance on grant writing, fundraising, and organizational capacity building</p>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="max-w-[1600px] mx-auto px-6 py-12">
+      <div className="max-w-[1280px] mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Column */}
           <div className="flex-1">
@@ -268,7 +268,7 @@ export default function Blog() {
 
       {/* Footer */}
       <footer className="bg-[#143A50] text-slate-400 py-12 mt-20">
-        <div className="max-w-[1600px] mx-auto px-6">
+        <div className="max-w-[1280px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <img 
