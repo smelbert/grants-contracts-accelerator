@@ -158,6 +158,89 @@ export default function EventManagement() {
     return registrations.filter(r => r.event_id === eventId && r.status === 'confirmed').length;
   };
 
+  // --- Program Calendar Data ---
+  const { data: allEnrollments = [] } = useQuery({
+    queryKey: ['all-enrollments-admin'],
+    queryFn: () => base44.entities.ProgramEnrollment.list()
+  });
+
+  const { data: cohorts = [] } = useQuery({
+    queryKey: ['program-cohorts'],
+    queryFn: () => base44.entities.ProgramCohort.list()
+  });
+
+  const { data: consultations = [] } = useQuery({
+    queryKey: ['all-consultations-admin'],
+    queryFn: () => base44.entities.ConsultationBooking.list()
+  });
+
+  const [calFilterType, setCalFilterType] = useState('all');
+  const [calViewMode, setCalViewMode] = useState('upcoming');
+
+  const programEvents = useMemo(() => {
+    const evts = [];
+    const today = startOfDay(new Date());
+    const seen = new Set();
+
+    cohorts.forEach(cohort => {
+      if (!cohort.session_days) return;
+      cohort.session_days.forEach((session, idx) => {
+        const key = `session-${cohort.id}-${idx}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        const sessionDate = session.date ? parseISO(session.date) : null;
+        if (!sessionDate) return;
+        evts.push({
+          id: key,
+          type: 'session',
+          title: `${cohort.program_name} – Session ${idx + 1}`,
+          date: sessionDate,
+          time: session.time,
+          location: session.location || 'TBD',
+          meetingLink: session.meeting_link,
+          description: session.sections?.map(s => s.title).join(', '),
+          isPast: isBefore(sessionDate, today),
+          cohortName: cohort.program_name
+        });
+      });
+    });
+
+    consultations.forEach(c => {
+      if (!c.scheduled_date) return;
+      const d = parseISO(c.scheduled_date);
+      evts.push({
+        id: `consultation-${c.id}`,
+        type: 'consultation',
+        title: `Consultation – ${c.participant_email || 'Participant'}`,
+        date: d,
+        time: c.scheduled_time || 'TBD',
+        location: c.location || 'Virtual',
+        meetingLink: c.meeting_link,
+        description: c.notes,
+        isPast: isBefore(d, today),
+        status: c.status
+      });
+    });
+
+    return evts.sort((a, b) => a.date - b.date);
+  }, [cohorts, consultations]);
+
+  const filteredProgramEvents = useMemo(() => {
+    let filtered = programEvents;
+    if (calFilterType !== 'all') filtered = filtered.filter(e => e.type === calFilterType);
+    const today = startOfDay(new Date());
+    if (calViewMode === 'upcoming') filtered = filtered.filter(e => !e.isPast);
+    else if (calViewMode === 'past') filtered = filtered.filter(e => e.isPast);
+    else if (calViewMode === 'this-week') filtered = filtered.filter(e => !isBefore(e.date, today) && isBefore(e.date, addDays(today, 7)));
+    return filtered;
+  }, [programEvents, calFilterType, calViewMode]);
+
+  const getProgramEventColor = (type) => {
+    if (type === 'session') return 'bg-blue-100 text-blue-800';
+    if (type === 'consultation') return 'bg-purple-100 text-purple-800';
+    return 'bg-slate-100 text-slate-800';
+  };
+
   const eventTypeColors = {
     webinar: 'bg-blue-100 text-blue-800',
     workshop: 'bg-green-100 text-green-800',
