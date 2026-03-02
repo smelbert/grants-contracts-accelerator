@@ -82,7 +82,7 @@ export default function Blog() {
       </div>
 
       {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-[1600px] mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Column */}
           <div className="flex-1">
