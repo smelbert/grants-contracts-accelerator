@@ -75,7 +75,7 @@ export default function Blog() {
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[#143A50] via-[#1E4F58] to-[#143A50] text-white py-16">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-[1600px] mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">EIS Insights</h1>
           <p className="text-lg text-slate-200">Expert guidance on grant writing, fundraising, and organizational capacity building</p>
         </div>
