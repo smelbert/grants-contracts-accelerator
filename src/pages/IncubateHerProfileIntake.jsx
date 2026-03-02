@@ -139,8 +139,9 @@ export default function IncubateHerProfileIntake() {
       setLastSaved(new Date());
       toast.success('Profile saved successfully!');
     },
-    onError: () => {
-      toast.error('Failed to save profile');
+    onError: (error) => {
+      console.error('Profile save error:', error);
+      toast.error(error.message || 'Failed to save profile');
     }
   });
 
@@ -152,6 +153,10 @@ export default function IncubateHerProfileIntake() {
   };
 
   const handleSave = async () => {
+    if (!enrollment?.id) {
+      toast.error('Unable to save: Program enrollment not found');
+      return;
+    }
     await saveProfileMutation.mutateAsync(formData);
   };
 
