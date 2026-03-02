@@ -559,7 +559,7 @@ export default function IncubateHerCourse() {
                     <div className="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
                       <span className="text-sm text-slate-600 font-medium">Course Presentation</span>
                       <a
-                        href={course.content_url}
+                        href={course.content_url.replace('/embed/', '/')}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-blue-600 hover:underline flex items-center gap-1"
@@ -570,12 +570,9 @@ export default function IncubateHerCourse() {
                     </div>
                     <iframe
                       src={course.content_url}
-                      className="w-full"
-                      style={{ height: '650px' }}
-                      allowFullScreen
+                      style={{ width: '100%', maxWidth: '100%', height: '550px', border: 'none' }}
                       allow="fullscreen"
-                      title="Course Presentation"
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
+                      title={course.title}
                     />
                   </div>
                 )}
