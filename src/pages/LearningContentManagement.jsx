@@ -44,7 +44,7 @@ export default function LearningContentManagement() {
       }
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries(['learning-content-admin']);
+      queryClient.invalidateQueries({ queryKey: ['learning-content-admin'] });
       const wasEditing = !!editingContent?.id;
       setBuilderMode(false);
       setEditingContent(null);
