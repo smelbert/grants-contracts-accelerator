@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, MapPin, Video, Users, Plus, Edit, Trash2, Copy, Send, Clock, FileText, CheckCircle2, Filter, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, parseISO, isBefore, startOfDay, addDays } from 'date-fns';
+import CalendarSyncButton from '@/components/events/CalendarSyncButton';
 import RecurringEventForm from '@/components/events/RecurringEventForm';
 import TicketingForm from '@/components/events/TicketingForm';
 import PostEventSurveyForm from '@/components/events/PostEventSurveyForm';
