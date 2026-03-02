@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, MapPin, Video, Clock, Users, CheckCircle, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
 import CalendarExportButtons from '@/components/events/CalendarExportButtons';
+import CalendarSyncButton from '@/components/events/CalendarSyncButton';
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState(null);
