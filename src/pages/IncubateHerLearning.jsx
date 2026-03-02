@@ -70,7 +70,7 @@ export default function IncubateHerLearning() {
     }
   });
 
-  const { data: userProgress } = useQuery({
+  const { data: userProgress = [] } = useQuery({
     queryKey: ['user-progress', enrollment?.id],
     queryFn: async () => {
       if (!enrollment?.id) return [];
@@ -81,7 +81,7 @@ export default function IncubateHerLearning() {
     enabled: !!enrollment?.id
   });
 
-  const { data: badges } = useQuery({
+  const { data: badges = [] } = useQuery({
     queryKey: ['user-badges', user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
