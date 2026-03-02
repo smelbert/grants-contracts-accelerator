@@ -38,14 +38,11 @@ export default function EventManagement() {
     recurrence_pattern: null,
     ticketing_enabled: false,
     ticket_tiers: [],
-    post_event_survey: {
-      enabled: false,
-      questions: []
-    },
-    calendar_integration: {
-      google_calendar_enabled: true,
-      outlook_enabled: true
-    }
+    agenda: [],
+    speakers: [],
+    materials: [],
+    post_event_survey: { enabled: false, questions: [] },
+    calendar_integration: { google_calendar_enabled: true, outlook_enabled: true }
   });
 
   const queryClient = useQueryClient();
