@@ -378,7 +378,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "WorkbookSectionEditor",
+    mainPage: "Home",
     Pages: PAGES,
     Layout: __Layout,
 };
