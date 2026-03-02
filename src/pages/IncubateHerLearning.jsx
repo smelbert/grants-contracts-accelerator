@@ -43,7 +43,7 @@ export default function IncubateHerLearning() {
       const cohorts = await base44.entities.ProgramCohort.filter({
         program_code: 'incubateher_funding_readiness'
       });
-      return cohorts[0] || null;
+      return cohorts?.[0] || null;
     }
   });
 
