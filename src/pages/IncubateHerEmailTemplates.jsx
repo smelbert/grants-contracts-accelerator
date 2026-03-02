@@ -146,7 +146,7 @@ Elbert Innovative Solutions</p>`,
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['emailTemplates']);
+      queryClient.invalidateQueries({ queryKey: ['emailTemplates'] });
       setEditDialogOpen(false);
       toast.success('Template saved successfully!');
     },
@@ -175,9 +175,13 @@ Elbert Innovative Solutions</p>`,
     },
     onSuccess: () => {
       toast.success('Test email sent successfully!');
+      setTestRecipient('');
     },
     onError: (error) => {
-      toast.error(`Failed to send: ${error.message}`);
+      const message = error.message.includes('outside the app') 
+        ? 'Test emails can only be sent to registered app users. Invite the user to the app first.' 
+        : error.message;
+      toast.error(`Failed to send: ${message}`);
     }
   });
 
@@ -328,12 +332,15 @@ Elbert Innovative Solutions</p>`,
                   Send Test Email
                 </CardTitle>
                 <CardDescription>
-                  Send this template to an email address for testing
+                  Send this template to a registered app user for testing
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-900">
+                  <p>Test emails can only be sent to users who are registered in the app. If you want to test with an external email, please invite them as a user first.</p>
+                </div>
                 <Input
-                  placeholder="Test recipient email address"
+                  placeholder="Recipient email (must be a registered user)"
                   value={testRecipient}
                   onChange={(e) => setTestRecipient(e.target.value)}
                   type="email"
