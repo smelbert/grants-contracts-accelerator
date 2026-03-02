@@ -281,7 +281,6 @@ export default function IncubateHerSchedule() {
                   ))}
                 </div>
               </div>
-            </div>
             );
             })}
 
