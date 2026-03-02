@@ -176,7 +176,7 @@ export default function BlogPost() {
 
       {/* Content */}
       <div className="max-w-[1280px] mx-auto px-6 py-12">
-        <article className="bg-white">
+        <article className="bg-white text-slate-800">
           <style>{`
             article h1 {
               font-size: 2.5rem;
