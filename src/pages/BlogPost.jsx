@@ -348,7 +348,7 @@ export default function BlogPost() {
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <div className="bg-slate-50 py-16">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-[1280px] mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-1 h-8 bg-[#AC1A5B] rounded-full" />
               <h2 className="text-3xl font-bold text-[#143A50]">You May Also Like</h2>
