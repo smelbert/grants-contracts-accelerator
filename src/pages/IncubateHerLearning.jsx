@@ -104,7 +104,7 @@ export default function IncubateHerLearning() {
     return learningContent?.filter(content => content.agenda_section === sectionId) || [];
   };
 
-  if (!enrollment) {
+  if (!enrollmentLoading && !enrollment) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
         <CoBrandedHeader title="IncubateHer Learning Hub" />
