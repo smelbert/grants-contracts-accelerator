@@ -9,6 +9,7 @@ import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrande
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import ParticipantAggregates from '@/components/incubateher/ParticipantAggregates';
 import JotFormProfile from '@/components/incubateher/JotFormProfile';
+import BulkEnrolleAccessManager from '@/components/admin/BulkEnrolleAccessManager';
 import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function IncubateHerParticipants() {
@@ -193,6 +194,11 @@ export default function IncubateHerParticipants() {
             )}
           </CardContent>
         </Card>
+
+        {/* Bulk Access Manager */}
+        {enrollments.length > 0 && (
+          <BulkEnrolleAccessManager enrollments={enrollments} />
+        )}
 
         {/* Aggregates */}
         {enrollments.length > 0 && (
