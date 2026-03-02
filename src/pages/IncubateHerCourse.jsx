@@ -26,7 +26,8 @@ import {
   ChevronRight,
   Play,
   FileText,
-  Video
+  Video,
+  ExternalLink
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
