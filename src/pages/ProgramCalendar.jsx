@@ -248,10 +248,11 @@ export default function ProgramCalendar() {
           {filteredEvents.map(event => {
             const cfg = typeConfig[event.type] || typeConfig.event;
             return (
-              <Card key={event.id} className={`border-l-4 ${event.isPast ? 'opacity-60' : ''}`}
-                style={{ borderLeftColor: event.type === 'event' ? '#143A50' : undefined }}>
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between gap-4">
+              <Card key={event.id} className={`border-l-4 cursor-pointer hover:shadow-md transition-shadow ${event.isPast ? 'opacity-60' : ''}`}
+              style={{ borderLeftColor: event.type === 'event' ? '#143A50' : undefined }}
+              onClick={() => event.type === 'event' && setSelectedEvent(event.raw)}>
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                       <div className={`p-2 rounded-lg border flex-shrink-0 ${cfg.color}`}>
                         {cfg.icon}
