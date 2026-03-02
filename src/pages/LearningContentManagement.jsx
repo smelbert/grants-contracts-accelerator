@@ -45,6 +45,7 @@ export default function LearningContentManagement() {
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['learning-content-admin'] });
+      queryClient.invalidateQueries({ queryKey: ['learning'] });
       const wasEditing = !!editingContent?.id;
       setBuilderMode(false);
       setEditingContent(null);
@@ -58,7 +59,8 @@ export default function LearningContentManagement() {
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.LearningContent.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['learning-content-admin']);
+      queryClient.invalidateQueries({ queryKey: ['learning-content-admin'] });
+      queryClient.invalidateQueries({ queryKey: ['learning'] });
       toast.success('Content deleted');
     }
   });
