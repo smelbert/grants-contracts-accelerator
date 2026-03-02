@@ -337,6 +337,15 @@ export default function ProgramCalendar() {
           )}
         </div>
       </div>
+
+      {selectedEvent && (
+        <EventDetailView
+          event={selectedEvent}
+          userEmail={user?.email}
+          userName={user?.full_name}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 }
