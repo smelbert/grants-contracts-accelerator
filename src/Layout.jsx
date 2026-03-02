@@ -97,7 +97,7 @@ const getUserPortalNav = () => [
     groupName: 'Community',
     items: [
       { name: 'Community Spaces', page: 'Community', icon: Users },
-      { name: 'Events', page: 'Events', icon: Calendar, hideForIncubateHer: true },
+      { name: 'Calendar', page: 'ProgramCalendar', icon: Calendar },
       { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
       { name: 'My Mentorship', page: 'MyMentorship', icon: Target, hideForIncubateHer: true },
     ]
