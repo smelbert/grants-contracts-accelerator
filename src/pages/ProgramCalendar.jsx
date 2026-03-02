@@ -20,8 +20,10 @@ import {
 import { format, parseISO, isBefore, startOfDay, addDays } from 'date-fns';
 import CalendarSyncButton from '@/components/events/CalendarSyncButton';
 import { toast } from 'sonner';
+import EventDetailView from '@/components/events/EventDetailView';
 
 export default function ProgramCalendar() {
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const [viewMode, setViewMode] = useState('upcoming');
   const queryClient = useQueryClient();
