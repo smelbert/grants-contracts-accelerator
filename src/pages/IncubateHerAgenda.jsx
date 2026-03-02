@@ -67,7 +67,7 @@ export default function IncubateHerAgenda() {
   const updateCohortMutation = useMutation({
     mutationFn: (cohortData) => base44.entities.ProgramCohort.update(cohort.id, cohortData),
     onSuccess: () => {
-      queryClient.invalidateQueries(['incubateher-cohort']);
+      queryClient.invalidateQueries({ queryKey: ['incubateher-cohort'] });
       setAgendaEditorOpen(false);
       toast.success('Program agenda updated');
     }
