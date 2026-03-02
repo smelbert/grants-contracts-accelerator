@@ -181,7 +181,8 @@ export default function BlogPost() {
             article h1 {
               font-size: 2.5rem;
               font-weight: 700;
-              color: #143A50;
+              color: #143A50 !important;
+              background: transparent !important;
               margin-top: 3rem;
               margin-bottom: 1.5rem;
               line-height: 1.2;
@@ -192,7 +193,8 @@ export default function BlogPost() {
             article h2 {
               font-size: 2rem;
               font-weight: 700;
-              color: #143A50;
+              color: #143A50 !important;
+              background: transparent !important;
               margin-top: 3rem;
               margin-bottom: 1.25rem;
               line-height: 1.3;
@@ -203,9 +205,19 @@ export default function BlogPost() {
             article h3 {
               font-size: 1.5rem;
               font-weight: 600;
-              color: #1E4F58;
+              color: #1E4F58 !important;
+              background: transparent !important;
               margin-top: 2rem;
               margin-bottom: 1rem;
+              line-height: 1.4;
+            }
+            
+            article h4, article h5, article h6 {
+              color: #143A50 !important;
+              background: transparent !important;
+              font-weight: 600;
+              margin-top: 1.5rem;
+              margin-bottom: 0.75rem;
               line-height: 1.4;
             }
             
