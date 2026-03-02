@@ -17,6 +17,8 @@ import CalendarSyncButton from '@/components/events/CalendarSyncButton';
 import RecurringEventForm from '@/components/events/RecurringEventForm';
 import TicketingForm from '@/components/events/TicketingForm';
 import PostEventSurveyForm from '@/components/events/PostEventSurveyForm';
+import EventDetailsForm from '@/components/events/EventDetailsForm';
+import EventDetailView from '@/components/events/EventDetailView';
 
 export default function EventManagement() {
   const [isCreating, setIsCreating] = useState(false);
