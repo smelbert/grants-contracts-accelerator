@@ -148,6 +148,13 @@ export default function Events() {
                       Join Event
                     </Button>
                   )}
+                  <CalendarSyncButton
+                    title={event.event_name}
+                    date={event.start_date ? new Date(event.start_date) : null}
+                    endDate={event.end_date ? new Date(event.end_date) : null}
+                    description={event.description}
+                    location={event.location_details || event.meeting_url}
+                  />
                   <Button
                     variant="outline"
                     className="w-full"
