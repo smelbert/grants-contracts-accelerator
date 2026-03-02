@@ -31,14 +31,13 @@ export default function IncubateHerOverview() {
   const { data: enrollment } = useQuery({
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
-      if (!user?.email || !cohort?.id) return null;
+      if (!user?.email) return null;
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        cohort_id: cohort.id
+        participant_email: user.email
       });
-      return enrollments[0];
+      return enrollments.find(e => e.cohort_id) || null;
     },
-    enabled: !!user?.email && !!cohort?.id
+    enabled: !!user?.email
   });
 
   return (
