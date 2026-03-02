@@ -75,7 +75,6 @@ const getUserPortalNav = () => [
     items: [
       { name: 'Learning Hub', page: 'Learning', icon: BookOpen, dataTour: 'learning', requiresAccess: 'learning_hub', hideForIncubateHer: true },
       { name: 'Resource Library', page: 'ResourceLibrary', icon: FileText, hideForIncubateHer: true },
-      { name: 'Program Calendar', page: 'ProgramCalendar', icon: Calendar, hideForIncubateHer: true },
     ]
   },
   {
