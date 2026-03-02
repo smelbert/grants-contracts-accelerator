@@ -222,7 +222,10 @@ export default function IncubateHerSchedule() {
             </p>
           </CardHeader>
           <CardContent className="space-y-6">
-            {PROGRAM_SCHEDULE.map((session, idx) => (
+            {PROGRAM_SCHEDULE.map((session, idx) => {
+              const cohortDay = sessionDays[idx];
+              const meetingLink = cohortDay?.meeting_link;
+              return (
               <div key={idx} className="bg-white p-6 rounded-lg border border-slate-200">
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -242,6 +245,21 @@ export default function IncubateHerSchedule() {
                 <p className="text-slate-600 mb-4">
                   <strong>Location:</strong> {session.location}
                 </p>
+
+                {meetingLink && (
+                  <div className="mb-4">
+                    <a
+                      href={meetingLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="bg-[#AC1A5B] hover:bg-[#A65D40] text-white">
+                        <Video className="w-4 h-4 mr-2" />
+                        Join Google Meet
+                      </Button>
+                    </a>
+                  </div>
+                )}
 
                 <h4 className="font-semibold text-[#AC1A5B] mb-3 text-lg">
                   {session.sessionTitle}
