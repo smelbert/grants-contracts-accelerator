@@ -281,7 +281,8 @@ export default function IncubateHerSchedule() {
                   ))}
                 </div>
               </div>
-            ))}
+            );
+            })}
 
             {/* Summary */}
             <div className="bg-[#143A50] text-white p-6 rounded-lg">
