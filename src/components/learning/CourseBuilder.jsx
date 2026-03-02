@@ -912,15 +912,26 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
               />
             </TabsContent>
 
-            <TabsContent value="embed" className="space-y-2">
-              <Label>Embed Code (iframe, etc.)</Label>
-              <Textarea
-                value={formData.embed_code || ''}
-                onChange={(e) => setFormData({ ...formData, embed_code: e.target.value })}
-                placeholder='<iframe src="..." ...></iframe>'
-                rows={5}
-                className="font-mono text-sm"
-              />
+            <TabsContent value="embed" className="space-y-4">
+              <div>
+                <Label>Gamma / Embed URL</Label>
+                <Input
+                  value={formData.content_url || ''}
+                  onChange={(e) => setFormData({ ...formData, content_url: e.target.value })}
+                  placeholder="https://gamma.app/embed/..."
+                />
+                <p className="text-xs text-slate-500 mt-1">Paste the URL from the src attribute of the Gamma iframe code</p>
+              </div>
+              <div>
+                <Label>Custom Embed Code (optional fallback)</Label>
+                <Textarea
+                  value={formData.embed_code || ''}
+                  onChange={(e) => setFormData({ ...formData, embed_code: e.target.value })}
+                  placeholder='<iframe src="..." ...></iframe>'
+                  rows={5}
+                  className="font-mono text-sm"
+                />
+              </div>
             </TabsContent>
           </Tabs>
 
