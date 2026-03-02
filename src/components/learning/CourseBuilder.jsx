@@ -203,7 +203,17 @@ Return ONLY valid JSON, no additional text.`,
       return;
     }
 
-    onSave(courseData);
+    // Sanitize numeric fields to avoid validation errors
+    const sanitized = {
+      ...courseData,
+      duration_minutes: courseData.duration_minutes || null,
+      curriculum_sections: (courseData.curriculum_sections || []).map(s => ({
+        ...s,
+        duration_minutes: s.duration_minutes === '' || s.duration_minutes === undefined ? null : Number(s.duration_minutes) || null
+      }))
+    };
+
+    onSave(sanitized);
   };
 
   return (
