@@ -615,12 +615,22 @@ export default function EventManagement() {
                             )}
                           </div>
                         </div>
+                        <div className="flex flex-col items-end gap-2">
                         {event.meetingLink && (
                           <Button size="sm" variant="outline" onClick={() => window.open(event.meetingLink, '_blank')}>
                             <Video className="w-4 h-4 mr-2" />
                             Join
                           </Button>
                         )}
+                        {!event.isPast && (
+                          <CalendarSyncButton
+                            title={event.title}
+                            date={event.date}
+                            description={event.description}
+                            location={event.location || event.meetingLink}
+                          />
+                        )}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
