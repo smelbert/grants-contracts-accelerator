@@ -45,8 +45,8 @@ export default function DirectoryOptIn({ user, organization }) {
         return await base44.entities.AppDirectoryProfile.create(data);
       }
     },
-    onSuccess: () => {
-      toast.success(data.is_visible ? 'Added to App Directory!' : 'Removed from App Directory');
+    onSuccess: (response, variables) => {
+      toast.success(variables.is_visible ? 'Added to App Directory!' : 'Removed from App Directory');
       setShowForm(false);
     },
     onError: (error) => {
