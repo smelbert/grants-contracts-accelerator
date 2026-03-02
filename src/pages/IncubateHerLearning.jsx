@@ -60,13 +60,13 @@ export default function IncubateHerLearning() {
     enabled: !!user?.email
   });
 
-  const { data: learningContent, isLoading } = useQuery({
+  const { data: learningContent = [], isLoading } = useQuery({
     queryKey: ['incubateher-learning'],
     queryFn: async () => {
       const content = await base44.entities.LearningContent.filter({
         incubateher_only: true
       });
-      return content;
+      return content || [];
     }
   });
 
