@@ -268,7 +268,7 @@ export default function Blog() {
 
       {/* Footer */}
       <footer className="bg-[#143A50] text-slate-400 py-12 mt-20">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <img 
