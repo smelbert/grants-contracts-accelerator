@@ -83,15 +83,10 @@ export default function IncubateHerParticipants() {
   const { data: enrollments = [] } = useQuery({
     queryKey: ['all-enrollments'],
     queryFn: async () => {
-      // Load all enrollments for IncubateHer cohorts
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher-2024'
+      // Load all IncubateHer participants (synced with program control)
+      return await base44.entities.ProgramEnrollment.filter({
+        role: 'participant'
       });
-      if (cohorts.length === 0) return [];
-      const allEnrollments = await Promise.all(
-        cohorts.map(c => base44.entities.ProgramEnrollment.filter({ cohort_id: c.id }))
-      );
-      return allEnrollments.flat();
     }
   });
 
