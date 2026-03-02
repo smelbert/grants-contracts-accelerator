@@ -36,6 +36,7 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
     incubateher_only: false,
     is_standalone_resource: false,
     file_url: '',
+    content_url: '',
     ...course
   });
 
@@ -342,6 +343,16 @@ Return ONLY valid JSON, no additional text.`,
                 onChange={(e) => setCourseData({ ...courseData, meeting_link: e.target.value })}
                 placeholder="https://meet.google.com/..."
               />
+            </div>
+
+            <div className="col-span-2">
+              <Label>Gamma / Embed URL (course-level presentation)</Label>
+              <Input
+                value={courseData.content_url || ''}
+                onChange={(e) => setCourseData({ ...courseData, content_url: e.target.value })}
+                placeholder="https://gamma.app/embed/..."
+              />
+              <p className="text-xs text-slate-500 mt-1">Paste the Gamma embed URL (from the src attribute of the iframe code)</p>
             </div>
 
             {courseData.incubateher_only && (
