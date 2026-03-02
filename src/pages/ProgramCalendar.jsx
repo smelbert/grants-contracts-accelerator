@@ -352,7 +352,7 @@ export default function ProgramCalendar() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col items-end gap-2">
                     {event.meetingLink && (
                       <Button
                         size="sm"
@@ -363,14 +363,14 @@ export default function ProgramCalendar() {
                         Join
                       </Button>
                     )}
-                    
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => downloadICS(event)}
-                    >
-                      <Download className="w-4 h-4" />
-                    </Button>
+                    {!event.isPast && (
+                      <CalendarSyncButton
+                        title={event.title}
+                        date={event.date}
+                        description={event.description}
+                        location={event.location || event.meetingLink}
+                      />
+                    )}
                   </div>
                 </div>
               </CardHeader>
