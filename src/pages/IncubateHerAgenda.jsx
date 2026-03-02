@@ -150,43 +150,27 @@ export default function IncubateHerAgenda() {
       meeting_link: '',
       sections: [
         {
-          id: 'intro',
-          title: 'Program Orientation & Funding Foundations',
-          duration_minutes: 30,
+          id: 'monday',
+          title: 'Funding Foundations: Orientation, Compliance & Readiness',
+          duration_minutes: 120,
           topics: [
             'Welcome & expectations',
             'Completion requirements',
             'Consultation cap explanation',
             'Overview of grants, proposals, and contracts',
-            'Understanding funding landscapes for early-stage vs. growth-phase businesses'
-          ],
-          facilitator_notes: 'Set clear expectations early. Explain the consultation process and cap.'
-        },
-        {
-          id: 'legal',
-          title: 'Legal Structure & Organizational Compliance',
-          duration_minutes: 45,
-          topics: [
+            'Understanding funding landscapes for early-stage vs. growth-phase businesses',
             'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
             'Formation vs. readiness',
             'Required documentation basics',
             'Insurance, governance (if applicable), compliance realities',
-            'Common structural mistakes'
-          ],
-          facilitator_notes: 'Many participants struggle with structural requirements. Clarify LLC vs nonprofit eligibility.'
-        },
-        {
-          id: 'intro',
-          title: 'Funding Readiness Reality Check',
-          duration_minutes: 45,
-          topics: [
+            'Common structural mistakes',
             'What "ready" actually means',
             'Assessing documentation gaps',
             'Capacity alignment',
             'When NOT to pursue funding',
             'Pre-assessment reflection'
           ],
-          facilitator_notes: 'Help participants self-assess realistically. Some may not be ready yet - that\'s okay.'
+          facilitator_notes: 'Set clear expectations early. Explain the consultation process and cap. Clarify LLC vs nonprofit eligibility. Help participants self-assess realistically. Some may not be ready yet - that\'s okay.'
         }
       ]
     },
@@ -196,24 +180,16 @@ export default function IncubateHerAgenda() {
       meeting_link: '',
       sections: [
         {
-          id: 'financial',
-          title: 'Financial Management & Budget Development',
-          duration_minutes: 60,
+          id: 'thursday',
+          title: 'Financial & Funding Strategy: Budgets, Grants & Contracts',
+          duration_minutes: 120,
           topics: [
             'Basic financial systems for entrepreneurs',
             'Budget building fundamentals',
             'Revenue vs. reimbursement',
             'Indirect costs (simple explanation)',
             'Cash flow awareness',
-            'Common financial red flags'
-          ],
-          facilitator_notes: 'Use the budget template during this session. Walk through a sample budget line by line.'
-        },
-        {
-          id: 'grants',
-          title: 'Grants, Proposals & RFP Fundamentals',
-          duration_minutes: 60,
-          topics: [
+            'Common financial red flags',
             'How to find opportunities',
             'Reading guidelines correctly',
             'Grants vs. competitive proposals',
@@ -221,7 +197,7 @@ export default function IncubateHerAgenda() {
             'Deliverables vs. outcomes',
             'Avoiding common application mistakes'
           ],
-          facilitator_notes: 'Clarify the difference between grants and contracts. Show real examples.'
+          facilitator_notes: 'Use the budget template during this session. Walk through a sample budget line by line. Clarify the difference between grants and contracts. Show real examples.'
         }
       ]
     },
@@ -232,54 +208,30 @@ export default function IncubateHerAgenda() {
       meeting_link: '',
       sections: [
         {
-          id: 'grants',
-          title: 'Deep Dive: Grant Writing Fundamentals',
-          duration_minutes: 60,
+          id: 'saturday',
+          title: 'Grant Writing, Contracts & Strategic Planning',
+          duration_minutes: 180,
           topics: [
             'Narrative components',
             'Problem statements',
             'Goals & measurable outcomes',
             'Logic model basics (simple)',
-            'Alignment language'
-          ],
-          facilitator_notes: 'Participants often underestimate timeline. Stress the 6-8 week preparation period.'
-        },
-        {
-          id: 'contracts',
-          title: 'RFPs & Contract Proposals in Practice',
-          duration_minutes: 45,
-          topics: [
+            'Alignment language',
             'Competitive positioning',
             'Pricing considerations',
             'Capability statements',
             'Past performance documentation',
-            'Evaluating bid feasibility'
-          ],
-          facilitator_notes: 'Emphasize the binding nature of contracts vs. grants. Use real RFP examples.'
-        },
-        {
-          id: 'strategy',
-          title: 'Funding Strategy & Long-Term Sustainability',
-          duration_minutes: 30,
-          topics: [
+            'Evaluating bid feasibility',
             'Diversified funding portfolio',
             'Contracts vs. grants in growth strategy',
             'Relationship building',
-            'Grant lifecycle awareness'
-          ],
-          facilitator_notes: 'Connect back to their individual goals from pre-assessment.'
-        },
-        {
-          id: 'consultation',
-          title: 'Consultation Preparation Lab',
-          duration_minutes: 30,
-          topics: [
+            'Grant lifecycle awareness',
             'What to bring to your 1:1',
             'Document checklist',
             'How to maximize advisory time',
             'Booking instructions'
           ],
-          facilitator_notes: 'Provide consultation booking link. Clarify expectations and preparation requirements.'
+          facilitator_notes: 'Stress the 6-8 week preparation period. Emphasize the binding nature of contracts vs. grants. Use real RFP examples. Connect back to their individual goals from pre-assessment. Provide consultation booking link and clarify expectations.'
         }
       ]
     }
