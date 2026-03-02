@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import DirectoryOptIn from '@/components/profile/DirectoryOptIn';
 
 export default function MyProfile() {
   const { data: user } = useQuery({
