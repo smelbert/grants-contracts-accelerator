@@ -404,124 +404,230 @@ export default function EventManagement() {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Event Management</h1>
-            <p className="text-slate-600">Create and manage platform events</p>
-          </div>
-          <Button onClick={() => setIsCreating(true)} className="bg-[#143A50] hover:bg-[#1E4F58]">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Event
-          </Button>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">Events & Program Calendar</h1>
+          <p className="text-slate-600">Manage platform events and view program sessions</p>
         </div>
 
-        <div className="grid gap-6">
-          {isLoading ? (
-            <div className="text-center py-12">
-              <p className="text-slate-600">Loading events...</p>
+        <Tabs defaultValue="events">
+          <TabsList className="mb-6">
+            <TabsTrigger value="events">Event Management</TabsTrigger>
+            <TabsTrigger value="calendar">Program Calendar</TabsTrigger>
+          </TabsList>
+
+          {/* ---- Event Management Tab ---- */}
+          <TabsContent value="events">
+            <div className="flex justify-end mb-4">
+              <Button onClick={() => setIsCreating(true)} className="bg-[#143A50] hover:bg-[#1E4F58]">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Event
+              </Button>
             </div>
-          ) : events.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <p className="text-slate-600">No events created yet</p>
-              </CardContent>
-            </Card>
-          ) : (
-            events.map((event) => {
-              const registrationCount = getEventRegistrationCount(event.id);
-              const isFull = event.max_attendees && registrationCount >= event.max_attendees;
-              const isPast = new Date(event.start_date) < new Date();
-              const surveyCount = surveyResponses.filter(s => s.event_id === event.id).length;
-
-              return (
-                <Card key={event.id}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Badge className={eventTypeColors[event.event_type]}>
-                            {event.event_type}
-                          </Badge>
-                          {isPast && <Badge variant="outline">Past</Badge>}
-                          {isFull && <Badge className="bg-red-100 text-red-800">Full</Badge>}
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">{event.event_name}</h3>
-                        <p className="text-slate-600 mb-4">{event.description}</p>
-
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4 text-slate-400" />
-                            <span>{new Date(event.start_date).toLocaleDateString()}</span>
-                          </div>
-                          {event.location_type === 'virtual' && (
-                            <div className="flex items-center gap-2">
-                              <Video className="w-4 h-4 text-slate-400" />
-                              <span>Virtual</span>
-                            </div>
-                          )}
-                          {event.location_type === 'in_person' && (
-                            <div className="flex items-center gap-2">
-                              <MapPin className="w-4 h-4 text-slate-400" />
-                              <span>In Person</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 text-slate-400" />
-                            <span>
-                              {registrationCount}
-                              {event.max_attendees ? `/${event.max_attendees}` : ''} attendees
-                            </span>
-                          </div>
-                          {event.is_recurring && (
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline">Recurring</Badge>
-                            </div>
-                          )}
-                          {event.ticketing_enabled && (
-                            <div className="flex items-center gap-2">
-                              <Badge variant="outline">Ticketing</Badge>
-                            </div>
-                          )}
-                        </div>
-                        {isPast && event.post_event_survey?.enabled && (
-                          <div className="mt-3 pt-3 border-t">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-slate-600">
-                                Survey responses: {surveyCount}/{registrationCount}
-                              </span>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => sendSurveyMutation.mutate(event.id)}
-                              >
-                                <Send className="w-4 h-4 mr-2" />
-                                Send Survey
-                              </Button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => deleteEventMutation.mutate(event.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
+            <div className="grid gap-6">
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-slate-600">Loading events...</p>
+                </div>
+              ) : events.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-slate-600">No events created yet</p>
                   </CardContent>
                 </Card>
-              );
-            })
-          )}
-        </div>
+              ) : (
+                events.map((event) => {
+                  const registrationCount = getEventRegistrationCount(event.id);
+                  const isFull = event.max_attendees && registrationCount >= event.max_attendees;
+                  const isPast = new Date(event.start_date) < new Date();
+                  const surveyCount = surveyResponses.filter(s => s.event_id === event.id).length;
+
+                  return (
+                    <Card key={event.id}>
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <Badge className={eventTypeColors[event.event_type]}>
+                                {event.event_type}
+                              </Badge>
+                              {isPast && <Badge variant="outline">Past</Badge>}
+                              {isFull && <Badge className="bg-red-100 text-red-800">Full</Badge>}
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 mb-2">{event.event_name}</h3>
+                            <p className="text-slate-600 mb-4">{event.description}</p>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                              <div className="flex items-center gap-2">
+                                <Calendar className="w-4 h-4 text-slate-400" />
+                                <span>{new Date(event.start_date).toLocaleDateString()}</span>
+                              </div>
+                              {event.location_type === 'virtual' && (
+                                <div className="flex items-center gap-2">
+                                  <Video className="w-4 h-4 text-slate-400" />
+                                  <span>Virtual</span>
+                                </div>
+                              )}
+                              {event.location_type === 'in_person' && (
+                                <div className="flex items-center gap-2">
+                                  <MapPin className="w-4 h-4 text-slate-400" />
+                                  <span>In Person</span>
+                                </div>
+                              )}
+                              <div className="flex items-center gap-2">
+                                <Users className="w-4 h-4 text-slate-400" />
+                                <span>
+                                  {registrationCount}
+                                  {event.max_attendees ? `/${event.max_attendees}` : ''} attendees
+                                </span>
+                              </div>
+                              {event.is_recurring && (
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline">Recurring</Badge>
+                                </div>
+                              )}
+                              {event.ticketing_enabled && (
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline">Ticketing</Badge>
+                                </div>
+                              )}
+                            </div>
+                            {isPast && event.post_event_survey?.enabled && (
+                              <div className="mt-3 pt-3 border-t">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-slate-600">
+                                    Survey responses: {surveyCount}/{registrationCount}
+                                  </span>
+                                  <Button size="sm" variant="outline" onClick={() => sendSurveyMutation.mutate(event.id)}>
+                                    <Send className="w-4 h-4 mr-2" />
+                                    Send Survey
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm" onClick={() => handleEdit(event)}>
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => deleteEventMutation.mutate(event.id)}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              )}
+            </div>
+          </TabsContent>
+
+          {/* ---- Program Calendar Tab ---- */}
+          <TabsContent value="calendar">
+            <Card className="mb-6">
+              <CardContent className="py-4">
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-4 h-4 text-slate-500" />
+                    <span className="text-sm font-medium">Filters:</span>
+                  </div>
+                  <Select value={calViewMode} onValueChange={setCalViewMode}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="upcoming">Upcoming</SelectItem>
+                      <SelectItem value="this-week">This Week</SelectItem>
+                      <SelectItem value="all">All Events</SelectItem>
+                      <SelectItem value="past">Past Events</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={calFilterType} onValueChange={setCalFilterType}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="session">Program Sessions</SelectItem>
+                      <SelectItem value="consultation">Consultations</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <div className="ml-auto">
+                    <Badge variant="outline" className="text-slate-600">
+                      {filteredProgramEvents.length} event{filteredProgramEvents.length !== 1 ? 's' : ''}
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="space-y-4">
+              {filteredProgramEvents.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <Calendar className="w-16 h-16 mx-auto mb-4 text-slate-300" />
+                    <p className="text-slate-500">No events found. Try adjusting your filters.</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                filteredProgramEvents.map((event) => (
+                  <Card key={event.id} className={event.isPast ? 'opacity-60' : ''}>
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3 flex-1">
+                          <Badge className={getProgramEventColor(event.type)}>{event.type}</Badge>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-semibold text-slate-900">{event.title}</p>
+                              {event.isPast && <Badge variant="outline" className="text-xs">Past</Badge>}
+                            </div>
+                            <div className="space-y-1 text-sm text-slate-600">
+                              {event.date instanceof Date && !isNaN(event.date) && (
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-4 h-4" />
+                                  <span>{format(event.date, 'EEEE, MMMM d, yyyy')}</span>
+                                </div>
+                              )}
+                              {event.time && (
+                                <div className="flex items-center gap-2">
+                                  <Clock className="w-4 h-4" />
+                                  <span>{event.time}</span>
+                                </div>
+                              )}
+                              {event.location && (
+                                <div className="flex items-center gap-2">
+                                  <MapPin className="w-4 h-4" />
+                                  <span>{event.location}</span>
+                                </div>
+                              )}
+                              {event.cohortName && (
+                                <div className="flex items-center gap-2">
+                                  <Users className="w-4 h-4" />
+                                  <span>{event.cohortName}</span>
+                                </div>
+                              )}
+                            </div>
+                            {event.description && (
+                              <p className="text-sm text-slate-500 mt-1">{event.description}</p>
+                            )}
+                          </div>
+                        </div>
+                        {event.meetingLink && (
+                          <Button size="sm" variant="outline" onClick={() => window.open(event.meetingLink, '_blank')}>
+                            <Video className="w-4 h-4 mr-2" />
+                            Join
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
