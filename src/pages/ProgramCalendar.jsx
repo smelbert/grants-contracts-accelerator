@@ -1,43 +1,74 @@
 import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Calendar as CalendarIcon, 
-  Clock, 
-  MapPin, 
-  Video, 
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  MapPin,
+  Video,
   FileText,
   Users,
-  Download,
   Filter,
   CheckCircle2,
-  AlertCircle
+  DollarSign,
+  Ticket
 } from 'lucide-react';
-import { format, parseISO, isBefore, isAfter, startOfDay, addDays } from 'date-fns';
+import { format, parseISO, isBefore, startOfDay, addDays } from 'date-fns';
 import CalendarSyncButton from '@/components/events/CalendarSyncButton';
+import { toast } from 'sonner';
 
 export default function ProgramCalendar() {
   const [filterType, setFilterType] = useState('all');
   const [viewMode, setViewMode] = useState('upcoming');
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
 
+  // Platform Events
+  const { data: platformEvents = [] } = useQuery({
+    queryKey: ['events'],
+    queryFn: () => base44.entities.Event.list('-start_date')
+  });
+
+  const { data: myRegistrations = [] } = useQuery({
+    queryKey: ['my-registrations', user?.email],
+    queryFn: () => base44.entities.EventRegistration.filter({ attendee_email: user.email }),
+    enabled: !!user?.email
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: (event) => base44.entities.EventRegistration.create({
+      event_id: event.id,
+      attendee_email: user.email,
+      attendee_name: user.full_name,
+      registration_status: 'registered',
+      payment_status: 'pending'
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['my-registrations']);
+      toast.success('Successfully registered!');
+    }
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: (regId) => base44.entities.EventRegistration.update(regId, { registration_status: 'cancelled' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['my-registrations']);
+      toast.success('Registration cancelled');
+    }
+  });
+
+  // Program data
   const { data: enrollments = [] } = useQuery({
     queryKey: ['user-enrollments', user?.email],
-    queryFn: async () => {
-      if (!user?.email) return [];
-      return await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email
-      });
-    },
+    queryFn: () => base44.entities.ProgramEnrollment.filter({ participant_email: user.email }),
     enabled: !!user?.email
   });
 
@@ -48,343 +79,256 @@ export default function ProgramCalendar() {
 
   const { data: consultations = [] } = useQuery({
     queryKey: ['consultations', user?.email],
-    queryFn: async () => {
-      if (!user?.email) return [];
-      return await base44.entities.ConsultationBooking.filter({
-        participant_email: user.email
-      });
-    },
+    queryFn: () => base44.entities.ConsultationBooking.filter({ participant_email: user.email }),
     enabled: !!user?.email
-  });
-
-  const { data: learningContent = [] } = useQuery({
-    queryKey: ['learning-content-scheduled'],
-    queryFn: async () => {
-      const content = await base44.entities.LearningContent.list();
-      return content.filter(c => c.scheduled_start_date);
-    }
   });
 
   const { data: assessments = [] } = useQuery({
     queryKey: ['user-assessments', user?.email],
-    queryFn: async () => {
-      if (!user?.email) return [];
-      return await base44.entities.ProgramAssessment.filter({
-        participant_email: user.email
-      });
-    },
+    queryFn: () => base44.entities.ProgramAssessment.filter({ participant_email: user.email }),
     enabled: !!user?.email
   });
 
-  // Compile all events
-  const allEvents = useMemo(() => {
-    const events = [];
-    const today = startOfDay(new Date());
+  const isRegistered = (eventId) =>
+    myRegistrations.some(r => r.event_id === eventId && r.registration_status === 'registered');
+  const getRegistration = (eventId) =>
+    myRegistrations.find(r => r.event_id === eventId && r.registration_status === 'registered');
 
-    // Program sessions from enrolled cohorts
+  // Merge all events
+  const allEvents = useMemo(() => {
+    const today = startOfDay(new Date());
+    const events = [];
+
+    // Platform events
+    platformEvents.forEach(e => {
+      if (!e.start_date) return;
+      const date = new Date(e.start_date);
+      events.push({
+        id: `event-${e.id}`,
+        rawId: e.id,
+        type: 'event',
+        subtype: e.event_type,
+        title: e.event_name,
+        date,
+        description: e.description,
+        location: e.location_type === 'virtual' ? 'Virtual' : e.location_details,
+        meetingLink: e.meeting_url,
+        isPast: isBefore(date, today),
+        raw: e,
+        isRegistered: isRegistered(e.id),
+        registration: getRegistration(e.id),
+        hasPaidTiers: e.ticket_tiers?.some(t => t.price > 0)
+      });
+    });
+
+    // Program sessions
     enrollments.forEach(enrollment => {
       const cohort = cohorts.find(c => c.id === enrollment.cohort_id);
       if (!cohort?.session_days) return;
-
       cohort.session_days.forEach((session, idx) => {
-        const sessionDate = session.date ? parseISO(session.date) : null;
-        if (!sessionDate) return;
-
+        if (!session.date) return;
+        const date = parseISO(session.date);
         events.push({
           id: `session-${cohort.id}-${idx}`,
           type: 'session',
-          title: `${cohort.program_name} - Session ${idx + 1}`,
-          date: sessionDate,
+          title: `${cohort.program_name} – Session ${idx + 1}`,
+          date,
           time: session.time,
           location: session.location || 'TBD',
           meetingLink: session.meeting_link,
           description: session.sections?.map(s => s.title).join(', '),
-          isPast: isBefore(sessionDate, today),
-          cohortName: cohort.program_name
+          isPast: isBefore(date, today)
         });
       });
     });
 
     // Consultations
-    consultations.forEach(consultation => {
-      if (!consultation.scheduled_date) return;
-      const consultDate = parseISO(consultation.scheduled_date);
-
+    consultations.forEach(c => {
+      if (!c.scheduled_date) return;
+      const date = parseISO(c.scheduled_date);
       events.push({
-        id: `consultation-${consultation.id}`,
+        id: `consultation-${c.id}`,
         type: 'consultation',
         title: 'One-on-One Consultation',
-        date: consultDate,
-        time: consultation.scheduled_time || 'TBD',
-        location: consultation.location || 'Virtual',
-        meetingLink: consultation.meeting_link,
-        description: consultation.notes,
-        isPast: isBefore(consultDate, today),
-        status: consultation.status
-      });
-    });
-
-    // Scheduled learning content
-    learningContent.forEach(content => {
-      if (!content.scheduled_start_date) return;
-      const contentDate = parseISO(content.scheduled_start_date);
-
-      events.push({
-        id: `content-${content.id}`,
-        type: 'course',
-        title: content.title,
-        date: contentDate,
-        description: content.description,
-        isPast: isBefore(contentDate, today),
-        duration: content.duration_minutes
+        date,
+        time: c.scheduled_time || '',
+        location: c.location || 'Virtual',
+        meetingLink: c.meeting_link,
+        description: c.notes,
+        isPast: isBefore(date, today),
+        status: c.status
       });
     });
 
     // Assessment deadlines
-    assessments.forEach(assessment => {
-      if (!assessment.due_date) return;
-      const dueDate = parseISO(assessment.due_date);
-
+    assessments.forEach(a => {
+      if (!a.due_date) return;
+      const date = parseISO(a.due_date);
       events.push({
-        id: `assessment-${assessment.id}`,
+        id: `assessment-${a.id}`,
         type: 'assessment',
-        title: `${assessment.assessment_type === 'pre' ? 'Pre' : 'Post'}-Assessment`,
-        date: dueDate,
-        description: `Complete your ${assessment.assessment_type}-assessment`,
-        isPast: isBefore(dueDate, today),
-        isCompleted: assessment.is_completed
+        title: `${a.assessment_type === 'pre' ? 'Pre' : 'Post'}-Assessment`,
+        date,
+        description: `Complete your ${a.assessment_type}-assessment`,
+        isPast: isBefore(date, today),
+        isCompleted: a.is_completed
       });
     });
 
     return events.sort((a, b) => a.date - b.date);
-  }, [enrollments, cohorts, consultations, learningContent, assessments]);
+  }, [platformEvents, enrollments, cohorts, consultations, assessments, myRegistrations]);
 
-  // Filter events
   const filteredEvents = useMemo(() => {
-    let filtered = allEvents;
-
-    // Filter by type
-    if (filterType !== 'all') {
-      filtered = filtered.filter(e => e.type === filterType);
-    }
-
-    // Filter by view mode
+    let list = allEvents;
+    if (filterType !== 'all') list = list.filter(e => e.type === filterType);
     const today = startOfDay(new Date());
-    const nextWeek = addDays(today, 7);
-
-    if (viewMode === 'upcoming') {
-      filtered = filtered.filter(e => !e.isPast);
-    } else if (viewMode === 'past') {
-      filtered = filtered.filter(e => e.isPast);
-    } else if (viewMode === 'this-week') {
-      filtered = filtered.filter(e => 
-        !isBefore(e.date, today) && isBefore(e.date, nextWeek)
-      );
-    }
-
-    return filtered;
+    if (viewMode === 'upcoming') list = list.filter(e => !e.isPast);
+    else if (viewMode === 'past') list = list.filter(e => e.isPast);
+    else if (viewMode === 'this-week') list = list.filter(e => !isBefore(e.date, today) && isBefore(e.date, addDays(today, 7)));
+    return list;
   }, [allEvents, filterType, viewMode]);
 
-  const getEventIcon = (type) => {
-    switch (type) {
-      case 'session': return <Users className="w-5 h-5" />;
-      case 'consultation': return <Video className="w-5 h-5" />;
-      case 'course': return <FileText className="w-5 h-5" />;
-      case 'assessment': return <CheckCircle2 className="w-5 h-5" />;
-      default: return <CalendarIcon className="w-5 h-5" />;
-    }
-  };
-
-  const getEventColor = (type) => {
-    switch (type) {
-      case 'session': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'consultation': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'course': return 'bg-green-100 text-green-800 border-green-200';
-      case 'assessment': return 'bg-amber-100 text-amber-800 border-amber-200';
-      default: return 'bg-slate-100 text-slate-800 border-slate-200';
-    }
-  };
-
-  const downloadICS = (event) => {
-    if (!event.date) return;
-    
-    const startDate = format(event.date, "yyyyMMdd'T'HHmmss");
-    const endDate = format(addDays(event.date, 0), "yyyyMMdd'T'HHmmss");
-    
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//EIS//Program Calendar//EN',
-      'BEGIN:VEVENT',
-      `UID:${event.id}@eis.org`,
-      `DTSTAMP:${format(new Date(), "yyyyMMdd'T'HHmmss'Z'")}`,
-      `DTSTART:${startDate}`,
-      `DTEND:${endDate}`,
-      `SUMMARY:${event.title}`,
-      event.description ? `DESCRIPTION:${event.description}` : '',
-      event.location ? `LOCATION:${event.location}` : '',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].filter(Boolean).join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${event.title.replace(/\s+/g, '-')}.ics`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const typeConfig = {
+    event:        { color: 'bg-[#143A50]/10 text-[#143A50] border-[#143A50]/20', label: 'Event', icon: <Ticket className="w-4 h-4" /> },
+    session:      { color: 'bg-blue-100 text-blue-800 border-blue-200',           label: 'Session', icon: <Users className="w-4 h-4" /> },
+    consultation: { color: 'bg-purple-100 text-purple-800 border-purple-200',     label: 'Consultation', icon: <Video className="w-4 h-4" /> },
+    course:       { color: 'bg-green-100 text-green-800 border-green-200',         label: 'Course', icon: <FileText className="w-4 h-4" /> },
+    assessment:   { color: 'bg-amber-100 text-amber-800 border-amber-200',         label: 'Assessment', icon: <CheckCircle2 className="w-4 h-4" /> },
   };
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-[#143A50] mb-2">Program Calendar</h1>
-          <p className="text-slate-600">View all your upcoming sessions, deadlines, and events</p>
+          <h1 className="text-3xl font-bold text-[#143A50] mb-1">Calendar</h1>
+          <p className="text-slate-600">All your upcoming events, sessions, consultations, and deadlines in one place</p>
         </div>
 
         {/* Filters */}
         <Card className="mb-6">
           <CardContent className="py-4">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-slate-500" />
-                <span className="text-sm font-medium">Filters:</span>
-              </div>
-
+            <div className="flex flex-wrap items-center gap-3">
+              <Filter className="w-4 h-4 text-slate-400" />
               <Select value={viewMode} onValueChange={setViewMode}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-36">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="upcoming">Upcoming</SelectItem>
                   <SelectItem value="this-week">This Week</SelectItem>
-                  <SelectItem value="all">All Events</SelectItem>
-                  <SelectItem value="past">Past Events</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="past">Past</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-44">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="event">Platform Events</SelectItem>
                   <SelectItem value="session">Program Sessions</SelectItem>
                   <SelectItem value="consultation">Consultations</SelectItem>
-                  <SelectItem value="course">Courses</SelectItem>
                   <SelectItem value="assessment">Assessments</SelectItem>
                 </SelectContent>
               </Select>
 
-              <div className="ml-auto">
-                <Badge variant="outline" className="text-slate-600">
-                  {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
-                </Badge>
-              </div>
+              <span className="ml-auto text-sm text-slate-500">
+                {filteredEvents.length} item{filteredEvents.length !== 1 ? 's' : ''}
+              </span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Events List */}
-        <div className="space-y-4">
-          {filteredEvents.map((event) => (
-            <Card key={event.id} className={`border-l-4 ${event.isPast ? 'opacity-60' : ''}`}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3 flex-1">
-                    <div className={`p-2 rounded-lg ${getEventColor(event.type)}`}>
-                      {getEventIcon(event.type)}
+        {/* Events */}
+        <div className="space-y-3">
+          {filteredEvents.map(event => {
+            const cfg = typeConfig[event.type] || typeConfig.event;
+            return (
+              <Card key={event.id} className={`border-l-4 ${event.isPast ? 'opacity-60' : ''}`}
+                style={{ borderLeftColor: event.type === 'event' ? '#143A50' : undefined }}>
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <div className={`p-2 rounded-lg border flex-shrink-0 ${cfg.color}`}>
+                        {cfg.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-slate-900">{event.title}</h3>
+                          <Badge variant="outline" className={`text-xs ${cfg.color}`}>{cfg.label}</Badge>
+                          {event.subtype && <Badge variant="outline" className="text-xs capitalize">{event.subtype}</Badge>}
+                          {event.isPast && <Badge variant="outline" className="text-xs">Past</Badge>}
+                          {event.isCompleted && <Badge className="bg-green-600 text-xs text-white">Completed</Badge>}
+                          {event.isRegistered && <Badge className="bg-green-100 text-green-800 text-xs">Registered</Badge>}
+                        </div>
+                        <div className="space-y-1 text-sm text-slate-500">
+                          <div className="flex items-center gap-2">
+                            <CalendarIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span>{format(event.date, 'EEEE, MMMM d, yyyy')}{event.time ? ` at ${event.time}` : ''}</span>
+                          </div>
+                          {event.location && (
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>{event.location}</span>
+                            </div>
+                          )}
+                          {event.hasPaidTiers && (
+                            <div className="flex items-center gap-2 text-amber-700">
+                              <DollarSign className="w-3.5 h-3.5 flex-shrink-0" />
+                              <span>Paid event</span>
+                            </div>
+                          )}
+                        </div>
+                        {event.description && (
+                          <p className="text-sm text-slate-600 mt-1.5 line-clamp-2">{event.description}</p>
+                        )}
+                      </div>
                     </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <CardTitle className="text-lg">{event.title}</CardTitle>
-                        {event.isPast && (
-                          <Badge variant="outline" className="text-xs">Past</Badge>
-                        )}
-                        {event.isCompleted && (
-                          <Badge className="bg-green-600 text-xs">
-                            <CheckCircle2 className="w-3 h-3 mr-1" />
-                            Completed
-                          </Badge>
-                        )}
-                      </div>
-                      
-                      <div className="space-y-1 text-sm text-slate-600">
-                       {event.date && event.date instanceof Date && !isNaN(event.date) && (
-                         <div className="flex items-center gap-2">
-                           <CalendarIcon className="w-4 h-4" />
-                           <span className="font-medium">
-                             {format(event.date, 'EEEE, MMMM d, yyyy')}
-                           </span>
-                         </div>
-                       )}
-                        
-                        {event.time && (
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            <span>{event.time}</span>
-                          </div>
-                        )}
-                        
-                        {event.location && (
-                          <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
-                            <span>{event.location}</span>
-                          </div>
-                        )}
-                        
-                        {event.duration && (
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            <span>{event.duration} minutes</span>
-                          </div>
-                        )}
-                      </div>
 
-                      {event.description && (
-                        <p className="text-sm text-slate-600 mt-2">{event.description}</p>
+                    {/* Actions */}
+                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                      {event.meetingLink && !event.isPast && (
+                        <Button size="sm" variant="outline" onClick={() => window.open(event.meetingLink, '_blank')}>
+                          <Video className="w-3.5 h-3.5 mr-1" /> Join
+                        </Button>
+                      )}
+                      {!event.isPast && (
+                        <CalendarSyncButton
+                          title={event.title}
+                          date={event.date}
+                          description={event.description}
+                          location={event.location || event.meetingLink}
+                        />
+                      )}
+                      {/* Register/Cancel for platform events */}
+                      {event.type === 'event' && !event.isPast && (
+                        event.isRegistered ? (
+                          <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50"
+                            onClick={() => cancelMutation.mutate(event.registration.id)}>
+                            Cancel
+                          </Button>
+                        ) : (
+                          <Button size="sm" className="bg-[#143A50] hover:bg-[#1E4F58] text-white"
+                            onClick={() => registerMutation.mutate(event.raw)}>
+                            Register
+                          </Button>
+                        )
                       )}
                     </div>
                   </div>
-
-                  <div className="flex flex-col items-end gap-2">
-                    {event.meetingLink && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => window.open(event.meetingLink, '_blank')}
-                      >
-                        <Video className="w-4 h-4 mr-2" />
-                        Join
-                      </Button>
-                    )}
-                    {!event.isPast && (
-                      <CalendarSyncButton
-                        title={event.title}
-                        date={event.date}
-                        description={event.description}
-                        location={event.location || event.meetingLink}
-                      />
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
 
           {filteredEvents.length === 0 && (
             <Card>
-              <CardContent className="py-12 text-center">
-                <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-slate-300" />
-                <p className="text-slate-500 mb-2">No events found</p>
-                <p className="text-sm text-slate-400">
-                  Try adjusting your filters to see more events
-                </p>
+              <CardContent className="py-16 text-center">
+                <CalendarIcon className="w-14 h-14 mx-auto mb-4 text-slate-200" />
+                <p className="text-slate-500">No events found</p>
+                <p className="text-sm text-slate-400 mt-1">Try adjusting your filters</p>
               </CardContent>
             </Card>
           )}
