@@ -19,6 +19,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { format, parseISO, isBefore, isAfter, startOfDay, addDays } from 'date-fns';
+import CalendarSyncButton from '@/components/events/CalendarSyncButton';
 
 export default function ProgramCalendar() {
   const [filterType, setFilterType] = useState('all');
