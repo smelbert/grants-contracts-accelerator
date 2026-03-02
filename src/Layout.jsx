@@ -377,7 +377,7 @@ export default function Layout({ children, currentPageName }) {
         participant_email: user.email,
         role: 'participant'
       });
-      return enrollments.find(e => e.cohort_id);
+      return enrollments.find(e => e.cohort_id) || null;
     },
     enabled: !!user?.email
   });
