@@ -415,13 +415,11 @@ export default function WorkbookSectionEditor() {
                           </div>
 
                           <div>
-                            <label className="text-sm font-medium mb-2 block">Content (Markdown/HTML)</label>
-                            <Textarea
+                            <label className="text-sm font-medium mb-2 block">Page Content</label>
+                            <RichTextEditor
                               value={pageContent}
-                              onChange={(e) => setPageContent(e.target.value)}
-                              placeholder="Enter content in markdown or HTML format..."
-                              rows={12}
-                              className="font-mono text-sm"
+                              onChange={setPageContent}
+                              placeholder="Enter content with rich formatting..."
                             />
                           </div>
 
