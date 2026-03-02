@@ -644,6 +644,15 @@ export default function EventManagement() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {viewingEvent && (
+        <EventDetailView
+          event={viewingEvent}
+          userEmail={null}
+          userName={null}
+          onClose={() => setViewingEvent(null)}
+        />
+      )}
     </div>
   );
 }
