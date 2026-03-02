@@ -43,21 +43,21 @@ export default function IncubateHerLearning() {
       const cohorts = await base44.entities.ProgramCohort.filter({
         program_code: 'incubateher_funding_readiness'
       });
-      return cohorts[0];
+      return cohorts[0] || null;
     }
   });
 
-  const { data: enrollment } = useQuery({
-    queryKey: ['enrollment', user?.email, cohort?.id],
+  const { data: enrollment, isLoading: enrollmentLoading } = useQuery({
+    queryKey: ['enrollment', user?.email],
     queryFn: async () => {
-      if (!user?.email || !cohort?.id) return null;
+      if (!user?.email) return null;
+      // Find any IncubateHer enrollment for this user
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        cohort_id: cohort.id
+        participant_email: user.email
       });
-      return enrollments[0];
+      return enrollments.find(e => e.cohort_id) || null;
     },
-    enabled: !!user?.email && !!cohort?.id
+    enabled: !!user?.email
   });
 
   const { data: learningContent, isLoading } = useQuery({
