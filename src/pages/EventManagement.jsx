@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,8 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, MapPin, Video, Users, Plus, Edit, Trash2, Copy, Send } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Calendar, MapPin, Video, Users, Plus, Edit, Trash2, Copy, Send, Clock, FileText, CheckCircle2, Filter, Download } from 'lucide-react';
 import { toast } from 'sonner';
+import { format, parseISO, isBefore, startOfDay, addDays } from 'date-fns';
 import RecurringEventForm from '@/components/events/RecurringEventForm';
 import TicketingForm from '@/components/events/TicketingForm';
 import PostEventSurveyForm from '@/components/events/PostEventSurveyForm';
