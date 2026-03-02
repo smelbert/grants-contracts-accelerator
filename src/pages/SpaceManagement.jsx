@@ -118,7 +118,16 @@ export default function SpaceManagement() {
 
   const handleEdit = (space) => {
     setEditingSpace(space);
-    setFormData(space);
+    // Ensure settings object exists
+    const dataWithSettings = {
+      ...space,
+      settings: space.settings || {
+        allow_member_posts: true,
+        moderation_required: false,
+        notifications_enabled: true
+      }
+    };
+    setFormData(dataWithSettings);
     setSelectedType(space.space_type);
     setShowCreateDialog(true);
   };
@@ -329,23 +338,23 @@ export default function SpaceManagement() {
                 <h4 className="font-semibold">Settings</h4>
                 
                 <div className="flex items-center justify-between">
-                  <Label>Allow member posts</Label>
-                  <Switch
-                    checked={formData.settings.allow_member_posts}
-                    onCheckedChange={(checked) => setFormData({
-                      ...formData,
-                      settings: { ...formData.settings, allow_member_posts: checked }
-                    })}
-                  />
-                </div>
+                    <Label>Allow member posts</Label>
+                    <Switch
+                      checked={formData.settings?.allow_member_posts ?? true}
+                      onCheckedChange={(checked) => setFormData({
+                        ...formData,
+                        settings: { ...(formData.settings || {}), allow_member_posts: checked }
+                      })}
+                    />
+                  </div>
 
                 <div className="flex items-center justify-between">
                   <Label>Require moderation</Label>
                   <Switch
-                    checked={formData.settings.moderation_required}
+                    checked={formData.settings?.moderation_required ?? false}
                     onCheckedChange={(checked) => setFormData({
                       ...formData,
-                      settings: { ...formData.settings, moderation_required: checked }
+                      settings: { ...(formData.settings || {}), moderation_required: checked }
                     })}
                   />
                 </div>
@@ -353,10 +362,10 @@ export default function SpaceManagement() {
                 <div className="flex items-center justify-between">
                   <Label>Enable notifications</Label>
                   <Switch
-                    checked={formData.settings.notifications_enabled}
+                    checked={formData.settings?.notifications_enabled ?? true}
                     onCheckedChange={(checked) => setFormData({
                       ...formData,
-                      settings: { ...formData.settings, notifications_enabled: checked }
+                      settings: { ...(formData.settings || {}), notifications_enabled: checked }
                     })}
                   />
                 </div>
