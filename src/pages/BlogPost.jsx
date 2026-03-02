@@ -175,7 +175,7 @@ export default function BlogPost() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="max-w-[1280px] mx-auto px-6 py-12">
         <article className="bg-white">
           <style>{`
             article h1 {
