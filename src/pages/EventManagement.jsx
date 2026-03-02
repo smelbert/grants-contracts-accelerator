@@ -23,6 +23,7 @@ import EventDetailView from '@/components/events/EventDetailView';
 export default function EventManagement() {
   const [isCreating, setIsCreating] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [viewingEvent, setViewingEvent] = useState(null);
   const [formData, setFormData] = useState({
     event_name: '',
     description: '',
