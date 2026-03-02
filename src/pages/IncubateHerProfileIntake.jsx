@@ -135,7 +135,7 @@ export default function IncubateHerProfileIntake() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['organization-profile']);
+      queryClient.invalidateQueries({ queryKey: ['organization-profile'] });
       setLastSaved(new Date());
       toast.success('Profile saved successfully!');
     },

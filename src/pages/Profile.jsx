@@ -45,7 +45,7 @@ export default function ProfilePage() {
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.Organization.update(organization.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['organizations']);
+      queryClient.invalidateQueries({ queryKey: ['organizations'] });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     },
@@ -54,7 +54,7 @@ export default function ProfilePage() {
   const updateUserMutation = useMutation({
     mutationFn: (data) => base44.auth.updateMe(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['currentUser']);
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     },
