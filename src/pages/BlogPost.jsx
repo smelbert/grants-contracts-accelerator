@@ -406,7 +406,7 @@ export default function BlogPost() {
 
       {/* CTA Section */}
       <div className="bg-white py-16">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-[1280px] mx-auto px-6">
           <div className="bg-gradient-to-br from-[#143A50] to-[#1E4F58] rounded-2xl p-12 text-white text-center">
             <h3 className="text-3xl font-bold mb-4">Ready to Transform Your Funding Strategy?</h3>
             <p className="text-slate-200 mb-8 max-w-2xl mx-auto text-lg">
