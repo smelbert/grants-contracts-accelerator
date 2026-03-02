@@ -131,7 +131,7 @@ export default function BlogPost() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
           
           <div className="absolute bottom-0 left-0 right-0">
-            <div className="max-w-4xl mx-auto px-6 pb-12">
+            <div className="max-w-[1280px] mx-auto px-6 pb-12">
               <Link 
                 to={createPageUrl('Blog')}
                 className="inline-flex items-center gap-2 text-white hover:text-[#E5C089] mb-4 transition-colors"
