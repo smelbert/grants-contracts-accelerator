@@ -345,9 +345,9 @@ export default function IncubateHerAgenda() {
             <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex-1">
                     <CardTitle className="text-2xl mb-1">{day.date}</CardTitle>
-                    <div className="flex items-center gap-3 text-white/90">
+                    <div className="flex items-center gap-3 text-white/90 flex-wrap">
                       <span className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
                         {day.time}
@@ -359,6 +359,18 @@ export default function IncubateHerAgenda() {
                         </span>
                       )}
                     </div>
+                    {day.meeting_link && (
+                      <a
+                        href={day.meeting_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        <span className="text-sm font-medium">Join Google Meet</span>
+                      </a>
+                    )}
                   </div>
                   <Badge className="bg-white text-[#143A50]">
                     {dayTotal} minutes
