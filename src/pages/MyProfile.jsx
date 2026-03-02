@@ -234,8 +234,11 @@ export default function MyProfile() {
           </CardContent>
         </Card>
 
+        {/* Directory Opt-In */}
+        <DirectoryOptIn user={user} organization={organization} />
+
         <Tabs defaultValue="portal" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="portal">
               <ShoppingBag className="w-4 h-4 mr-2" />
               Customer Portal
