@@ -120,7 +120,7 @@ export default function AuditLogs() {
                         </p>
                       </div>
                       <Badge className={actionColors[log.action_type] || 'bg-slate-100 text-slate-800'}>
-                        {log.action_type.replace(/_/g, ' ')}
+                        {(log.action_type || '').replace(/_/g, ' ')}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 text-xs text-slate-500">
