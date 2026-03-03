@@ -11,6 +11,7 @@ import AIOnboardingAssistant from '@/components/onboarding/AIOnboardingAssistant
 import IncubateHerOnboarding from '@/components/incubateher/IncubateHerOnboarding';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import LegalAcknowledgement from '@/components/legal/LegalAcknowledgement';
+import IncubateHerProgramGate from '@/components/incubateher/IncubateHerProgramGate';
 import { 
   LayoutDashboard, 
   Search, 
