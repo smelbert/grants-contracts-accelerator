@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,25 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Building2, 
-  Target, 
-  Users, 
-  DollarSign, 
-  MapPin, 
-  Save, 
-  CheckCircle2, 
-  Sparkles,
-  AlertCircle,
-  ChevronRight,
-  Loader2,
-  Plus,
-  X,
-  Globe,
-  Wand2
+  Building2, Target, Users, DollarSign, Save, CheckCircle2, 
+  Sparkles, ChevronRight, Loader2, Plus, X, Globe, Wand2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
@@ -32,61 +18,63 @@ import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import SignatureField from '@/components/legal/SignatureField';
 import JotFormProfile from '@/components/incubateher/JotFormProfile';
 
+const ORG_TYPES = [
+  '501(c)(3) Nonprofit', '501(c)(4) Social Welfare', 'LLC', 'Sole Proprietor',
+  'S-Corp', 'C-Corp', 'Partnership', 'Cooperative', 'Fiscal Sponsee',
+  'Community-Based Organization (unincorporated)', 'Other'
+];
+
 export default function IncubateHerProfileIntake() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('basic');
   const [aiGenerating, setAiGenerating] = useState({});
   const hasLoadedInitialData = React.useRef(false);
+  const [aiAutoFilling, setAiAutoFilling] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
+  const autoSaveTimerRef = useRef(null);
   const [formData, setFormData] = useState({
-    // Basic Organization Info
     organization_name: '',
     organization_type: '',
     ein: '',
     founding_year: '',
     website: '',
-    
-    // Mission & Vision
     mission_statement: '',
     vision_statement: '',
     organizational_values: '',
-    
-    // Programs & Services
     programs_offered: '',
     target_population: '',
     geographic_service_area: '',
     annual_people_served: '',
-    
-    // Leadership & Team
-    executive_director: '',
-    board_chair: '',
+    // Inclusive leadership fields
+    primary_leader_name: '',
+    primary_leader_title: '',
+    secondary_leader_name: '',
+    secondary_leader_title: '',
     staff_count: '',
     volunteer_count: '',
     board_size: '',
-    
-    // Financial Information
+    executive_director: '',
+    board_chair: '',
+    // Financial
     annual_budget: '',
+    revenue_stage: '',
     funding_sources: '',
     largest_grant_amount: '',
     grant_experience_level: '',
-    
-    // Organizational Capacity
     has_strategic_plan: false,
     has_financial_systems: false,
     has_evaluation_system: false,
     has_data_tracking: false,
-    
-    // Contact & Social
+    // Contact
     mailing_address: '',
     phone: '',
     social_media: '',
     social_media_handles: [],
-    
-    // Goals & Needs
+    // Goals
     funding_goals: '',
     capacity_building_needs: '',
     technical_assistance_needed: ''
   });
-  const [lastSaved, setLastSaved] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -98,8 +86,7 @@ export default function IncubateHerProfileIntake() {
     queryFn: async () => {
       if (!user?.email) return null;
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        role: 'participant'
+        participant_email: user.email, role: 'participant'
       });
       return enrollments.find(e => e.cohort_id);
     },
@@ -110,17 +97,11 @@ export default function IncubateHerProfileIntake() {
     queryKey: ['organization-profile', enrollment?.id, user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
-      // First try to find a profile linked to this enrollment
       if (enrollment?.id) {
-        const enrollmentProfiles = await base44.entities.Organization.filter({
-          enrollment_id: enrollment.id
-        });
+        const enrollmentProfiles = await base44.entities.Organization.filter({ enrollment_id: enrollment.id });
         if (enrollmentProfiles[0]) return enrollmentProfiles[0];
       }
-      // Fallback: find any org profile created by this user
-      const userProfiles = await base44.entities.Organization.filter({
-        primary_contact_email: user.email
-      });
+      const userProfiles = await base44.entities.Organization.filter({ primary_contact_email: user.email });
       return userProfiles[0] || null;
     },
     enabled: !!user?.email
@@ -129,10 +110,7 @@ export default function IncubateHerProfileIntake() {
   useEffect(() => {
     if (existingProfile && !hasLoadedInitialData.current) {
       hasLoadedInitialData.current = true;
-      setFormData(prev => ({
-        ...prev,
-        ...existingProfile
-      }));
+      setFormData(prev => ({ ...prev, ...existingProfile }));
       setLastSaved(new Date(existingProfile.updated_date));
     }
   }, [existingProfile]);
@@ -149,39 +127,39 @@ export default function IncubateHerProfileIntake() {
         });
       }
     },
-    onSuccess: (savedProfile) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['organization-profile'] });
       setLastSaved(new Date());
-      toast.success('Profile saved successfully!');
     },
     onError: (error) => {
-      console.error('Profile save error:', error);
       toast.error(error.message || 'Failed to save profile');
     }
   });
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  const handleChange = useCallback((field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Auto-save after 2s of inactivity
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(() => {
+      setFormData(current => {
+        saveProfileMutation.mutate(current);
+        return current;
+      });
+    }, 2000);
+  }, []);
 
   const handleSave = async () => {
-    const saved = await saveProfileMutation.mutateAsync(formData);
-    // After saving, auto-fill empty AI fields from website/social
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    await saveProfileMutation.mutateAsync(formData);
+    toast.success('Profile saved!');
     await handleAutoFillFromWebsite(formData);
   };
 
-  const [aiAutoFilling, setAiAutoFilling] = useState(false);
-
-  // Auto-fill mission/vision/programs from website after save
   const handleAutoFillFromWebsite = async (savedFormData) => {
     const website = savedFormData.website;
     const orgName = savedFormData.organization_name;
     if (!website && !orgName) return;
 
-    // Only auto-fill fields that are empty
     const fieldsToFill = [];
     if (!savedFormData.mission_statement) fieldsToFill.push('mission_statement');
     if (!savedFormData.vision_statement) fieldsToFill.push('vision_statement');
@@ -189,31 +167,24 @@ export default function IncubateHerProfileIntake() {
     if (!savedFormData.programs_offered) fieldsToFill.push('programs_offered');
     if (!savedFormData.target_population) fieldsToFill.push('target_population');
     if (!savedFormData.funding_goals) fieldsToFill.push('funding_goals');
-
     if (fieldsToFill.length === 0) return;
 
     setAiAutoFilling(true);
     try {
       const socialHandles = (savedFormData.social_media_handles || []).filter(Boolean).join(', ');
-      const prompt = `You are helping a nonprofit complete their organizational profile for a funding readiness program.
-
+      const prompt = `You are helping an organization complete their profile for a funding readiness program.
 Organization Name: ${orgName || 'Not provided'}
 Website: ${website || 'Not provided'}
 Social Media: ${socialHandles || 'Not provided'}
-EIN: ${savedFormData.ein || 'Not provided'}
-Location: ${savedFormData.geographic_service_area || savedFormData.mailing_address || 'Not provided'}
-
-${website ? `Please visit or search for information about this organization at ${website} and their social media handles to learn about what they do.` : ''}
-
-Based on everything you can learn about this organization, generate professional, accurate content for the following fields:
-${fieldsToFill.includes('mission_statement') ? '- mission_statement: A 1-2 sentence mission statement (what they do, who they serve, why)' : ''}
-${fieldsToFill.includes('vision_statement') ? '- vision_statement: A 1-2 sentence aspirational vision statement' : ''}
+${website ? `Please search for information about this organization at ${website}.` : ''}
+Generate professional, accurate content for:
+${fieldsToFill.includes('mission_statement') ? '- mission_statement: A 1-2 sentence mission statement' : ''}
+${fieldsToFill.includes('vision_statement') ? '- vision_statement: A 1-2 sentence vision statement' : ''}
 ${fieldsToFill.includes('organizational_values') ? '- organizational_values: 3-4 core values with brief explanations' : ''}
-${fieldsToFill.includes('programs_offered') ? '- programs_offered: Description of the main programs and services offered' : ''}
+${fieldsToFill.includes('programs_offered') ? '- programs_offered: Description of programs and services offered' : ''}
 ${fieldsToFill.includes('target_population') ? '- target_population: Who the organization primarily serves' : ''}
-${fieldsToFill.includes('funding_goals') ? '- funding_goals: 2-3 realistic funding goals for the next 12 months based on their work' : ''}
-
-Return ONLY a JSON object with these exact field names and string values. If you cannot find information for a field, return an empty string for it.`;
+${fieldsToFill.includes('funding_goals') ? '- funding_goals: 2-3 realistic funding goals for the next 12 months' : ''}
+Return ONLY a JSON object with these exact field names and string values.`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -232,24 +203,19 @@ Return ONLY a JSON object with these exact field names and string values. If you
       });
 
       const updates = {};
-      fieldsToFill.forEach(field => {
-        if (result[field]) updates[field] = result[field];
-      });
-
+      fieldsToFill.forEach(field => { if (result[field]) updates[field] = result[field]; });
       if (Object.keys(updates).length > 0) {
         setFormData(prev => ({ ...prev, ...updates }));
-        // Save again with the AI-filled data
         const mergedData = { ...savedFormData, ...updates };
         if (existingProfile?.id) {
           await base44.entities.Organization.update(existingProfile.id, mergedData);
         }
         queryClient.invalidateQueries({ queryKey: ['organization-profile'] });
-        toast.success(`AI filled in ${Object.keys(updates).length} fields from your website info!`);
-        // Switch to mission tab so user sees the filled content
+        toast.success(`AI filled in ${Object.keys(updates).length} fields!`);
         setActiveTab('mission');
       }
     } catch (error) {
-      // Silent fail — don't interrupt the save flow
+      // silent fail
     } finally {
       setAiAutoFilling(false);
     }
@@ -257,23 +223,18 @@ Return ONLY a JSON object with these exact field names and string values. If you
 
   const handleAIAssist = async (field, prompt) => {
     setAiGenerating(prev => ({ ...prev, [field]: true }));
-    
     try {
-      const contextPrompt = `Help this nonprofit organization complete their profile. 
-      
+      const orgType = formData.organization_type || 'organization';
+      const contextPrompt = `Help this ${orgType} complete their organizational profile for a funding readiness program.
 Organization: ${formData.organization_name || 'unnamed organization'}
+Type: ${orgType}
 ${formData.mission_statement ? `Mission: ${formData.mission_statement}` : ''}
 ${formData.programs_offered ? `Programs: ${formData.programs_offered}` : ''}
-
+${formData.revenue_stage ? `Stage: ${formData.revenue_stage}` : ''}
 ${prompt}
+Provide a concise, professional response. Be inclusive — this could be a nonprofit, small business, consultant, or startup.`;
 
-Provide a concise, professional response (2-3 sentences max for short fields, 1-2 paragraphs for longer fields).`;
-
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: contextPrompt,
-        add_context_from_internet: false
-      });
-
+      const response = await base44.integrations.Core.InvokeLLM({ prompt: contextPrompt, add_context_from_internet: false });
       handleChange(field, response);
       toast.success('AI suggestion generated!');
     } catch (error) {
@@ -282,6 +243,12 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
       setAiGenerating(prev => ({ ...prev, [field]: false }));
     }
   };
+
+  const AIButton = ({ field, prompt }) => (
+    <Button variant="outline" size="sm" onClick={() => handleAIAssist(field, prompt)} disabled={aiGenerating[field]}>
+      {aiGenerating[field] ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Sparkles className="w-4 h-4 mr-1" />AI Assist</>}
+    </Button>
+  );
 
   const calculateProgress = () => {
     const fields = Object.keys(formData);
@@ -305,21 +272,16 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <CoBrandedHeader 
-        title="Organization Profile"
-        subtitle="Complete your profile to auto-fill workbook responses"
-      />
+      <CoBrandedHeader title="Organization Profile" subtitle="Complete your profile to auto-fill workbook responses" />
 
       <div className="max-w-5xl mx-auto px-6 py-8">
-        {/* Progress Overview */}
+        {/* Progress Card */}
         <Card className="mb-6 border-2 border-[#E5C089]">
           <CardContent className="py-6">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-2xl font-bold text-[#143A50]">Profile Completion</h2>
-                <p className="text-slate-600 mt-1">
-                  Complete your profile to automatically populate your workbook responses
-                </p>
+                <p className="text-slate-600 mt-1">Your profile auto-saves as you type. Click Save to also trigger AI fill.</p>
               </div>
               <div className="text-right">
                 <div className="text-4xl font-bold text-[#143A50]">{progress}%</div>
@@ -327,11 +289,11 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
               </div>
             </div>
             <Progress value={progress} className="h-3" />
-            
             {lastSaved && (
               <div className="flex items-center gap-2 mt-4 text-sm text-slate-600">
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
                 Last saved: {lastSaved.toLocaleString()}
+                {saveProfileMutation.isPending && <span className="text-slate-400 ml-2">(saving...)</span>}
               </div>
             )}
           </CardContent>
@@ -343,7 +305,7 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
             <Wand2 className="w-5 h-5 text-[#E5C089] flex-shrink-0" />
             <div>
               <p className="font-semibold text-sm">AI is researching your organization...</p>
-              <p className="text-xs text-white/80">Using your website and social media to fill in your mission, vision, and programs</p>
+              <p className="text-xs text-white/80">Using your website to fill in mission, vision, and programs</p>
             </div>
             <Loader2 className="w-5 h-5 animate-spin ml-auto" />
           </div>
@@ -351,20 +313,17 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
 
         {/* JotForm Registration Data */}
         {enrollment && (enrollment.jotform_data || enrollment.enrollment_notes) && (
-          <div className="mb-6">
-            <JotFormProfile enrollment={enrollment} />
-          </div>
+          <div className="mb-6"><JotFormProfile enrollment={enrollment} /></div>
         )}
 
-        {/* Alert: Why this matters */}
         <Card className="mb-6 bg-gradient-to-r from-[#143A50]/5 to-[#E5C089]/10 border-2 border-[#E5C089]">
           <CardContent className="py-4">
             <div className="flex items-start gap-3">
               <Wand2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-[#143A50] mb-1">AI fills your profile automatically</h3>
+                <h3 className="font-semibold text-[#143A50] mb-1">Your profile auto-saves as you type</h3>
                 <p className="text-sm text-slate-700">
-                  Enter your <strong>website</strong> and <strong>social media handles</strong> on the Basic tab, then click <strong>Save Profile</strong> — our AI will research your organization and auto-fill your mission, vision, programs, and more. You can then review and edit anything it generates.
+                  Enter your <strong>website</strong> on the Basic tab, then click <strong>Save Profile</strong> — AI will research your organization and auto-fill empty fields. Use the <strong>AI Assist</strong> buttons on any field for additional help.
                 </p>
               </div>
             </div>
@@ -374,26 +333,11 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
         {/* Tabbed Form */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="basic">
-              <Building2 className="w-4 h-4 mr-2" />
-              Basic
-            </TabsTrigger>
-            <TabsTrigger value="mission">
-              <Target className="w-4 h-4 mr-2" />
-              Mission
-            </TabsTrigger>
-            <TabsTrigger value="programs">
-              <Users className="w-4 h-4 mr-2" />
-              Programs
-            </TabsTrigger>
-            <TabsTrigger value="financial">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Financial
-            </TabsTrigger>
-            <TabsTrigger value="goals">
-              <ChevronRight className="w-4 h-4 mr-2" />
-              Goals
-            </TabsTrigger>
+            <TabsTrigger value="basic"><Building2 className="w-4 h-4 mr-1 hidden sm:inline" />Basic</TabsTrigger>
+            <TabsTrigger value="mission"><Target className="w-4 h-4 mr-1 hidden sm:inline" />Mission</TabsTrigger>
+            <TabsTrigger value="programs"><Users className="w-4 h-4 mr-1 hidden sm:inline" />Programs</TabsTrigger>
+            <TabsTrigger value="financial"><DollarSign className="w-4 h-4 mr-1 hidden sm:inline" />Financial</TabsTrigger>
+            <TabsTrigger value="goals"><ChevronRight className="w-4 h-4 mr-1 hidden sm:inline" />Goals</TabsTrigger>
           </TabsList>
 
           {/* Basic Info Tab */}
@@ -401,98 +345,62 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
             <Card>
               <CardHeader>
                 <CardTitle>Basic Organization Information</CardTitle>
-                <CardDescription>
-                  Tell us about your organization's legal and contact details
-                </CardDescription>
+                <CardDescription>Legal and contact details for your organization or business</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label>Organization Name *</Label>
-                  <Input
-                    value={formData.organization_name}
-                    onChange={(e) => handleChange('organization_name', e.target.value)}
-                    placeholder="e.g., Community Care Nonprofit"
-                  />
+                  <Label>Organization / Business Name *</Label>
+                  <Input value={formData.organization_name} onChange={(e) => handleChange('organization_name', e.target.value)} placeholder="e.g., Community Care Nonprofit or Jane's Consulting LLC" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Organization Type</Label>
-                    <Input
-                      value={formData.organization_type}
-                      onChange={(e) => handleChange('organization_type', e.target.value)}
-                      placeholder="e.g., 501(c)(3)"
-                    />
+                    <select value={formData.organization_type} onChange={(e) => handleChange('organization_type', e.target.value)} className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm">
+                      <option value="">Select type...</option>
+                      {ORG_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
                   </div>
                   <div>
-                    <Label>EIN (Tax ID)</Label>
-                    <Input
-                      value={formData.ein}
-                      onChange={(e) => handleChange('ein', e.target.value)}
-                      placeholder="e.g., 12-3456789"
-                    />
+                    <Label>EIN / Tax ID (if applicable)</Label>
+                    <Input value={formData.ein} onChange={(e) => handleChange('ein', e.target.value)} placeholder="e.g., 12-3456789" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Year Founded</Label>
-                    <Input
-                      type="number"
-                      value={formData.founding_year}
-                      onChange={(e) => handleChange('founding_year', e.target.value)}
-                      placeholder="e.g., 2015"
-                    />
+                    <Label>Year Founded / Established</Label>
+                    <Input type="number" value={formData.founding_year} onChange={(e) => handleChange('founding_year', e.target.value)} placeholder="e.g., 2015" />
                   </div>
                   <div>
                     <Label>Website</Label>
-                    <Input
-                      value={formData.website}
-                      onChange={(e) => handleChange('website', e.target.value)}
-                      placeholder="https://yourwebsite.org"
-                    />
+                    <Input value={formData.website} onChange={(e) => handleChange('website', e.target.value)} placeholder="https://yourwebsite.org" />
                   </div>
                 </div>
 
                 <div>
                   <Label>Mailing Address</Label>
-                  <Textarea
-                    value={formData.mailing_address}
-                    onChange={(e) => handleChange('mailing_address', e.target.value)}
-                    placeholder="Full mailing address"
-                    rows={3}
-                  />
+                  <Textarea value={formData.mailing_address} onChange={(e) => handleChange('mailing_address', e.target.value)} placeholder="Full mailing address" rows={2} />
                 </div>
 
                 <div>
                   <Label>Phone</Label>
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) => handleChange('phone', e.target.value)}
-                    placeholder="(555) 123-4567"
-                  />
+                  <Input value={formData.phone} onChange={(e) => handleChange('phone', e.target.value)} placeholder="(555) 123-4567" />
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <Label>Social Media Handles</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        const handles = Array.isArray(formData.social_media_handles) ? formData.social_media_handles : [];
-                        handleChange('social_media_handles', [...handles, '']);
-                      }}
-                      className="text-[#143A50] h-7 px-2"
-                    >
-                      <Plus className="w-4 h-4 mr-1" /> Add Handle
+                    <Button type="button" variant="ghost" size="sm" onClick={() => {
+                      const handles = Array.isArray(formData.social_media_handles) ? formData.social_media_handles : [];
+                      handleChange('social_media_handles', [...handles, '']);
+                    }} className="text-[#143A50] h-7 px-2">
+                      <Plus className="w-4 h-4 mr-1" /> Add
                     </Button>
                   </div>
                   <div className="space-y-2">
                     {(Array.isArray(formData.social_media_handles) && formData.social_media_handles.length > 0
-                      ? formData.social_media_handles
-                      : ['']
+                      ? formData.social_media_handles : ['']
                     ).map((handle, idx) => (
                       <div key={idx} className="flex gap-2 items-center">
                         <Globe className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -507,22 +415,17 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
                           className="flex-1"
                         />
                         {(formData.social_media_handles || []).length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const handles = [...formData.social_media_handles];
-                              handles.splice(idx, 1);
-                              handleChange('social_media_handles', handles);
-                            }}
-                            className="text-slate-400 hover:text-red-500"
-                          >
+                          <button type="button" onClick={() => {
+                            const handles = [...formData.social_media_handles];
+                            handles.splice(idx, 1);
+                            handleChange('social_media_handles', handles);
+                          }} className="text-slate-400 hover:text-red-500">
                             <X className="w-4 h-4" />
                           </button>
                         )}
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-slate-500 mt-1">Add Facebook, Instagram, LinkedIn, etc.</p>
                 </div>
               </CardContent>
             </Card>
@@ -533,100 +436,23 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
             <Card>
               <CardHeader>
                 <CardTitle>Mission, Vision & Values</CardTitle>
-                <CardDescription>
-                  Define your organization's purpose and guiding principles
-                </CardDescription>
+                <CardDescription>Define your organization's purpose and guiding principles</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label>Mission Statement *</Label>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAIAssist('mission_statement', 'Write a compelling mission statement for this organization based on the information provided. Focus on WHO they serve, WHAT they do, and WHY it matters.')}
-                      disabled={aiGenerating.mission_statement}
-                    >
-                      {aiGenerating.mission_statement ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          AI Assist
-                        </>
-                      )}
-                    </Button>
+                {[
+                  { field: 'mission_statement', label: 'Mission Statement *', placeholder: 'Our mission is to...', rows: 4, hint: 'What you do, who you serve, and why it matters', prompt: 'Write a compelling mission statement. Focus on WHO they serve, WHAT they do, and WHY it matters.' },
+                  { field: 'vision_statement', label: 'Vision Statement', placeholder: 'We envision a world where...', rows: 3, hint: 'The future you are working to create', prompt: 'Write an inspiring vision statement describing the ideal future this organization is working toward.' },
+                  { field: 'organizational_values', label: 'Organizational Values', placeholder: 'Our core values include...', rows: 4, hint: 'Principles that guide your work and decisions', prompt: 'List 3-5 core values that guide this organization\'s work, with a brief explanation of each.' },
+                ].map(({ field, label, placeholder, rows, hint, prompt }) => (
+                  <div key={field}>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label>{label}</Label>
+                      <AIButton field={field} prompt={prompt} />
+                    </div>
+                    <Textarea value={formData[field]} onChange={(e) => handleChange(field, e.target.value)} placeholder={placeholder} rows={rows} />
+                    <p className="text-xs text-slate-500 mt-1">{hint}</p>
                   </div>
-                  <Textarea
-                    value={formData.mission_statement}
-                    onChange={(e) => handleChange('mission_statement', e.target.value)}
-                    placeholder="Our mission is to..."
-                    rows={4}
-                  />
-                  <p className="text-xs text-slate-600 mt-1">
-                    What your organization does and why it exists
-                  </p>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label>Vision Statement</Label>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAIAssist('vision_statement', 'Write an inspiring vision statement that describes the ideal future state this organization is working toward.')}
-                      disabled={aiGenerating.vision_statement}
-                    >
-                      {aiGenerating.vision_statement ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          AI Assist
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                  <Textarea
-                    value={formData.vision_statement}
-                    onChange={(e) => handleChange('vision_statement', e.target.value)}
-                    placeholder="We envision a world where..."
-                    rows={3}
-                  />
-                  <p className="text-xs text-slate-600 mt-1">
-                    The future you're working to create
-                  </p>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label>Organizational Values</Label>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAIAssist('organizational_values', 'List 3-5 core values that guide this organization\'s work, with a brief explanation of each.')}
-                      disabled={aiGenerating.organizational_values}
-                    >
-                      {aiGenerating.organizational_values ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          AI Assist
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                  <Textarea
-                    value={formData.organizational_values}
-                    onChange={(e) => handleChange('organizational_values', e.target.value)}
-                    placeholder="Our core values include..."
-                    rows={4}
-                  />
-                  <p className="text-xs text-slate-600 mt-1">
-                    The principles that guide your work and decisions
-                  </p>
-                </div>
+                ))}
               </CardContent>
             </Card>
           </TabsContent>
@@ -635,117 +461,76 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
           <TabsContent value="programs">
             <Card>
               <CardHeader>
-                <CardTitle>Programs & Impact</CardTitle>
-                <CardDescription>
-                  Describe what you do and who you serve
-                </CardDescription>
+                <CardTitle>Programs, Services & Team</CardTitle>
+                <CardDescription>Describe what you do, who you serve, and your team structure</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <Label>Programs & Services Offered *</Label>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAIAssist('programs_offered', 'Describe the key programs and services this organization offers. List each program with a brief description.')}
-                      disabled={aiGenerating.programs_offered}
-                    >
-                      {aiGenerating.programs_offered ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          AI Assist
-                        </>
-                      )}
-                    </Button>
+                    <AIButton field="programs_offered" prompt="Describe the key programs and services this organization or business offers. List each with a brief description." />
                   </div>
-                  <Textarea
-                    value={formData.programs_offered}
-                    onChange={(e) => handleChange('programs_offered', e.target.value)}
-                    placeholder="We offer the following programs..."
-                    rows={5}
-                  />
+                  <Textarea value={formData.programs_offered} onChange={(e) => handleChange('programs_offered', e.target.value)} placeholder="We offer the following programs/services..." rows={5} />
                 </div>
 
                 <div>
-                  <Label>Target Population</Label>
-                  <Textarea
-                    value={formData.target_population}
-                    onChange={(e) => handleChange('target_population', e.target.value)}
-                    placeholder="We serve..."
-                    rows={3}
-                  />
-                  <p className="text-xs text-slate-600 mt-1">
-                    Who are the primary beneficiaries of your work?
-                  </p>
-                </div>
-
-                <div>
-                  <Label>Geographic Service Area</Label>
-                  <Input
-                    value={formData.geographic_service_area}
-                    onChange={(e) => handleChange('geographic_service_area', e.target.value)}
-                    placeholder="e.g., Franklin County, Ohio or Columbus Metro Area"
-                  />
-                </div>
-
-                <div>
-                  <Label>People Served Annually</Label>
-                  <Input
-                    type="number"
-                    value={formData.annual_people_served}
-                    onChange={(e) => handleChange('annual_people_served', e.target.value)}
-                    placeholder="e.g., 500"
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <Label>Staff Count</Label>
-                    <Input
-                      type="number"
-                      value={formData.staff_count}
-                      onChange={(e) => handleChange('staff_count', e.target.value)}
-                      placeholder="e.g., 5"
-                    />
+                  <div className="flex items-center justify-between mb-2">
+                    <Label>Target Population / Clients</Label>
+                    <AIButton field="target_population" prompt="Describe who this organization primarily serves or who their target clients/customers are." />
                   </div>
-                  <div>
-                    <Label>Volunteer Count</Label>
-                    <Input
-                      type="number"
-                      value={formData.volunteer_count}
-                      onChange={(e) => handleChange('volunteer_count', e.target.value)}
-                      placeholder="e.g., 25"
-                    />
-                  </div>
-                  <div>
-                    <Label>Board Size</Label>
-                    <Input
-                      type="number"
-                      value={formData.board_size}
-                      onChange={(e) => handleChange('board_size', e.target.value)}
-                      placeholder="e.g., 9"
-                    />
-                  </div>
+                  <Textarea value={formData.target_population} onChange={(e) => handleChange('target_population', e.target.value)} placeholder="We serve..." rows={3} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Executive Director</Label>
-                    <Input
-                      value={formData.executive_director}
-                      onChange={(e) => handleChange('executive_director', e.target.value)}
-                      placeholder="Name"
-                    />
+                    <Label>Geographic Service Area</Label>
+                    <Input value={formData.geographic_service_area} onChange={(e) => handleChange('geographic_service_area', e.target.value)} placeholder="e.g., Franklin County, OH or Nationwide" />
                   </div>
                   <div>
-                    <Label>Board Chair</Label>
-                    <Input
-                      value={formData.board_chair}
-                      onChange={(e) => handleChange('board_chair', e.target.value)}
-                      placeholder="Name"
-                    />
+                    <Label>People / Clients Served Annually</Label>
+                    <Input type="number" value={formData.annual_people_served} onChange={(e) => handleChange('annual_people_served', e.target.value)} placeholder="e.g., 500" />
+                  </div>
+                </div>
+
+                <div className="border-t pt-4">
+                  <p className="text-sm font-semibold text-slate-700 mb-3">Leadership & Team</p>
+                  <p className="text-xs text-slate-500 mb-4">Fill in what applies to your org structure — nonprofit, business, solo practice, etc.</p>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <Label>Primary Leader Name</Label>
+                      <Input value={formData.primary_leader_name} onChange={(e) => handleChange('primary_leader_name', e.target.value)} placeholder="Full name" />
+                    </div>
+                    <div>
+                      <Label>Primary Leader Title</Label>
+                      <Input value={formData.primary_leader_title} onChange={(e) => handleChange('primary_leader_title', e.target.value)} placeholder="e.g., CEO, Owner, Executive Director, Founder" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <Label>Secondary Leader Name (optional)</Label>
+                      <Input value={formData.secondary_leader_name} onChange={(e) => handleChange('secondary_leader_name', e.target.value)} placeholder="Full name" />
+                    </div>
+                    <div>
+                      <Label>Secondary Leader Title (optional)</Label>
+                      <Input value={formData.secondary_leader_title} onChange={(e) => handleChange('secondary_leader_title', e.target.value)} placeholder="e.g., COO, Board Chair, Co-Founder, Consultant" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label>Staff / Employees</Label>
+                      <Input type="number" value={formData.staff_count} onChange={(e) => handleChange('staff_count', e.target.value)} placeholder="e.g., 5 (or 0)" />
+                    </div>
+                    <div>
+                      <Label>Volunteers / Contractors</Label>
+                      <Input type="number" value={formData.volunteer_count} onChange={(e) => handleChange('volunteer_count', e.target.value)} placeholder="e.g., 10 (or 0)" />
+                    </div>
+                    <div>
+                      <Label>Board Size (if applicable)</Label>
+                      <Input type="number" value={formData.board_size} onChange={(e) => handleChange('board_size', e.target.value)} placeholder="e.g., 9 (or N/A)" />
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -757,94 +542,66 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
             <Card>
               <CardHeader>
                 <CardTitle>Financial & Capacity</CardTitle>
-                <CardDescription>
-                  Help us understand your organization's financial health
-                </CardDescription>
+                <CardDescription>Help us understand where you are financially — from pre-revenue to established</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label>Annual Operating Budget</Label>
-                  <Input
-                    value={formData.annual_budget}
-                    onChange={(e) => handleChange('annual_budget', e.target.value)}
-                    placeholder="e.g., $250,000"
-                  />
+                  <Label>Revenue / Funding Stage</Label>
+                  <select value={formData.revenue_stage} onChange={(e) => handleChange('revenue_stage', e.target.value)} className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm">
+                    <option value="">Select your current stage...</option>
+                    <option value="pre_revenue">Pre-Revenue / Just Starting — no income yet</option>
+                    <option value="early_stage">Early Stage — some revenue or small grants (under $25K)</option>
+                    <option value="growing">Growing — $25K–$100K annual revenue/funding</option>
+                    <option value="established_small">Established Small — $100K–$500K</option>
+                    <option value="established_mid">Established Mid-Size — $500K–$1M</option>
+                    <option value="scaling">Scaling — over $1M</option>
+                  </select>
                 </div>
 
                 <div>
-                  <Label>Current Funding Sources</Label>
-                  <Textarea
-                    value={formData.funding_sources}
-                    onChange={(e) => handleChange('funding_sources', e.target.value)}
-                    placeholder="List your main funding sources (grants, donations, earned revenue, etc.)"
-                    rows={3}
-                  />
+                  <Label>Annual Operating Budget (approximate)</Label>
+                  <Input value={formData.annual_budget} onChange={(e) => handleChange('annual_budget', e.target.value)} placeholder="e.g., $50,000 or 'Not yet established'" />
+                  <p className="text-xs text-slate-500 mt-1">Estimate is fine — leave blank if pre-revenue</p>
                 </div>
 
                 <div>
-                  <Label>Largest Grant Amount Received</Label>
-                  <Input
-                    value={formData.largest_grant_amount}
-                    onChange={(e) => handleChange('largest_grant_amount', e.target.value)}
-                    placeholder="e.g., $50,000"
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <Label>Current / Projected Funding Sources</Label>
+                    <AIButton field="funding_sources" prompt="Based on this organization's type, stage, and programs, suggest realistic funding sources they may have or could pursue (grants, contracts, donations, earned revenue, self-funded, etc.)." />
+                  </div>
+                  <Textarea value={formData.funding_sources} onChange={(e) => handleChange('funding_sources', e.target.value)} placeholder="e.g., Self-funded, family grants, earned revenue from services, government contracts, individual donors..." rows={3} />
                 </div>
 
                 <div>
-                  <Label>Grant Writing Experience Level</Label>
-                  <select
-                    value={formData.grant_experience_level}
-                    onChange={(e) => handleChange('grant_experience_level', e.target.value)}
-                    className="w-full border border-slate-300 rounded-md px-3 py-2"
-                  >
-                    <option value="">Select level</option>
-                    <option value="beginner">Beginner - Little to no experience</option>
-                    <option value="intermediate">Intermediate - Some successful grants</option>
-                    <option value="advanced">Advanced - Regular grant writer</option>
-                    <option value="expert">Expert - Extensive track record</option>
+                  <Label>Largest Grant or Contract Received (if any)</Label>
+                  <Input value={formData.largest_grant_amount} onChange={(e) => handleChange('largest_grant_amount', e.target.value)} placeholder="e.g., $25,000 or 'None yet'" />
+                </div>
+
+                <div>
+                  <Label>Grant / Contract Writing Experience</Label>
+                  <select value={formData.grant_experience_level} onChange={(e) => handleChange('grant_experience_level', e.target.value)} className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm">
+                    <option value="">Select experience level...</option>
+                    <option value="beginner">Beginner — Never written a grant or proposal</option>
+                    <option value="some_attempts">Some Attempts — Tried a few, not yet successful</option>
+                    <option value="intermediate">Intermediate — Some successful grants or contracts</option>
+                    <option value="advanced">Advanced — Regular grant / contract writer</option>
+                    <option value="expert">Expert — Extensive track record</option>
                   </select>
                 </div>
 
                 <div className="space-y-3">
                   <Label>Organizational Systems (Check all that apply)</Label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100">
-                      <input
-                        type="checkbox"
-                        checked={formData.has_strategic_plan}
-                        onChange={(e) => handleChange('has_strategic_plan', e.target.checked)}
-                        className="w-4 h-4"
-                      />
-                      <span>Strategic Plan (3-5 years)</span>
+                  {[
+                    { field: 'has_strategic_plan', label: 'Strategic Plan (written goals for 1–3+ years)' },
+                    { field: 'has_financial_systems', label: 'Financial Management System (QuickBooks, spreadsheets, accountant, etc.)' },
+                    { field: 'has_evaluation_system', label: 'Program Evaluation / Impact Tracking System' },
+                    { field: 'has_data_tracking', label: 'Data Tracking & Reporting (client data, outcomes, metrics)' },
+                  ].map(({ field, label }) => (
+                    <label key={field} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100">
+                      <input type="checkbox" checked={formData[field]} onChange={(e) => handleChange(field, e.target.checked)} className="w-4 h-4" />
+                      <span className="text-sm">{label}</span>
                     </label>
-                    <label className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100">
-                      <input
-                        type="checkbox"
-                        checked={formData.has_financial_systems}
-                        onChange={(e) => handleChange('has_financial_systems', e.target.checked)}
-                        className="w-4 h-4"
-                      />
-                      <span>Financial Management Systems</span>
-                    </label>
-                    <label className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100">
-                      <input
-                        type="checkbox"
-                        checked={formData.has_evaluation_system}
-                        onChange={(e) => handleChange('has_evaluation_system', e.target.checked)}
-                        className="w-4 h-4"
-                      />
-                      <span>Program Evaluation System</span>
-                    </label>
-                    <label className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100">
-                      <input
-                        type="checkbox"
-                        checked={formData.has_data_tracking}
-                        onChange={(e) => handleChange('has_data_tracking', e.target.checked)}
-                        className="w-4 h-4"
-                      />
-                      <span>Data Tracking & Reporting</span>
-                    </label>
-                  </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -855,56 +612,31 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
             <Card>
               <CardHeader>
                 <CardTitle>Goals & Development Needs</CardTitle>
-                <CardDescription>
-                  What are you hoping to achieve through IncubateHer?
-                </CardDescription>
+                <CardDescription>What are you hoping to achieve through IncubateHer?</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <Label>Funding Goals</Label>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAIAssist('funding_goals', 'Based on this organization\'s information, suggest 2-3 specific, achievable funding goals they could pursue in the next 12 months.')}
-                      disabled={aiGenerating.funding_goals}
-                    >
-                      {aiGenerating.funding_goals ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          AI Assist
-                        </>
-                      )}
-                    </Button>
+                    <AIButton field="funding_goals" prompt="Based on this organization's information, suggest 2-3 specific, achievable funding goals they could pursue in the next 12 months. Be realistic and specific to their stage and type." />
                   </div>
-                  <Textarea
-                    value={formData.funding_goals}
-                    onChange={(e) => handleChange('funding_goals', e.target.value)}
-                    placeholder="What funding are you seeking? What do you hope to achieve?"
-                    rows={4}
-                  />
+                  <Textarea value={formData.funding_goals} onChange={(e) => handleChange('funding_goals', e.target.value)} placeholder="What funding are you seeking? What do you hope to achieve financially?" rows={4} />
                 </div>
 
                 <div>
-                  <Label>Capacity Building Needs</Label>
-                  <Textarea
-                    value={formData.capacity_building_needs}
-                    onChange={(e) => handleChange('capacity_building_needs', e.target.value)}
-                    placeholder="What areas does your organization need to strengthen?"
-                    rows={4}
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <Label>Capacity Building Needs</Label>
+                    <AIButton field="capacity_building_needs" prompt="Based on this organization's information, identify 2-3 key capacity building needs they likely have. Consider their stage, type, and programs." />
+                  </div>
+                  <Textarea value={formData.capacity_building_needs} onChange={(e) => handleChange('capacity_building_needs', e.target.value)} placeholder="What areas does your organization need to strengthen? (e.g., board development, financial systems, HR, marketing)" rows={4} />
                 </div>
 
                 <div>
-                  <Label>Technical Assistance Needed</Label>
-                  <Textarea
-                    value={formData.technical_assistance_needed}
-                    onChange={(e) => handleChange('technical_assistance_needed', e.target.value)}
-                    placeholder="What specific help or training would be most valuable?"
-                    rows={4}
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <Label>Technical Assistance Needed</Label>
+                    <AIButton field="technical_assistance_needed" prompt="Based on this organization's profile, suggest what specific technical assistance or training would be most valuable for them right now." />
+                  </div>
+                  <Textarea value={formData.technical_assistance_needed} onChange={(e) => handleChange('technical_assistance_needed', e.target.value)} placeholder="What specific help or training would be most valuable? (e.g., grant writing, financial management, strategic planning)" rows={4} />
                 </div>
 
                 {/* Signature Field */}
@@ -919,28 +651,19 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
           </TabsContent>
         </Tabs>
 
-        {/* Save Button - Fixed at Bottom */}
+        {/* Save Button */}
         <div className="sticky bottom-6 mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow-xl border-2 border-[#E5C089]">
           <div className="flex items-center gap-3">
             <Progress value={progress} className="w-32 h-2" />
             <span className="text-sm text-slate-600">{progress}% Complete</span>
+            {saveProfileMutation.isPending && <span className="text-xs text-slate-400">Saving...</span>}
           </div>
-          <Button
-            onClick={handleSave}
-            disabled={saveProfileMutation.isPending || aiAutoFilling}
-            className="bg-[#143A50] hover:bg-[#1E4F58]"
-            size="lg"
-          >
-            {saveProfileMutation.isPending || aiAutoFilling ? (
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4 mr-2" />
-            )}
-            {aiAutoFilling ? 'AI Filling Profile...' : 'Save Profile'}
+          <Button onClick={handleSave} disabled={saveProfileMutation.isPending || aiAutoFilling} className="bg-[#143A50] hover:bg-[#1E4F58]" size="lg">
+            {saveProfileMutation.isPending || aiAutoFilling ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+            {aiAutoFilling ? 'AI Filling...' : 'Save Profile'}
           </Button>
         </div>
       </div>
-
       <CoBrandedFooter />
     </div>
   );
