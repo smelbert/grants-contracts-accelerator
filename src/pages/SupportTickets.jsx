@@ -37,7 +37,7 @@ export default function SupportTickets() {
   const createTicketMutation = useMutation({
     mutationFn: (data) => base44.entities.SupportTicket.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['support-tickets']);
+      queryClient.invalidateQueries({ queryKey: ['support-tickets'] });
       toast.success('Support ticket created');
     }
   });
@@ -45,7 +45,7 @@ export default function SupportTickets() {
   const updateTicketMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.SupportTicket.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['support-tickets']);
+      queryClient.invalidateQueries({ queryKey: ['support-tickets'] });
       toast.success('Ticket updated');
     }
   });
