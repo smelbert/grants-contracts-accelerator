@@ -459,12 +459,15 @@ export default function LearningPage() {
                 <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
               </div>
             ) : filteredContent.length === 0 ? (
-              <div className="text-center py-12 bg-amber-50 border border-amber-200 rounded-xl p-8">
-                <span className="text-4xl block mb-3">🚧</span>
-                <h3 className="text-lg font-semibold text-amber-900 mb-2">Courses & Webinars Coming Soon</h3>
-                <p className="text-amber-800 text-sm max-w-md mx-auto">
-                  Additional courses, webinars, and workshops are being finalized and will be published here soon. IncubateHer participants can access their program courses from the <strong>IncubateHer Courses</strong> tab.
-                </p>
+              <div>
+                <div className="text-center py-8 bg-amber-50 border border-amber-200 rounded-xl px-8">
+                  <span className="text-4xl block mb-3">🚧</span>
+                  <h3 className="text-lg font-semibold text-amber-900 mb-2">Courses & Webinars Coming Soon</h3>
+                  <p className="text-amber-800 text-sm max-w-md mx-auto">
+                    Additional courses, webinars, and workshops are being finalized and will be published here soon. IncubateHer participants can access their program courses from the <strong>IncubateHer Courses</strong> tab.
+                  </p>
+                </div>
+                <ComingSoonPipeline mode="learning" />
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

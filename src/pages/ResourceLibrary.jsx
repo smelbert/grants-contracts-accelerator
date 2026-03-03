@@ -237,6 +237,8 @@ export default function ResourceLibrary() {
 
         <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="resource_library" />
 
+        <ComingSoonPipeline mode="resources" />
+
         <Tabs defaultValue="all" className="space-y-6 mt-8">
           <TabsList>
             <TabsTrigger value="all">
