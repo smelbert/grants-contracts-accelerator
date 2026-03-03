@@ -103,27 +103,6 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
     return '';
   };
 
-  const getVideoEmbedUrl = (url) => {
-    if (!url) return null;
-    
-    // YouTube
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      const videoId = url.includes('youtu.be') 
-        ? url.split('youtu.be/')[1]?.split('?')[0]
-        : url.split('v=')[1]?.split('&')[0];
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-    
-    // Vimeo
-    if (url.includes('vimeo.com')) {
-      const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
-      return `https://player.vimeo.com/video/${videoId}`;
-    }
-    
-    // Direct video URL
-    return url;
-  };
-
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: `
