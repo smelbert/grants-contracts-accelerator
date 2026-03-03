@@ -876,8 +876,6 @@ export const WORKBOOK_PAGES = [
     section: 'consultation',
     title: 'Preparing for Your Consultation',
     type: 'consultation',
-    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    video_description: 'Facilitator guide: Making the most of your one-on-one consultation session',
     content: `
       <p class="mb-3 text-sm">Your 1:1 consultation is a strategic readiness conversation—not a writing or search session.</p>
       
