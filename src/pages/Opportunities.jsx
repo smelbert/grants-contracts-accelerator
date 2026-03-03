@@ -273,6 +273,13 @@ function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onRep
             </div>
           )}
 
+          {/* Attachments — shown for grants, RFPs, contracts */}
+          {['grant', 'rfp', 'rfq', 'rfi', 'contract'].includes(opp.type) && (
+            <div className="border-t border-slate-100 pt-4">
+              <OpportunityAttachments opp={opp} isAdmin={isAdmin} onUpdated={onRefresh} />
+            </div>
+          )}
+
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-2 border-t border-slate-100">
             <Button
