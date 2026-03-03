@@ -269,9 +269,22 @@ export default function IncubateHerConsultations() {
                   <p className="text-slate-700 text-sm mb-3">
                     Complete at least 50% of the required workbook pages ({completedRequiredPages.length} of {requiredPages.length} completed).
                   </p>
-                  <Button className="bg-[#143A50]">
-                    Continue Workbook
-                  </Button>
+                  <div className="flex flex-wrap gap-3">
+                    <Button className="bg-[#143A50]" onClick={() => window.location.href = '/IncubateHerWorkbook'}>
+                      Continue Workbook
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-[#143A50] text-[#143A50]"
+                      onClick={() => {
+                        const el = document.getElementById('contact-charles-section');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Contact Charles
+                    </Button>
+                  </div>
                 </div>
               )}
             </CardContent>
