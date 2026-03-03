@@ -76,8 +76,6 @@ export const WORKBOOK_PAGES = [
     section: 'funding_foundations',
     title: 'Funding Pathways Overview',
     type: 'handout',
-    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    video_description: 'Expert explanation: Understanding the key differences between grants and contracts',
     takeaways: [
       'Grants fund your mission and provide more flexibility',
       'Contracts pay for specific deliverables with strict requirements',
