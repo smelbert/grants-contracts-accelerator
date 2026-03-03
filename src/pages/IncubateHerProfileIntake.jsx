@@ -337,6 +337,18 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
           </CardContent>
         </Card>
 
+        {/* AI Auto-Fill Banner */}
+        {aiAutoFilling && (
+          <div className="mb-6 p-4 bg-[#143A50] text-white rounded-lg flex items-center gap-3 animate-pulse">
+            <Wand2 className="w-5 h-5 text-[#E5C089] flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-sm">AI is researching your organization...</p>
+              <p className="text-xs text-white/80">Using your website and social media to fill in your mission, vision, and programs</p>
+            </div>
+            <Loader2 className="w-5 h-5 animate-spin ml-auto" />
+          </div>
+        )}
+
         {/* JotForm Registration Data */}
         {enrollment && (enrollment.jotform_data || enrollment.enrollment_notes) && (
           <div className="mb-6">
