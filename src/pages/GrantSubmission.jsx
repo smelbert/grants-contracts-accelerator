@@ -132,8 +132,18 @@ export default function GrantSubmissionPage() {
     createGrantMutation.mutate(formData);
   };
 
+  // Auto-sync funding_lane when type changes
+  const TYPE_TO_LANE = {
+    grant: 'grants', rfp: 'contracts', rfq: 'contracts', rfi: 'contracts',
+    contract: 'contracts', donor_program: 'donors', public_fund: 'public_funds'
+  };
+
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const next = { ...prev, [field]: value };
+      if (field === 'type') next.funding_lane = TYPE_TO_LANE[value] || prev.funding_lane;
+      return next;
+    });
   };
 
   const toggleSave = (grantId) => {
