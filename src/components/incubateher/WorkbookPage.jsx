@@ -53,8 +53,6 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         title: customContent.title || page.title,
         subtitle: customContent.subtitle || page.subtitle,
         content: customContent.content || page.content,
-        video_url: customContent.video_url || page.video_url,
-        video_description: customContent.video_description || page.video_description,
         takeaways: customContent.takeaways || page.takeaways,
         action_items: customContent.action_items || page.action_items
       }
@@ -254,42 +252,6 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
-        )}
-
-        {/* Video Content with Enhanced Callout */}
-        {displayPage.video_url && (
-          <div className="relative">
-            <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
-            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 rounded-xl p-4 border-2 border-[#E5C089] shadow-lg">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-[#AC1A5B] flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-[#143A50]">📹 Watch & Learn</h3>
-              </div>
-              <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 shadow-xl border-2 border-slate-300">
-                {getVideoEmbedUrl(displayPage.video_url)?.startsWith('http') ? (
-                  <iframe
-                    src={getVideoEmbedUrl(displayPage.video_url)}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <video
-                    src={displayPage.video_url}
-                    controls
-                    className="w-full h-full"
-                  />
-                )}
-              </div>
-              {displayPage.video_description && (
-                <p className="text-sm text-slate-700 mt-4 italic">{displayPage.video_description}</p>
-              )}
             </div>
           </div>
         )}
