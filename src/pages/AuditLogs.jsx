@@ -116,7 +116,7 @@ export default function AuditLogs() {
                       <div className="flex-1">
                         <p className="text-sm font-medium text-slate-900">{log.description}</p>
                         <p className="text-xs text-slate-500 mt-1">
-                          {log.user_email} • {log.user_role}
+                          {log.user_email} {log.user_role ? `• ${log.user_role}` : ''}
                         </p>
                       </div>
                       <Badge className={actionColors[log.action_type] || 'bg-slate-100 text-slate-800'}>
