@@ -9,8 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Search, DollarSign, Calendar, Bookmark, BookmarkCheck,
   ExternalLink, MapPin, TrendingUp, X, ShieldCheck,
-  AlertTriangle, Flag, Clock, Archive, ChevronRight, Star,
-  ClipboardPaste, CheckCircle2, RefreshCw, Building2
+  AlertTriangle, Flag, Clock, Archive, ChevronRight,
+  Link2, CheckCircle2, RefreshCw, Building2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, differenceInDays, isPast, isWithinInterval, addDays } from 'date-fns';
