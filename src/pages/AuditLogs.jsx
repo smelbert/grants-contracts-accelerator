@@ -38,8 +38,8 @@ export default function AuditLogs() {
 
   const filteredLogs = logs.filter(log => {
     const matchesSearch = !searchQuery || 
-      log.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.user_email.toLowerCase().includes(searchQuery.toLowerCase());
+      (log.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (log.user_email || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesAction = actionFilter === 'all' || log.action_type === actionFilter;
     return matchesSearch && matchesAction;
   });
