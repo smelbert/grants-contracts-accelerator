@@ -65,6 +65,12 @@ const DOCUMENT_TEMPLATES = {
       title: 'Client Intake Form',
       description: 'Capture demographics and service data',
       includes: ['Demographics', 'Service provided', 'Date', 'Consent', 'Outcome tracking']
+    },
+    {
+      id: 'inkind-tracker',
+      title: 'In-Kind Donation Tracker',
+      description: 'Track non-cash contributions required for reporting and matching funds',
+      includes: ['Volunteer hours (with hourly rate)', 'Donated goods & materials', 'Pro-bono services', 'Donated space/facilities', 'Equipment loans', 'Total estimated value']
     }
   ],
   day3: [
@@ -303,6 +309,16 @@ export default function DocumentTemplates({ day }) {
         { id: 'outputs', label: 'Outputs (Direct Results)', type: 'textarea', required: true, rows: 3, placeholder: 'Number served, sessions held, materials distributed' },
         { id: 'outcomes', label: 'Outcomes (Changes)', type: 'textarea', required: true, rows: 3, placeholder: 'Knowledge, skills, behaviors changed' },
         { id: 'impact', label: 'Long-Term Impact', type: 'textarea', required: true, rows: 2, placeholder: 'Community-level change' }
+      ],
+      'inkind-tracker': [
+        { id: 'organization_name', label: 'Organization Name', type: 'input', required: true },
+        { id: 'reporting_period', label: 'Reporting Period', type: 'input', placeholder: 'e.g., January 2026 – March 2026' },
+        { id: 'volunteer_hours', label: 'Volunteer Hours Log', type: 'textarea', required: true, rows: 6, placeholder: 'Date | Volunteer Name | Activity | Hours | Hourly Rate | Value\n2026-01-05 | Jane Doe | Grant Writing Support | 4 hrs | $50/hr | $200\n2026-01-12 | John Smith | Event Setup | 3 hrs | $25/hr | $75' },
+        { id: 'donated_goods', label: 'Donated Goods & Materials', type: 'textarea', rows: 5, placeholder: 'Date | Donor Name | Item(s) | Estimated Fair Market Value\n2026-01-10 | Office Depot | Office Supplies | $150\n2026-01-20 | Community Church | Folding Tables x10 | $300' },
+        { id: 'probono_services', label: 'Pro-Bono / Professional Services', type: 'textarea', rows: 5, placeholder: 'Date | Provider | Service | Hours | Rate | Value\n2026-02-01 | ABC Law Firm | Legal Review | 2 hrs | $200/hr | $400' },
+        { id: 'donated_space', label: 'Donated Space / Facilities', type: 'textarea', rows: 4, placeholder: 'Date(s) | Location | Purpose | Hours Used | Market Rate | Value\n2026-01-15 | Community Center Room B | Training Session | 3 hrs | $75/hr | $225' },
+        { id: 'equipment_loans', label: 'Equipment / Technology Loans', type: 'textarea', rows: 4, placeholder: 'Date | Donor | Item | Duration | Estimated Value\n2026-02-10 | TechCorp | Laptop x2 | 1 month | $200' },
+        { id: 'total_summary', label: 'Summary Notes / Total Estimated Value', type: 'textarea', rows: 3, placeholder: 'Add up all categories and note how this in-kind support connects to your grant match requirements or program costs.' }
       ],
       'sustainability-plan': [
         { id: 'organization_name', label: 'Organization Name', type: 'input', required: true },

@@ -15,7 +15,8 @@ import {
   Filter,
   CheckCircle2,
   DollarSign,
-  Ticket
+  Ticket,
+  ExternalLink
 } from 'lucide-react';
 import { format, parseISO, isBefore, startOfDay, addDays } from 'date-fns';
 import CalendarSyncButton from '@/components/events/CalendarSyncButton';
