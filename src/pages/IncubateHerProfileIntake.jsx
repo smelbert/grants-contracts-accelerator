@@ -453,23 +453,65 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Phone</Label>
-                    <Input
-                      value={formData.phone}
-                      onChange={(e) => handleChange('phone', e.target.value)}
-                      placeholder="(555) 123-4567"
-                    />
-                  </div>
-                  <div>
+                <div>
+                  <Label>Phone</Label>
+                  <Input
+                    value={formData.phone}
+                    onChange={(e) => handleChange('phone', e.target.value)}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
                     <Label>Social Media Handles</Label>
-                    <Input
-                      value={formData.social_media}
-                      onChange={(e) => handleChange('social_media', e.target.value)}
-                      placeholder="@yourorg"
-                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        const handles = Array.isArray(formData.social_media_handles) ? formData.social_media_handles : [];
+                        handleChange('social_media_handles', [...handles, '']);
+                      }}
+                      className="text-[#143A50] h-7 px-2"
+                    >
+                      <Plus className="w-4 h-4 mr-1" /> Add Handle
+                    </Button>
                   </div>
+                  <div className="space-y-2">
+                    {(Array.isArray(formData.social_media_handles) && formData.social_media_handles.length > 0
+                      ? formData.social_media_handles
+                      : ['']
+                    ).map((handle, idx) => (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <Globe className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                        <Input
+                          value={handle}
+                          onChange={(e) => {
+                            const handles = [...(formData.social_media_handles || [''])];
+                            handles[idx] = e.target.value;
+                            handleChange('social_media_handles', handles);
+                          }}
+                          placeholder="e.g., https://facebook.com/yourorg or @yourorg"
+                          className="flex-1"
+                        />
+                        {(formData.social_media_handles || []).length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const handles = [...formData.social_media_handles];
+                              handles.splice(idx, 1);
+                              handleChange('social_media_handles', handles);
+                            }}
+                            className="text-slate-400 hover:text-red-500"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">Add Facebook, Instagram, LinkedIn, etc.</p>
                 </div>
               </CardContent>
             </Card>
