@@ -1,60 +1,147 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { 
-  BookOpen, 
-  CheckCircle2, 
-  Clock, 
-  Award, 
+import {
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  Award,
   Trophy,
-  Target,
   Lock,
   Play,
   Sparkles,
-  FileText,
   Video,
-  Download,
-  ChevronDown,
   ChevronRight,
-  MapPin,
-  ExternalLink
+  Circle,
+  RotateCcw,
+  FileText,
+  Download
 } from 'lucide-react';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
+const MODULE_ORDER = ['monday', 'thursday', 'saturday', 'intro', 'legal', 'financial', 'grants', 'contracts', 'strategy', 'consultation', 'wrap'];
+
+const MODULE_LABELS = {
+  monday: 'Session 1 – Foundations & Compliance',
+  thursday: 'Session 2 – Financial & Funding Strategy',
+  saturday: 'Session 3 – Grant Writing & Planning',
+  intro: 'Program Orientation & Funding Foundations',
+  legal: 'Legal Structure & Organizational Compliance',
+  financial: 'Financial Management & Budget Development',
+  grants: 'Grants, Proposals & RFP Fundamentals',
+  contracts: 'RFPs & Contract Proposals in Practice',
+  strategy: 'Funding Strategy & Long-Term Sustainability',
+  consultation: 'Consultation Preparation Lab',
+  wrap: 'Program Wrap-Up & Next Steps'
+};
+
+function CourseCard({ content, progress, onStart }) {
+  const isCompleted = progress?.is_completed;
+  const hasStarted = progress && !isCompleted;
+  const pct = progress?.progress_percentage || 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group"
+    >
+      <Card className={`h-full border-2 transition-all duration-200 ${isCompleted ? 'border-green-300 bg-green-50' : 'border-slate-200 hover:border-[#143A50] hover:shadow-md'}`}>
+        <CardContent className="p-5 flex flex-col h-full">
+          {/* Status badge */}
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex-1">
+              {isCompleted ? (
+                <Badge className="bg-green-100 text-green-700 border-green-200 mb-2">
+                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                  Completed
+                </Badge>
+              ) : hasStarted ? (
+                <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-2">
+                  <RotateCcw className="w-3 h-3 mr-1" />
+                  In Progress
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="mb-2 text-slate-500">
+                  <Circle className="w-3 h-3 mr-1" />
+                  Not Started
+                </Badge>
+              )}
+            </div>
+            {content.duration_minutes && (
+              <span className="text-xs text-slate-500 flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {content.duration_minutes}m
+              </span>
+            )}
+          </div>
+
+          {/* Title & Description */}
+          <h3 className="font-semibold text-slate-900 mb-2 leading-snug">{content.title}</h3>
+          {content.description && (
+            <p className="text-sm text-slate-600 mb-4 flex-1 leading-relaxed line-clamp-3">{content.description}</p>
+          )}
+
+          {/* Progress bar */}
+          {hasStarted && (
+            <div className="mb-3">
+              <div className="flex justify-between text-xs text-slate-500 mb-1">
+                <span>Progress</span>
+                <span>{pct}%</span>
+              </div>
+              <Progress value={pct} className="h-1.5" />
+            </div>
+          )}
+
+          {/* CTA */}
+          <Link
+            to={`${createPageUrl('IncubateHerCourse')}?id=${content.id}&from=learning`}
+            className="mt-auto"
+          >
+            <Button
+              className="w-full"
+              size="sm"
+              style={isCompleted
+                ? { backgroundColor: '#e2f4ea', color: '#15803d', border: '1px solid #86efac' }
+                : { backgroundColor: BRAND_COLORS.culRed, color: 'white' }
+              }
+            >
+              {isCompleted ? (
+                <><RotateCcw className="w-3 h-3 mr-2" /> Review</>
+              ) : hasStarted ? (
+                <><Play className="w-3 h-3 mr-2" /> Continue</>
+              ) : (
+                <><Play className="w-3 h-3 mr-2" /> Start Course</>
+              )}
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
 export default function IncubateHerLearning() {
-  const [expandedSections, setExpandedSections] = useState({});
+  const [activeModule, setActiveModule] = useState('all');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me()
   });
 
-  const { data: cohort } = useQuery({
-    queryKey: ['incubateher-cohort'],
-    queryFn: async () => {
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
-      });
-      return cohorts?.[0] || null;
-    }
-  });
-
   const { data: enrollment, isLoading: enrollmentLoading } = useQuery({
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
-      // Find any IncubateHer enrollment for this user
-      const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email
-      });
+      const enrollments = await base44.entities.ProgramEnrollment.filter({ participant_email: user.email });
       return enrollments.find(e => e.cohort_id) || null;
     },
     enabled: !!user?.email
@@ -63,46 +150,28 @@ export default function IncubateHerLearning() {
   const { data: learningContent = [], isLoading } = useQuery({
     queryKey: ['incubateher-learning'],
     queryFn: async () => {
-      const content = await base44.entities.LearningContent.filter({
-        incubateher_only: true
-      });
+      const content = await base44.entities.LearningContent.filter({ incubateher_only: true });
       return content || [];
     }
   });
 
   const { data: userProgress = [] } = useQuery({
-    queryKey: ['user-progress', enrollment?.id],
+    queryKey: ['user-progress', user?.email],
     queryFn: async () => {
-      if (!enrollment?.id) return [];
-      return await base44.entities.UserProgress.filter({
-        enrollment_id: enrollment.id
-      });
+      if (!user?.email) return [];
+      return await base44.entities.UserProgress.filter({ user_email: user.email });
     },
-    enabled: !!enrollment?.id
+    enabled: !!user?.email
   });
 
   const { data: badges = [] } = useQuery({
     queryKey: ['user-badges', user?.email],
     queryFn: async () => {
       if (!user?.email) return [];
-      return await base44.entities.UserBadge.filter({
-        user_email: user.email,
-        program: 'incubateher'
-      });
+      return await base44.entities.UserBadge.filter({ user_email: user.email, program: 'incubateher' });
     },
     enabled: !!user?.email
   });
-
-  const toggleSection = (sectionId) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [sectionId]: !prev[sectionId]
-    }));
-  };
-
-  const getLinkedContent = (sectionId) => {
-    return learningContent?.filter(content => content.agenda_section === sectionId) || [];
-  };
 
   if (!enrollmentLoading && !enrollment) {
     return (
@@ -118,11 +187,6 @@ export default function IncubateHerLearning() {
               <p className="text-slate-600 mb-6">
                 This learning hub is exclusive to IncubateHer program participants.
               </p>
-              <Button asChild style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
-                <a href={createPageUrl('IncubateHerSchedule')}>
-                  Enroll in IncubateHer
-                </a>
-              </Button>
             </CardContent>
           </Card>
         </div>
@@ -131,413 +195,271 @@ export default function IncubateHerLearning() {
     );
   }
 
-  const isCULObserver = enrollment?.role === 'cul_observer';
-  const completedCourses = userProgress?.filter(p => p.is_completed) || [];
-  const totalCourses = learningContent?.length || 0;
-  const completionPercent = totalCourses > 0 ? Math.round((completedCourses.length / totalCourses) * 100) : 0;
-  const totalPoints = enrollment?.gamification_points || 0;
+  // Build progress map
+  const progressMap = {};
+  userProgress.forEach(p => { progressMap[p.content_id] = p; });
 
-  const sessionDays = cohort?.session_days || [
-    {
-      date: 'Monday – March 2',
-      time: '5:30–7:30 PM (Virtual – Google Meet)',
-      meeting_link: '',
-      sections: [
-        {
-          id: 'intro',
-          title: 'Program Orientation & Funding Foundations',
-          duration_minutes: 30,
-          topics: [
-            'Welcome & expectations',
-            'Completion requirements',
-            'Consultation cap explanation',
-            'Overview of grants, proposals, and contracts',
-            'Understanding funding landscapes for early-stage vs. growth-phase businesses'
-          ]
-        },
-        {
-          id: 'legal',
-          title: 'Legal Structure & Organizational Compliance',
-          duration_minutes: 45,
-          topics: [
-            'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
-            'Formation vs. readiness',
-            'Required documentation basics',
-            'Insurance, governance (if applicable), compliance realities',
-            'Common structural mistakes'
-          ]
-        },
-        {
-          id: 'intro',
-          title: 'Funding Readiness Reality Check',
-          duration_minutes: 45,
-          topics: [
-            'What "ready" actually means',
-            'Assessing documentation gaps',
-            'Capacity alignment',
-            'When NOT to pursue funding',
-            'Pre-assessment reflection'
-          ]
-        }
-      ]
-    },
-    {
-      date: 'Thursday – March 5',
-      time: '5:30–7:30 PM (Virtual – Google Meet)',
-      meeting_link: '',
-      sections: [
-        {
-          id: 'financial',
-          title: 'Financial Management & Budget Development',
-          duration_minutes: 60,
-          topics: [
-            'Basic financial systems for entrepreneurs',
-            'Budget building fundamentals',
-            'Revenue vs. reimbursement',
-            'Indirect costs (simple explanation)',
-            'Cash flow awareness',
-            'Common financial red flags'
-          ]
-        },
-        {
-          id: 'grants',
-          title: 'Grants, Proposals & RFP Fundamentals',
-          duration_minutes: 60,
-          topics: [
-            'How to find opportunities',
-            'Reading guidelines correctly',
-            'Grants vs. competitive proposals',
-            'RFP structure overview',
-            'Deliverables vs. outcomes',
-            'Avoiding common application mistakes'
-          ]
-        }
-      ]
-    },
-    {
-      date: 'Saturday – March 7',
-      time: '9:00 AM–12:00 PM (In Person)',
-      location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
-      meeting_link: '',
-      sections: [
-        {
-          id: 'grants',
-          title: 'Deep Dive: Grant Writing Fundamentals',
-          duration_minutes: 60,
-          topics: [
-            'Narrative components',
-            'Problem statements',
-            'Goals & measurable outcomes',
-            'Logic model basics (simple)',
-            'Alignment language'
-          ]
-        },
-        {
-          id: 'contracts',
-          title: 'RFPs & Contract Proposals in Practice',
-          duration_minutes: 45,
-          topics: [
-            'Competitive positioning',
-            'Pricing considerations',
-            'Capability statements',
-            'Past performance documentation',
-            'Evaluating bid feasibility'
-          ]
-        },
-        {
-          id: 'strategy',
-          title: 'Funding Strategy & Long-Term Sustainability',
-          duration_minutes: 30,
-          topics: [
-            'Diversified funding portfolio',
-            'Contracts vs. grants in growth strategy',
-            'Relationship building',
-            'Grant lifecycle awareness'
-          ]
-        },
-        {
-          id: 'consultation',
-          title: 'Consultation Preparation Lab',
-          duration_minutes: 30,
-          topics: [
-            'What to bring to your 1:1',
-            'Document checklist',
-            'How to maximize advisory time',
-            'Booking instructions'
-          ]
-        }
-      ]
-    }
+  const completedCount = learningContent.filter(c => progressMap[c.id]?.is_completed).length;
+  const totalCount = learningContent.length;
+  const completionPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const isCULObserver = enrollment?.role === 'cul_observer';
+
+  // Group content by agenda_section
+  const grouped = {};
+  learningContent.forEach(c => {
+    const key = c.agenda_section || 'other';
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(c);
+  });
+
+  // Get sorted module keys
+  const availableModules = Object.keys(grouped);
+  const sortedModules = [
+    ...MODULE_ORDER.filter(k => availableModules.includes(k)),
+    ...availableModules.filter(k => !MODULE_ORDER.includes(k))
   ];
 
+  const filteredContent = activeModule === 'all'
+    ? learningContent
+    : (grouped[activeModule] || []);
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-      <CoBrandedHeader 
-        title="IncubateHer Learning Hub"
-        subtitle="Your path to funding readiness mastery"
+    <div className="min-h-screen" style={{ backgroundColor: '#f8f9fa' }}>
+      <CoBrandedHeader
+        title="Learning Hub"
+        subtitle="Your IncubateHer curriculum — work at your own pace"
       />
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+
         {/* CUL Observer Badge */}
         {isCULObserver && (
-          <Card className="mb-6" style={{ backgroundColor: BRAND_COLORS.eisGold + '15', borderColor: BRAND_COLORS.eisGold }}>
-            <CardContent className="py-4">
-              <div className="flex items-center gap-3">
-                <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
-                  CUL Observer
-                </Badge>
-                <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                  You have observer access. You can participate and access all materials, but completion is not required.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-6 p-4 rounded-xl flex items-center gap-3" style={{ backgroundColor: BRAND_COLORS.eisGold + '20', borderLeft: `4px solid ${BRAND_COLORS.eisGold}` }}>
+            <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>CUL Observer</Badge>
+            <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+              You have observer access. You can participate and access all materials, but completion is not required.
+            </p>
+          </div>
         )}
 
-        {/* Progress Overview - Hide for CUL Observers */}
+        {/* Top Stats Row */}
         {!isCULObserver && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card style={{ borderColor: BRAND_COLORS.culRed, borderWidth: 2 }}>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <Trophy className="w-8 h-8" style={{ color: BRAND_COLORS.eisGold }} />
-                  <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.culRed }}>
-                    {totalPoints}
-                  </span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND_COLORS.culRed + '15' }}>
+                    <BookOpen className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">{completedCount}<span className="text-slate-400 text-lg">/{totalCount}</span></p>
+                    <p className="text-xs text-slate-500">Courses Done</p>
+                  </div>
                 </div>
-                <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                  Total Points Earned
-                </p>
               </CardContent>
             </Card>
-
-            <Card style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <CheckCircle2 className="w-8 h-8" style={{ color: BRAND_COLORS.eisGold }} />
-                  <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisGold }}>
-                    {completedCourses.length}/{totalCourses}
-                  </span>
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND_COLORS.eisGold + '20' }}>
+                    <Trophy className="w-5 h-5" style={{ color: BRAND_COLORS.eisGold }} />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">{enrollment?.gamification_points || 0}</p>
+                    <p className="text-xs text-slate-500">Points</p>
+                  </div>
                 </div>
-                <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                  Courses Completed
-                </p>
-                <Progress value={completionPercent} className="mt-2" />
               </CardContent>
             </Card>
-
-            <Card style={{ borderColor: BRAND_COLORS.eisNavy, borderWidth: 2 }}>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <Award className="w-8 h-8" style={{ color: BRAND_COLORS.eisNavy }} />
-                  <span className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
-                    {badges?.length || 0}
-                  </span>
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: BRAND_COLORS.eisNavy + '15' }}>
+                    <Award className="w-5 h-5" style={{ color: BRAND_COLORS.eisNavy }} />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">{badges.length}</p>
+                    <p className="text-xs text-slate-500">Badges</p>
+                  </div>
                 </div>
-                <p className="text-sm font-medium" style={{ color: BRAND_COLORS.eisNavy }}>
-                  Badges Earned
-                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-0 shadow-sm">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-100">
+                    <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">{completionPct}%</p>
+                    <p className="text-xs text-slate-500">Complete</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
         )}
 
-        {/* Gamification Notice - Hide for CUL Observers */}
+        {/* Overall progress bar */}
         {!isCULObserver && (
-          <Card className="mb-8" style={{ backgroundColor: BRAND_COLORS.eisGold + '15', borderColor: BRAND_COLORS.eisGold }}>
-            <CardContent className="py-6">
-              <div className="flex items-start gap-4">
-                <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
-                <div>
-                  <h3 className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
-                    How to Earn Points & Badges
-                  </h3>
-                  <ul className="space-y-1 text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                    <li>• Complete each course section: <strong>+10 points</strong></li>
-                    <li>• Complete a full course: <strong>+50 bonus points</strong></li>
-                    <li>• Unlock special badges at milestones (1, 3, and 6 courses completed)</li>
-                    <li>• Complete all courses to be eligible for the program giveaway</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-slate-700">Overall Progress</span>
+              <span className="text-sm text-slate-500">{completedCount} of {totalCount} courses completed</span>
+            </div>
+            <Progress value={completionPct} className="h-3 rounded-full" />
+          </div>
         )}
 
-        {/* Program Schedule Overview */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2" style={{ color: BRAND_COLORS.culRed }}>
-              <Clock className="w-5 h-5" />
-              Program Schedule Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-slate-700 mb-4">
-              The IncubateHer program is structured across three sessions with a total of 7 hours of instruction plus individual consultations.
-            </p>
-            <div className="space-y-2">
-              {sessionDays.map((day, idx) => (
-                <div key={idx} className="flex items-start gap-3">
-                  <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }} className="mt-1">
-                    {idx + 1}
-                  </Badge>
-                  <div>
-                    <p className="font-medium text-slate-900">{day.date}</p>
-                    <p className="text-sm text-slate-600">{day.time}</p>
-                    {day.location && (
-                      <p className="text-sm text-slate-600 flex items-center gap-1 mt-1">
-                        <MapPin className="w-3 h-3" />
-                        {day.location}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Main Layout: Sidebar + Content */}
+        <div className="flex flex-col lg:flex-row gap-6">
 
-        {/* Day-by-Day Curriculum */}
-        {sessionDays.map((day, dayIdx) => {
-          return (
-          <div key={dayIdx} className="mb-6">
-            <Card className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white mb-4">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-2xl mb-1">{day.date}</CardTitle>
-                    <div className="flex items-center gap-3 text-white/90">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {day.time}
-                      </span>
-                      {day.location && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          {day.location}
-                        </span>
-                      )}
-                    </div>
-                    {day.meeting_link && (
-                      <a 
-                        href={day.meeting_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                      >
-                        <Video className="w-4 h-4" />
-                        <span className="text-sm font-medium">Join Google Meet</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
-                  </div>
-                </div>
+          {/* Left Sidebar – Module Navigation */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <Card className="border-0 shadow-sm sticky top-6">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Modules</CardTitle>
               </CardHeader>
-            </Card>
-
-            {day.sections.map((section, sectionIdx) => {
-              const linkedContent = getLinkedContent(section.id);
-              
-              return (
-              <Card key={`${dayIdx}-${sectionIdx}`} className="overflow-hidden ml-4 mb-3">
-                <CardHeader 
-                  className="cursor-pointer hover:bg-slate-50 transition-colors"
-                  onClick={() => toggleSection(`${dayIdx}-${section.id}-${sectionIdx}`)}
+              <CardContent className="p-2">
+                <button
+                  onClick={() => setActiveModule('all')}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-1 flex items-center justify-between ${
+                    activeModule === 'all'
+                      ? 'text-white'
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                  style={activeModule === 'all' ? { backgroundColor: BRAND_COLORS.eisNavy } : {}}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {expandedSections[`${dayIdx}-${section.id}-${sectionIdx}`] ? (
-                        <ChevronDown className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
-                      ) : (
-                        <ChevronRight className="w-5 h-5" style={{ color: BRAND_COLORS.culRed }} />
-                      )}
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
-                            {sectionIdx + 1}
-                          </Badge>
-                          <CardTitle className="text-lg">{section.title}</CardTitle>
-                        </div>
+                  <span>All Courses</span>
+                  <Badge
+                    className="text-xs"
+                    style={activeModule === 'all'
+                      ? { backgroundColor: 'rgba(255,255,255,0.2)', color: 'white' }
+                      : { backgroundColor: '#f1f5f9', color: '#64748b' }
+                    }
+                  >
+                    {totalCount}
+                  </Badge>
+                </button>
+                {sortedModules.map(key => {
+                  const label = MODULE_LABELS[key] || key;
+                  const count = grouped[key]?.length || 0;
+                  const doneInModule = (grouped[key] || []).filter(c => progressMap[c.id]?.is_completed).length;
+                  const isActive = activeModule === key;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => setActiveModule(key)}
+                      className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all mb-1 ${
+                        isActive ? 'text-white' : 'text-slate-600 hover:bg-slate-100'
+                      }`}
+                      style={isActive ? { backgroundColor: BRAND_COLORS.culRed } : {}}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="truncate pr-2 font-medium leading-snug">{label}</span>
+                        <span className={`text-xs flex-shrink-0 ${isActive ? 'text-white/70' : 'text-slate-400'}`}>
+                          {doneInModule}/{count}
+                        </span>
                       </div>
-                    </div>
+                    </button>
+                  );
+                })}
+              </CardContent>
+            </Card>
+          </aside>
+
+          {/* Main Content Area */}
+          <main className="flex-1 min-w-0">
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-48 bg-slate-200 rounded-xl animate-pulse" />
+                ))}
+              </div>
+            ) : filteredContent.length === 0 ? (
+              <Card className="border-0 shadow-sm">
+                <CardContent className="py-16 text-center">
+                  <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                  <h3 className="font-semibold text-slate-700 mb-2">No courses yet</h3>
+                  <p className="text-sm text-slate-500">Courses for this module haven't been added yet. Check back soon!</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                {/* Section header */}
+                {activeModule !== 'all' && (
+                  <div className="mb-5">
+                    <h2 className="text-xl font-bold text-slate-900">{MODULE_LABELS[activeModule] || activeModule}</h2>
+                    <p className="text-sm text-slate-500 mt-1">{filteredContent.length} course{filteredContent.length !== 1 ? 's' : ''} in this module</p>
                   </div>
-                </CardHeader>
+                )}
+                {activeModule === 'all' && (
+                  <div className="mb-5">
+                    <h2 className="text-xl font-bold text-slate-900">All Courses</h2>
+                    <p className="text-sm text-slate-500 mt-1">{totalCount} course{totalCount !== 1 ? 's' : ''} available</p>
+                  </div>
+                )}
 
-                {expandedSections[`${dayIdx}-${section.id}-${sectionIdx}`] && (
-                  <CardContent className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-slate-700 mb-2">Topics Covered:</h4>
-                      <ul className="space-y-1">
-                        {section.topics.map((topic, idx) => (
-                          <li key={idx} className="text-slate-600 flex items-start gap-2">
-                            <span style={{ color: BRAND_COLORS.eisGold }} className="mt-1">•</span>
-                            <span>{topic}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <h4 className="font-semibold text-blue-900 flex items-center gap-2 mb-3">
-                        <BookOpen className="w-4 h-4" />
-                        Learning Resources
-                      </h4>
-                      {getLinkedContent(section.id).length > 0 ? (
-                        <div className="space-y-2">
-                          {getLinkedContent(section.id).map(content => (
-                           <div key={content.id} className="flex items-center justify-between p-3 bg-white rounded border border-blue-100">
-                             <div className="flex items-center gap-3 flex-1">
-                               <div className="flex-1">
-                                 <p className="text-sm font-medium text-slate-900">{content.title}</p>
-                                 <p className="text-xs text-slate-600 mt-1">{content.description}</p>
-                               </div>
-                             </div>
-                              <Link to={createPageUrl('IncubateHerCourse') + '?id=' + content.id + '&from=learning'}>
-                                <Button 
-                                  size="sm" 
-                                  style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}
-                                >
-                                  <ExternalLink className="w-4 h-4" />
-                                </Button>
-                              </Link>
-                            </div>
+                {/* Course grid when showing all – group by module */}
+                {activeModule === 'all' ? (
+                  <div className="space-y-8">
+                    {sortedModules.map(key => (
+                      <div key={key}>
+                        <div className="flex items-center gap-3 mb-4">
+                          <h3 className="font-semibold text-slate-800">{MODULE_LABELS[key] || key}</h3>
+                          <div className="flex-1 h-px bg-slate-200" />
+                          <span className="text-xs text-slate-400">
+                            {(grouped[key] || []).filter(c => progressMap[c.id]?.is_completed).length}/{(grouped[key] || []).length} done
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                          {(grouped[key] || []).map(content => (
+                            <CourseCard
+                              key={content.id}
+                              content={content}
+                              progress={progressMap[content.id]}
+                            />
                           ))}
                         </div>
-                      ) : (
-                        <p className="text-sm text-slate-600 italic">No courses linked yet</p>
-                      )}
-                    </div>
-                  </CardContent>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {filteredContent.map(content => (
+                      <CourseCard
+                        key={content.id}
+                        content={content}
+                        progress={progressMap[content.id]}
+                      />
+                    ))}
+                  </div>
                 )}
-              </Card>
-            );
-            })}
-          </div>
-        );
-        })}
+              </>
+            )}
+          </main>
+        </div>
 
-        {/* Completion Status - Hide for CUL Observers */}
-        {!isCULObserver && completionPercent === 100 && (
+        {/* Completion banner */}
+        {!isCULObserver && completionPct === 100 && totalCount > 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8"
+            className="mt-10"
           >
-            <Card style={{ backgroundColor: BRAND_COLORS.eisGold + '20', borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
-              <CardContent className="py-8 text-center">
-                <Trophy className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
+            <Card className="border-2 text-center" style={{ borderColor: BRAND_COLORS.eisGold, backgroundColor: BRAND_COLORS.eisGold + '10' }}>
+              <CardContent className="py-10">
+                <Trophy className="w-14 h-14 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
                 <h2 className="text-2xl font-bold mb-2" style={{ color: BRAND_COLORS.culRed }}>
-                  🎉 Congratulations!
+                  🎉 You've completed all courses!
                 </h2>
-                <p className="text-lg mb-4" style={{ color: BRAND_COLORS.eisNavy }}>
-                  You've completed all IncubateHer courses and earned your certificate!
-                </p>
-                <Button asChild size="lg" style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
-                  <a href={createPageUrl('IncubateHerCompletion')}>
+                <p className="text-slate-600 mb-6">You're eligible for your program certificate and the giveaway.</p>
+                <Link to={createPageUrl('IncubateHerCompletion')}>
+                  <Button size="lg" style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
                     View Certificate & Giveaway Status
-                  </a>
-                </Button>
+                    <ChevronRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </motion.div>
