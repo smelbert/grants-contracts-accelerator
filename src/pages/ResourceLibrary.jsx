@@ -222,7 +222,9 @@ export default function ResourceLibrary() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="all" className="space-y-6">
+        <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="resource_library" />
+
+        <Tabs defaultValue="all" className="space-y-6 mt-8">
           <TabsList>
             <TabsTrigger value="all">
               <FileText className="w-4 h-4 mr-2" />

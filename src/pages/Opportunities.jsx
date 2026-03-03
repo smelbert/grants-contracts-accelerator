@@ -34,6 +34,7 @@ export default function OpportunitiesPage() {
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
   const [reportingOpportunity, setReportingOpportunity] = useState(null);
+  const [quickPasteOpen, setQuickPasteOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -176,14 +177,25 @@ export default function OpportunitiesPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900">Funding Opportunities</h1>
+                <p className="text-slate-600">Discover and track funding that matches your mission</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">Funding Opportunities</h1>
-              <p className="text-slate-600">Discover and track funding that matches your mission</p>
-            </div>
+            {user?.role === 'admin' && (
+              <Button
+                onClick={() => setQuickPasteOpen(true)}
+                className="bg-emerald-600 hover:bg-emerald-700 gap-2"
+              >
+                <ClipboardPaste className="w-4 h-4" />
+                Quick Paste Grant
+              </Button>
+            )}
           </div>
         </div>
 
