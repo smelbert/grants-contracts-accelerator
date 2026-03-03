@@ -22,8 +22,6 @@ export const WORKBOOK_PAGES = [
     section: 'front_matter',
     title: 'How to Use This Workbook',
     type: 'handout',
-    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    video_description: 'Welcome message from Dr. Shawnté Elbert on how to get the most from this workbook',
     content: `
       <p class="mb-4">Self-paced companion for sessions, assessments, and consultation prep.</p>
       
