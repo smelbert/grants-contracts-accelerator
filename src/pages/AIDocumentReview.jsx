@@ -56,18 +56,20 @@ export default function AIDocumentReview() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
         <div className="max-w-5xl mx-auto">
-          <Button
-            variant="ghost"
-            onClick={() => setShowCoach(false)}
-            className="mb-4"
-          >
+          <Button variant="ghost" onClick={() => setShowCoach(false)} className="mb-4">
             ← Back to Document Review
           </Button>
-          <AIDocumentCoach
-            documentId={selectedDocument?.id}
-            existingText={selectedDocument?.content}
-            onClose={() => setShowCoach(false)}
-          />
+          <AIDocumentCoach documentId={selectedDocument?.id} existingText={selectedDocument?.content} onClose={() => setShowCoach(false)} />
+        </div>
+      </div>
+    );
+  }
+
+  if (showGrantEval) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
+        <div className="max-w-4xl mx-auto">
+          <GrantFitEvaluator userOrgProfile={orgProfile} onBack={() => setShowGrantEval(false)} />
         </div>
       </div>
     );
