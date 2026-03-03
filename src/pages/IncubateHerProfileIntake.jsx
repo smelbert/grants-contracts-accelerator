@@ -163,10 +163,6 @@ export default function IncubateHerProfileIntake() {
   };
 
   const handleSave = async () => {
-    if (!enrollment?.id) {
-      toast.error('Unable to save: Program enrollment not found');
-      return;
-    }
     await saveProfileMutation.mutateAsync(formData);
   };
 
