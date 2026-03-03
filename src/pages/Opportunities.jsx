@@ -101,11 +101,9 @@ function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, ve
 
   return (
     <div
-      className={`group relative bg-white rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden flex flex-col ${dim ? 'opacity-60' : ''}`}
+      className={`group relative bg-white rounded-2xl border-l-4 border border-slate-200 ${lane.hoverBorder} hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden flex flex-col ${lane.cardBorder} ${dim ? 'opacity-60' : ''}`}
       onClick={onClick}
     >
-      {/* Left accent bar */}
-      <div className={`absolute left-0 top-0 bottom-0 w-1 ${lane.color} rounded-l-2xl`} />
 
       <div className="pl-4 pr-4 pt-4 pb-3 flex-1">
         {/* Top row: badges + bookmark */}
