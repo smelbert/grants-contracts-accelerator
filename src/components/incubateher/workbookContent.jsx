@@ -538,8 +538,6 @@ export const WORKBOOK_PAGES = [
     section: 'fundraising',
     title: 'Making the Ask: Fundraising 101',
     type: 'handout',
-    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    video_description: 'Expert walkthrough: How to make effective fundraising asks',
     takeaways: [
       'The ask is relationship-based, not transactional',
       'Preparation includes research, cultivation, and timing',
