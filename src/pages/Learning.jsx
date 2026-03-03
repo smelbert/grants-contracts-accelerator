@@ -16,6 +16,7 @@ import AILearningRecommendations from '@/components/ai/AILearningRecommendations
 import AIContentRecommendations from '@/components/learning/AIContentRecommendations';
 import LearningRequestForm from '@/components/learning/LearningRequestForm';
 import MyLearningRequests from '@/components/learning/MyLearningRequests';
+import ComingSoonPipeline from '@/components/library/ComingSoonPipeline';
 
 const CONTENT_TYPES = [
   { value: 'all', label: 'All Types', icon: BookOpen },

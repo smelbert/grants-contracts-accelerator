@@ -12,6 +12,7 @@ import { Search, Download, FileText, BookOpen, Heart, Star, Eye } from 'lucide-r
 import { toast } from 'sonner';
 import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
 import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
+import ComingSoonPipeline from '@/components/library/ComingSoonPipeline';
 import { createPageUrl } from '@/utils';
 
 const CATEGORY_LABELS = {
