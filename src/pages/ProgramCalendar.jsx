@@ -251,11 +251,11 @@ export default function ProgramCalendar() {
         {/* Events */}
         <div className="space-y-3">
           {filteredEvents.map(event => {
-            const cfg = typeConfig[event.type] || typeConfig.event;
+            const cfg = event.isExternal ? typeConfig.external : (typeConfig[event.type] || typeConfig.event);
             return (
               <Card key={event.id} className={`border-l-4 cursor-pointer hover:shadow-md transition-shadow ${event.isPast ? 'opacity-60' : ''}`}
-              style={{ borderLeftColor: event.type === 'event' ? '#143A50' : undefined }}
-              onClick={() => event.type === 'event' && setSelectedEvent(event.raw)}>
+              style={{ borderLeftColor: event.isExternal ? '#ea580c' : (event.type === 'event' ? '#143A50' : undefined) }}
+              onClick={() => !event.isExternal && event.type === 'event' && setSelectedEvent(event.raw)}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
