@@ -67,50 +67,56 @@ export default function GrantSubmissionPage() {
     queryFn: () => base44.auth.me()
   });
 
+  const EMPTY_FORM = {
+    title: '', project_category: '', funder_name: '', type: 'grant',
+    funding_lane: 'grants', amount_min: '', amount_max: '', deadline_loi: '',
+    deadline_pre: '', deadline_full: '', deadline: '', rolling_deadline: false,
+    status: 'researching', description: '', eligibility_summary: '',
+    application_url: '', geographic_focus: '', internal_notes: '', is_active: true
+  };
+
+  const openCreate = () => { setEditingGrant(null); setFormData(EMPTY_FORM); setShowForm(true); };
+  const openEdit = (grant) => {
+    setEditingGrant(grant);
+    setFormData({
+      title: grant.title || '', project_category: grant.project_category || '',
+      funder_name: grant.funder_name || '', type: grant.type || 'grant',
+      funding_lane: grant.funding_lane || 'grants', amount_min: grant.amount_min || '',
+      amount_max: grant.amount_max || '', deadline_loi: grant.deadline_loi || '',
+      deadline_pre: grant.deadline_pre || '', deadline_full: grant.deadline_full || '',
+      deadline: grant.deadline || '', rolling_deadline: grant.rolling_deadline || false,
+      status: grant.status || 'researching', description: grant.description || '',
+      eligibility_summary: grant.eligibility_summary || '', application_url: grant.application_url || '',
+      geographic_focus: grant.geographic_focus || '', internal_notes: grant.internal_notes || '',
+      is_active: grant.is_active !== false
+    });
+    setSelectedGrant(null);
+    setShowForm(true);
+  };
+
   const createGrantMutation = useMutation({
     mutationFn: async (grantData) => {
+      if (editingGrant) {
+        return await base44.entities.FundingOpportunity.update(editingGrant.id, grantData);
+      }
       const grant = await base44.entities.FundingOpportunity.create(grantData);
-      
       // Notify all active organizations
       if (organizations?.length > 0) {
-        const notificationPromises = organizations.map(org => 
+        await Promise.all(organizations.map(org =>
           base44.entities.TeamMessage.create({
             organization_id: org.id,
-            message: `📢 New Grant Opportunity: ${grantData.title} - Deadline: ${grantData.deadline ? format(new Date(grantData.deadline), 'MMM d, yyyy') : 'Rolling'}. Check the Grant Dashboard!`,
-            sender_name: 'Grant Team',
-            sender_email: 'grants@system',
-            is_pinned: true
+            message: `📢 New Grant Opportunity: ${grantData.title} - Deadline: ${grantData.deadline_full ? format(new Date(grantData.deadline_full), 'MMM d, yyyy') : 'Rolling'}. Check the Grant Dashboard!`,
+            sender_name: 'Grant Team', sender_email: 'grants@system', is_pinned: true
           })
-        );
-        await Promise.all(notificationPromises);
+        ));
       }
-      
       return grant;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['funding-opportunities'] });
       setShowForm(false);
-      setFormData({
-        title: '',
-        project_category: '',
-        funder_name: '',
-        type: 'grant',
-        funding_lane: 'grants',
-        amount_min: '',
-        amount_max: '',
-        deadline_loi: '',
-        deadline_pre: '',
-        deadline_full: '',
-        deadline: '',
-        rolling_deadline: false,
-        status: 'researching',
-        description: '',
-        eligibility_summary: '',
-        application_url: '',
-        geographic_focus: '',
-        internal_notes: '',
-        is_active: true
-      });
+      setEditingGrant(null);
+      setFormData(EMPTY_FORM);
     }
   });
 
