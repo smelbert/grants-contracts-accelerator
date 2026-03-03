@@ -222,6 +222,18 @@ export default function ResourceLibrary() {
           </CardContent>
         </Card>
 
+        {enrichedResources.length === 0 && !isLoading && (
+          <div className="mb-6 p-5 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
+            <span className="text-2xl">🚧</span>
+            <div>
+              <p className="font-semibold text-amber-900">Resources Coming Soon</p>
+              <p className="text-sm text-amber-800 mt-1">
+                We're finishing up the Resource Library — templates will be published here shortly. In the meantime, use the suggestion box below to tell us what you need most!
+              </p>
+            </div>
+          </div>
+        )}
+
         <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="resource_library" />
 
         <Tabs defaultValue="all" className="space-y-6 mt-8">
