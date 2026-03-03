@@ -8,9 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus, Save, Trash2, ExternalLink, Calendar, DollarSign, TrendingUp, Target, Clock, CheckCircle2, BarChart3, Building2, AlertCircle, Bookmark, BookmarkCheck, EyeOff, X, MapPin, Users, FileText, Award } from 'lucide-react';
+import { Plus, Save, Trash2, ExternalLink, Calendar, DollarSign, TrendingUp, Target, Clock, CheckCircle2, BarChart3, Building2, AlertCircle, Bookmark, BookmarkCheck, EyeOff, X, MapPin, Users, FileText, Award, Pencil, Link2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import QuickPasteOpportunity from '@/components/opportunities/QuickPasteOpportunity';
+import { createPageUrl } from '@/utils';
 
 export default function GrantSubmissionPage() {
   const [showForm, setShowForm] = useState(false);
