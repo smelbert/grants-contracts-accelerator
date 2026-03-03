@@ -32,6 +32,7 @@ export default function IncubateHerProfileIntake() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('basic');
   const [aiGenerating, setAiGenerating] = useState({});
+  const hasLoadedInitialData = React.useRef(false);
   const [formData, setFormData] = useState({
     // Basic Organization Info
     organization_name: '',
