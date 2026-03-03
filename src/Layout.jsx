@@ -712,16 +712,26 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
 
-      {/* Legal Acknowledgement */}
-      {user && (
+      {/* IncubateHer Program Gate — replaces generic legal modal for IncubateHer participants */}
+      {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && !userAccess?.legal_acknowledged && (
+        <IncubateHerProgramGate
+          user={user}
+          userAccess={userAccess}
+          enrollment={incubateHerEnrollment}
+          onComplete={() => refetchAccess()}
+        />
+      )}
+
+      {/* Generic Legal Acknowledgement — for all other users */}
+      {user && !(incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program') && (
         <LegalAcknowledgement
           open={showLegalAcknowledgement}
           onAccept={handleLegalAccept}
         />
       )}
 
-      {/* IncubateHer Onboarding */}
-      {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && (
+      {/* IncubateHer Onboarding Tour — only after legal gate is cleared */}
+      {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && userAccess?.legal_acknowledged && (
         <IncubateHerOnboarding
           userEmail={user.email}
           show={true}
