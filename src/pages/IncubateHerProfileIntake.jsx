@@ -168,7 +168,9 @@ export default function IncubateHerProfileIntake() {
   };
 
   const handleSave = async () => {
-    await saveProfileMutation.mutateAsync(formData);
+    const saved = await saveProfileMutation.mutateAsync(formData);
+    // After saving, auto-fill empty AI fields from website/social
+    await handleAutoFillFromWebsite(formData);
   };
 
   const [aiAutoFilling, setAiAutoFilling] = useState(false);
