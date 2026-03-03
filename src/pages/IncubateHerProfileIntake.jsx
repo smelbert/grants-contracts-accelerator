@@ -171,6 +171,88 @@ export default function IncubateHerProfileIntake() {
     await saveProfileMutation.mutateAsync(formData);
   };
 
+  const [aiAutoFilling, setAiAutoFilling] = useState(false);
+
+  // Auto-fill mission/vision/programs from website after save
+  const handleAutoFillFromWebsite = async (savedFormData) => {
+    const website = savedFormData.website;
+    const orgName = savedFormData.organization_name;
+    if (!website && !orgName) return;
+
+    // Only auto-fill fields that are empty
+    const fieldsToFill = [];
+    if (!savedFormData.mission_statement) fieldsToFill.push('mission_statement');
+    if (!savedFormData.vision_statement) fieldsToFill.push('vision_statement');
+    if (!savedFormData.organizational_values) fieldsToFill.push('organizational_values');
+    if (!savedFormData.programs_offered) fieldsToFill.push('programs_offered');
+    if (!savedFormData.target_population) fieldsToFill.push('target_population');
+    if (!savedFormData.funding_goals) fieldsToFill.push('funding_goals');
+
+    if (fieldsToFill.length === 0) return;
+
+    setAiAutoFilling(true);
+    try {
+      const socialHandles = (savedFormData.social_media_handles || []).filter(Boolean).join(', ');
+      const prompt = `You are helping a nonprofit complete their organizational profile for a funding readiness program.
+
+Organization Name: ${orgName || 'Not provided'}
+Website: ${website || 'Not provided'}
+Social Media: ${socialHandles || 'Not provided'}
+EIN: ${savedFormData.ein || 'Not provided'}
+Location: ${savedFormData.geographic_service_area || savedFormData.mailing_address || 'Not provided'}
+
+${website ? `Please visit or search for information about this organization at ${website} and their social media handles to learn about what they do.` : ''}
+
+Based on everything you can learn about this organization, generate professional, accurate content for the following fields:
+${fieldsToFill.includes('mission_statement') ? '- mission_statement: A 1-2 sentence mission statement (what they do, who they serve, why)' : ''}
+${fieldsToFill.includes('vision_statement') ? '- vision_statement: A 1-2 sentence aspirational vision statement' : ''}
+${fieldsToFill.includes('organizational_values') ? '- organizational_values: 3-4 core values with brief explanations' : ''}
+${fieldsToFill.includes('programs_offered') ? '- programs_offered: Description of the main programs and services offered' : ''}
+${fieldsToFill.includes('target_population') ? '- target_population: Who the organization primarily serves' : ''}
+${fieldsToFill.includes('funding_goals') ? '- funding_goals: 2-3 realistic funding goals for the next 12 months based on their work' : ''}
+
+Return ONLY a JSON object with these exact field names and string values. If you cannot find information for a field, return an empty string for it.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        add_context_from_internet: !!website,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            mission_statement: { type: 'string' },
+            vision_statement: { type: 'string' },
+            organizational_values: { type: 'string' },
+            programs_offered: { type: 'string' },
+            target_population: { type: 'string' },
+            funding_goals: { type: 'string' }
+          }
+        }
+      });
+
+      const updates = {};
+      fieldsToFill.forEach(field => {
+        if (result[field]) updates[field] = result[field];
+      });
+
+      if (Object.keys(updates).length > 0) {
+        setFormData(prev => ({ ...prev, ...updates }));
+        // Save again with the AI-filled data
+        const mergedData = { ...savedFormData, ...updates };
+        if (existingProfile?.id) {
+          await base44.entities.Organization.update(existingProfile.id, mergedData);
+        }
+        queryClient.invalidateQueries({ queryKey: ['organization-profile'] });
+        toast.success(`AI filled in ${Object.keys(updates).length} fields from your website info!`);
+        // Switch to mission tab so user sees the filled content
+        setActiveTab('mission');
+      }
+    } catch (error) {
+      // Silent fail — don't interrupt the save flow
+    } finally {
+      setAiAutoFilling(false);
+    }
+  };
+
   const handleAIAssist = async (field, prompt) => {
     setAiGenerating(prev => ({ ...prev, [field]: true }));
     
