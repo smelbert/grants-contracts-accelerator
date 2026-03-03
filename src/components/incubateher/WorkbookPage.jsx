@@ -128,14 +128,17 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
           }
         }
         .print-page {
-          width: 8.5in;
-          min-height: 11in;
-          padding: 0.75in;
-          margin: 0 auto;
+          width: 100%;
+          max-width: 100%;
+          min-height: auto;
+          padding: 2rem;
+          margin: 0;
           background: white;
           box-sizing: border-box;
           position: relative;
           font-family: 'Inter', sans-serif;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
         .header-band {
           background: linear-gradient(to right, #0f766e, #14b8a6);
@@ -145,19 +148,17 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
           margin-bottom: 24px;
         }
         .footer-band {
-          position: absolute;
-          bottom: 0.5in;
-          left: 0.75in;
-          right: 0.75in;
+          position: relative;
+          bottom: auto;
+          left: auto;
+          right: auto;
+          margin-top: 2rem;
+          padding-top: 0.75rem;
+          border-top: 1px solid #e5e7eb;
           font-size: 10px;
           color: #6b7280;
           display: flex;
           justify-content: space-between;
-        }
-        @media screen {
-          .print-page {
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-          }
         }
       `}} />
 
