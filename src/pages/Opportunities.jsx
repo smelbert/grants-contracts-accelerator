@@ -171,7 +171,7 @@ function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, ve
   );
 }
 
-function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onReport, vettingInfo }) {
+function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onReport, vettingInfo, isAdmin, onRefresh }) {
   const lane = LANE_CONFIG[opp.funding_lane] || LANE_CONFIG.grants;
   const deadline = opp.deadline || opp.deadline_full;
 
