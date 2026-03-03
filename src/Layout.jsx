@@ -90,6 +90,7 @@ const getUserPortalNav = () => [
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
+      { name: 'My Attendance', page: 'IncubateHerAttendance', icon: Calendar },
     ]
   },
   {
