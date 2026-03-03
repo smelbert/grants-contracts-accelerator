@@ -927,16 +927,16 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
           </div>
           <Button
             onClick={handleSave}
-            disabled={saveProfileMutation.isPending}
+            disabled={saveProfileMutation.isPending || aiAutoFilling}
             className="bg-[#143A50] hover:bg-[#1E4F58]"
             size="lg"
           >
-            {saveProfileMutation.isPending ? (
+            {saveProfileMutation.isPending || aiAutoFilling ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
               <Save className="w-4 h-4 mr-2" />
             )}
-            Save Profile
+            {aiAutoFilling ? 'AI Filling Profile...' : 'Save Profile'}
           </Button>
         </div>
       </div>
