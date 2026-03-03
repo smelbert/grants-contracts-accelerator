@@ -335,7 +335,12 @@ export default function GrantSubmissionPage() {
         {showForm && (
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>New Grant Opportunity</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>{editingGrant ? `Edit: ${editingGrant.title}` : 'New Funding Opportunity'}</CardTitle>
+                <Button variant="ghost" size="icon" onClick={() => { setShowForm(false); setEditingGrant(null); }}>
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
