@@ -302,7 +302,13 @@ export default function ProgramCalendar() {
 
                     {/* Actions */}
                     <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                      {event.meetingLink && !event.isPast && (
+                      {event.isExternal && event.externalUrl && (
+                        <Button size="sm" className="bg-orange-600 hover:bg-orange-700 text-white"
+                          onClick={(e) => { e.stopPropagation(); window.open(event.externalUrl, '_blank'); }}>
+                          <ExternalLink className="w-3.5 h-3.5 mr-1" /> Learn More
+                        </Button>
+                      )}
+                      {event.meetingLink && !event.isPast && !event.isExternal && (
                         <Button size="sm" variant="outline" onClick={() => window.open(event.meetingLink, '_blank')}>
                           <Video className="w-3.5 h-3.5 mr-1" /> Join
                         </Button>
@@ -316,7 +322,7 @@ export default function ProgramCalendar() {
                         />
                       )}
                       {/* Register/Cancel for platform events */}
-                      {event.type === 'event' && !event.isPast && (
+                      {event.type === 'event' && !event.isPast && !event.isExternal && (
                         event.isRegistered ? (
                           <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50"
                             onClick={() => cancelMutation.mutate(event.registration.id)}>
