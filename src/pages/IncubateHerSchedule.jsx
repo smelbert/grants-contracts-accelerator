@@ -3,144 +3,209 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Video, MapPin, Users, CheckCircle, FileText, Upload, Play } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import {
+  Calendar, Video, MapPin, Clock, ChevronDown, ChevronRight,
+  Play, Upload, CheckCircle2, Lock, ExternalLink, BookOpen
+} from 'lucide-react';
 import { toast } from 'sonner';
+import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
+import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 
 const PROGRAM_SCHEDULE = [
   {
+    id: 'session-1',
+    number: 1,
     date: 'Monday, March 2, 2026',
     time: '5:30–7:30 PM',
     duration: '2 Hours',
     format: 'Virtual – Google Meet',
-    location: 'Google Meet',
-    sessionTitle: 'Session 1: Funding Foundations & Readiness',
+    location: null,
+    sessionTitle: 'Funding Foundations & Readiness',
     topics: [
-      {
-        section: 'Program Orientation & Expectations',
-        items: [
-          'Completion requirements',
-          'Consultation cap explanation',
-          'Pre- & post-assessment overview',
-          'How this series supports early-stage and growth-phase businesses'
-        ]
-      },
-      {
-        section: 'Understanding Funding Pathways',
-        items: [
-          'Grants vs. Proposals vs. Contracts',
-          'Revenue vs. reimbursement models',
-          'Public vs. private funding realities'
-        ]
-      },
-      {
-        section: 'Legal Structure & Organizational Readiness',
-        items: [
-          'Business structure eligibility (LLC, nonprofit, sole prop, etc.)',
-          'Formation vs. operational readiness',
-          'Required documentation fundamentals',
-          'Compliance basics and common structural mistakes'
-        ]
-      },
-      {
-        section: 'Funding Readiness Reality Check',
-        items: [
-          'What "ready" actually means',
-          'Identifying documentation gaps',
-          'Capacity alignment',
-          'When NOT to pursue funding'
-        ]
-      }
+      { section: 'Program Orientation & Expectations', items: ['Completion requirements', 'Consultation cap explanation', 'Pre- & post-assessment overview', 'How this series supports early-stage and growth-phase businesses'] },
+      { section: 'Understanding Funding Pathways', items: ['Grants vs. Proposals vs. Contracts', 'Revenue vs. reimbursement models', 'Public vs. private funding realities'] },
+      { section: 'Legal Structure & Organizational Readiness', items: ['Business structure eligibility (LLC, nonprofit, sole prop, etc.)', 'Formation vs. operational readiness', 'Required documentation fundamentals', 'Compliance basics and common structural mistakes'] },
+      { section: 'Funding Readiness Reality Check', items: ['What "ready" actually means', 'Identifying documentation gaps', 'Capacity alignment', 'When NOT to pursue funding'] }
     ]
   },
   {
+    id: 'session-2',
+    number: 2,
     date: 'Thursday, March 5, 2026',
     time: '5:30–7:30 PM',
     duration: '2 Hours',
     format: 'Virtual – Google Meet',
-    location: 'Google Meet',
-    sessionTitle: 'Session 2: Financial Systems & Funding Mechanics',
+    location: null,
+    sessionTitle: 'Financial Systems & Funding Mechanics',
     topics: [
-      {
-        section: 'Financial Management & Budget Development',
-        items: [
-          'Basic financial systems for entrepreneurs',
-          'Budget building fundamentals',
-          'Cash flow awareness',
-          'Indirect cost concepts (simplified)',
-          'Common financial red flags'
-        ]
-      },
-      {
-        section: 'Grants, Proposals & RFP Fundamentals',
-        items: [
-          'How to find funding opportunities',
-          'Reading guidelines correctly',
-          'RFP structure overview',
-          'Deliverables vs. measurable outcomes',
-          'Avoiding common application mistakes'
-        ]
-      }
+      { section: 'Financial Management & Budget Development', items: ['Basic financial systems for entrepreneurs', 'Budget building fundamentals', 'Cash flow awareness', 'Indirect cost concepts (simplified)', 'Common financial red flags'] },
+      { section: 'Grants, Proposals & RFP Fundamentals', items: ['How to find funding opportunities', 'Reading guidelines correctly', 'RFP structure overview', 'Deliverables vs. measurable outcomes', 'Avoiding common application mistakes'] }
     ]
   },
   {
+    id: 'session-3',
+    number: 3,
     date: 'Saturday, March 7, 2026',
     time: '9:00 AM–12:00 PM',
     duration: '3 Hours',
     format: 'In Person',
     location: 'Columbus Metropolitan Library – Shepard Location, Meeting Room 1',
-    sessionTitle: 'Session 3: Application Strategy & Integration',
+    sessionTitle: 'Application Strategy & Integration',
     topics: [
-      {
-        section: 'Grant Writing Fundamentals (Applied)',
-        items: [
-          'Narrative components',
-          'Writing strong problem statements',
-          'Goals & measurable outcomes',
-          'Logic model basics (practical)',
-          'Alignment language'
-        ]
-      },
-      {
-        section: 'RFPs & Contract Proposals in Practice',
-        items: [
-          'Competitive positioning',
-          'Pricing considerations',
-          'Capability statements',
-          'Past performance documentation',
-          'Evaluating bid feasibility'
-        ]
-      },
-      {
-        section: 'Funding Strategy & Sustainability',
-        items: [
-          'Diversified funding portfolios',
-          'Contracts vs. grants in growth strategy',
-          'Relationship building',
-          'Understanding the grant lifecycle'
-        ]
-      },
-      {
-        section: 'Consultation Preparation Lab',
-        items: [
-          'What to bring to your 1:1',
-          'Document checklist',
-          'How to maximize advisory time',
-          'Booking instructions'
-        ]
-      }
+      { section: 'Grant Writing Fundamentals (Applied)', items: ['Narrative components', 'Writing strong problem statements', 'Goals & measurable outcomes', 'Logic model basics (practical)', 'Alignment language'] },
+      { section: 'RFPs & Contract Proposals in Practice', items: ['Competitive positioning', 'Pricing considerations', 'Capability statements', 'Past performance documentation', 'Evaluating bid feasibility'] },
+      { section: 'Funding Strategy & Sustainability', items: ['Diversified funding portfolios', 'Contracts vs. grants in growth strategy', 'Relationship building', 'Understanding the grant lifecycle'] },
+      { section: 'Consultation Preparation Lab', items: ['What to bring to your 1:1', 'Document checklist', 'How to maximize advisory time', 'Booking instructions'] }
     ]
   }
 ];
 
+function SessionCard({ session, cohortDay, sessionIndex, isAdmin, onUploadVideo, expandedTopics, onToggleTopics }) {
+  const hasRecording = !!cohortDay?.video_url;
+  const hasMeetingLink = !!cohortDay?.meeting_link;
+  const isInPerson = session.format === 'In Person';
+  const topicsExpanded = expandedTopics[session.id];
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Session header bar */}
+      <div
+        className="h-1.5 w-full"
+        style={{ background: `linear-gradient(to right, ${BRAND_COLORS.culRed}, ${BRAND_COLORS.eisNavy})` }}
+      />
+
+      <div className="p-6">
+        {/* Top row */}
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex items-start gap-4">
+            {/* Session number circle */}
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-lg"
+              style={{ backgroundColor: BRAND_COLORS.eisNavy }}
+            >
+              {session.number}
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-slate-900">{session.sessionTitle}</h3>
+              <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                <span className="text-sm text-slate-600 flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5" /> {session.date}
+                </span>
+                <span className="text-sm text-slate-600 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" /> {session.time}
+                </span>
+                <Badge
+                  className="text-xs"
+                  style={isInPerson
+                    ? { backgroundColor: BRAND_COLORS.eisGold + '30', color: '#7a5c1e', border: `1px solid ${BRAND_COLORS.eisGold}` }
+                    : { backgroundColor: BRAND_COLORS.culRed + '15', color: BRAND_COLORS.culRed, border: `1px solid ${BRAND_COLORS.culRed}30` }
+                  }
+                >
+                  {isInPerson ? '📍 In Person' : '💻 Virtual'}
+                </Badge>
+                <Badge variant="outline" className="text-xs">{session.duration}</Badge>
+              </div>
+              {session.location && (
+                <p className="text-sm text-slate-500 flex items-center gap-1 mt-1">
+                  <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                  {session.location}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Status */}
+          {hasRecording ? (
+            <Badge className="bg-green-100 text-green-700 border-green-200 flex-shrink-0">
+              <CheckCircle2 className="w-3 h-3 mr-1" />
+              Recording Available
+            </Badge>
+          ) : hasMeetingLink ? (
+            <Badge className="flex-shrink-0" style={{ backgroundColor: BRAND_COLORS.culRed + '15', color: BRAND_COLORS.culRed }}>
+              Live
+            </Badge>
+          ) : null}
+        </div>
+
+        {/* Recording */}
+        {hasRecording && (
+          <div className="mb-5">
+            <p className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <Play className="w-4 h-4" style={{ color: BRAND_COLORS.culRed }} />
+              Session Recording
+            </p>
+            <div className="bg-slate-900 rounded-xl overflow-hidden">
+              <video controls className="w-full" src={cohortDay.video_url}>
+                Your browser does not support video playback.
+              </video>
+            </div>
+          </div>
+        )}
+
+        {/* Join button */}
+        {hasMeetingLink && (
+          <a href={cohortDay.meeting_link} target="_blank" rel="noopener noreferrer" className="block mb-5">
+            <Button className="w-full" style={{ backgroundColor: BRAND_COLORS.culRed, color: 'white' }}>
+              <Video className="w-4 h-4 mr-2" />
+              Join Google Meet
+              <ExternalLink className="w-3.5 h-3.5 ml-2" />
+            </Button>
+          </a>
+        )}
+
+        {/* Admin: upload video */}
+        {isAdmin && !hasRecording && (
+          <div className="mb-5 p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+            <p className="text-xs text-slate-500 mb-2 font-medium">Upload Recording (Admin)</p>
+            <div className="flex gap-2">
+              <input
+                type="file"
+                accept="video/*"
+                className="text-xs flex-1"
+                onChange={(e) => onUploadVideo(sessionIndex, e.target.files[0])}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Topics toggle */}
+        <button
+          onClick={() => onToggleTopics(session.id)}
+          className="flex items-center gap-2 text-sm font-medium w-full text-left py-2 px-3 rounded-lg hover:bg-slate-50 transition-colors"
+          style={{ color: BRAND_COLORS.eisNavy }}
+        >
+          {topicsExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          <BookOpen className="w-4 h-4" />
+          Topics Covered ({session.topics.length} sections)
+        </button>
+
+        {topicsExpanded && (
+          <div className="mt-3 space-y-3 pl-2">
+            {session.topics.map((topic, ti) => (
+              <div key={ti} className="pl-4 border-l-2 py-1" style={{ borderColor: BRAND_COLORS.eisGold }}>
+                <p className="font-semibold text-slate-800 text-sm mb-1.5">{topic.section}</p>
+                <ul className="space-y-1">
+                  {topic.items.map((item, ii) => (
+                    <li key={ii} className="text-sm text-slate-600 flex items-start gap-2">
+                      <span className="mt-1 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }}>•</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function IncubateHerSchedule() {
-  const [editingSession, setEditingSession] = useState(null);
-  const [videoFile, setVideoFile] = useState(null);
-  const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [expandedTopics, setExpandedTopics] = useState({});
+  const [uploadingIndex, setUploadingIndex] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -156,262 +221,98 @@ export default function IncubateHerSchedule() {
   const cohort = cohorts[0];
   const sessionDays = cohort?.session_days || [];
 
-  const { data: enrollment } = useQuery({
-    queryKey: ['my-enrollment', user?.email],
-    queryFn: async () => {
-      const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email
-      });
-      return enrollments[0];
-    },
-    enabled: !!user?.email
-  });
-
   const updateCohortMutation = useMutation({
     mutationFn: (data) => base44.entities.ProgramCohort.update(cohort.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['incubateher-cohorts']);
-      toast.success('Session updated');
+      toast.success('Recording uploaded successfully');
     }
   });
 
-  const handleVideoUpload = async (dayIndex) => {
-    if (!videoFile || !cohort) return;
-
-    setUploadingVideo(true);
+  const handleUploadVideo = async (dayIndex, file) => {
+    if (!file || !cohort) return;
+    setUploadingIndex(dayIndex);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file: videoFile });
-      
-      const updatedSessionDays = [...sessionDays];
-      updatedSessionDays[dayIndex] = {
-        ...updatedSessionDays[dayIndex],
-        video_url: file_url
-      };
-      
-      await updateCohortMutation.mutateAsync({
-        session_days: updatedSessionDays
-      });
-      
-      setVideoFile(null);
-      toast.success('Video uploaded successfully');
-    } catch (error) {
-      toast.error('Failed to upload video');
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const updatedDays = [...sessionDays];
+      updatedDays[dayIndex] = { ...updatedDays[dayIndex], video_url: file_url };
+      await updateCohortMutation.mutateAsync({ session_days: updatedDays });
+    } catch {
+      toast.error('Failed to upload recording');
     } finally {
-      setUploadingVideo(false);
+      setUploadingIndex(null);
     }
   };
 
-  const isAdmin = user?.role === 'admin' || user?.role === 'owner' || Array.isArray(user?.role) && (user.role.includes('admin') || user.role.includes('coach'));
+  const toggleTopics = (id) => {
+    setExpandedTopics(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+  const recordingsCount = sessionDays.filter(d => d?.video_url).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">IncubateHer Schedule</h1>
-          <p className="text-slate-600">View sessions, watch recordings, and track attendance</p>
+    <div className="min-h-screen" style={{ backgroundColor: '#f8f9fa' }}>
+      <CoBrandedHeader
+        title="Schedule & Sessions"
+        subtitle="Join live sessions, access recordings, and review topics"
+      />
+
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-8">
+
+        {/* Summary strip */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          {[
+            { label: 'Total Sessions', value: 3 },
+            { label: 'Total Hours', value: '7 hrs' },
+            { label: 'Recordings', value: `${recordingsCount}/3` },
+          ].map(({ label, value }) => (
+            <Card key={label} className="border-0 shadow-sm text-center">
+              <CardContent className="py-4">
+                <p className="text-2xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>{value}</p>
+                <p className="text-xs text-slate-500 mt-1">{label}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Program Schedule Overview */}
-        <Card className="mb-8 border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/5 to-[#E5C089]/5">
-          <CardHeader>
-            <CardTitle className="text-2xl text-[#143A50] flex items-center gap-2">
-              📅 PROGRAM SCHEDULE OVERVIEW
-            </CardTitle>
-            <p className="text-slate-600 mt-2">
-              The IncubateHer Funding Readiness Series is delivered across three structured sessions combining virtual instruction and in-person application.
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {PROGRAM_SCHEDULE.map((session, idx) => {
-              const cohortDay = sessionDays[idx];
-              const meetingLink = cohortDay?.meeting_link;
-              return (
-              <div key={idx} className="bg-white p-6 rounded-lg border border-slate-200">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-[#143A50]">{session.date}</h3>
-                    <p className="text-lg text-slate-700 mt-1">{session.time}</p>
-                    <div className="flex items-center gap-4 mt-2 text-sm">
-                      <Badge className="bg-[#E5C089] text-[#143A50]">
-                        {session.duration}
-                      </Badge>
-                      <Badge variant="outline" className="border-[#AC1A5B] text-[#AC1A5B]">
-                        {session.format}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
+        {/* Session cards */}
+        <div className="space-y-6">
+          {PROGRAM_SCHEDULE.map((session, idx) => (
+            <SessionCard
+              key={session.id}
+              session={session}
+              cohortDay={sessionDays[idx]}
+              sessionIndex={idx}
+              isAdmin={isAdmin}
+              onUploadVideo={handleUploadVideo}
+              expandedTopics={expandedTopics}
+              onToggleTopics={toggleTopics}
+            />
+          ))}
+        </div>
 
-                <p className="text-slate-600 mb-4">
-                  <strong>Location:</strong> {session.location}
-                </p>
-
-                {meetingLink && (
-                  <div className="mb-4">
-                    <a
-                      href={meetingLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button className="bg-[#AC1A5B] hover:bg-[#A65D40] text-white">
-                        <Video className="w-4 h-4 mr-2" />
-                        Join Google Meet
-                      </Button>
-                    </a>
-                  </div>
-                )}
-
-                <h4 className="font-semibold text-[#AC1A5B] mb-3 text-lg">
-                  {session.sessionTitle}
-                </h4>
-
-                <div className="space-y-4">
-                  {session.topics.map((topic, topicIdx) => (
-                    <div key={topicIdx} className="pl-4 border-l-2 border-[#E5C089]">
-                      <h5 className="font-semibold text-slate-900 mb-2">{topic.section}</h5>
-                      <ul className="space-y-1">
-                        {topic.items.map((item, itemIdx) => (
-                          <li key={itemIdx} className="text-sm text-slate-600 flex items-start gap-2">
-                            <span className="text-[#E5C089] mt-1">•</span>
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-            })}
-
-            {/* Summary */}
-            <div className="bg-[#143A50] text-white p-6 rounded-lg">
-              <h4 className="text-lg font-bold mb-3">⏱ Program Summary</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="font-semibold text-[#E5C089] mb-1">Instructional Total: 7 Hours</p>
-                  <ul className="space-y-1 ml-4">
-                    <li>• Monday: 2 Hours</li>
-                    <li>• Thursday: 2 Hours</li>
-                    <li>• Saturday: 3 Hours</li>
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-semibold text-[#E5C089] mb-1">Individual Consultations</p>
-                  <p>45–60 Minutes (first 20 eligible participants)</p>
-                </div>
-              </div>
+        {/* Program summary */}
+        <div className="mt-8 rounded-2xl p-6 text-white" style={{ backgroundColor: BRAND_COLORS.eisNavy }}>
+          <h4 className="font-bold text-lg mb-3">Program Summary</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-semibold mb-2" style={{ color: BRAND_COLORS.eisGold }}>Instructional Hours: 7 Total</p>
+              <ul className="space-y-1 text-white/80">
+                <li>• Session 1 (Monday): 2 hours</li>
+                <li>• Session 2 (Thursday): 2 hours</li>
+                <li>• Session 3 (Saturday): 3 hours</li>
+              </ul>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Session Recordings Section */}
-        {sessionDays.length > 0 && sessionDays.some(day => day.video_url) && (
-          <div className="space-y-6">
-            {sessionDays.filter(day => day.video_url).map((day, dayIndex) => {
-              const sessionData = PROGRAM_SCHEDULE[dayIndex];
-              const isVirtual = sessionData?.location?.toLowerCase().includes('virtual');
-              
-              return (
-                <Card key={dayIndex} className="overflow-hidden">
-                  {/* Fuchsia Header with Session Info */}
-                  <div className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white p-6">
-                    <h2 className="text-2xl font-bold mb-3">{sessionData?.sessionTitle || day.date}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        <span>{sessionData?.date || day.date}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Video className="w-4 h-4" />
-                        <span>{sessionData?.time || day.time}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {isVirtual ? (
-                          <>
-                            <Video className="w-4 h-4" />
-                            <span>Virtual</span>
-                          </>
-                        ) : (
-                          <>
-                            <MapPin className="w-4 h-4" />
-                            <span>{sessionData?.location || 'In-Person'}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <CardContent className="p-6">
-                    <div className="space-y-6">
-
-                      {/* Session Recording */}
-                      <div>
-                        <div className="bg-slate-900 rounded-lg overflow-hidden">
-                          <video
-                            controls
-                            className="w-full"
-                            src={day.video_url}
-                          >
-                            Your browser does not support video playback.
-                          </video>
-                        </div>
-                      </div>
-
-                      {/* Topics Covered - from original schedule */}
-                      {sessionData?.topics && (
-                        <div>
-                          <h3 className="font-semibold text-[#AC1A5B] text-lg mb-3">Topics Covered</h3>
-                          <div className="space-y-4">
-                            {sessionData.topics.map((topic, topicIdx) => (
-                              <div key={topicIdx} className="pl-4 border-l-2 border-[#E5C089]">
-                                <h5 className="font-semibold text-slate-900 mb-2">{topic.section}</h5>
-                                <ul className="space-y-1">
-                                  {topic.items.map((item, itemIdx) => (
-                                    <li key={itemIdx} className="text-sm text-slate-600 flex items-start gap-2">
-                                      <span className="text-[#E5C089] mt-1">•</span>
-                                      <span>{item}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Join/Access Info */}
-                      {day.meeting_link && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                          <Button
-                            className="w-full bg-[#AC1A5B] hover:bg-[#A65D40]"
-                            onClick={() => window.open(day.meeting_link, '_blank')}
-                          >
-                            <Video className="w-4 h-4 mr-2" />
-                            Join Virtual Session
-                          </Button>
-                        </div>
-                      )}
-
-                      {day.location && (
-                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                          <div className="flex items-start gap-3">
-                            <MapPin className="w-5 h-5 text-amber-600 mt-0.5" />
-                            <div>
-                              <p className="font-semibold text-amber-900">In-Person Location</p>
-                              <p className="text-sm text-amber-800 mt-1">{day.location}</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+            <div>
+              <p className="font-semibold mb-2" style={{ color: BRAND_COLORS.eisGold }}>Individual Consultations</p>
+              <p className="text-white/80">45–60 minutes for the first 20 eligible participants</p>
+            </div>
           </div>
-        )}
+        </div>
       </div>
+
+      <CoBrandedFooter />
     </div>
   );
 }
