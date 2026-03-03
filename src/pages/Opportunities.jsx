@@ -16,11 +16,12 @@ import { toast } from 'sonner';
 import { format, differenceInDays, isPast, isWithinInterval, addDays } from 'date-fns';
 import QuickPasteOpportunity from '@/components/opportunities/QuickPasteOpportunity';
 
+// Grants = emerald/green, Contracts = blue/indigo, Donors = purple/pink, Public = amber/orange
 const LANE_CONFIG = {
-  grants:       { color: 'bg-emerald-500', light: 'bg-emerald-50 text-emerald-700 border-emerald-200', bar: 'from-emerald-500 to-green-500',   label: 'Grant' },
-  contracts:    { color: 'bg-blue-500',    light: 'bg-blue-50 text-blue-700 border-blue-200',         bar: 'from-blue-500 to-indigo-500',     label: 'Contract' },
-  donors:       { color: 'bg-purple-500',  light: 'bg-purple-50 text-purple-700 border-purple-200',   bar: 'from-purple-500 to-pink-500',     label: 'Donor' },
-  public_funds: { color: 'bg-amber-500',   light: 'bg-amber-50 text-amber-700 border-amber-200',      bar: 'from-amber-500 to-orange-500',    label: 'Public Fund' },
+  grants:       { color: 'bg-emerald-500', light: 'bg-emerald-50 text-emerald-800 border-emerald-300', bar: 'from-emerald-400 to-green-500',   cardBorder: 'border-l-emerald-400', hoverBorder: 'hover:border-emerald-300' },
+  contracts:    { color: 'bg-blue-600',    light: 'bg-blue-50 text-blue-800 border-blue-300',          bar: 'from-blue-500 to-indigo-600',     cardBorder: 'border-l-blue-500',    hoverBorder: 'hover:border-blue-300' },
+  donors:       { color: 'bg-purple-500',  light: 'bg-purple-50 text-purple-800 border-purple-300',   bar: 'from-purple-500 to-pink-500',     cardBorder: 'border-l-purple-400',  hoverBorder: 'hover:border-purple-300' },
+  public_funds: { color: 'bg-amber-500',   light: 'bg-amber-50 text-amber-800 border-amber-300',      bar: 'from-amber-400 to-orange-500',    cardBorder: 'border-l-amber-400',   hoverBorder: 'hover:border-amber-300' },
 };
 
 const TYPE_LABELS = {
