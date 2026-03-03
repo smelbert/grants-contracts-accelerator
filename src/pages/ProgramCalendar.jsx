@@ -266,7 +266,12 @@ export default function ProgramCalendar() {
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <h3 className="font-semibold text-slate-900">{event.title}</h3>
                           <Badge variant="outline" className={`text-xs ${cfg.color}`}>{cfg.label}</Badge>
-                          {event.subtype && <Badge variant="outline" className="text-xs capitalize">{event.subtype}</Badge>}
+                          {event.isExternal && event.externalProvider && (
+                            <Badge variant="outline" className="text-xs bg-orange-50 text-orange-700 border-orange-200">
+                              via {event.externalProvider}
+                            </Badge>
+                          )}
+                          {event.subtype && !event.isExternal && <Badge variant="outline" className="text-xs capitalize">{event.subtype}</Badge>}
                           {event.isPast && <Badge variant="outline" className="text-xs">Past</Badge>}
                           {event.isCompleted && <Badge className="bg-green-600 text-xs text-white">Completed</Badge>}
                           {event.isRegistered && <Badge className="bg-green-100 text-green-800 text-xs">Registered</Badge>}
