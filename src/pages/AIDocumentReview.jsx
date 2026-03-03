@@ -20,6 +20,15 @@ export default function AIDocumentReview() {
     queryFn: () => base44.auth.me(),
   });
 
+  const { data: orgProfile } = useQuery({
+    queryKey: ['org-profile', user?.email],
+    queryFn: async () => {
+      const orgs = await base44.entities.Organization.filter({ primary_contact_email: user.email });
+      return orgs[0] || null;
+    },
+    enabled: !!user?.email,
+  });
+
   const { data: recentDocuments } = useQuery({
     queryKey: ['recent-documents', user?.email],
     queryFn: async () => {
