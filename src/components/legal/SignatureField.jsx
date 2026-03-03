@@ -194,11 +194,14 @@ export default function SignatureField({
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
                 onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
                 className="w-full cursor-crosshair"
                 style={{ touchAction: 'none' }}
               />
             </div>
-            <p className="text-xs text-slate-600 italic">Draw your signature above using your mouse or touchscreen</p>
+            <p className="text-xs text-slate-600 italic">Draw your signature using your mouse, stylus, or finger (touchscreen supported)</p>
           </div>
 
           {/* Date */}
