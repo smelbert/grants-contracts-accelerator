@@ -24,6 +24,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
+import QuickPasteOpportunity from '@/components/opportunities/QuickPasteOpportunity';
+import { ClipboardPaste, Plus } from 'lucide-react';
 
 export default function OpportunitiesPage() {
   const [searchTerm, setSearchTerm] = useState('');

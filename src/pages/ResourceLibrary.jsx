@@ -11,6 +11,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Search, Download, FileText, BookOpen, Heart, Star, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
+import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
+import { createPageUrl } from '@/utils';
 
 const CATEGORY_LABELS = {
   foundational: 'Foundational / Readiness',

@@ -13,6 +13,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, FileText, CheckCircle2, Edit, Upload, Download, Sparkles, Trash2, FolderOpen } from 'lucide-react';
 import DocumentTemplates from '@/components/incubateher/DocumentTemplates';
+import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
+import { toast } from 'sonner';
 
 export default function IncubateHerDocuments() {
   const [selectedDay, setSelectedDay] = useState('day1');
