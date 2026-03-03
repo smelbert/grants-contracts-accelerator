@@ -371,12 +371,12 @@ export default function TestimonialManagement() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Testimonial.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries(['testimonials']); toast.success('Updated'); }
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['testimonials'] }); toast.success('Updated'); }
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Testimonial.delete(id),
-    onSuccess: () => { queryClient.invalidateQueries(['testimonials']); toast.success('Deleted'); }
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['testimonials'] }); toast.success('Deleted'); }
   });
 
   const handleApprove = (t) => updateMutation.mutate({ id: t.id, data: { ...t, admin_approved: true } });
