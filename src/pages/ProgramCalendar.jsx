@@ -120,7 +120,10 @@ export default function ProgramCalendar() {
         raw: e,
         isRegistered: isRegistered(e.id),
         registration: getRegistration(e.id),
-        hasPaidTiers: e.ticket_tiers?.some(t => t.price > 0)
+        hasPaidTiers: e.ticket_tiers?.some(t => t.price > 0),
+        isExternal: !!e.is_external,
+        externalProvider: e.external_provider,
+        externalUrl: e.external_registration_url
       });
     });
 
