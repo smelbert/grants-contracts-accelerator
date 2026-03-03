@@ -60,8 +60,13 @@ export default function LearningPage() {
     queryFn: async () => {
       const allContent = await base44.entities.LearningContent.list();
       // Filter out standalone resources (they belong in Resource Library)
-      // Also filter out IncubateHer-only content if user is not enrolled
-      let filtered = allContent.filter(c => !c.is_standalone_resource);
+      // IncubateHer-only content bypasses the is_published gate (controlled by enrollment)
+      // Non-IncubateHer content must be explicitly published by admin
+      let filtered = allContent.filter(c => {
+        if (c.is_standalone_resource) return false;
+        if (c.incubateher_only) return true; // enrollment check happens separately
+        return c.is_published === true;
+      });
       if (!enrollment) {
         filtered = filtered.filter(c => !c.incubateher_only);
       }

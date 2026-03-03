@@ -45,7 +45,7 @@ export default function ResourceLibrary() {
   const { data: templates, isLoading } = useQuery({
     queryKey: ['published-templates'],
     queryFn: async () => {
-      const allTemplates = await base44.entities.Template.filter({ is_active: true });
+      const allTemplates = await base44.entities.Template.filter({ is_active: true, is_published: true });
       return allTemplates;
     },
   });
