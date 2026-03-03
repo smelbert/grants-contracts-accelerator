@@ -122,7 +122,8 @@ export default function IncubateHerProfileIntake() {
   });
 
   useEffect(() => {
-    if (existingProfile) {
+    if (existingProfile && !hasLoadedInitialData.current) {
+      hasLoadedInitialData.current = true;
       setFormData(prev => ({
         ...prev,
         ...existingProfile
