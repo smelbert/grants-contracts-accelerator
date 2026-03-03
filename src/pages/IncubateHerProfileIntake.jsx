@@ -139,12 +139,12 @@ export default function IncubateHerProfileIntake() {
       } else {
         return await base44.entities.Organization.create({
           ...data,
-          enrollment_id: enrollment.id,
+          ...(enrollment?.id ? { enrollment_id: enrollment.id } : {}),
           primary_contact_email: user.email
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: (savedProfile) => {
       queryClient.invalidateQueries({ queryKey: ['organization-profile'] });
       setLastSaved(new Date());
       toast.success('Profile saved successfully!');
