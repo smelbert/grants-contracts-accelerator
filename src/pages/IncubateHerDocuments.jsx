@@ -290,6 +290,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             </Card>
 
             <DocumentTemplates day="day1" />
+            <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="day1_documents" />
           </TabsContent>
 
           <TabsContent value="day2" className="mt-8">
@@ -315,6 +316,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             </Card>
 
             <DocumentTemplates day="day2" />
+            <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="day2_documents" />
           </TabsContent>
 
           <TabsContent value="day3" className="mt-8">
@@ -340,6 +342,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             </Card>
 
             <DocumentTemplates day="day3" />
+            <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="day3_documents" />
           </TabsContent>
 
           <TabsContent value="mydocs" className="mt-8">
