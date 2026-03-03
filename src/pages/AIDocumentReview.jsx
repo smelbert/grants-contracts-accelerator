@@ -12,6 +12,7 @@ import { motion } from 'framer-motion';
 
 export default function AIDocumentReview() {
   const [showCoach, setShowCoach] = useState(false);
+  const [showGrantEval, setShowGrantEval] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(null);
 
   const { data: user } = useQuery({
