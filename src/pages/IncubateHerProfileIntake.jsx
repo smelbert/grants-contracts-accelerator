@@ -20,7 +20,11 @@ import {
   Sparkles,
   AlertCircle,
   ChevronRight,
-  Loader2
+  Loader2,
+  Plus,
+  X,
+  Globe,
+  Wand2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
