@@ -385,8 +385,6 @@ export const WORKBOOK_PAGES = [
     section: 'rfps',
     title: 'Understanding RFPs & Solicitations',
     type: 'handout',
-    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    video_description: 'Deep dive: How to read and respond to RFPs strategically',
     content: `
       <p class="mb-3 text-sm"><strong>RFP = Request for Proposal.</strong> Formal competitive process for contracts. Common with government and large organizations.</p>
       
