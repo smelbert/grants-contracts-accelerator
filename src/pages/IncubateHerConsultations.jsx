@@ -571,6 +571,83 @@ export default function IncubateHerConsultations() {
             </Card>
           </>
         )}
+        {/* Contact Charles Section */}
+        <Card id="contact-charles-section" className="border-l-4 border-l-[#AC1A5B]">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="w-5 h-5 text-[#AC1A5B]" />
+              Contact Charles Watterson (Co-Facilitator)
+            </CardTitle>
+            <p className="text-sm text-slate-600">
+              Have a question or need help scheduling? Send Charles a message directly — he'll receive it in his portal inbox and via email.
+            </p>
+          </CardHeader>
+          <CardContent>
+            {charlesMessageSent ? (
+              <div className="flex items-center gap-3 text-green-700 py-4">
+                <CheckCircle2 className="w-6 h-6" />
+                <div>
+                  <p className="font-semibold">Message sent to Charles!</p>
+                  <p className="text-sm text-slate-600">He'll respond via the portal or at charles@elbertinnovativesolutions.org</p>
+                </div>
+                <Button variant="ghost" size="sm" className="ml-auto" onClick={() => setCharlesMessageSent(false)}>
+                  Send Another
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="p-3 bg-slate-50 rounded-lg text-sm text-slate-700">
+                  <strong>Charles Watterson</strong> — Co-Facilitator, IncubateHer Program<br />
+                  <a href="mailto:charles@elbertinnovativesolutions.org" className="text-[#143A50] underline text-xs">
+                    charles@elbertinnovativesolutions.org
+                  </a>
+                </div>
+                <textarea
+                  value={charlesMessage}
+                  onChange={(e) => setCharlesMessage(e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#143A50]"
+                  rows={4}
+                  placeholder="Type your message to Charles here (e.g., question about scheduling, consultation prep, or anything else)..."
+                />
+                <Button
+                  disabled={!charlesMessage.trim() || contactingCharles}
+                  className="bg-[#AC1A5B] hover:bg-[#8e1549] text-white"
+                  onClick={async () => {
+                    setContactingCharles(true);
+                    try {
+                      // Send email to Charles
+                      await base44.integrations.Core.SendEmail({
+                        to: 'charles@elbertinnovativesolutions.org',
+                        subject: `IncubateHer Consultation Message from ${user?.full_name || user?.email}`,
+                        body: `You have a new message from an IncubateHer participant:\n\nFrom: ${user?.full_name || ''} (${user?.email})\n\nMessage:\n${charlesMessage}\n\n---\nReply directly to this email or log into the portal.`,
+                      });
+                      // Also create a portal chat/message record
+                      await base44.entities.DirectMessage.create({
+                        from_email: user?.email,
+                        from_name: user?.full_name,
+                        to_email: 'charles@elbertinnovativesolutions.org',
+                        to_name: 'Charles Watterson',
+                        message: charlesMessage,
+                        context: 'consultation_request',
+                        is_read: false,
+                      });
+                      setCharlesMessageSent(true);
+                      setCharlesMessage('');
+                      toast.success('Message sent to Charles!');
+                    } catch (err) {
+                      toast.error('Failed to send message. Please email charles@elbertinnovativesolutions.org directly.');
+                    } finally {
+                      setContactingCharles(false);
+                    }
+                  }}
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  {contactingCharles ? 'Sending...' : 'Send Message to Charles'}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       <CoBrandedFooter />
