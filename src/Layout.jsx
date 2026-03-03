@@ -84,7 +84,6 @@ const getUserPortalNav = () => [
       { name: 'My Profile', page: 'IncubateHerProfileIntake', icon: User },
       { name: 'Learning Hub', page: 'IncubateHerLearning', icon: BookOpen },
       { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
-      { name: 'Schedule & Videos', page: 'IncubateHerSchedule', icon: Calendar },
       { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
       { name: 'Assessments & Evaluations', page: 'IncubateHerAssessments', icon: CheckCircle2 },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
