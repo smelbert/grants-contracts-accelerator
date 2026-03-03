@@ -102,27 +102,18 @@ export default function AIDocumentReview() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-2 gap-4">
-              <Button
-                onClick={() => {
-                  setSelectedDocument(null);
-                  setShowCoach(true);
-                }}
-                className="h-20 bg-[#143A50] hover:bg-[#1E4F58] text-lg"
-              >
-                <FileText className="w-6 h-6 mr-3" />
+            <div className="grid md:grid-cols-3 gap-4">
+              <Button onClick={() => { setSelectedDocument(null); setShowCoach(true); }} className="h-20 bg-[#143A50] hover:bg-[#1E4F58] text-base flex-col gap-1">
+                <FileText className="w-6 h-6" />
                 Review New Document
               </Button>
-              <Button
-                onClick={() => {
-                  // Would open document selector
-                  setShowCoach(true);
-                }}
-                variant="outline"
-                className="h-20 text-lg border-2"
-              >
-                <History className="w-6 h-6 mr-3" />
+              <Button onClick={() => setShowCoach(true)} variant="outline" className="h-20 text-base border-2 flex-col gap-1">
+                <History className="w-6 h-6" />
                 Review Existing Document
+              </Button>
+              <Button onClick={() => setShowGrantEval(true)} className="h-20 bg-[#AC1A5B] hover:bg-[#8e1549] text-base flex-col gap-1">
+                <Search className="w-6 h-6" />
+                Should I Apply? (Grant Fit)
               </Button>
             </div>
           </CardContent>
