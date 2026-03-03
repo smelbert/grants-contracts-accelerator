@@ -5,8 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, FileText, Clock, TrendingUp, Award, History } from 'lucide-react';
+import { Sparkles, FileText, Clock, TrendingUp, Award, History, Search } from 'lucide-react';
 import AIDocumentCoach from '@/components/ai/AIDocumentCoach';
+import GrantFitEvaluator from '@/components/ai/GrantFitEvaluator';
 import { motion } from 'framer-motion';
 
 export default function AIDocumentReview() {
