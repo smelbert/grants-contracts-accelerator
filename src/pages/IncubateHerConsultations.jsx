@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Calendar, CheckCircle2, AlertCircle, Upload, ExternalLink, Clock, Video, MapPin } from 'lucide-react';
+import { Calendar, CheckCircle2, AlertCircle, Upload, ExternalLink, Clock, Video, MapPin, MessageSquare } from 'lucide-react';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { toast } from 'sonner';
@@ -28,6 +28,9 @@ export default function IncubateHerConsultations() {
   const [availabilityOption3, setAvailabilityOption3] = useState({ date: '', time: '' });
   const [meetingPreference, setMeetingPreference] = useState('online');
   const [meetingDuration, setMeetingDuration] = useState('60');
+  const [contactingCharles, setContactingCharles] = useState(false);
+  const [charlesMessageSent, setCharlesMessageSent] = useState(false);
+  const [charlesMessage, setCharlesMessage] = useState('');
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
