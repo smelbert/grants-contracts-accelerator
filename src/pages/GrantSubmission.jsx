@@ -16,7 +16,9 @@ import { createPageUrl } from '@/utils';
 
 export default function GrantSubmissionPage() {
   const [showForm, setShowForm] = useState(false);
+  const [editingGrant, setEditingGrant] = useState(null); // null = create, object = edit
   const [selectedGrant, setSelectedGrant] = useState(null);
+  const [quickPasteOpen, setQuickPasteOpen] = useState(false);
   const [savedGrants, setSavedGrants] = useState(() => {
     const saved = localStorage.getItem('savedGrants');
     return saved ? JSON.parse(saved) : [];
