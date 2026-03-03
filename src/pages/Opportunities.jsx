@@ -15,6 +15,7 @@ import {
 import { toast } from 'sonner';
 import { format, differenceInDays, isPast, isWithinInterval, addDays } from 'date-fns';
 import QuickPasteOpportunity from '@/components/opportunities/QuickPasteOpportunity';
+import OpportunityAttachments from '@/components/opportunities/OpportunityAttachments';
 
 // Grants = emerald/green, Contracts = blue/indigo, Donors = purple/pink, Public = amber/orange
 const LANE_CONFIG = {
