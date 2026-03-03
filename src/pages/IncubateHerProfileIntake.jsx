@@ -101,15 +101,23 @@ export default function IncubateHerProfileIntake() {
   });
 
   const { data: existingProfile, isLoading } = useQuery({
-    queryKey: ['organization-profile', enrollment?.id],
+    queryKey: ['organization-profile', enrollment?.id, user?.email],
     queryFn: async () => {
-      if (!enrollment?.id) return null;
-      const profiles = await base44.entities.Organization.filter({
-        enrollment_id: enrollment.id
+      if (!user?.email) return null;
+      // First try to find a profile linked to this enrollment
+      if (enrollment?.id) {
+        const enrollmentProfiles = await base44.entities.Organization.filter({
+          enrollment_id: enrollment.id
+        });
+        if (enrollmentProfiles[0]) return enrollmentProfiles[0];
+      }
+      // Fallback: find any org profile created by this user
+      const userProfiles = await base44.entities.Organization.filter({
+        primary_contact_email: user.email
       });
-      return profiles[0];
+      return userProfiles[0] || null;
     },
-    enabled: !!enrollment?.id
+    enabled: !!user?.email
   });
 
   useEffect(() => {
