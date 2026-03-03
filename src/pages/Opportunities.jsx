@@ -485,11 +485,9 @@ export default function OpportunitiesPage() {
               <p className="text-slate-500 text-sm mt-0.5">Discover grants, contracts & more matched to your mission</p>
             </div>
           </div>
-          {user?.role === 'admin' && (
-            <Button onClick={() => setQuickPasteOpen(true)} className="bg-[#143A50] hover:bg-[#1E4F58] gap-2 shrink-0">
-              <ClipboardPaste className="w-4 h-4" /> Quick Paste Grant
-            </Button>
-          )}
+          <Button onClick={() => setQuickPasteOpen(true)} className="bg-[#143A50] hover:bg-[#1E4F58] gap-2 shrink-0">
+            <Link2 className="w-4 h-4" /> Add via URL or Text
+          </Button>
         </div>
 
         {/* Stats strip */}
