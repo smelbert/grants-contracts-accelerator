@@ -196,6 +196,7 @@ export default function ProgramCalendar() {
 
   const typeConfig = {
     event:        { color: 'bg-[#143A50]/10 text-[#143A50] border-[#143A50]/20', label: 'Event', icon: <Ticket className="w-4 h-4" /> },
+    external:     { color: 'bg-orange-100 text-orange-800 border-orange-200',     label: 'External Training', icon: <ExternalLink className="w-4 h-4" /> },
     session:      { color: 'bg-blue-100 text-blue-800 border-blue-200',           label: 'Session', icon: <Users className="w-4 h-4" /> },
     consultation: { color: 'bg-purple-100 text-purple-800 border-purple-200',     label: 'Consultation', icon: <Video className="w-4 h-4" /> },
     course:       { color: 'bg-green-100 text-green-800 border-green-200',         label: 'Course', icon: <FileText className="w-4 h-4" /> },
