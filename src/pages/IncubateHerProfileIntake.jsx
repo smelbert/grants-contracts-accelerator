@@ -357,15 +357,14 @@ Provide a concise, professional response (2-3 sentences max for short fields, 1-
         )}
 
         {/* Alert: Why this matters */}
-        <Card className="mb-6 bg-blue-50 border-2 border-blue-200">
+        <Card className="mb-6 bg-gradient-to-r from-[#143A50]/5 to-[#E5C089]/10 border-2 border-[#E5C089]">
           <CardContent className="py-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <Wand2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-blue-900 mb-1">Why complete your profile?</h3>
-                <p className="text-sm text-blue-800">
-                  Your profile information will automatically populate throughout your workbook, saving you time 
-                  and ensuring consistency across all your documents. You can always come back and update it later!
+                <h3 className="font-semibold text-[#143A50] mb-1">AI fills your profile automatically</h3>
+                <p className="text-sm text-slate-700">
+                  Enter your <strong>website</strong> and <strong>social media handles</strong> on the Basic tab, then click <strong>Save Profile</strong> — our AI will research your organization and auto-fill your mission, vision, programs, and more. You can then review and edit anything it generates.
                 </p>
               </div>
             </div>
