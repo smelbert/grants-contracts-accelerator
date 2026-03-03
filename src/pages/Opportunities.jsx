@@ -407,6 +407,13 @@ export default function OpportunitiesPage() {
           />
         )}
 
+        {/* Quick Paste Dialog */}
+        <QuickPasteOpportunity
+          open={quickPasteOpen}
+          onClose={() => setQuickPasteOpen(false)}
+          onCreated={() => queryClient.invalidateQueries(['opportunities'])}
+        />
+
         {/* Report Dialog */}
         {reportDialogOpen && (
           <ReportOpportunityDialog
