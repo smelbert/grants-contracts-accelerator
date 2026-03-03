@@ -79,6 +79,7 @@ export default function IncubateHerProfileIntake() {
     mailing_address: '',
     phone: '',
     social_media: '',
+    social_media_handles: [],
     
     // Goals & Needs
     funding_goals: '',
