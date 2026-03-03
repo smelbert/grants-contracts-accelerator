@@ -202,10 +202,14 @@ export default function GrantSubmissionPage() {
               <h1 className="text-3xl font-bold text-slate-900">Funding Opportunities</h1>
               <p className="text-slate-600">Discover and manage grants, RFPs, and contracts</p>
             </div>
-            <Button onClick={() => setShowForm(!showForm)} className="bg-emerald-600 hover:bg-emerald-700">
-              <Plus className="w-4 h-4 mr-2" />
-              {showForm ? 'Cancel' : 'Add Opportunity'}
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setQuickPasteOpen(true)} variant="outline" className="gap-2">
+                <Link2 className="w-4 h-4" /> Add via URL or Text
+              </Button>
+              <Button onClick={openCreate} className="bg-emerald-600 hover:bg-emerald-700 gap-2">
+                <Plus className="w-4 h-4" /> Add Opportunity
+              </Button>
+            </div>
           </div>
 
           {/* View Mode Tabs */}
