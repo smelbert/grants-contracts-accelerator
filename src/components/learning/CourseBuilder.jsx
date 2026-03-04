@@ -1234,7 +1234,7 @@ function TipDialog({ open, onClose, onSave, existingTip }) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Tip</DialogTitle>
+          <DialogTitle>{existingTip ? 'Edit Tip' : 'Add Tip'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
