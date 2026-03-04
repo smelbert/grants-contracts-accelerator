@@ -385,13 +385,19 @@ function AdminAttendanceView() {
                         const watched = watchedRecording(enrollment.id, session.id);
                         return (
                           <td key={session.id} className="text-center p-2">
-                            {attended ? (
-                              <span title="Attended live" className="text-green-600 text-lg">●</span>
-                            ) : watched ? (
-                              <span title="Watched recording" className="text-blue-400 text-lg">◐</span>
-                            ) : (
-                              <span title="Absent" className="text-slate-200 text-lg">○</span>
-                            )}
+                            <button
+                              title={attended ? "Click to remove live attendance" : "Click to mark attended live"}
+                              onClick={() => markAttendanceMutation.mutate({ enrollmentId: enrollment.id, sessionId: session.id, attended: !attended })}
+                              className="text-lg hover:scale-125 transition-transform cursor-pointer"
+                            >
+                              {attended ? (
+                                <span className="text-green-600">●</span>
+                              ) : watched ? (
+                                <span className="text-blue-400">◐</span>
+                              ) : (
+                                <span className="text-slate-300">○</span>
+                              )}
+                            </button>
                           </td>
                         );
                       })}
