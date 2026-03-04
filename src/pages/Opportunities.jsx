@@ -97,7 +97,7 @@ function AmountDisplay({ min, max }) {
   );
 }
 
-function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, vettingInfo, dim = false }) {
+function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, onArchive, onUnarchive, vettingInfo, dim = false }) {
   const lane = LANE_CONFIG[opp.funding_lane] || LANE_CONFIG.grants;
   const deadline = opp.deadline || opp.deadline_full;
 
@@ -164,12 +164,29 @@ function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, ve
         <span className="text-xs text-slate-400 flex items-center gap-1">
           <ChevronRight className="w-3 h-3" /> Click to view details
         </span>
-        <button
-          className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors"
-          onClick={(e) => { e.stopPropagation(); onReport(); }}
-        >
-          <Flag className="w-3 h-3" /> Report
-        </button>
+        <div className="flex items-center gap-3">
+          {opp.status === 'archived' ? (
+            <button
+              className="text-xs text-slate-400 hover:text-emerald-600 flex items-center gap-1 transition-colors"
+              onClick={(e) => { e.stopPropagation(); onUnarchive(); }}
+            >
+              <RefreshCw className="w-3 h-3" /> Restore
+            </button>
+          ) : (
+            <button
+              className="text-xs text-slate-400 hover:text-amber-600 flex items-center gap-1 transition-colors"
+              onClick={(e) => { e.stopPropagation(); onArchive(); }}
+            >
+              <Archive className="w-3 h-3" /> Archive
+            </button>
+          )}
+          <button
+            className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors"
+            onClick={(e) => { e.stopPropagation(); onReport(); }}
+          >
+            <Flag className="w-3 h-3" /> Report
+          </button>
+        </div>
       </div>
     </div>
   );
