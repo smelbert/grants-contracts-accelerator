@@ -91,6 +91,12 @@ export default function LearningModulePage() {
   const getEmbedUrl = (url) => {
     if (!url) return null;
     
+    // Google Drive — convert /view or /file/d/.../view to /preview
+    const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (driveMatch) {
+      return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+    }
+
     // YouTube
     if (url.includes('youtube.com') || url.includes('youtu.be')) {
       const videoId = url.includes('youtu.be') 
