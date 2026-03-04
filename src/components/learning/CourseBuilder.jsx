@@ -1117,7 +1117,7 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile, exi
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Handout</DialogTitle>
+          <DialogTitle>{existingHandout ? 'Edit Handout' : 'Add Handout'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
