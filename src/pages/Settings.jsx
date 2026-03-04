@@ -291,6 +291,43 @@ export default function SettingsPage() {
             </Card>
           </motion.div>
 
+          {/* Onboarding Tours */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <PlayCircle className="w-5 h-5" />
+                  Onboarding Tours
+                </CardTitle>
+                <CardDescription>Revisit feature walkthroughs anytime</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">Funding Opportunities Tour</Label>
+                    <p className="text-sm text-slate-500">Learn to filter, save, and use AI vetting insights</p>
+                  </div>
+                  <Link to={createPageUrl('Opportunities')}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        localStorage.removeItem('opportunities_tour_v1');
+                      }}
+                      className="gap-2"
+                    >
+                      <RotateCcw className="w-4 h-4" /> Restart Tour
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
           {/* Save Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
