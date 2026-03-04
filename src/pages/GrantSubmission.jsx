@@ -603,17 +603,24 @@ export default function GrantSubmissionPage() {
                             )}
                           </Button>
                           {user?.role === 'admin' && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deleteGrantMutation.mutate(grant.id);
-                              }}
-                            >
-                              <Trash2 className="w-4 h-4 text-red-600" />
-                            </Button>
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={(e) => { e.stopPropagation(); openEdit(grant); }}
+                              >
+                                <Pencil className="w-4 h-4 text-blue-600" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={(e) => { e.stopPropagation(); deleteGrantMutation.mutate(grant.id); }}
+                              >
+                                <Trash2 className="w-4 h-4 text-red-600" />
+                              </Button>
+                            </>
                           )}
                         </div>
                       </div>
