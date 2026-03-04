@@ -755,60 +755,53 @@ export default function IncubateHerCourse() {
               </TabsContent>
 
               {/* Resources Tab */}
-              <TabsContent value="resources" className="space-y-3">
+              <TabsContent value="resources" className="space-y-4">
                 {course.handouts && course.handouts.length > 0 ? (
-                  course.handouts.map((handout, idx) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-lg border border-slate-200 bg-slate-50"
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h4 className="font-medium mb-1 text-slate-900">
-                            {handout.title}
-                          </h4>
-                          {handout.description && (
-                            <p className="text-sm text-slate-600">
-                              {handout.description}
-                            </p>
-                          )}
-                          <p className="text-xs mt-1 text-slate-500">
-                            Type: {handout.file_type || 'PDF'}
-                          </p>
+                  course.handouts.map((handout, idx) => {
+                    const isHtml = handout.source_type === 'html' || (handout.html_content && !handout.file_url);
+                    return (
+                      <div key={idx} className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
+                        <div className="p-4 border-b border-slate-200">
+                          <h4 className="font-medium text-slate-900">{handout.title}</h4>
+                          {handout.description && <p className="text-sm text-slate-600 mt-1">{handout.description}</p>}
                         </div>
+                        {isHtml ? (
+                          <div className="p-4 prose prose-sm max-w-none bg-white" dangerouslySetInnerHTML={{ __html: handout.html_content }} />
+                        ) : handout.file_url ? (
+                          <>
+                            {/* Inline preview for PDFs and Google Drive */}
+                            {(handout.file_url.includes('drive.google.com') || handout.file_url.match(/\.pdf(\?|$)/i)) && (
+                              <div className="bg-white">
+                                <iframe
+                                  src={handout.file_url.includes('drive.google.com')
+                                    ? handout.file_url.replace('/view', '/preview').replace(/\/edit.*$/, '/preview')
+                                    : handout.file_url}
+                                  className="w-full"
+                                  style={{ height: '500px', border: 'none' }}
+                                  title={handout.title}
+                                  allow="autoplay"
+                                />
+                              </div>
+                            )}
+                            <div className="p-3 flex gap-2">
+                              <a href={handout.file_url} download className="flex-1">
+                                <Button size="sm" className="w-full" style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
+                                  <Download className="w-4 h-4 mr-2" />
+                                  Download
+                                </Button>
+                              </a>
+                              <a href={handout.file_url} target="_blank" rel="noopener noreferrer" className="flex-1">
+                                <Button size="sm" variant="outline" className="w-full">
+                                  <ExternalLink className="w-4 h-4 mr-2" />
+                                  Open in New Tab
+                                </Button>
+                              </a>
+                            </div>
+                          </>
+                        ) : null}
                       </div>
-                      <div className="flex gap-2">
-                        <a
-                          href={handout.file_url}
-                          download
-                          className="flex-1"
-                        >
-                          <Button
-                            size="sm"
-                            className="w-full"
-                            style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </Button>
-                        </a>
-                        <a
-                          href={handout.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1"
-                        >
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="w-full"
-                          >
-                            View in Browser
-                          </Button>
-                        </a>
-                      </div>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <p className="text-slate-600">No downloadable resources for this course yet.</p>
                 )}
