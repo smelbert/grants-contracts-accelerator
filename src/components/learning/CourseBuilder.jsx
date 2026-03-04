@@ -875,12 +875,25 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
             </TabsContent>
 
             <TabsContent value="video" className="space-y-3">
-              <Label>Video URL (direct .mp4 link or uploaded file)</Label>
+              <Label>Video URL</Label>
               <Input
                 value={formData.video_url || ''}
-                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                placeholder="https://... or upload video file"
+                onChange={(e) => {
+                  let url = e.target.value;
+                  // Auto-convert Google Drive share links to embed links
+                  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+                  if (driveMatch) {
+                    url = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+                  }
+                  setFormData({ ...formData, video_url: url });
+                }}
+                placeholder="Paste Google Drive share link, YouTube, or direct .mp4 URL"
               />
+              {formData.video_url && formData.video_url.includes('drive.google.com') && (
+                <p className="text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-3 py-2">
+                  ✅ Google Drive link detected — auto-converted to embed format
+                </p>
+              )}
               <div className="flex items-center gap-2">
                 <Button 
                   type="button" 
@@ -910,7 +923,7 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
                 />
               </div>
               <p className="text-xs text-slate-500">
-                For YouTube/Vimeo, use the direct video file URL, not the page URL
+                Supports Google Drive share links (auto-converted), YouTube, Vimeo, or direct .mp4 URLs
               </p>
             </TabsContent>
 
