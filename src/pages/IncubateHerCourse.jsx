@@ -507,18 +507,26 @@ export default function IncubateHerCourse() {
                 {/* Video Player */}
                 {currentSectionData?.video_url && (() => {
                   const vUrl = currentSectionData.video_url;
-                  const driveMatch = vUrl.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+                  const isDirect = vUrl.match(/\.(mp4|webm|ogg)(\?|$)/i);
+                  const isDrive = vUrl.includes('drive.google.com');
                   const isYoutube = vUrl.includes('youtube.com') || vUrl.includes('youtu.be');
                   const isVimeo = vUrl.includes('vimeo.com');
-                  const isDirect = vUrl.match(/\.(mp4|webm|ogg)(\?|$)/i);
 
+                  // Build embed src
                   let embedSrc = null;
-                  if (driveMatch) embedSrc = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-                  else if (isYoutube) {
-                    const vid = vUrl.includes('youtu.be') ? vUrl.split('youtu.be/')[1]?.split('?')[0] : new URLSearchParams(vUrl.split('?')[1]).get('v');
-                    embedSrc = `https://www.youtube.com/embed/${vid}`;
+                  if (isDrive) {
+                    // Handle /preview already set, or /view, or share links
+                    const idMatch = vUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (idMatch) embedSrc = `https://drive.google.com/file/d/${idMatch[1]}/preview`;
+                    else embedSrc = vUrl; // already a full embed URL
+                  } else if (isYoutube) {
+                    const vid = vUrl.includes('youtu.be')
+                      ? vUrl.split('youtu.be/')[1]?.split('?')[0]
+                      : new URLSearchParams(vUrl.split('?')[1]).get('v');
+                    if (vid) embedSrc = `https://www.youtube.com/embed/${vid}`;
                   } else if (isVimeo) {
-                    embedSrc = `https://player.vimeo.com/video/${vUrl.split('vimeo.com/')[1]?.split('?')[0]}`;
+                    const vid = vUrl.split('vimeo.com/')[1]?.split('?')[0];
+                    if (vid) embedSrc = `https://player.vimeo.com/video/${vid}`;
                   }
 
                   if (isDirect) return (
