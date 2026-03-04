@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, BookOpen, Target, CheckCircle2, FileText, ChevronDown, ChevronUp, Lightbulb, Pen, Users, Shield } from 'lucide-react';
 
-export const MODULES_DATA = [
+const MODULES_DATA = [
   {
     number: 1,
     title: 'The Funding & Procurement Ecosystem',
