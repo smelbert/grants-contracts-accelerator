@@ -44,7 +44,11 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   const [sectionDialog, setSectionDialog] = useState(false);
   const [editingSection, setEditingSection] = useState(null);
   const [handoutDialog, setHandoutDialog] = useState(false);
+  const [editingHandout, setEditingHandout] = useState(null);
+  const [editingHandoutIdx, setEditingHandoutIdx] = useState(null);
   const [tipDialog, setTipDialog] = useState(false);
+  const [editingTip, setEditingTip] = useState(null);
+  const [editingTipIdx, setEditingTipIdx] = useState(null);
   const [aiDialog, setAiDialog] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
