@@ -382,9 +382,10 @@ export default function GrantSubmissionPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="grant">Grant</SelectItem>
+                        <SelectItem value="rfp">RFP (Request for Proposals)</SelectItem>
+                        <SelectItem value="rfq">RFQ (Request for Qualifications)</SelectItem>
+                        <SelectItem value="rfi">RFI (Request for Information)</SelectItem>
                         <SelectItem value="contract">Contract</SelectItem>
-                        <SelectItem value="rfp">RFP</SelectItem>
-                        <SelectItem value="rfq">RFQ</SelectItem>
                         <SelectItem value="donor_program">Donor Program</SelectItem>
                         <SelectItem value="public_fund">Public Fund</SelectItem>
                       </SelectContent>
