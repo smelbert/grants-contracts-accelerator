@@ -16,7 +16,6 @@ import {
   GripVertical, Plus, Trash2, Edit, Upload, Link2, Video, FileText, 
   Calendar, Clock, Sparkles, ChevronDown, ChevronUp, Save, X
 } from 'lucide-react';
-import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export default function CourseBuilder({ course, onSave, onCancel }) {
