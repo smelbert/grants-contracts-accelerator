@@ -103,6 +103,14 @@ export default function LiveSessionManagementPage() {
           </Button>
         </div>
 
+        {sessions.length === 0 && (
+          <div className="text-center py-20 text-slate-400">
+            <Video className="w-14 h-14 mx-auto mb-4 opacity-30" />
+            <p className="text-lg font-medium text-slate-500">No live sessions yet</p>
+            <p className="text-sm mt-1">Click "Create Session" to schedule your first live training session.</p>
+          </div>
+        )}
+
         <div className="grid gap-4">
           {sessions.map((session) => (
             <Card key={session.id}>
