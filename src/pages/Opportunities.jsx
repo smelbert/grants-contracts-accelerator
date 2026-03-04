@@ -492,7 +492,10 @@ export default function OpportunitiesPage() {
               <p className="text-slate-500 text-sm mt-0.5">Discover grants, contracts & more matched to your mission</p>
             </div>
           </div>
-          {(user?.role === 'admin' || user?.role === 'owner') && (
+          {(user?.role === 'admin' || user?.role === 'owner') && (() => {
+            const portalView = localStorage.getItem('portalView') || 'auto';
+            return portalView !== 'user';
+          })() && (
             <Button onClick={() => setQuickPasteOpen(true)} className="bg-[#143A50] hover:bg-[#1E4F58] gap-2 shrink-0">
               <Link2 className="w-4 h-4" /> Add via URL or Text
             </Button>
