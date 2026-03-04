@@ -531,9 +531,9 @@ export default function GrantSubmissionPage() {
                   <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
                     Cancel
                   </Button>
-                  <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
+                  <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700" disabled={createGrantMutation.isPending}>
                     <Save className="w-4 h-4 mr-2" />
-                    Save & Notify Clients
+                    {editingGrant ? 'Save Changes' : 'Save & Notify Clients'}
                   </Button>
                 </div>
               </form>
