@@ -596,7 +596,7 @@ export default function IncubateHerCourse() {
                     </div>
                     <iframe
                       src={course.content_url}
-                      style={{ width: '100%', maxWidth: '100%', height: '550px', border: 'none' }}
+                      style={{ width: '100%', maxWidth: '100%', height: '650px', border: 'none' }}
                       allow="fullscreen"
                       title={course.title}
                     />
