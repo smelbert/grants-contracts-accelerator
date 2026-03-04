@@ -1057,9 +1057,17 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    source_type: 'file_url',
     file_url: '',
-    file_type: 'pdf'
+    file_type: '',
+    html_content: ''
   });
+
+  useEffect(() => {
+    if (!open) {
+      setFormData({ title: '', description: '', source_type: 'file_url', file_url: '', file_type: '', html_content: '' });
+    }
+  }, [open]);
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
@@ -1074,12 +1082,11 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
-    setFormData({ title: '', description: '', file_url: '', file_type: 'pdf' });
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Handout</DialogTitle>
         </DialogHeader>
@@ -1105,32 +1112,67 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile }) {
           </div>
 
           <div>
-            <Label>File URL or Upload</Label>
-            <div className="flex gap-2">
+            <Label>Resource Type</Label>
+            <div className="flex gap-2 mt-1">
+              {[
+                { value: 'file_url', label: 'Link / URL' },
+                { value: 'upload', label: 'Upload File' },
+                { value: 'html', label: 'HTML Content' },
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, source_type: opt.value })}
+                  className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-colors ${formData.source_type === opt.value ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {formData.source_type === 'file_url' && (
+            <div>
+              <Label>URL</Label>
               <Input
                 value={formData.file_url}
                 onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
-                placeholder="https://... or upload"
+                placeholder="https://docs.google.com/... or any link"
               />
-              <Button type="button" onClick={() => document.getElementById('handout-upload').click()} disabled={uploadingFile}>
-                <Upload className="w-4 h-4" />
-              </Button>
             </div>
-            <input
-              id="handout-upload"
-              type="file"
-              className="hidden"
-              onChange={handleFileSelect}
-            />
-          </div>
+          )}
+
+          {formData.source_type === 'upload' && (
+            <div>
+              <Label>Upload File</Label>
+              <div className="flex gap-2">
+                <Input value={formData.file_url} readOnly placeholder="No file uploaded yet" className="bg-slate-50" />
+                <Button type="button" variant="outline" onClick={() => document.getElementById('handout-upload').click()} disabled={uploadingFile}>
+                  <Upload className="w-4 h-4 mr-1" />
+                  {uploadingFile ? 'Uploading...' : 'Browse'}
+                </Button>
+              </div>
+              <input id="handout-upload" type="file" className="hidden" onChange={handleFileSelect} />
+            </div>
+          )}
+
+          {formData.source_type === 'html' && (
+            <div>
+              <Label>HTML Content</Label>
+              <Textarea
+                value={formData.html_content}
+                onChange={(e) => setFormData({ ...formData, html_content: e.target.value })}
+                placeholder="<h2>Resource Title</h2><p>Your content here...</p>"
+                rows={10}
+                className="font-mono text-sm"
+              />
+              <p className="text-xs text-slate-500 mt-1">Write HTML directly — checklists, tables, formatted guides all work great here.</p>
+            </div>
+          )}
 
           <div className="flex justify-end gap-2 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" className="bg-blue-600">
-              Add Handout
-            </Button>
+            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+            <Button type="submit" className="bg-blue-600">Add Handout</Button>
           </div>
         </form>
       </DialogContent>
