@@ -120,6 +120,14 @@ export default function IncubateHerCourse() {
     }
   });
 
+  // Track course page view on load
+  useEffect(() => {
+    if (course && user) {
+      track('course_viewed', { course_title: course.title, funding_lane: course.funding_lane });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [course?.id, user?.email]);
+
   useEffect(() => {
     if (userActivity?.notes) {
       setUserNotes(userActivity.notes);
