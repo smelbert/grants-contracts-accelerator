@@ -243,6 +243,7 @@ const getAdminPortalNav = () => [
       { name: 'Support Tickets', page: 'SupportTickets', icon: MessageSquare },
       { name: 'Testimonials', page: 'TestimonialManagement', icon: Target },
       { name: 'FAQ Management', page: 'FAQManagement', icon: HelpCircle },
+      { name: 'User Activity Analytics', page: 'UserActivityAnalytics', icon: TrendingUp },
       { name: 'Audit Logs', page: 'AuditLogs', icon: Shield },
     ]
   },
