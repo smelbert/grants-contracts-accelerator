@@ -354,7 +354,7 @@ export default function GrantSubmissionPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-slate-700 mb-1 block">Grant Title *</label>
+                    <label className="text-sm font-medium text-slate-700 mb-1 block">Title *</label>
                     <Input
                       required
                       value={formData.title}
