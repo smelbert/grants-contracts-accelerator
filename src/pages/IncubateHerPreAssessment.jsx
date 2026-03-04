@@ -429,6 +429,22 @@ export default function IncubateHerPreAssessment() {
           </CardContent>
         </Card>
 
+        {prefilled && (
+          <Card className="mb-6 border-blue-200 bg-blue-50">
+            <CardContent className="pt-4">
+              <div className="flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-blue-900">Some answers pre-filled from your registration</p>
+                  <p className="text-sm text-blue-700 mt-1">
+                    We've used information from your registration form to suggest answers. Please review each question carefully and adjust any responses that don't accurately reflect your current situation.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Grants vs Contracts Section */}
         <Card className="mb-6">
           <CardHeader>
