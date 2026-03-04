@@ -94,11 +94,55 @@ const QUESTIONS = {
   ]
 };
 
+// Map JotForm data fields to pre-assessment question answers
+function inferResponsesFromJotform(jotformData) {
+  if (!jotformData) return {};
+  const inferred = {};
+
+  // q3: Legal structure — map org_type
+  const orgType = (jotformData.org_type || '').toLowerCase();
+  if (orgType.includes('501') || orgType.includes('nonprofit')) inferred['q3'] = 'a';
+  else if (orgType.includes('llc') || orgType.includes('corporation') || orgType.includes('corp')) inferred['q3'] = 'b';
+  else if (orgType.includes('sole') || orgType.includes('proprietor')) inferred['q3'] = 'c';
+
+  // q4: Board — infer from org type (nonprofits typically have boards)
+  if (orgType.includes('501') || orgType.includes('nonprofit')) inferred['q4'] = 'a';
+
+  // q5: Financial statements — infer from annual_revenue
+  const revenue = (jotformData.annual_revenue || '').toLowerCase();
+  if (revenue.includes('100k') || revenue.includes('250k') || revenue.includes('500k') || revenue.includes('1m') || parseInt(revenue) > 100000) {
+    inferred['q5'] = 'a';
+  } else if (revenue && revenue !== 'none' && revenue !== '$0' && revenue !== '0') {
+    inferred['q5'] = 'b';
+  }
+
+  // q6: Expense tracking — infer from grant_experience
+  const grantExp = (jotformData.grant_experience || '').toLowerCase();
+  if (grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('applied many')) inferred['q6'] = 'a';
+  else if (grantExp.includes('some') || grantExp.includes('applied') || grantExp.includes('intermediate')) inferred['q6'] = 'b';
+  else if (grantExp.includes('little') || grantExp.includes('beginner') || grantExp.includes('new')) inferred['q6'] = 'c';
+
+  // q7 & q8: Confidence — infer from grant_experience level
+  if (grantExp.includes('advanced') || grantExp.includes('experienced')) {
+    inferred['q7'] = '8';
+    inferred['q8'] = '7';
+  } else if (grantExp.includes('some') || grantExp.includes('intermediate')) {
+    inferred['q7'] = '6';
+    inferred['q8'] = '5';
+  } else if (grantExp.includes('little') || grantExp.includes('beginner') || grantExp.includes('new') || grantExp.includes('none')) {
+    inferred['q7'] = '4';
+    inferred['q8'] = '3';
+  }
+
+  return inferred;
+}
+
 export default function IncubateHerPreAssessment() {
   const queryClient = useQueryClient();
   const [responses, setResponses] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [scores, setScores] = useState(null);
+  const [prefilled, setPrefilled] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
