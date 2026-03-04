@@ -172,6 +172,18 @@ export default function IncubateHerPreAssessment() {
     enabled: !!user?.email && !!cohort?.id
   });
 
+  // Pre-fill responses from JotForm data when enrollment loads
+  React.useEffect(() => {
+    if (enrollment?.jotform_data && !prefilled && Object.keys(responses).length === 0) {
+      const inferred = inferResponsesFromJotform(enrollment.jotform_data);
+      if (Object.keys(inferred).length > 0) {
+        setResponses(inferred);
+        setPrefilled(true);
+        toast.success('Some answers pre-filled from your registration form — review and adjust as needed.', { duration: 5000 });
+      }
+    }
+  }, [enrollment]);
+
   const { data: existingAssessment } = useQuery({
     queryKey: ['pre-assessment', enrollment?.id],
     queryFn: async () => {
