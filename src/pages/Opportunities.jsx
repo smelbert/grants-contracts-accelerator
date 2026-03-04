@@ -651,6 +651,8 @@ export default function OpportunitiesPage() {
           onSave={() => { saveMutation.mutate(selected); setSelected(null); }}
           onUnsave={() => { unsaveMutation.mutate(selected.id); setSelected(null); }}
           onReport={() => { setReportingOpp(selected); setSelected(null); }}
+          onArchive={() => archiveMutation.mutate(selected.id)}
+          onUnarchive={() => unarchiveMutation.mutate(selected.id)}
           vettingInfo={getVetting(selected)}
           isAdmin={user?.role === 'admin' || user?.role === 'owner'}
           onRefresh={() => queryClient.invalidateQueries({ queryKey: ['opportunities'] })}
