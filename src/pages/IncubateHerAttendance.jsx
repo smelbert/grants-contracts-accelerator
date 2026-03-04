@@ -419,41 +419,48 @@ function AdminAttendanceView() {
               </thead>
               <tbody>
                 {filteredEnrollments.map(enrollment => {
-                  const rate = calculateRate(enrollment.id);
-                  return (
-                    <tr key={enrollment.id} className="border-b hover:bg-slate-50">
-                      <td className="p-3">
-                        <p className="font-medium">{enrollment.participant_name}</p>
-                        <p className="text-xs text-slate-500">{enrollment.participant_email}</p>
-                      </td>
-                      {sessions.map(session => {
-                        const attended = isAttended(enrollment.id, session.id);
-                        const watched = watchedRecording(enrollment.id, session.id);
-                        return (
-                          <td key={session.id} className="text-center p-2">
-                            <button
-                              title={attended ? "Click to remove live attendance" : "Click to mark attended live"}
-                              onClick={() => markAttendanceMutation.mutate({ enrollmentId: enrollment.id, sessionId: session.id, attended: !attended })}
-                              className="text-lg hover:scale-125 transition-transform cursor-pointer"
-                            >
-                              {attended ? (
-                                <span className="text-green-600">●</span>
-                              ) : watched ? (
-                                <span className="text-blue-400">◐</span>
-                              ) : (
-                                <span className="text-slate-300">○</span>
-                              )}
-                            </button>
-                          </td>
-                        );
-                      })}
-                      <td className="text-center p-3">
+                const rate = calculateRate(enrollment.id);
+                const liveCount = allAttendance.filter(a => a.enrollment_id === enrollment.id && a.attended).length;
+                const recCount = allAttendance.filter(a => a.enrollment_id === enrollment.id && a.watched_recording && !a.attended).length;
+                return (
+                  <tr key={enrollment.id} className="border-b hover:bg-slate-50">
+                    <td className="p-3">
+                      <p className="font-medium">{enrollment.participant_name}</p>
+                      <p className="text-xs text-slate-500">{enrollment.participant_email}</p>
+                    </td>
+                    {sessions.map(session => {
+                      const attended = isAttended(enrollment.id, session.id);
+                      const watched = watchedRecording(enrollment.id, session.id);
+                      return (
+                        <td key={session.id} className="text-center p-2">
+                          <button
+                            title={attended ? "Click to remove live attendance" : "Click to mark attended live"}
+                            onClick={() => markAttendanceMutation.mutate({ enrollmentId: enrollment.id, sessionId: session.id, attended: !attended })}
+                            className="text-lg hover:scale-125 transition-transform cursor-pointer"
+                          >
+                            {attended ? (
+                              <span className="text-green-600">●</span>
+                            ) : watched ? (
+                              <span className="text-blue-400">◐</span>
+                            ) : (
+                              <span className="text-slate-300">○</span>
+                            )}
+                          </button>
+                        </td>
+                      );
+                    })}
+                    <td className="text-center p-2 text-sm font-medium text-green-700">{liveCount}</td>
+                    <td className="text-center p-2 text-sm font-medium text-blue-600">{recCount}</td>
+                    <td className="text-center p-3">
+                      <div className="flex flex-col items-center gap-0.5">
                         <Badge className={rate >= 80 ? 'bg-green-100 text-green-800' : rate >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}>
                           {rate}%
                         </Badge>
-                      </td>
-                    </tr>
-                  );
+                        <span className="text-xs text-slate-400">{liveCount + recCount}/{sessions.length}</span>
+                      </div>
+                    </td>
+                  </tr>
+                );
                 })}
               </tbody>
             </table>
