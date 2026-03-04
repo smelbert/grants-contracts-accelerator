@@ -505,41 +505,66 @@ export default function IncubateHerCourse() {
               {/* Content Tab */}
               <TabsContent value="content" className="space-y-6">
                 {/* Video Player */}
-                {currentSectionData?.video_url && (
-                  <div className="rounded-lg overflow-hidden shadow-lg bg-slate-100">
-                    <video
-                      key={currentSection}
-                      className="w-full"
-                      controls
-                      onTimeUpdate={(e) => {
-                        const video = e.target;
-                        updateVideoProgress(currentSection, video.currentTime, video.duration);
-                      }}
-                      onLoadedMetadata={(e) => {
-                        const savedProgress = videoProgress[currentSection];
-                        if (savedProgress?.currentTime) {
-                          e.target.currentTime = savedProgress.currentTime;
-                        }
-                      }}
-                    >
-                      <source src={currentSectionData.video_url} />
-                      Your browser does not support video playback.
-                    </video>
-                    {videoProgress[currentSection] && (
-                      <div className="p-3 bg-white border-t border-slate-200 text-xs text-slate-600 flex items-center gap-2">
-                        <Video className="w-4 h-4 text-slate-400" />
-                        <span>Progress: {videoProgress[currentSection].percent}%</span>
-                        <span>•</span>
-                        <span>
-                          {Math.floor(videoProgress[currentSection].currentTime / 60)}:
-                          {Math.floor(videoProgress[currentSection].currentTime % 60).toString().padStart(2, '0')} / 
-                          {Math.floor(videoProgress[currentSection].duration / 60)}:
-                          {Math.floor(videoProgress[currentSection].duration % 60).toString().padStart(2, '0')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
+                {currentSectionData?.video_url && (() => {
+                  const vUrl = currentSectionData.video_url;
+                  const driveMatch = vUrl.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+                  const isYoutube = vUrl.includes('youtube.com') || vUrl.includes('youtu.be');
+                  const isVimeo = vUrl.includes('vimeo.com');
+                  const isDirect = vUrl.match(/\.(mp4|webm|ogg)(\?|$)/i);
+
+                  let embedSrc = null;
+                  if (driveMatch) embedSrc = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+                  else if (isYoutube) {
+                    const vid = vUrl.includes('youtu.be') ? vUrl.split('youtu.be/')[1]?.split('?')[0] : new URLSearchParams(vUrl.split('?')[1]).get('v');
+                    embedSrc = `https://www.youtube.com/embed/${vid}`;
+                  } else if (isVimeo) {
+                    embedSrc = `https://player.vimeo.com/video/${vUrl.split('vimeo.com/')[1]?.split('?')[0]}`;
+                  }
+
+                  if (isDirect) return (
+                    <div className="rounded-lg overflow-hidden shadow-lg bg-slate-100">
+                      <video
+                        key={currentSection}
+                        className="w-full"
+                        controls
+                        onTimeUpdate={(e) => {
+                          const video = e.target;
+                          updateVideoProgress(currentSection, video.currentTime, video.duration);
+                        }}
+                        onLoadedMetadata={(e) => {
+                          const savedProgress = videoProgress[currentSection];
+                          if (savedProgress?.currentTime) e.target.currentTime = savedProgress.currentTime;
+                        }}
+                      >
+                        <source src={vUrl} />
+                        Your browser does not support video playback.
+                      </video>
+                    </div>
+                  );
+
+                  if (embedSrc) return (
+                    <div className="rounded-lg overflow-hidden shadow-lg border border-slate-200">
+                      <iframe
+                        key={currentSection}
+                        src={embedSrc}
+                        className="w-full"
+                        style={{ height: '520px', border: 'none' }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  );
+
+                  // Fallback: direct link
+                  return (
+                    <div className="rounded-lg border border-slate-200 p-4 bg-slate-50 flex items-center gap-3">
+                      <Video className="w-6 h-6 text-slate-400" />
+                      <a href={vUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
+                        Open video in new tab
+                      </a>
+                    </div>
+                  );
+                })()}
 
                 {/* Embedded Presentation */}
                 {currentSectionData?.presentation_url && (
