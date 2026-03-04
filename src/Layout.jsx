@@ -213,6 +213,7 @@ const getAdminPortalNav = () => [
       { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
       { name: 'Program Announcements', page: 'ProgramAnnouncements', icon: Bell },
       { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
+      { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: Calendar },
       { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
       { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
     ]
