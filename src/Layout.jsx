@@ -185,7 +185,6 @@ const getAdminPortalNav = () => [
       { name: 'Training Framework', page: 'TrainingFramework', icon: BookOpen },
       { name: 'Content Editor', page: 'TrainingFrameworkEditor', icon: FileText },
       { name: 'Live Sessions', page: 'LiveSessionManagement', icon: Video },
-      { name: 'Session Outlines', page: 'TrainingLiveSessions', icon: BookOpen },
       { name: 'Assessment Management', page: 'AssessmentManagement', icon: FileText },
       { name: 'Pre-Assessment', page: 'TrainingPreAssessment', icon: FileText },
       { name: 'Post-Assessment', page: 'TrainingPostAssessment', icon: FileText },
