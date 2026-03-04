@@ -714,6 +714,11 @@ export default function GrantSubmissionPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      {(user?.role === 'admin' || user?.role === 'owner') && (
+                        <Button variant="outline" size="sm" onClick={() => openEdit(selectedGrant)}>
+                          <Pencil className="w-4 h-4 mr-1" /> Edit
+                        </Button>
+                      )}
                       <Button
                         variant={savedGrants.includes(selectedGrant.id) ? 'default' : 'outline'}
                         size="sm"
@@ -726,13 +731,8 @@ export default function GrantSubmissionPage() {
                           <><Bookmark className="w-4 h-4 mr-1" />Save</>
                         )}
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => toggleHide(selectedGrant.id)}
-                      >
-                        <EyeOff className="w-4 h-4 mr-1" />
-                        Hide
+                      <Button variant="outline" size="sm" onClick={() => toggleHide(selectedGrant.id)}>
+                        <EyeOff className="w-4 h-4 mr-1" /> Hide
                       </Button>
                     </div>
                   </div>
