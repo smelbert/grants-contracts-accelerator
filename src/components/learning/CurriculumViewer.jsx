@@ -80,9 +80,54 @@ export default function CurriculumViewer({ sections }) {
               {section.description && (
                 <p className="text-slate-600 italic">{section.description}</p>
               )}
-              <div className="prose prose-sm max-w-none">
-                <div className="whitespace-pre-wrap text-slate-700">{section.content}</div>
-              </div>
+              {/* Video */}
+              {section.show_video && section.video_url && (
+                <div className="rounded-lg overflow-hidden border border-slate-200">
+                  {section.video_url.includes('drive.google.com') ? (
+                    <iframe
+                      src={section.video_url.replace('/view', '/preview')}
+                      className="w-full"
+                      style={{ height: '400px', border: 'none' }}
+                      allow="autoplay"
+                      allowFullScreen
+                    />
+                  ) : section.video_url.match(/\.(mp4|webm|ogg)$/i) ? (
+                    <video controls className="w-full" style={{ maxHeight: '400px' }}>
+                      <source src={section.video_url} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <iframe
+                      src={section.video_url}
+                      className="w-full"
+                      style={{ height: '400px', border: 'none' }}
+                      allowFullScreen
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Gamma / Embed */}
+              {section.show_embed && (section.content_url || section.embed_code) && (
+                <div className="rounded-lg overflow-hidden border border-slate-200">
+                  {section.content_url ? (
+                    <iframe
+                      src={section.content_url}
+                      className="w-full"
+                      style={{ height: '500px', border: 'none' }}
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div dangerouslySetInnerHTML={{ __html: section.embed_code }} />
+                  )}
+                </div>
+              )}
+
+              {/* Text/HTML content */}
+              {(section.show_content !== false) && section.content && (
+                <div className="prose prose-sm max-w-none">
+                  <div dangerouslySetInnerHTML={{ __html: section.content }} />
+                </div>
+              )}
 
               <div className="flex gap-3 pt-4 border-t">
                 <Button
