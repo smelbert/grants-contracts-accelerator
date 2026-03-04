@@ -661,22 +661,17 @@ Return ONLY valid JSON, no additional text.`,
                     <FileText className="w-4 h-4 text-slate-400" />
                     <div>
                       <p className="font-medium text-sm">{handout.title}</p>
-                      <p className="text-xs text-slate-500">{handout.description}</p>
+                      <p className="text-xs text-slate-500">{handout.source_type === 'html' ? 'HTML content' : handout.file_url || handout.description}</p>
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="text-red-600"
-                    onClick={() => {
-                      setCourseData({
-                        ...courseData,
-                        handouts: courseData.handouts.filter((_, i) => i !== idx)
-                      });
-                    }}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button size="sm" variant="ghost" onClick={() => { setEditingHandout(handout); setEditingHandoutIdx(idx); setHandoutDialog(true); }}>
+                      <Edit className="w-4 h-4 text-slate-500" />
+                    </Button>
+                    <Button size="sm" variant="ghost" className="text-red-600" onClick={() => setCourseData({ ...courseData, handouts: courseData.handouts.filter((_, i) => i !== idx) })}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
