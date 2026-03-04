@@ -114,10 +114,13 @@ function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, ve
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${lane.light}`}>
               {TYPE_LABELS[opp.type] || opp.type}
             </span>
-            <ValidationBadge vettingInfo={vettingInfo} aiVetted={opp.ai_vetted} />
+            <span data-tour="opp-vetting">
+              <ValidationBadge vettingInfo={vettingInfo} aiVetted={opp.ai_vetted} />
+            </span>
             <DeadlineBadge deadline={deadline} rolling={opp.rolling_deadline} />
           </div>
           <button
+            data-tour="opp-save"
             className="shrink-0 p-1.5 rounded-full hover:bg-slate-100 transition-colors"
             onClick={(e) => { e.stopPropagation(); isSaved ? onUnsave() : onSave(); }}
           >
@@ -129,7 +132,7 @@ function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, ve
         </div>
 
         {/* Title */}
-        <h3 className="font-semibold text-slate-900 text-base leading-snug mb-1 line-clamp-2 group-hover:text-[#143A50] transition-colors">
+        <h3 data-tour="opp-card" className="font-semibold text-slate-900 text-base leading-snug mb-1 line-clamp-2 group-hover:text-[#143A50] transition-colors">
           {opp.title}
         </h3>
 
