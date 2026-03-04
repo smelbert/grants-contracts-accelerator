@@ -685,6 +685,13 @@ export default function GrantSubmissionPage() {
           </div>
         )}
 
+        {/* Quick Paste */}
+        <QuickPasteOpportunity
+          open={quickPasteOpen}
+          onClose={() => setQuickPasteOpen(false)}
+          onCreated={() => queryClient.invalidateQueries({ queryKey: ['funding-opportunities'] })}
+        />
+
         {/* Detail Modal */}
         <Dialog open={!!selectedGrant} onOpenChange={() => setSelectedGrant(null)}>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
