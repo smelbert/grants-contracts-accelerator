@@ -520,10 +520,15 @@ export default function IncubateHerCourse() {
                     if (idMatch) embedSrc = `https://drive.google.com/file/d/${idMatch[1]}/preview`;
                     else embedSrc = vUrl; // already a full embed URL
                   } else if (isYoutube) {
-                    const vid = vUrl.includes('youtu.be')
-                      ? vUrl.split('youtu.be/')[1]?.split('?')[0]
-                      : new URLSearchParams(vUrl.split('?')[1]).get('v');
-                    if (vid) embedSrc = `https://www.youtube.com/embed/${vid}`;
+                    let vid = null;
+                    if (vUrl.includes('youtu.be/')) {
+                      vid = vUrl.split('youtu.be/')[1]?.split(/[?&]/)[0];
+                    } else if (vUrl.includes('watch?v=')) {
+                      vid = new URLSearchParams(vUrl.split('?')[1]).get('v');
+                    } else if (vUrl.includes('/embed/')) {
+                      vid = vUrl.split('/embed/')[1]?.split(/[?&]/)[0];
+                    }
+                    if (vid) embedSrc = `https://www.youtube.com/embed/${vid}?rel=0`;
                   } else if (isVimeo) {
                     const vid = vUrl.split('vimeo.com/')[1]?.split('?')[0];
                     if (vid) embedSrc = `https://player.vimeo.com/video/${vid}`;
