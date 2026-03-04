@@ -95,11 +95,16 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   };
 
   const addHandout = (handoutData) => {
-    setCourseData({
-      ...courseData,
-      handouts: [...(courseData.handouts || []), handoutData]
-    });
+    if (editingHandoutIdx !== null) {
+      const updated = [...(courseData.handouts || [])];
+      updated[editingHandoutIdx] = handoutData;
+      setCourseData({ ...courseData, handouts: updated });
+    } else {
+      setCourseData({ ...courseData, handouts: [...(courseData.handouts || []), handoutData] });
+    }
     setHandoutDialog(false);
+    setEditingHandout(null);
+    setEditingHandoutIdx(null);
   };
 
   const addTip = (tipData) => {
