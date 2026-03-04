@@ -248,6 +248,42 @@ function AdminAttendanceView() {
     return total > 0 ? Math.round((counted / total) * 100) : 0;
   };
 
+  const exportCSV = () => {
+    const sessionHeaders = sessions.map(s =>
+      `"${s.session_title} (${new Date(s.session_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})"`
+    ).join(',');
+
+    const header = `"Name","Email","Organization",${sessionHeaders},"Sessions Attended Live","Sessions via Recording","Total Sessions Counted","Completion Rate (%)"`;
+
+    const rows = enrollments.map(enrollment => {
+      const sessionCols = sessions.map(session => {
+        const attended = isAttended(enrollment.id, session.id);
+        const watched = watchedRecording(enrollment.id, session.id);
+        if (attended) return '"Live"';
+        if (watched) return '"Recording"';
+        return '"Absent"';
+      }).join(',');
+
+      const liveCount = allAttendance.filter(a => a.enrollment_id === enrollment.id && a.attended).length;
+      const recCount = allAttendance.filter(a => a.enrollment_id === enrollment.id && a.watched_recording && !a.attended).length;
+      const total = liveCount + recCount;
+      const rate = calculateRate(enrollment.id);
+
+      return `"${enrollment.participant_name}","${enrollment.participant_email}","${enrollment.organization_name || ''}",${sessionCols},${liveCount},${recCount},${total},${rate}`;
+    });
+
+    const csv = [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `IncubateHer-Attendance-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       {/* Session Selector */}
