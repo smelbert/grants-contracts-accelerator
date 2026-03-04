@@ -108,11 +108,16 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   };
 
   const addTip = (tipData) => {
-    setCourseData({
-      ...courseData,
-      tips: [...(courseData.tips || []), tipData]
-    });
+    if (editingTipIdx !== null) {
+      const updated = [...(courseData.tips || [])];
+      updated[editingTipIdx] = tipData;
+      setCourseData({ ...courseData, tips: updated });
+    } else {
+      setCourseData({ ...courseData, tips: [...(courseData.tips || []), tipData] });
+    }
     setTipDialog(false);
+    setEditingTip(null);
+    setEditingTipIdx(null);
   };
 
   const generateHandoutsWithAI = async () => {
