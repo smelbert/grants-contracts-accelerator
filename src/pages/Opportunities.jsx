@@ -428,6 +428,24 @@ export default function OpportunitiesPage() {
     onSuccess: () => { toast.success('Report submitted. Thank you!'); setReportingOpp(null); }
   });
 
+  const archiveMutation = useMutation({
+    mutationFn: (id) => base44.entities.FundingOpportunity.update(id, { status: 'archived' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      toast.success('Opportunity archived.');
+      setSelected(null);
+    }
+  });
+
+  const unarchiveMutation = useMutation({
+    mutationFn: (id) => base44.entities.FundingOpportunity.update(id, { status: 'active' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['opportunities'] });
+      toast.success('Opportunity restored to active.');
+      setSelected(null);
+    }
+  });
+
   const isSaved = (id) => savedOpportunities.some(s => s.opportunity_id === id);
   const getVetting = (opp) => { try { return opp.ai_vetting_notes ? JSON.parse(opp.ai_vetting_notes) : null; } catch { return null; } };
 
