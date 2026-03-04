@@ -592,29 +592,44 @@ export default function IncubateHerCourse() {
                   </div>
                 )}
 
-                {/* Embedded Gamma Presentation */}
-                {course.content_url && (
-                  <div className="rounded-lg overflow-hidden shadow-lg border border-slate-200">
-                    <div className="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
-                      <span className="text-sm text-slate-600 font-medium">Course Presentation</span>
-                      <a
-                        href={course.content_url.replace('/embed/', '/')}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 hover:underline flex items-center gap-1"
-                      >
-                        Open in new tab
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                {/* Embedded Gamma / YouTube / Drive Presentation */}
+                {course.content_url && (() => {
+                  const cUrl = course.content_url;
+                  let embedSrc = cUrl;
+                  let openUrl = cUrl;
+
+                  if (cUrl.includes('youtube.com') || cUrl.includes('youtu.be')) {
+                    let vid = null;
+                    if (cUrl.includes('youtu.be/')) vid = cUrl.split('youtu.be/')[1]?.split(/[?&]/)[0];
+                    else if (cUrl.includes('watch?v=')) vid = new URLSearchParams(cUrl.split('?')[1]).get('v');
+                    else if (cUrl.includes('/embed/')) vid = cUrl.split('/embed/')[1]?.split(/[?&]/)[0];
+                    if (vid) { embedSrc = `https://www.youtube.com/embed/${vid}?rel=0`; openUrl = `https://www.youtube.com/watch?v=${vid}`; }
+                  } else if (cUrl.includes('drive.google.com')) {
+                    const idMatch = cUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (idMatch) { embedSrc = `https://drive.google.com/file/d/${idMatch[1]}/preview`; openUrl = cUrl; }
+                  } else if (cUrl.includes('vimeo.com') && !cUrl.includes('player.vimeo.com')) {
+                    const vid = cUrl.split('vimeo.com/')[1]?.split('?')[0];
+                    if (vid) { embedSrc = `https://player.vimeo.com/video/${vid}`; openUrl = cUrl; }
+                  }
+
+                  return (
+                    <div className="rounded-lg overflow-hidden shadow-lg border border-slate-200">
+                      <div className="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between">
+                        <span className="text-sm text-slate-600 font-medium">Course Presentation</span>
+                        <a href={openUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline flex items-center gap-1">
+                          Open in new tab <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                      <iframe
+                        src={embedSrc}
+                        style={{ width: '100%', maxWidth: '100%', height: '650px', border: 'none' }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        allowFullScreen
+                        title={course.title}
+                      />
                     </div>
-                    <iframe
-                      src={course.content_url}
-                      style={{ width: '100%', maxWidth: '100%', height: '650px', border: 'none' }}
-                      allow="fullscreen"
-                      title={course.title}
-                    />
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* Section-level Gamma/embed URL */}
                 {currentSectionData?.content_url && (
