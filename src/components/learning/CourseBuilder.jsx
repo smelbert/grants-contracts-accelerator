@@ -946,22 +946,43 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
               <Label>Video URL</Label>
               <Input
                 value={formData.video_url || ''}
-                onChange={(e) => {
-                  let url = e.target.value;
-                  // Auto-convert Google Drive share links to embed links
-                  const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
-                  if (driveMatch) {
-                    url = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
-                  }
-                  setFormData({ ...formData, video_url: url });
-                }}
-                placeholder="Paste Google Drive share link, YouTube, or direct .mp4 URL"
+                onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                placeholder="Paste YouTube, Google Drive share link, or direct .mp4 URL"
               />
-              {formData.video_url && formData.video_url.includes('drive.google.com') && (
-                <p className="text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-3 py-2">
-                  ✅ Google Drive link detected — auto-converted to embed format
-                </p>
-              )}
+              {/* Live preview */}
+              {formData.video_url && (() => {
+                const vUrl = formData.video_url;
+                const isDirect = vUrl.match(/\.(mp4|webm|ogg)(\?|$)/i);
+                const isDrive = vUrl.includes('drive.google.com');
+                const isYoutube = vUrl.includes('youtube.com') || vUrl.includes('youtu.be');
+                const isVimeo = vUrl.includes('vimeo.com');
+                let embedSrc = null;
+                if (isDrive) {
+                  const idMatch = vUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                  if (idMatch) embedSrc = `https://drive.google.com/file/d/${idMatch[1]}/preview`;
+                } else if (isYoutube) {
+                  let vid = null;
+                  if (vUrl.includes('youtu.be/')) vid = vUrl.split('youtu.be/')[1]?.split(/[?&]/)[0];
+                  else if (vUrl.includes('watch?v=')) vid = new URLSearchParams(vUrl.split('?')[1]).get('v');
+                  else if (vUrl.includes('/embed/')) vid = vUrl.split('/embed/')[1]?.split(/[?&]/)[0];
+                  if (vid) embedSrc = `https://www.youtube.com/embed/${vid}?rel=0`;
+                } else if (isVimeo) {
+                  const vid = vUrl.split('vimeo.com/')[1]?.split(/[?&]/)[0];
+                  if (vid) embedSrc = `https://player.vimeo.com/video/${vid}`;
+                }
+                if (isDirect) return (
+                  <video controls className="w-full rounded border" style={{ maxHeight: '300px' }}>
+                    <source src={vUrl} />
+                  </video>
+                );
+                if (embedSrc) return (
+                  <div className="rounded border overflow-hidden">
+                    <p className="text-xs text-emerald-600 bg-emerald-50 px-3 py-1.5 border-b border-emerald-100">✅ Preview</p>
+                    <iframe src={embedSrc} className="w-full" style={{ height: '280px', border: 'none' }} allowFullScreen />
+                  </div>
+                );
+                return <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded px-3 py-2">⚠️ Could not detect video type — link will open in new tab as fallback.</p>;
+              })()}
               <div className="flex items-center gap-2">
                 <Button 
                   type="button" 
