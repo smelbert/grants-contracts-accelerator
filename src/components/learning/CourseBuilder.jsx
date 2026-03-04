@@ -708,19 +708,14 @@ Return ONLY valid JSON, no additional text.`,
                     <p className="font-medium text-sm mb-1">{tip.title}</p>
                     <p className="text-xs text-slate-600">{tip.content}</p>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="text-red-600"
-                    onClick={() => {
-                      setCourseData({
-                        ...courseData,
-                        tips: courseData.tips.filter((_, i) => i !== idx)
-                      });
-                    }}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-1 shrink-0 ml-2">
+                    <Button size="sm" variant="ghost" onClick={() => { setEditingTip(tip); setEditingTipIdx(idx); setTipDialog(true); }}>
+                      <Edit className="w-4 h-4 text-slate-500" />
+                    </Button>
+                    <Button size="sm" variant="ghost" className="text-red-600" onClick={() => setCourseData({ ...courseData, tips: courseData.tips.filter((_, i) => i !== idx) })}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
