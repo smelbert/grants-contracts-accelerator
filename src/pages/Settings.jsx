@@ -9,8 +9,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Settings as SettingsIcon, Bell, Eye, Palette, Moon, Sun, Monitor,
-  Globe, Lock, Zap, CheckCircle2
+  Globe, Lock, Zap, CheckCircle2, PlayCircle, RotateCcw
 } from 'lucide-react';
+import { startOpportunitiesTour } from '@/components/onboarding/OpportunitiesTour';
+import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 export default function SettingsPage() {
   const queryClient = useQueryClient();
