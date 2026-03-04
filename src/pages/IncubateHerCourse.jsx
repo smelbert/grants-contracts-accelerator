@@ -455,6 +455,7 @@ export default function IncubateHerCourse() {
                 <button
                   key={idx}
                   onClick={() => {
+                    track('section_navigated', { section_index: idx, section_title: section.title });
                     setCurrentSection(idx);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
