@@ -466,7 +466,7 @@ export default function IncubateHerCourse() {
 
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-8">
+          <div className="max-w-6xl mx-auto p-6">
             {/* Section Header */}
             <div className="mb-6">
               <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
