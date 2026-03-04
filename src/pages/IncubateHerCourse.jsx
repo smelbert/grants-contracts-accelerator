@@ -248,6 +248,19 @@ export default function IncubateHerCourse() {
     }
   });
 
+  // Track user actions
+  const track = (eventName, properties = {}) => {
+    base44.analytics.track({
+      eventName,
+      properties: {
+        user_email: user?.email || '',
+        course_id: courseId || '',
+        course_title: course?.title || '',
+        ...properties
+      }
+    });
+  };
+
   const markSectionComplete = async (sectionIndex) => {
     const newCompleted = [...completedSections];
     if (!newCompleted.includes(sectionIndex)) {
