@@ -390,8 +390,16 @@ function AdminAttendanceView() {
       {/* All-participant overview */}
       <Card>
         <CardHeader>
-          <CardTitle>All Participants — Attendance Overview</CardTitle>
-          <p className="text-sm text-slate-500">Live + recording counted toward attendance rate</p>
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <CardTitle>All Participants — Attendance Overview</CardTitle>
+              <p className="text-sm text-slate-500">Live + recording counted toward attendance rate</p>
+            </div>
+            <Button onClick={exportCSV} variant="outline" size="sm" className="flex items-center gap-2">
+              <FileDown className="w-4 h-4" />
+              Export CSV
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
