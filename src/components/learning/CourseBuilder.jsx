@@ -760,8 +760,9 @@ Return ONLY valid JSON, no additional text.`,
       {/* Tip Dialog */}
       <TipDialog
         open={tipDialog}
-        onClose={() => setTipDialog(false)}
+        onClose={() => { setTipDialog(false); setEditingTip(null); setEditingTipIdx(null); }}
         onSave={addTip}
+        existingTip={editingTip}
       />
 
       {/* AI Generation Dialog */}
