@@ -192,7 +192,7 @@ function OpportunityCard({ opp, isSaved, onSave, onUnsave, onClick, onReport, on
   );
 }
 
-function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onReport, vettingInfo, isAdmin, onRefresh }) {
+function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onReport, onArchive, onUnarchive, vettingInfo, isAdmin, onRefresh }) {
   const lane = LANE_CONFIG[opp.funding_lane] || LANE_CONFIG.grants;
   const deadline = opp.deadline || opp.deadline_full;
 
@@ -314,6 +314,15 @@ function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onRep
                 <a href={opp.application_url || opp.source_url} target="_blank" rel="noopener noreferrer">
                   Apply / Learn More <ExternalLink className="w-4 h-4 ml-2" />
                 </a>
+              </Button>
+            )}
+            {opp.status === 'archived' ? (
+              <Button variant="outline" onClick={onUnarchive} className="text-emerald-600 border-emerald-300 hover:bg-emerald-50">
+                <RefreshCw className="w-4 h-4 mr-2" /> Restore
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={onArchive} className="text-amber-600 border-amber-300 hover:bg-amber-50">
+                <Archive className="w-4 h-4 mr-2" /> Archive
               </Button>
             )}
             <Button variant="ghost" onClick={onReport} className="text-slate-500 hover:text-red-600">
