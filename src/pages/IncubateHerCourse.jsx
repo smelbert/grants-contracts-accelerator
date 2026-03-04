@@ -331,6 +331,12 @@ export default function IncubateHerCourse() {
         queryClient.invalidateQueries(['user-badges']);
       }
       
+      track(isFullyCompleted ? 'course_completed' : 'section_completed', {
+        section_index: sectionIndex,
+        section_title: sections[sectionIndex]?.title || '',
+        is_fully_completed: isFullyCompleted,
+        progress_percent: progressPercent
+      });
       toast.success(`+${pointsEarned} points! ${isFullyCompleted ? '🎉 Course completed!' : 'Section completed!'}`);
       
       // Celebration animation
