@@ -1201,7 +1201,7 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile, exi
 
           <div className="flex justify-end gap-2 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-            <Button type="submit" className="bg-blue-600">Add Handout</Button>
+            <Button type="submit" className="bg-blue-600">{existingHandout ? 'Update Handout' : 'Add Handout'}</Button>
           </div>
         </form>
       </DialogContent>
