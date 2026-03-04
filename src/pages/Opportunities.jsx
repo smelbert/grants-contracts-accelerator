@@ -499,6 +499,8 @@ export default function OpportunitiesPage() {
           onUnsave={() => unsaveMutation.mutate(opp.id)}
           onClick={() => setSelected(opp)}
           onReport={() => setReportingOpp(opp)}
+          onArchive={() => archiveMutation.mutate(opp.id)}
+          onUnarchive={() => unarchiveMutation.mutate(opp.id)}
           vettingInfo={getVetting(opp)}
           dim={dim}
         />
