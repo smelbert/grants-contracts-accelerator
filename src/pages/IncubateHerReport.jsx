@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Download, Save, CheckCircle2, Sparkles } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { Progress } from '@/components/ui/progress';
+import { FileText, Download, CheckCircle2, Sparkles, Users, Calendar, BookOpen, ClipboardList, TrendingUp, BarChart3, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import ParticipantOverviewReport from '@/components/incubateher/ParticipantOverviewReport';
 import RegistrationInsightsBrief from '@/components/incubateher/RegistrationInsightsBrief';
@@ -22,413 +23,591 @@ export default function IncubateHerReportPage() {
 The program was delivered through a short, intensive learning format and included structured group instruction, readiness assessments, and individualized one-on-one consultations. Content was aligned with IncubateHer's Business Operations and Business Organization curriculum areas and tailored to the needs of women entrepreneurs, many of whom are early-stage or growth-phase business owners.`,
     equity_narrative: `The program centered equity by meeting participants where they were, avoiding assumptions about readiness, and reducing harm caused by premature or misaligned funding pursuits. By emphasizing preparation, clarity, and informed decision-making, the program supported sustainable business growth and reduced common barriers faced by women entrepreneurs navigating complex funding systems.`,
     compliance_statement: `This program focused on funding readiness and preparation. It did not include grant searches, application drafting during sessions, or guarantees of funding. Any additional grant-writing support offered outside of the program was not funded through Columbus Urban League grant resources.`,
-    incentive_language: `As an engagement incentive, participants who completed all program requirements were eligible for a randomized drawing for a complimentary grant-writing session for one non-federal grant. This incentive was not tied to program outcomes and did not guarantee funding.`
+    incentive_language: `As an engagement incentive, participants who completed all program requirements were eligible for a randomized drawing for a complimentary grant-writing session for one non-federal grant. This incentive was not tied to program outcomes and did not guarantee funding.`,
+    outcomes_narrative: ''
   });
 
   const [generatingAI, setGeneratingAI] = useState(false);
 
-  // Fetch IncubateHer cohort data
+  // ─── Data fetching ───────────────────────────────────────────────
   const { data: cohorts } = useQuery({
     queryKey: ['incubateher-cohorts'],
     queryFn: async () => {
-      const allCohorts = await base44.entities.ProgramCohort.list();
-      return allCohorts.filter(c => c.program_code?.includes('incubateher'));
+      const all = await base44.entities.ProgramCohort.list();
+      return all.filter(c => c.program_code?.includes('incubateher'));
     }
   });
-
   const activeCohort = cohorts?.[0];
 
-  // Fetch enrollment data
-  const { data: enrollments } = useQuery({
+  const { data: enrollments = [] } = useQuery({
     queryKey: ['incubateher-enrollments', activeCohort?.id],
-    queryFn: async () => {
-      if (!activeCohort?.id) return [];
-      return await base44.entities.ProgramEnrollment.filter({
-        cohort_id: activeCohort.id
-      });
-    },
+    queryFn: () => base44.entities.ProgramEnrollment.filter({ cohort_id: activeCohort.id }),
     enabled: !!activeCohort?.id
   });
 
-  // Fetch assessment data
-  const { data: assessments } = useQuery({
+  const { data: sessions = [] } = useQuery({
+    queryKey: ['program-sessions-report'],
+    queryFn: () => base44.entities.ProgramSession.list('session_order')
+  });
+
+  const { data: allAttendance = [] } = useQuery({
+    queryKey: ['session-attendance-report'],
+    queryFn: () => base44.entities.SessionAttendance.list()
+  });
+
+  const { data: assessments = [] } = useQuery({
     queryKey: ['incubateher-assessments'],
     queryFn: () => base44.entities.ProgramAssessment.list()
   });
 
-  // Calculate metrics
-  const totalEnrolled = enrollments?.length || 0;
-  const completedAllSessions = enrollments?.filter(e => e.attendance_complete).length || 0;
-  const completedConsultations = enrollments?.filter(e => e.consultation_completed).length || 0;
-  const completedAllRequirements = enrollments?.filter(e => 
-    e.pre_assessment_completed && 
-    e.attendance_complete && 
-    e.consultation_completed && 
-    e.post_assessment_completed
-  ).length || 0;
+  const { data: workbookResponses = [] } = useQuery({
+    queryKey: ['workbook-responses-report'],
+    queryFn: () => base44.entities.WorkbookResponse.list()
+  });
 
-  const preAssessments = assessments?.filter(a => a.assessment_type === 'pre') || [];
-  const postAssessments = assessments?.filter(a => a.assessment_type === 'post') || [];
+  const { data: consultations = [] } = useQuery({
+    queryKey: ['consultations-report'],
+    queryFn: () => base44.entities.ConsultationBooking.list()
+  });
 
+  const { data: docSubmissions = [] } = useQuery({
+    queryKey: ['doc-submissions-report'],
+    queryFn: () => base44.entities.DocumentSubmission.list()
+  });
+
+  // ─── Computed metrics ─────────────────────────────────────────────
+  const participants = enrollments.filter(e => e.role === 'participant');
+  const totalEnrolled = participants.length;
+
+  // Attendance
+  const getAttendanceRate = (enrollmentId) => {
+    if (!sessions.length) return 0;
+    const attended = allAttendance.filter(a => a.enrollment_id === enrollmentId && (a.attended || a.watched_recording)).length;
+    return Math.round((attended / sessions.length) * 100);
+  };
+
+  const attended80Plus = participants.filter(e => getAttendanceRate(e.id) >= 80).length;
+  const attended60Plus = participants.filter(e => getAttendanceRate(e.id) >= 60).length;
+  const attendedAtLeastOne = participants.filter(e =>
+    allAttendance.some(a => a.enrollment_id === e.id && (a.attended || a.watched_recording))
+  ).length;
+
+  // Per-session attendance
+  const sessionStats = sessions.map(s => ({
+    ...s,
+    liveCount: allAttendance.filter(a => a.session_id === s.id && a.attended).length,
+    recordingCount: allAttendance.filter(a => a.session_id === s.id && a.watched_recording && !a.attended).length,
+  }));
+
+  // Assessments
+  const preAssessments = assessments.filter(a => a.assessment_type === 'pre');
+  const postAssessments = assessments.filter(a => a.assessment_type === 'post');
   const avgPreScore = preAssessments.length > 0
-    ? (preAssessments.reduce((sum, a) => sum + a.total_score, 0) / preAssessments.length).toFixed(1)
-    : 0;
-
+    ? (preAssessments.reduce((s, a) => s + (a.total_score || 0), 0) / preAssessments.length).toFixed(1) : 0;
   const avgPostScore = postAssessments.length > 0
-    ? (postAssessments.reduce((sum, a) => sum + a.total_score, 0) / postAssessments.length).toFixed(1)
-    : 0;
+    ? (postAssessments.reduce((s, a) => s + (a.total_score || 0), 0) / postAssessments.length).toFixed(1) : 0;
+  const avgImprovement = (parseFloat(avgPostScore) - parseFloat(avgPreScore)).toFixed(1);
 
-  const avgImprovement = (avgPostScore - avgPreScore).toFixed(1);
+  // Completions
+  const completedPre = participants.filter(e => e.pre_assessment_completed).length;
+  const completedPost = participants.filter(e => e.post_assessment_completed).length;
+  const completedConsultation = participants.filter(e => e.consultation_completed).length;
+  const completedDocs = participants.filter(e => e.documents_uploaded).length;
+  const completedAll = participants.filter(e =>
+    e.pre_assessment_completed && e.attendance_complete && e.consultation_completed && e.post_assessment_completed
+  ).length;
 
+  // Workbook
+  const uniqueWorkbookParticipants = new Set(workbookResponses.map(w => w.participant_email)).size;
+
+  // Org types from jotform data
+  const orgTypeCounts = {};
+  participants.forEach(e => {
+    const type = e.jotform_data?.org_type;
+    if (type) orgTypeCounts[type] = (orgTypeCounts[type] || 0) + 1;
+  });
+
+  // Individual participant rows for detailed table
+  const participantRows = participants.map(e => {
+    const rate = getAttendanceRate(e.id);
+    const preA = preAssessments.find(a => a.participant_email === e.participant_email || a.created_by === e.participant_email);
+    const postA = postAssessments.find(a => a.participant_email === e.participant_email || a.created_by === e.participant_email);
+    const hasWorkbook = workbookResponses.some(w => w.participant_email === e.participant_email);
+    return {
+      name: e.participant_name,
+      email: e.participant_email,
+      org: e.organization_name || e.jotform_data?.org_type || '—',
+      attendanceRate: rate,
+      pre: preA?.total_score ?? '—',
+      post: postA?.total_score ?? '—',
+      gain: preA?.total_score != null && postA?.total_score != null ? postA.total_score - preA.total_score : '—',
+      preComplete: e.pre_assessment_completed,
+      postComplete: e.post_assessment_completed,
+      consultation: e.consultation_completed,
+      docs: e.documents_uploaded,
+      workbook: hasWorkbook,
+      allComplete: e.program_completed,
+    };
+  });
+
+  // ─── AI Narrative ──────────────────────────────────────────────────
   const generateAINarrative = async (section) => {
     setGeneratingAI(true);
     try {
       let prompt = '';
-      
       if (section === 'outcomes') {
-        prompt = `Write a professional outcomes narrative for a funding readiness program with these results:
+        prompt = `Write a professional outcomes narrative for a funding readiness program (IncubateHer) with these results:
 - ${totalEnrolled} participants enrolled
-- Average pre-assessment score: ${avgPreScore}/100
-- Average post-assessment score: ${avgPostScore}/100
-- Score improvement: +${avgImprovement} points
-- ${completedConsultations} completed one-on-one consultations
+- ${attendedAtLeastOne} attended at least one session
+- ${attended80Plus} participants had ≥80% attendance rate
+- ${completedPre} completed pre-assessment (avg score: ${avgPreScore}/100)
+- ${completedPost} completed post-assessment (avg score: ${avgPostScore}/100)
+- Average score improvement: +${avgImprovement} points
+- ${completedConsultation} completed one-on-one consultations
+- ${completedDocs} uploaded required documents
+- ${uniqueWorkbookParticipants} engaged with the digital workbook
+- ${completedAll} completed all requirements
 
-Focus on learning outcomes, confidence gains, and readiness improvements. Write 2-3 paragraphs.`;
+Write 3 paragraphs covering: (1) participation & engagement, (2) learning gains & assessment results, (3) practical readiness outcomes. Professional tone for a funder report.`;
       } else if (section === 'equity') {
-        prompt = `Write a compelling equity and capacity-building impact statement for a program serving women entrepreneurs, emphasizing how the program met participants where they were, reduced barriers, and supported sustainable growth. Write 1-2 paragraphs.`;
+        prompt = `Write a compelling equity and capacity-building impact statement for a program serving women entrepreneurs through Columbus Urban League's IncubateHer initiative. Emphasize how the program met participants where they were, reduced barriers to funding access, centered women of color and early-stage entrepreneurs, and supported sustainable growth without shaming financial or operational gaps. Write 2 paragraphs.`;
       }
 
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: prompt,
-        add_context_from_internet: false
-      });
-
-      if (section === 'outcomes') {
-        setReportData({ ...reportData, outcomes_narrative: response });
-      } else if (section === 'equity') {
-        setReportData({ ...reportData, equity_narrative: response });
-      }
-
+      const response = await base44.integrations.Core.InvokeLLM({ prompt });
+      if (section === 'outcomes') setReportData(prev => ({ ...prev, outcomes_narrative: response }));
+      else if (section === 'equity') setReportData(prev => ({ ...prev, equity_narrative: response }));
       toast.success('AI narrative generated');
-    } catch (error) {
+    } catch {
       toast.error('Failed to generate narrative');
     } finally {
       setGeneratingAI(false);
     }
   };
 
+  // ─── PDF Export ────────────────────────────────────────────────────
   const exportToPDF = () => {
     const doc = new jsPDF();
     const margin = 20;
     let y = margin;
 
-    // Title
-    doc.setFontSize(16);
-    doc.setFont(undefined, 'bold');
-    doc.text('IncubateHer Program Report', margin, y);
-    doc.text('Columbus Urban League', margin, y + 8);
-    y += 20;
+    const addPage = () => { doc.addPage(); y = margin; };
+    const checkPage = (needed = 20) => { if (y + needed > 275) addPage(); };
+    const addText = (text, size = 11, bold = false, color = [0,0,0]) => {
+      doc.setFontSize(size);
+      doc.setFont(undefined, bold ? 'bold' : 'normal');
+      doc.setTextColor(...color);
+      const lines = doc.splitTextToSize(text, 170);
+      checkPage(lines.length * (size * 0.4 + 1));
+      doc.text(lines, margin, y);
+      y += lines.length * (size * 0.4 + 1) + 2;
+    };
+    const addSection = (title) => {
+      checkPage(14);
+      doc.setFontSize(13);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(20, 58, 80);
+      doc.text(title, margin, y);
+      y += 8;
+      doc.setDrawColor(20, 58, 80);
+      doc.line(margin, y - 2, 190, y - 2);
+      y += 4;
+    };
 
-    // Section 1: Program Overview
-    doc.setFontSize(14);
+    // Cover
+    doc.setFillColor(20, 58, 80);
+    doc.rect(0, 0, 210, 45, 'F');
+    doc.setFontSize(18);
     doc.setFont(undefined, 'bold');
-    doc.text('1. Program Overview', margin, y);
-    y += 8;
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'bold');
-    doc.text('Program Name:', margin, y);
-    y += 6;
+    doc.setTextColor(255, 255, 255);
+    doc.text('IncubateHer Program Report', margin, 20);
+    doc.setFontSize(12);
     doc.setFont(undefined, 'normal');
-    const nameLines = doc.splitTextToSize(reportData.program_name, 170);
-    doc.text(nameLines, margin, y);
-    y += nameLines.length * 5 + 6;
+    doc.text('Columbus Urban League | Elbert Innovative Solutions', margin, 30);
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, margin, 38);
+    y = 55;
 
-    doc.setFont(undefined, 'bold');
-    doc.text('Program Description:', margin, y);
-    y += 6;
-    doc.setFont(undefined, 'normal');
-    const descLines = doc.splitTextToSize(reportData.program_description, 170);
-    doc.text(descLines, margin, y);
-    y += descLines.length * 5 + 10;
+    // 1. Program Overview
+    addSection('1. Program Overview');
+    addText('Program Name', 11, true);
+    addText(reportData.program_name);
+    y += 3;
+    addText('Program Description', 11, true);
+    addText(reportData.program_description);
 
-    if (y > 250) {
-      doc.addPage();
-      y = margin;
-    }
-
-    // Section 2: Outputs & Deliverables
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.text('2. Outputs & Deliverables', margin, y);
-    y += 10;
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    const outputs = [
-      'Multi-session funding readiness training delivered',
-      'Coverage of both grant and contract pathways',
-      'Pre- and post-assessments completed',
-      'One-on-one consultations provided',
-      'Structured workbook and readiness tools distributed'
+    // 2. Participant Metrics
+    addSection('2. Participant Engagement Metrics');
+    const metrics = [
+      ['Total Participants Enrolled', totalEnrolled],
+      ['Attended At Least One Session', attendedAtLeastOne],
+      ['≥80% Session Attendance Rate', attended80Plus],
+      ['Completed Pre-Assessment', completedPre],
+      ['Completed Post-Assessment', completedPost],
+      ['Completed 1-on-1 Consultation', completedConsultation],
+      ['Uploaded Required Documents', completedDocs],
+      ['Engaged with Digital Workbook', uniqueWorkbookParticipants],
+      ['Completed ALL Requirements', completedAll],
     ];
-    outputs.forEach(output => {
-      doc.text(`• ${output}`, margin + 5, y);
+    metrics.forEach(([label, val]) => {
+      checkPage(7);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`• ${label}: ${val}`, margin + 4, y);
       y += 6;
     });
-    y += 6;
 
-    doc.setFont(undefined, 'bold');
-    doc.text('Participant Engagement Metrics:', margin, y);
-    y += 6;
-    doc.setFont(undefined, 'normal');
-    doc.text(`• Participants enrolled: ${totalEnrolled}`, margin + 5, y);
-    y += 6;
-    doc.text(`• Completed all sessions: ${completedAllSessions}`, margin + 5, y);
-    y += 6;
-    doc.text(`• Completed consultations: ${completedConsultations}`, margin + 5, y);
-    y += 6;
-    doc.text(`• Completed all requirements: ${completedAllRequirements}`, margin + 5, y);
-    y += 10;
+    // 3. Session Attendance
+    addSection('3. Session-by-Session Attendance');
+    sessionStats.forEach((s, i) => {
+      checkPage(8);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Day ${i + 1}: ${s.session_title}`, margin + 4, y);
+      y += 5;
+      doc.setFont(undefined, 'normal');
+      doc.text(`   Date: ${new Date(s.session_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`, margin + 4, y);
+      y += 5;
+      doc.text(`   Live Attendance: ${s.liveCount}  |  Watched Recording: ${s.recordingCount}  |  Total: ${s.liveCount + s.recordingCount} of ${totalEnrolled}`, margin + 4, y);
+      y += 7;
+    });
 
-    if (y > 250) {
-      doc.addPage();
-      y = margin;
-    }
-
-    // Section 3: Outcomes
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.text('3. Outcomes', margin, y);
-    y += 10;
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'bold');
-    doc.text('Measured Learning Outcomes:', margin, y);
-    y += 6;
-    doc.setFont(undefined, 'normal');
-    doc.text(`• Pre-assessment average: ${avgPreScore}/100`, margin + 5, y);
-    y += 6;
-    doc.text(`• Post-assessment average: ${avgPostScore}/100`, margin + 5, y);
-    y += 6;
-    doc.text(`• Average improvement: +${avgImprovement} points`, margin + 5, y);
-    y += 6;
-    doc.text(`• Participants with complete data: ${preAssessments.length}`, margin + 5, y);
-    y += 10;
-
+    // 4. Assessment Results
+    addSection('4. Assessment Results');
+    const aMetrics = [
+      [`Pre-Assessment Average (n=${preAssessments.length})`, `${avgPreScore}/100`],
+      [`Post-Assessment Average (n=${postAssessments.length})`, `${avgPostScore}/100`],
+      ['Average Score Improvement', `+${avgImprovement} points`],
+    ];
+    aMetrics.forEach(([label, val]) => {
+      checkPage(7);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`• ${label}: ${val}`, margin + 4, y);
+      y += 6;
+    });
     if (reportData.outcomes_narrative) {
-      const outcomeLines = doc.splitTextToSize(reportData.outcomes_narrative, 170);
-      doc.text(outcomeLines, margin, y);
-      y += outcomeLines.length * 5 + 10;
+      y += 4;
+      addText('Outcomes Narrative', 11, true);
+      addText(reportData.outcomes_narrative);
     }
 
-    if (y > 250) {
-      doc.addPage();
-      y = margin;
-    }
+    // 5. Equity
+    addSection('5. Equity & Capacity-Building Impact');
+    addText(reportData.equity_narrative);
 
-    // Section 4: Equity
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.text('4. Equity & Capacity-Building Impact', margin, y);
-    y += 10;
+    // 6. Compliance
+    addSection('6. Compliance & Scope Statement');
+    addText(reportData.compliance_statement);
 
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    const equityLines = doc.splitTextToSize(reportData.equity_narrative, 170);
-    doc.text(equityLines, margin, y);
-    y += equityLines.length * 5 + 10;
+    // 7. Incentive
+    addSection('7. Completion Incentive');
+    addText(reportData.incentive_language);
 
-    if (y > 250) {
-      doc.addPage();
-      y = margin;
-    }
+    // 8. Individual Participant Detail
+    addSection('8. Individual Participant Summary');
+    participantRows.forEach((p, i) => {
+      checkPage(18);
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`${i + 1}. ${p.name} — ${p.org}`, margin + 2, y);
+      y += 5;
+      doc.setFont(undefined, 'normal');
+      const detail = `   Attendance: ${p.attendanceRate}%  |  Pre: ${p.pre}  Post: ${p.post}  Gain: ${typeof p.gain === 'number' ? '+' + p.gain : p.gain}  |  Consultation: ${p.consultation ? 'Yes' : 'No'}  |  Docs: ${p.docs ? 'Yes' : 'No'}  |  Workbook: ${p.workbook ? 'Yes' : 'No'}`;
+      doc.text(detail, margin + 2, y);
+      y += 7;
+    });
 
-    // Section 5: Compliance
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.text('5. Compliance & Scope Statement', margin, y);
-    y += 10;
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    const complianceLines = doc.splitTextToSize(reportData.compliance_statement, 170);
-    doc.text(complianceLines, margin, y);
-    y += complianceLines.length * 5 + 10;
-
-    if (y > 250) {
-      doc.addPage();
-      y = margin;
-    }
-
-    // Section 6: Incentive
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.text('6. Completion Incentive', margin, y);
-    y += 10;
-
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    const incentiveLines = doc.splitTextToSize(reportData.incentive_language, 170);
-    doc.text(incentiveLines, margin, y);
-
-    // Save PDF
-    doc.save(`IncubateHer-Report-${new Date().toISOString().split('T')[0]}.pdf`);
-    toast.success('Report exported to PDF');
+    doc.save(`IncubateHer-CUL-Report-${new Date().toISOString().split('T')[0]}.pdf`);
+    toast.success('Comprehensive report exported to PDF');
   };
 
-  const exportToText = () => {
-    const report = `
-INCUBATEHER PROGRAM REPORT
-Columbus Urban League
-Generated: ${new Date().toLocaleDateString()}
-
-═══════════════════════════════════════════════════════════
-
-1️⃣ PROGRAM OVERVIEW
-
-Program Name:
-${reportData.program_name}
-
-Program Description:
-${reportData.program_description}
-
-═══════════════════════════════════════════════════════════
-
-2️⃣ OUTPUTS & DELIVERABLES
-
-Program Outputs:
-• Multi-session funding readiness training delivered
-• Coverage of both grant and contract pathways, including RFP orientation
-• Pre- and post-assessments completed
-• One-on-one consultations provided
-• Structured workbook and readiness tools distributed
-
-Participant Engagement Metrics:
-• Participants enrolled: ${totalEnrolled}
-• Completed all sessions: ${completedAllSessions}
-• Completed consultations: ${completedConsultations}
-• Completed all requirements: ${completedAllRequirements}
-
-═══════════════════════════════════════════════════════════
-
-3️⃣ OUTCOMES
-
-Measured Learning Outcomes:
-• Pre-assessment average: ${avgPreScore}/100
-• Post-assessment average: ${avgPostScore}/100
-• Average improvement: +${avgImprovement} points
-• Participants with complete data: ${preAssessments.length}
-
-${reportData.outcomes_narrative || 'Participants demonstrated measurable growth in funding readiness knowledge and confidence.'}
-
-═══════════════════════════════════════════════════════════
-
-4️⃣ EQUITY & CAPACITY-BUILDING IMPACT
-
-${reportData.equity_narrative}
-
-═══════════════════════════════════════════════════════════
-
-5️⃣ COMPLIANCE & SCOPE STATEMENT
-
-${reportData.compliance_statement}
-
-═══════════════════════════════════════════════════════════
-
-6️⃣ COMPLETION INCENTIVE
-
-${reportData.incentive_language}
-
-═══════════════════════════════════════════════════════════
-
-CHECKLIST FOR CUL SUBMISSION:
-✔ Program description
-✔ Curriculum summary
-✔ Attendance summary
-✔ Pre/Post assessment results
-✔ Completion metrics
-✔ Equity-centered narrative
-✔ Scope & compliance statement
-`;
-
-    const blob = new Blob([report], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `IncubateHer-Report-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast.success('Report exported to text file');
-  };
+  const isLoading = !enrollments.length && !sessions.length;
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">IncubateHer Program Report</h1>
-            <p className="text-slate-600 mt-1">Generate CUL submission report with auto-filled metrics</p>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={exportToText} variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Export Text
-            </Button>
-            <Button onClick={exportToPDF} className="bg-[#143A50]">
-              <Download className="w-4 h-4 mr-2" />
-              Export PDF
-            </Button>
-          </div>
+      {/* Header */}
+      <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">IncubateHer Program Report</h1>
+          <p className="text-slate-600 mt-1">Comprehensive CUL submission report — all data pulled live</p>
         </div>
+        <Button onClick={exportToPDF} className="bg-[#143A50]">
+          <Download className="w-4 h-4 mr-2" />
+          Export Full PDF Report
+        </Button>
       </div>
 
-      {/* Metrics Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-slate-600 mb-1">Total Enrolled</p>
-            <p className="text-3xl font-bold text-slate-900">{totalEnrolled}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-slate-600 mb-1">Completed All</p>
-            <p className="text-3xl font-bold text-green-600">{completedAllRequirements}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-slate-600 mb-1">Avg Pre-Score</p>
-            <p className="text-3xl font-bold text-slate-900">{avgPreScore}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-slate-600 mb-1">Avg Improvement</p>
-            <p className="text-3xl font-bold text-[#AC1A5B]">+{avgImprovement}</p>
-          </CardContent>
-        </Card>
+      {/* Top Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: 'Total Enrolled', value: totalEnrolled, icon: Users, color: 'text-[#143A50]' },
+          { label: 'Completed All Req.', value: completedAll, icon: CheckCircle2, color: 'text-green-600' },
+          { label: 'Pre→Post Gain', value: `+${avgImprovement}`, icon: TrendingUp, color: 'text-[#AC1A5B]' },
+          { label: '≥80% Attendance', value: attended80Plus, icon: Calendar, color: 'text-blue-600' },
+        ].map(m => (
+          <Card key={m.label}>
+            <CardContent className="pt-5 flex items-center gap-3">
+              <m.icon className={`w-8 h-8 ${m.color}`} />
+              <div>
+                <p className="text-2xl font-bold">{m.value}</p>
+                <p className="text-xs text-slate-500">{m.label}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      <Tabs defaultValue="participant_overview" className="space-y-6">
+      <Tabs defaultValue="summary" className="space-y-6">
         <TabsList className="flex w-full overflow-x-auto h-auto flex-wrap gap-1 justify-start bg-muted p-1">
-          <TabsTrigger value="participant_overview" className="whitespace-nowrap">Participant Overview</TabsTrigger>
-          <TabsTrigger value="registration_insights" className="whitespace-nowrap">Registration Insights</TabsTrigger>
-          <TabsTrigger value="section1" className="whitespace-nowrap">Program Overview</TabsTrigger>
-          <TabsTrigger value="section2" className="whitespace-nowrap">Outputs</TabsTrigger>
-          <TabsTrigger value="section3" className="whitespace-nowrap">Outcomes</TabsTrigger>
-          <TabsTrigger value="section4" className="whitespace-nowrap">Equity</TabsTrigger>
-          <TabsTrigger value="section5" className="whitespace-nowrap">Compliance</TabsTrigger>
-          <TabsTrigger value="section6" className="whitespace-nowrap">Incentive</TabsTrigger>
+          <TabsTrigger value="summary">📊 Data Summary</TabsTrigger>
+          <TabsTrigger value="attendance">📅 Attendance</TabsTrigger>
+          <TabsTrigger value="participants">👥 Participants</TabsTrigger>
+          <TabsTrigger value="assessments">📋 Assessments</TabsTrigger>
+          <TabsTrigger value="participant_overview">🔍 Reg. Insights</TabsTrigger>
+          <TabsTrigger value="registration_insights">📌 Brief</TabsTrigger>
+          <TabsTrigger value="narrative">✍️ Narratives</TabsTrigger>
         </TabsList>
 
-        {/* Participant Overview Tab */}
+        {/* DATA SUMMARY */}
+        <TabsContent value="summary">
+          <div className="space-y-6">
+            {/* Completion Funnel */}
+            <Card>
+              <CardHeader><CardTitle className="flex items-center gap-2"><BarChart3 className="w-5 h-5 text-[#143A50]" /> Program Completion Funnel</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { label: 'Enrolled', count: totalEnrolled, color: 'bg-slate-600' },
+                  { label: 'Attended ≥1 Session', count: attendedAtLeastOne, color: 'bg-blue-500' },
+                  { label: 'Completed Pre-Assessment', count: completedPre, color: 'bg-amber-500' },
+                  { label: 'Completed Consultation', count: completedConsultation, color: 'bg-[#1E4F58]' },
+                  { label: 'Uploaded Documents', count: completedDocs, color: 'bg-purple-500' },
+                  { label: 'Completed Post-Assessment', count: completedPost, color: 'bg-green-500' },
+                  { label: 'Completed ALL Requirements', count: completedAll, color: 'bg-[#AC1A5B]' },
+                ].map(item => (
+                  <div key={item.label} className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-700">{item.label}</span>
+                      <span className="font-semibold">{item.count} / {totalEnrolled} ({totalEnrolled > 0 ? Math.round(item.count / totalEnrolled * 100) : 0}%)</span>
+                    </div>
+                    <Progress value={totalEnrolled > 0 ? (item.count / totalEnrolled) * 100 : 0} className="h-2" />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Org Types */}
+            {Object.keys(orgTypeCounts).length > 0 && (
+              <Card>
+                <CardHeader><CardTitle>Organization Types</CardTitle></CardHeader>
+                <CardContent className="flex flex-wrap gap-2">
+                  {Object.entries(orgTypeCounts).map(([type, count]) => (
+                    <Badge key={type} className="bg-[#143A50] text-white text-sm px-3 py-1">{type}: {count}</Badge>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Assessment Summary */}
+            <Card>
+              <CardHeader><CardTitle>Assessment Results Summary</CardTitle></CardHeader>
+              <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { label: 'Pre-Assessment Avg', value: `${avgPreScore}/100`, sub: `n=${preAssessments.length}` },
+                  { label: 'Post-Assessment Avg', value: `${avgPostScore}/100`, sub: `n=${postAssessments.length}` },
+                  { label: 'Avg Score Gain', value: `+${avgImprovement} pts`, sub: 'pre→post' },
+                  { label: 'Workbook Engaged', value: uniqueWorkbookParticipants, sub: 'participants' },
+                ].map(m => (
+                  <div key={m.label} className="text-center p-4 bg-slate-50 rounded-lg">
+                    <p className="text-2xl font-bold text-[#143A50]">{m.value}</p>
+                    <p className="text-sm text-slate-600">{m.label}</p>
+                    <p className="text-xs text-slate-400">{m.sub}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* ATTENDANCE TAB */}
+        <TabsContent value="attendance">
+          <div className="space-y-4">
+            <Card>
+              <CardHeader><CardTitle className="flex items-center gap-2"><Calendar className="w-5 h-5 text-[#143A50]" /> Session Attendance Breakdown</CardTitle></CardHeader>
+              <CardContent>
+                {sessions.length === 0 ? (
+                  <p className="text-slate-500 text-center py-8">No sessions found.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {sessionStats.map((s, i) => {
+                      const total = s.liveCount + s.recordingCount;
+                      const pct = totalEnrolled > 0 ? Math.round(total / totalEnrolled * 100) : 0;
+                      return (
+                        <div key={s.id} className="p-4 border rounded-lg">
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <div>
+                              <p className="font-semibold text-slate-900">Day {i + 1}: {s.session_title}</p>
+                              <p className="text-sm text-slate-500">
+                                {new Date(s.session_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                              </p>
+                            </div>
+                            <Badge className={pct >= 70 ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}>
+                              {pct}% total
+                            </Badge>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 text-sm mt-3">
+                            <div className="text-center p-2 bg-green-50 rounded">
+                              <p className="text-xl font-bold text-green-700">{s.liveCount}</p>
+                              <p className="text-xs text-slate-600">Attended Live</p>
+                            </div>
+                            <div className="text-center p-2 bg-blue-50 rounded">
+                              <p className="text-xl font-bold text-blue-700">{s.recordingCount}</p>
+                              <p className="text-xs text-slate-600">Watched Recording</p>
+                            </div>
+                            <div className="text-center p-2 bg-slate-50 rounded">
+                              <p className="text-xl font-bold text-slate-500">{totalEnrolled - total}</p>
+                              <p className="text-xs text-slate-600">Absent</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Attendance Distribution */}
+            <Card>
+              <CardHeader><CardTitle>Attendance Rate Distribution</CardTitle></CardHeader>
+              <CardContent>
+                {[
+                  { label: '100% (All sessions)', count: participants.filter(e => getAttendanceRate(e.id) === 100).length, color: 'bg-green-600' },
+                  { label: '80–99%', count: participants.filter(e => { const r = getAttendanceRate(e.id); return r >= 80 && r < 100; }).length, color: 'bg-green-400' },
+                  { label: '60–79%', count: participants.filter(e => { const r = getAttendanceRate(e.id); return r >= 60 && r < 80; }).length, color: 'bg-amber-400' },
+                  { label: '1–59%', count: participants.filter(e => { const r = getAttendanceRate(e.id); return r > 0 && r < 60; }).length, color: 'bg-orange-400' },
+                  { label: '0% (No attendance)', count: participants.filter(e => getAttendanceRate(e.id) === 0).length, color: 'bg-red-400' },
+                ].map(row => (
+                  <div key={row.label} className="flex items-center gap-3 mb-2 text-sm">
+                    <div className="w-36 shrink-0 text-slate-700">{row.label}</div>
+                    <div className="flex-1 bg-slate-100 rounded-full h-5 overflow-hidden">
+                      <div className={`${row.color} h-5 rounded-full transition-all`} style={{ width: totalEnrolled > 0 ? `${(row.count / totalEnrolled) * 100}%` : '0%' }} />
+                    </div>
+                    <div className="w-8 text-right font-semibold">{row.count}</div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* PARTICIPANTS TABLE */}
+        <TabsContent value="participants">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#143A50]" />
+                Individual Participant Data ({participantRows.length})
+              </CardTitle>
+              <p className="text-sm text-slate-500">All completion data pulled live from the database</p>
+            </CardHeader>
+            <CardContent className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-slate-50">
+                    <th className="text-left p-2 font-semibold">Name / Org</th>
+                    <th className="text-center p-2 font-semibold text-xs">Attend %</th>
+                    <th className="text-center p-2 font-semibold text-xs">Pre</th>
+                    <th className="text-center p-2 font-semibold text-xs">Post</th>
+                    <th className="text-center p-2 font-semibold text-xs">Gain</th>
+                    <th className="text-center p-2 font-semibold text-xs">Consult</th>
+                    <th className="text-center p-2 font-semibold text-xs">Docs</th>
+                    <th className="text-center p-2 font-semibold text-xs">Workbook</th>
+                    <th className="text-center p-2 font-semibold text-xs">Done</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {participantRows.map((p, i) => (
+                    <tr key={i} className={`border-b hover:bg-slate-50 ${p.allComplete ? 'bg-green-50' : ''}`}>
+                      <td className="p-2">
+                        <p className="font-medium">{p.name}</p>
+                        <p className="text-xs text-slate-400">{p.org}</p>
+                      </td>
+                      <td className="text-center p-2">
+                        <Badge className={p.attendanceRate >= 80 ? 'bg-green-100 text-green-800' : p.attendanceRate >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}>
+                          {p.attendanceRate}%
+                        </Badge>
+                      </td>
+                      <td className="text-center p-2 font-mono">{p.pre}</td>
+                      <td className="text-center p-2 font-mono">{p.post}</td>
+                      <td className="text-center p-2 font-mono font-bold text-green-700">
+                        {typeof p.gain === 'number' ? `+${p.gain}` : '—'}
+                      </td>
+                      <td className="text-center p-2">{p.consultation ? '✅' : '⬜'}</td>
+                      <td className="text-center p-2">{p.docs ? '✅' : '⬜'}</td>
+                      <td className="text-center p-2">{p.workbook ? '✅' : '⬜'}</td>
+                      <td className="text-center p-2">{p.allComplete ? '🏆' : '⬜'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {participantRows.length === 0 && (
+                <p className="text-center py-8 text-slate-500">No participant data available yet.</p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ASSESSMENTS */}
+        <TabsContent value="assessments">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader><CardTitle>Pre vs. Post Assessment Overview</CardTitle></CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-6 text-center mb-6">
+                  <div className="p-4 bg-slate-50 rounded-lg">
+                    <p className="text-3xl font-bold text-slate-700">{avgPreScore}</p>
+                    <p className="text-sm text-slate-500">Avg Pre-Score</p>
+                    <p className="text-xs text-slate-400">n={preAssessments.length}</p>
+                  </div>
+                  <div className="p-4 bg-[#AC1A5B]/10 rounded-lg">
+                    <p className="text-3xl font-bold text-[#AC1A5B]">+{avgImprovement}</p>
+                    <p className="text-sm text-slate-500">Avg Gain</p>
+                  </div>
+                  <div className="p-4 bg-green-50 rounded-lg">
+                    <p className="text-3xl font-bold text-green-700">{avgPostScore}</p>
+                    <p className="text-sm text-slate-500">Avg Post-Score</p>
+                    <p className="text-xs text-slate-400">n={postAssessments.length}</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {participantRows.filter(p => p.pre !== '—' || p.post !== '—').map((p, i) => (
+                    <div key={i} className="flex items-center gap-3 text-sm p-2 border rounded">
+                      <div className="w-40 shrink-0">
+                        <p className="font-medium truncate">{p.name}</p>
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <Badge variant="outline">Pre: {p.pre}</Badge>
+                        {p.post !== '—' && <Badge className="bg-green-100 text-green-800">Post: {p.post}</Badge>}
+                        {typeof p.gain === 'number' && (
+                          <Badge className={p.gain >= 0 ? 'bg-[#AC1A5B] text-white' : 'bg-red-100 text-red-800'}>
+                            {p.gain >= 0 ? '+' : ''}{p.gain}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Participant Overview (AI Synthesis) */}
         <TabsContent value="participant_overview">
-          <ParticipantOverviewReport enrollments={enrollments || []} />
+          <ParticipantOverviewReport enrollments={participants} />
         </TabsContent>
 
         {/* Registration Insights Brief */}
@@ -436,207 +615,69 @@ CHECKLIST FOR CUL SUBMISSION:
           <RegistrationInsightsBrief />
         </TabsContent>
 
-        {/* Section 1: Overview */}
-        <TabsContent value="section1">
-          <Card>
-            <CardHeader>
-              <CardTitle>1️⃣ Program Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label>Program Name</Label>
-                <Input
-                  value={reportData.program_name}
-                  onChange={(e) => setReportData({ ...reportData, program_name: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Program Description</Label>
-                <Textarea
-                  rows={10}
-                  value={reportData.program_description}
-                  onChange={(e) => setReportData({ ...reportData, program_description: e.target.value })}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Section 2: Outputs */}
-        <TabsContent value="section2">
-          <Card>
-            <CardHeader>
-              <CardTitle>2️⃣ Outputs & Deliverables</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h3 className="font-semibold mb-3">Program Outputs (Auto-Generated)</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Multi-session funding readiness training delivered</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Coverage of both grant and contract pathways</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Pre- and post-assessments completed</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>One-on-one consultations provided</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span>Structured workbook and readiness tools distributed</span>
-                  </div>
+        {/* NARRATIVES */}
+        <TabsContent value="narrative">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader><CardTitle>Program Overview Text</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Program Name</Label>
+                  <Input value={reportData.program_name} onChange={e => setReportData(p => ({ ...p, program_name: e.target.value }))} />
                 </div>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-3">Participant Engagement Metrics</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-slate-600">Participants enrolled</p>
-                    <p className="text-2xl font-bold text-slate-900">{totalEnrolled}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Completed all sessions</p>
-                    <p className="text-2xl font-bold text-slate-900">{completedAllSessions}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Completed consultations</p>
-                    <p className="text-2xl font-bold text-slate-900">{completedConsultations}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Completed all requirements</p>
-                    <p className="text-2xl font-bold text-green-600">{completedAllRequirements}</p>
-                  </div>
+                <div>
+                  <Label>Program Description</Label>
+                  <Textarea rows={8} value={reportData.program_description} onChange={e => setReportData(p => ({ ...p, program_description: e.target.value }))} />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
 
-        {/* Section 3: Outcomes */}
-        <TabsContent value="section3">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>3️⃣ Outcomes</CardTitle>
-                <Button
-                  onClick={() => generateAINarrative('outcomes')}
-                  disabled={generatingAI}
-                  size="sm"
-                  className="bg-[#AC1A5B]"
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Generate AI Narrative
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <h3 className="font-semibold mb-3">Measured Learning Outcomes</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-slate-600">Pre-assessment average</p>
-                    <p className="text-2xl font-bold text-slate-900">{avgPreScore}/100</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Post-assessment average</p>
-                    <p className="text-2xl font-bold text-green-600">{avgPostScore}/100</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Average improvement</p>
-                    <p className="text-2xl font-bold text-[#AC1A5B]">+{avgImprovement} points</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">Complete data sets</p>
-                    <p className="text-2xl font-bold text-slate-900">{preAssessments.length}</p>
-                  </div>
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Outcomes Narrative</CardTitle>
+                  <Button size="sm" className="bg-[#AC1A5B]" onClick={() => generateAINarrative('outcomes')} disabled={generatingAI}>
+                    {generatingAI ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Generating...</> : <><Sparkles className="w-4 h-4 mr-2" /> AI Generate</>}
+                  </Button>
                 </div>
-              </div>
+              </CardHeader>
+              <CardContent>
+                <Textarea rows={8} placeholder="Describe learning outcomes, assessment gains, and participant growth..." value={reportData.outcomes_narrative} onChange={e => setReportData(p => ({ ...p, outcomes_narrative: e.target.value }))} />
+              </CardContent>
+            </Card>
 
-              <div>
-                <Label>Outcomes Narrative (Optional - Expand on metrics above)</Label>
-                <Textarea
-                  rows={8}
-                  placeholder="Add additional context about learning outcomes, confidence gains, and readiness improvements..."
-                  value={reportData.outcomes_narrative || ''}
-                  onChange={(e) => setReportData({ ...reportData, outcomes_narrative: e.target.value })}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Equity & Capacity-Building Impact</CardTitle>
+                  <Button size="sm" variant="outline" onClick={() => generateAINarrative('equity')} disabled={generatingAI}>
+                    <Sparkles className="w-4 h-4 mr-2" /> AI Generate
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Textarea rows={6} value={reportData.equity_narrative} onChange={e => setReportData(p => ({ ...p, equity_narrative: e.target.value }))} />
+              </CardContent>
+            </Card>
 
-        {/* Section 4: Equity */}
-        <TabsContent value="section4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>4️⃣ Equity & Capacity-Building Impact</CardTitle>
-                <Button
-                  onClick={() => generateAINarrative('equity')}
-                  disabled={generatingAI}
-                  size="sm"
-                  className="bg-[#AC1A5B]"
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Generate AI Narrative
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                rows={8}
-                value={reportData.equity_narrative}
-                onChange={(e) => setReportData({ ...reportData, equity_narrative: e.target.value })}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
+            <Card>
+              <CardHeader><CardTitle>Compliance & Scope Statement</CardTitle></CardHeader>
+              <CardContent>
+                <Textarea rows={5} value={reportData.compliance_statement} onChange={e => setReportData(p => ({ ...p, compliance_statement: e.target.value }))} />
+              </CardContent>
+            </Card>
 
-        {/* Section 5: Compliance */}
-        <TabsContent value="section5">
-          <Card>
-            <CardHeader>
-              <CardTitle>5️⃣ Compliance & Scope Statement</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                rows={6}
-                value={reportData.compliance_statement}
-                onChange={(e) => setReportData({ ...reportData, compliance_statement: e.target.value })}
-              />
-              <p className="text-xs text-slate-500 mt-2">
-                This statement clarifies what was and was NOT included in the funded program scope.
-              </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Section 6: Incentive */}
-        <TabsContent value="section6">
-          <Card>
-            <CardHeader>
-              <CardTitle>6️⃣ Completion Incentive Language</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea
-                rows={5}
-                value={reportData.incentive_language}
-                onChange={(e) => setReportData({ ...reportData, incentive_language: e.target.value })}
-              />
-            </CardContent>
-          </Card>
+            <Card>
+              <CardHeader><CardTitle>Completion Incentive Language</CardTitle></CardHeader>
+              <CardContent>
+                <Textarea rows={4} value={reportData.incentive_language} onChange={e => setReportData(p => ({ ...p, incentive_language: e.target.value }))} />
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
 
-      {/* Submission Checklist */}
+      {/* CUL Submission Checklist */}
       <Card className="mt-6 border-green-200 bg-green-50">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -646,34 +687,23 @@ CHECKLIST FOR CUL SUBMISSION:
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Program description</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Agenda/curriculum summary</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Attendance summary</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Pre/Post assessment results</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Completion metrics</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Equity-centered narrative</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-green-600">✓</Badge>
-              <span>Scope & compliance statement</span>
-            </div>
+            {[
+              'Program description & overview',
+              'Agenda/curriculum summary',
+              'Session-by-session attendance',
+              'Attendance rate distribution',
+              'Pre/Post assessment results',
+              'Individual participant data',
+              'Completion metrics funnel',
+              'Outcomes narrative',
+              'Equity-centered narrative',
+              'Scope & compliance statement',
+            ].map(item => (
+              <div key={item} className="flex items-center gap-2">
+                <Badge className="bg-green-600">✓</Badge>
+                <span>{item}</span>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
