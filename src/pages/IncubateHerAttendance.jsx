@@ -412,7 +412,9 @@ function AdminAttendanceView() {
                       <div>{new Date(s.session_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
                     </th>
                   ))}
-                  <th className="text-center p-3 font-semibold">Rate</th>
+                  <th className="text-center p-3 font-semibold text-xs">Live</th>
+                  <th className="text-center p-3 font-semibold text-xs">Recording</th>
+                  <th className="text-center p-3 font-semibold">Completion</th>
                 </tr>
               </thead>
               <tbody>
