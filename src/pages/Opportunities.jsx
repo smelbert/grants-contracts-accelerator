@@ -519,7 +519,7 @@ export default function OpportunitiesPage() {
         </div>
 
         {/* Search & Filters */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6">
+        <div data-tour="opp-filters" className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -616,6 +616,9 @@ export default function OpportunitiesPage() {
           onSubmit={(reason, desc) => reportMutation.mutate({ opportunityId: reportingOpp.id, reason, description: desc })}
         />
       )}
+
+      {/* Onboarding Tour */}
+      <OpportunitiesTour autoStart={true} />
 
       {/* Quick paste */}
       <QuickPasteOpportunity
