@@ -750,10 +750,11 @@ Return ONLY valid JSON, no additional text.`,
       {/* Handout Dialog */}
       <HandoutDialog
         open={handoutDialog}
-        onClose={() => setHandoutDialog(false)}
+        onClose={() => { setHandoutDialog(false); setEditingHandout(null); setEditingHandoutIdx(null); }}
         onSave={addHandout}
         onFileUpload={handleFileUpload}
         uploadingFile={uploadingFile}
+        existingHandout={editingHandout}
       />
 
       {/* Tip Dialog */}
