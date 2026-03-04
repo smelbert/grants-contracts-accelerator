@@ -1209,12 +1209,20 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile, exi
   );
 }
 
-function TipDialog({ open, onClose, onSave }) {
+function TipDialog({ open, onClose, onSave, existingTip }) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     category: 'best_practice'
   });
+
+  useEffect(() => {
+    if (open && existingTip) {
+      setFormData({ ...existingTip });
+    } else if (!open) {
+      setFormData({ title: '', content: '', category: 'best_practice' });
+    }
+  }, [open, existingTip]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
