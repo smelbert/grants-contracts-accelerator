@@ -29,6 +29,62 @@ Deno.serve(async (req) => {
         `;
         break;
 
+      case 'inactive_login_reminder':
+        emailSubject = 'We Miss You – Check In on Your IncubateHer Progress';
+        emailBody = `
+          <h2>Hi ${participantName},</h2>
+          <p>We noticed it's been a while since you've logged into your IncubateHer program dashboard. Don't let your momentum slip — you've got important components waiting for you!</p>
+
+          <h3>Things to check on:</h3>
+          <ul>
+            <li>Complete any pending assessments</li>
+            <li>Review your learning content and workbook</li>
+            <li>Upload required documents</li>
+            <li>Book or prepare for your consultation</li>
+          </ul>
+
+          <p><a href="${Deno.env.get('BASE44_APP_URL')}/IncubateHerOverview" style="background:#143A50;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:10px;">Return to My Dashboard</a></p>
+
+          <p style="margin-top:16px;">Questions or need help? Reach out to us at support@elbertinnovativesolutions.org</p>
+          <p><em>— The IncubateHer Team</em></p>
+        `;
+        break;
+
+      case 'learning_not_started':
+        emailSubject = 'Your IncubateHer Learning Content Is Ready';
+        emailBody = `
+          <h2>Hi ${participantName},</h2>
+          <p>Your IncubateHer Learning Hub is ready and waiting — but it looks like you haven't started the course content yet.</p>
+
+          <p>The learning modules are a core part of the program and cover grants, contracts, financial readiness, and more. They're self-paced, so you can go at your own speed.</p>
+
+          <h3>Ready to start?</h3>
+          <ul>
+            <li>Access the learning hub from your dashboard</li>
+            <li>Begin with Day 1: Structure & Eligibility Documents</li>
+            <li>Work through at your own pace before the live sessions</li>
+          </ul>
+
+          <p><a href="${Deno.env.get('BASE44_APP_URL')}/IncubateHerLearning" style="background:#143A50;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:10px;">Start Learning Now</a></p>
+
+          <p style="margin-top:16px;"><em>— The IncubateHer Team</em></p>
+        `;
+        break;
+
+      case 'workbook_not_started':
+        emailSubject = 'Reminder: Your IncubateHer Workbook Is Waiting';
+        emailBody = `
+          <h2>Hi ${participantName},</h2>
+          <p>Your IncubateHer Workbook is an important part of the program — and it looks like you haven't started it yet.</p>
+
+          <p>The workbook helps you apply what you're learning directly to your organization. It includes exercises, reflection prompts, and action planning tools.</p>
+
+          <p><a href="${Deno.env.get('BASE44_APP_URL')}/IncubateHerWorkbook" style="background:#143A50;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:10px;">Open My Workbook</a></p>
+
+          <p style="margin-top:16px;"><em>— The IncubateHer Team</em></p>
+        `;
+        break;
+
       case 'pre_assessment_reminder':
         emailSubject = 'Reminder: Complete Your Pre-Assessment';
         emailBody = `
