@@ -556,7 +556,7 @@ export default function IncubateHerCourse() {
                     } else if (vUrl.includes('/embed/')) {
                       vid = vUrl.split('/embed/')[1]?.split(/[?&]/)[0];
                     }
-                    if (vid) embedSrc = `https://www.youtube.com/embed/${vid}?rel=0`;
+                    if (vid) embedSrc = `https://www.youtube-nocookie.com/embed/${vid}?rel=0`;
                   } else if (isVimeo) {
                     const vid = vUrl.split('vimeo.com/')[1]?.split('?')[0];
                     if (vid) embedSrc = `https://player.vimeo.com/video/${vid}`;
