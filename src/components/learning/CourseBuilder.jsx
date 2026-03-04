@@ -1080,7 +1080,7 @@ function SectionDialog({ open, onClose, section, onSave, onFileUpload, uploading
   );
 }
 
-function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile }) {
+function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile, existingHandout }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -1091,10 +1091,12 @@ function HandoutDialog({ open, onClose, onSave, onFileUpload, uploadingFile }) {
   });
 
   useEffect(() => {
-    if (!open) {
+    if (open && existingHandout) {
+      setFormData({ ...existingHandout });
+    } else if (!open) {
       setFormData({ title: '', description: '', source_type: 'file_url', file_url: '', file_type: '', html_content: '' });
     }
-  }, [open]);
+  }, [open, existingHandout]);
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0];
