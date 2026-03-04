@@ -390,6 +390,19 @@ Return ONLY valid JSON, no additional text.`,
             )}
 
             <div className="col-span-2 space-y-3">
+              <label className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                <input
+                  type="checkbox"
+                  checked={courseData.is_published === true}
+                  onChange={(e) => setCourseData({ ...courseData, is_published: e.target.checked })}
+                  className="rounded"
+                />
+                <div>
+                  <span className="text-sm font-medium text-slate-900 block">✅ Published (visible to users)</span>
+                  <span className="text-xs text-slate-600">Must be checked for non-IncubateHer content to appear in the Learning Hub</span>
+                </div>
+              </label>
+
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
