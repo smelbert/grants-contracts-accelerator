@@ -1278,7 +1278,7 @@ function TipDialog({ open, onClose, onSave, existingTip }) {
               Cancel
             </Button>
             <Button type="submit" className="bg-blue-600">
-              Add Tip
+              {existingTip ? 'Update Tip' : 'Add Tip'}
             </Button>
           </div>
         </form>
