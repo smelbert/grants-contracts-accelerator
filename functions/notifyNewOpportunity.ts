@@ -5,14 +5,17 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const payload = await req.json();
         
-        const { opportunity_id } = payload;
-        
+        // Support both entity automation payload ({ event, data }) and direct calls ({ opportunity_id })
+        const opportunity_id = payload.opportunity_id || payload.event?.entity_id;
+        const opportunityData = payload.data || null;
+
         if (!opportunity_id) {
+            console.error('Missing opportunity_id. Payload received:', JSON.stringify(payload));
             return Response.json({ error: 'Missing opportunity_id' }, { status: 400 });
         }
 
-        // Fetch the opportunity details using service role
-        const opportunity = await base44.asServiceRole.entities.FundingOpportunity.get(opportunity_id);
+        // Use entity data from automation payload if available, otherwise fetch it
+        const opportunity = opportunityData || await base44.asServiceRole.entities.FundingOpportunity.get(opportunity_id);
         
         if (!opportunity) {
             return Response.json({ error: 'Opportunity not found' }, { status: 404 });
