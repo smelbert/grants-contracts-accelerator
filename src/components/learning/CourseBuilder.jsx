@@ -93,7 +93,7 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   const addHandout = (handoutData) => {
     setCourseData({
       ...courseData,
-      handouts: [...courseData.handouts, handoutData]
+      handouts: [...(courseData.handouts || []), handoutData]
     });
     setHandoutDialog(false);
   };
@@ -101,9 +101,65 @@ export default function CourseBuilder({ course, onSave, onCancel }) {
   const addTip = (tipData) => {
     setCourseData({
       ...courseData,
-      tips: [...courseData.tips, tipData]
+      tips: [...(courseData.tips || []), tipData]
     });
     setTipDialog(false);
+  };
+
+  const generateHandoutsWithAI = async () => {
+    const topic = courseData.title || 'this course topic';
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `You are an expert instructional designer. Generate 3 practical handout resources for a course titled "${topic}". Each handout should be a self-contained reference guide written in clean HTML. Focus on actionable checklists, templates, or reference sheets that learners can use immediately.`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          handouts: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                description: { type: 'string' },
+                source_type: { type: 'string' },
+                html_content: { type: 'string' }
+              }
+            }
+          }
+        }
+      }
+    });
+    if (result?.handouts?.length > 0) {
+      const aiHandouts = result.handouts.map(h => ({ ...h, source_type: 'html' }));
+      setCourseData(prev => ({ ...prev, handouts: [...(prev.handouts || []), ...aiHandouts] }));
+      toast.success(`Generated ${aiHandouts.length} handouts with AI`);
+    }
+  };
+
+  const generateTipsWithAI = async () => {
+    const topic = courseData.title || 'this course topic';
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt: `Generate 5 practical tips for a course titled "${topic}". Mix categories: best_practice, common_mistake, pro_tip, and warning. Keep each tip concise and actionable.`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          tips: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                content: { type: 'string' },
+                category: { type: 'string', enum: ['best_practice', 'common_mistake', 'pro_tip', 'warning'] }
+              }
+            }
+          }
+        }
+      }
+    });
+    if (result?.tips?.length > 0) {
+      setCourseData(prev => ({ ...prev, tips: [...(prev.tips || []), ...result.tips] }));
+      toast.success(`Generated ${result.tips.length} tips with AI`);
+    }
   };
 
   const handleApplyAiContent = (content, type) => {
