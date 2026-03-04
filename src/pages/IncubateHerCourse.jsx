@@ -631,7 +631,7 @@ export default function IncubateHerCourse() {
                     if (cUrl.includes('youtu.be/')) vid = cUrl.split('youtu.be/')[1]?.split(/[?&]/)[0];
                     else if (cUrl.includes('watch?v=')) vid = new URLSearchParams(cUrl.split('?')[1]).get('v');
                     else if (cUrl.includes('/embed/')) vid = cUrl.split('/embed/')[1]?.split(/[?&]/)[0];
-                    if (vid) { embedSrc = `https://www.youtube.com/embed/${vid}?rel=0`; openUrl = `https://www.youtube.com/watch?v=${vid}`; }
+                    if (vid) { embedSrc = `https://www.youtube-nocookie.com/embed/${vid}?rel=0`; openUrl = `https://www.youtube.com/watch?v=${vid}`; }
                   } else if (cUrl.includes('drive.google.com')) {
                     const idMatch = cUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
                     if (idMatch) { embedSrc = `https://drive.google.com/file/d/${idMatch[1]}/preview`; openUrl = cUrl; }
