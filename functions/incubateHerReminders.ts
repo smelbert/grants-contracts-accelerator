@@ -1,34 +1,68 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 /**
- * Send automated reminders for:
- * 1. Participants who haven't logged in for 7+ days
- * 2. Pre-assessment not completed (3+ days after enrollment)
- * 3. Documents not uploaded (7+ days after enrollment)
- * 4. Learning content not started (5+ days after enrollment)
- * 5. Workbook not started (7+ days after enrollment)
- * 6. Post-assessment available but not done
+ * IncubateHer Re-Engagement Reminders
+ *
+ * Reminder windows are computed relative to the cohort's actual start_date
+ * and total program length (derived from session count / end_date when available).
+ *
+ * Logic:
+ *  - programLengthDays: end_date - start_date, or fallback to session_days length × 7 days, or 42 days default
+ *  - earlyWindow  = first 20% of program
+ *  - midWindow    = first 50% of program
+ *  - lateWindow   = first 75% of program
+ *
+ * Checks (highest priority first — only one email per participant per run):
+ *  1. No login for > 10% of program length (min 3 days)
+ *  2. Pre-assessment not done & past earlyWindow start
+ *  3. Learning content not started & past earlyWindow
+ *  4. Documents not uploaded & past midWindow
+ *  5. Workbook not started & past midWindow
+ *  6. Post-assessment available but not done
  */
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-
     const now = Date.now();
     const dayMs = 1000 * 60 * 60 * 24;
 
-    // Fetch all active enrollments (participants only, not completed)
-    const enrollments = await base44.asServiceRole.entities.ProgramEnrollment.filter({
-      role: 'participant'
-    });
+    // --- Load cohort to determine program length ---
+    const cohorts = await base44.asServiceRole.entities.ProgramCohort.list();
+    // Find the active IncubateHer cohort
+    const cohort = cohorts.find(c => c.is_active && (c.program_code?.includes('incubateher') || c.program_name?.toLowerCase().includes('incubate'))) || cohorts[0];
 
-    // Fetch last login data from UserAccessLevel
+    let programLengthDays = 42; // sensible fallback (6-week program)
+    let programStartDate = null;
+
+    if (cohort) {
+      const startDate = cohort.start_date ? new Date(cohort.start_date) : null;
+      const endDate = cohort.end_date ? new Date(cohort.end_date) : null;
+      programStartDate = startDate;
+
+      if (startDate && endDate) {
+        programLengthDays = Math.max(7, (endDate.getTime() - startDate.getTime()) / dayMs);
+      } else if (cohort.session_days && cohort.session_days.length > 0) {
+        // Estimate: number of unique session weeks × 7
+        programLengthDays = Math.max(7, cohort.session_days.length * 7);
+      }
+    }
+
+    // Proportional windows based on actual program length
+    const earlyWindowDays  = Math.max(2, Math.round(programLengthDays * 0.20)); // 20% mark
+    const midWindowDays    = Math.max(5, Math.round(programLengthDays * 0.50)); // 50% mark
+    const inactiveGapDays  = Math.max(3, Math.round(programLengthDays * 0.10)); // 10% of program
+
+    console.log(`Program: ${cohort?.program_name || 'unknown'} | Length: ${programLengthDays} days | earlyWindow: ${earlyWindowDays}d | midWindow: ${midWindowDays}d | inactiveGap: ${inactiveGapDays}d`);
+
+    // --- Load supporting data ---
+    const enrollments = await base44.asServiceRole.entities.ProgramEnrollment.filter({ role: 'participant' });
+
     const accessLevels = await base44.asServiceRole.entities.UserAccessLevel.list();
     const accessByEmail = {};
     for (const a of accessLevels) {
       if (a.user_email) accessByEmail[a.user_email] = a;
     }
 
-    // Fetch UserProgress to know who has started learning content
     const allProgress = await base44.asServiceRole.entities.UserProgress.list();
     const progressByEmail = {};
     for (const p of allProgress) {
@@ -39,7 +73,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Fetch WorkbookResponses to know who has started the workbook
     const workbookResponses = await base44.asServiceRole.entities.WorkbookResponse.list();
     const workbookByEmail = {};
     for (const w of workbookResponses) {
@@ -50,12 +83,23 @@ Deno.serve(async (req) => {
     const results = [];
 
     for (const enrollment of enrollments) {
-      // Skip completed participants
       if (enrollment.program_completed) continue;
 
       const email = enrollment.participant_email;
-      const name = enrollment.participant_name || email;
-      const enrolledDaysAgo = (now - new Date(enrollment.created_date).getTime()) / dayMs;
+      const name  = enrollment.participant_name || email;
+
+      // Days since enrollment (or program start, whichever is later / more meaningful)
+      const enrolledAt = enrollment.enrolled_date
+        ? new Date(enrollment.enrolled_date).getTime()
+        : new Date(enrollment.created_date).getTime();
+      const programStartAt = programStartDate ? programStartDate.getTime() : enrolledAt;
+      const refStart = Math.min(enrolledAt, programStartAt); // use whichever came first
+      const daysInProgram = (now - refStart) / dayMs;
+
+      // Last login
+      const access = accessByEmail[email];
+      const lastLogin = access?.last_login ? new Date(access.last_login).getTime() : null;
+      const daysSinceLogin = lastLogin ? (now - lastLogin) / dayMs : daysInProgram;
 
       const send = async (type) => {
         await base44.asServiceRole.functions.invoke('incubateHerNotifications', {
@@ -65,41 +109,37 @@ Deno.serve(async (req) => {
           participantName: name
         });
         remindersSent++;
-        results.push({ email, type });
-        console.log(`Sent ${type} to ${email}`);
+        results.push({ email, type, daysInProgram: Math.round(daysInProgram) });
+        console.log(`Sent [${type}] to ${email} (${Math.round(daysInProgram)} days into program)`);
       };
 
-      // 1. NOT LOGGED IN — check last_login from UserAccessLevel or ClientStage
-      const access = accessByEmail[email];
-      const lastLogin = access?.last_login ? new Date(access.last_login).getTime() : null;
-      const daysSinceLogin = lastLogin ? (now - lastLogin) / dayMs : enrolledDaysAgo;
-
-      if (daysSinceLogin >= 7 && enrolledDaysAgo >= 3) {
+      // 1. Inactive — hasn't logged in for ≥ 10% of program length
+      if (daysSinceLogin >= inactiveGapDays && daysInProgram >= inactiveGapDays) {
         await send('inactive_login_reminder');
-        continue; // Don't pile on — one nudge per cycle
+        continue;
       }
 
-      // 2. Pre-assessment not completed (3+ days enrolled)
-      if (!enrollment.pre_assessment_completed && enrolledDaysAgo > 3) {
+      // 2. Pre-assessment not done — past 20% of program
+      if (!enrollment.pre_assessment_completed && daysInProgram > earlyWindowDays) {
         await send('pre_assessment_reminder');
         continue;
       }
 
-      // 3. Learning content not started (5+ days enrolled)
+      // 3. Learning content not started — past 20% of program
       const hasStartedLearning = (progressByEmail[email] || []).length > 0;
-      if (!hasStartedLearning && enrolledDaysAgo > 5) {
+      if (!hasStartedLearning && daysInProgram > earlyWindowDays) {
         await send('learning_not_started');
         continue;
       }
 
-      // 4. Documents not uploaded (7+ days enrolled)
-      if (enrollment.pre_assessment_completed && !enrollment.documents_uploaded && enrolledDaysAgo > 7) {
+      // 4. Documents not uploaded — past 50% of program
+      if (enrollment.pre_assessment_completed && !enrollment.documents_uploaded && daysInProgram > midWindowDays) {
         await send('documents_reminder');
         continue;
       }
 
-      // 5. Workbook not started (7+ days enrolled)
-      if (!workbookByEmail[email] && enrolledDaysAgo > 7) {
+      // 5. Workbook not started — past 50% of program
+      if (!workbookByEmail[email] && daysInProgram > midWindowDays) {
         await send('workbook_not_started');
         continue;
       }
@@ -113,6 +153,10 @@ Deno.serve(async (req) => {
 
     return Response.json({
       success: true,
+      programLengthDays,
+      earlyWindowDays,
+      midWindowDays,
+      inactiveGapDays,
       message: `Sent ${remindersSent} reminder emails`,
       results
     });
