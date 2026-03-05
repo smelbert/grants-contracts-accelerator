@@ -96,6 +96,45 @@ export default function IncubateHerEvaluation() {
     });
   };
 
+  const handleDownloadPDF = (respData) => {
+    const doc = new jsPDF('p', 'mm', 'letter');
+    const margin = 20;
+    let y = 30;
+    doc.setFontSize(18); doc.setTextColor(20, 58, 80);
+    doc.text('IncubateHer Program Evaluation', margin, y); y += 10;
+    doc.setFontSize(11); doc.setTextColor(100, 100, 100);
+    doc.text(`Participant: ${user?.full_name || user?.email || ''}`, margin, y); y += 7;
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, margin, y); y += 12;
+    doc.setDrawColor(229, 192, 137); doc.line(margin, y, 196, y); y += 8;
+    const fields = [
+      ['Overall Rating', respData.overall_rating],
+      ['Content Quality', respData.content_quality],
+      ['Facilitation Effectiveness', respData.facilitation_effectiveness],
+      ['Materials Usefulness', respData.materials_usefulness],
+      ['Workbook Quality', respData.workbook_quality],
+      ['Schedule Format', respData.schedule_format],
+      ['Consultation Experience', respData.consultation_experience],
+      ['Would Recommend', respData.would_recommend],
+      ['Most Valuable', respData.most_valuable],
+      ['Suggestions', respData.suggestions],
+      ['Facilitator Feedback', respData.facilitator_feedback],
+      ['Additional Comments', respData.additional_comments],
+    ];
+    fields.forEach(([label, val]) => {
+      if (!val) return;
+      if (y > 255) { doc.addPage(); y = 20; }
+      doc.setFontSize(10); doc.setTextColor(20, 58, 80); doc.setFont(undefined, 'bold');
+      doc.text(`${label}:`, margin, y); y += 6;
+      doc.setFont(undefined, 'normal'); doc.setTextColor(60, 60, 60);
+      const lines = doc.splitTextToSize(String(val), 170);
+      lines.forEach(l => { doc.text(`  ${l}`, margin, y); y += 6; });
+      y += 2;
+    });
+    doc.setFontSize(8); doc.setTextColor(130, 130, 130);
+    doc.text('Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions', 108, 280, { align: 'center' });
+    doc.save(`IncubateHer_Evaluation_${user?.full_name?.replace(/\s+/g, '_') || 'Participant'}.pdf`);
+  };
+
   const handleSubmit = async () => {
     if (!enrollment) return;
     localStorage.removeItem(AUTOSAVE_KEY);
