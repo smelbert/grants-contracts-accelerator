@@ -233,10 +233,11 @@ export default function IncubateHerPreAssessment() {
   });
 
   const handleResponseChange = (questionId, value) => {
-    setResponses(prev => ({
-      ...prev,
-      [questionId]: value
-    }));
+    setResponses(prev => {
+      const next = { ...prev, [questionId]: value };
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(next));
+      return next;
+    });
   };
 
   const calculateScores = () => {
@@ -295,6 +296,7 @@ export default function IncubateHerPreAssessment() {
     setScores(calculatedScores);
     setSubmitted(true);
 
+    localStorage.removeItem(AUTOSAVE_KEY);
     if (enrollment) {
       await submitAssessmentMutation.mutateAsync({
         enrollment_id: enrollment.id,

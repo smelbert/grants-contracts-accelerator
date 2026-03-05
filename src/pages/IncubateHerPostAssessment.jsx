@@ -184,10 +184,16 @@ export default function IncubateHerPostAssessment() {
   });
 
   const handleResponseChange = (questionId, value) => {
-    setResponses(prev => ({
-      ...prev,
-      [questionId]: value
-    }));
+    setResponses(prev => {
+      const next = { ...prev, [questionId]: value };
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({ responses: next, nextSteps }));
+      return next;
+    });
+  };
+
+  const handleNextStepsChange = (value) => {
+    setNextSteps(value);
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({ responses, nextSteps: value }));
   };
 
   const calculateScores = () => {
@@ -242,6 +248,7 @@ export default function IncubateHerPostAssessment() {
     setScores(calculatedScores);
     setSubmitted(true);
 
+    localStorage.removeItem(AUTOSAVE_KEY);
     if (enrollment) {
       await submitAssessmentMutation.mutateAsync({
         enrollment_id: enrollment.id,
@@ -520,7 +527,7 @@ export default function IncubateHerPostAssessment() {
             </Label>
             <Textarea
               value={nextSteps}
-              onChange={(e) => setNextSteps(e.target.value)}
+              onChange={(e) => handleNextStepsChange(e.target.value)}
               placeholder="1. &#10;2. &#10;3. "
               rows={6}
               className="w-full"

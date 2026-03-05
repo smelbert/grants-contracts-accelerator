@@ -88,12 +88,16 @@ export default function IncubateHerEvaluation() {
   });
 
   const handleChange = (field, value) => {
-    setResponses(prev => ({ ...prev, [field]: value }));
+    setResponses(prev => {
+      const next = { ...prev, [field]: value };
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(next));
+      return next;
+    });
   };
 
   const handleSubmit = async () => {
     if (!enrollment) return;
-
+    localStorage.removeItem(AUTOSAVE_KEY);
     await submitEvaluationMutation.mutateAsync({
       enrollment_id: enrollment.id,
       participant_email: user.email,
