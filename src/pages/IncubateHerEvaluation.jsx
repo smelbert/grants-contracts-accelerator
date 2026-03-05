@@ -12,22 +12,19 @@ import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { CheckCircle2, Star, MessageSquare } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+const AUTOSAVE_KEY = 'eis_evaluation_draft';
+const DEFAULT_RESPONSES = {
+  overall_rating: '', content_quality: '', facilitation_effectiveness: '',
+  materials_usefulness: '', workbook_quality: '', schedule_format: '',
+  consultation_experience: '', most_valuable: '', suggestions: '',
+  facilitator_feedback: '', would_recommend: '', additional_comments: ''
+};
+
 export default function IncubateHerEvaluation() {
   const queryClient = useQueryClient();
   const [submitted, setSubmitted] = useState(false);
-  const [responses, setResponses] = useState({
-    overall_rating: '',
-    content_quality: '',
-    facilitation_effectiveness: '',
-    materials_usefulness: '',
-    workbook_quality: '',
-    schedule_format: '',
-    consultation_experience: '',
-    most_valuable: '',
-    suggestions: '',
-    facilitator_feedback: '',
-    would_recommend: '',
-    additional_comments: ''
+  const [responses, setResponses] = useState(() => {
+    try { return { ...DEFAULT_RESPONSES, ...JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || '{}') }; } catch { return DEFAULT_RESPONSES; }
   });
 
   const { data: user } = useQuery({

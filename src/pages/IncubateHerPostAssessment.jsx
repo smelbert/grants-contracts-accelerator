@@ -95,10 +95,16 @@ const QUESTIONS = {
   ]
 };
 
+const AUTOSAVE_KEY = 'eis_post_assessment_draft';
+
 export default function IncubateHerPostAssessment() {
   const queryClient = useQueryClient();
-  const [responses, setResponses] = useState({});
-  const [nextSteps, setNextSteps] = useState('');
+  const [responses, setResponses] = useState(() => {
+    try { const d = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || '{}'); return d.responses || {}; } catch { return {}; }
+  });
+  const [nextSteps, setNextSteps] = useState(() => {
+    try { const d = JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || '{}'); return d.nextSteps || ''; } catch { return ''; }
+  });
   const [submitted, setSubmitted] = useState(false);
   const [scores, setScores] = useState(null);
 
