@@ -407,6 +407,11 @@ export default function IncubateHerPostAssessment() {
               <Badge className="text-xl px-6 py-3" style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight }}>
                 Your Growth: +{delta} points
               </Badge>
+              <div className="mt-6">
+                <Button variant="outline" onClick={() => handleDownloadPDF(responses, scores, nextSteps)}>
+                  <Download className="w-4 h-4 mr-2" /> Download PDF
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
