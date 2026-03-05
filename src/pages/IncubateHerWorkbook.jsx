@@ -509,10 +509,16 @@ export default function IncubateHerWorkbook() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
+                <div className="mt-4 flex items-center gap-3 text-sm text-slate-600 flex-wrap">
                   <span>Page {currentPageIndex + 1} of {WORKBOOK_PAGES.length}</span>
                   <span>•</span>
-                  <span>{Math.round(((currentPageIndex + 1) / WORKBOOK_PAGES.length) * 100)}% Complete</span>
+                  <span>{Object.keys(completedPages).length} of {WORKBOOK_PAGES.length} pages marked complete</span>
+                  {completedPages[currentPage.id] && (
+                    <Badge className="bg-green-100 text-green-800 text-xs">
+                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      This page is complete
+                    </Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>
