@@ -140,14 +140,50 @@ export default function IncubateHerWorkbook() {
     }
   });
 
+  // Debounced autosave ref
+  const autosaveTimer = React.useRef(null);
+
   const handleResponseChange = (pageId, fieldId, value) => {
-    setAllResponses(prev => ({
-      ...prev,
-      [pageId]: {
-        ...(prev[pageId] || {}),
-        [fieldId]: value
-      }
-    }));
+    setAllResponses(prev => {
+      const next = {
+        ...prev,
+        [pageId]: {
+          ...(prev[pageId] || {}),
+          [fieldId]: value
+        }
+      };
+
+      // Debounce autosave: save 1.5s after last change
+      if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+      autosaveTimer.current = setTimeout(() => {
+        const pageResponses = next[pageId];
+        if (pageResponses && enrollment?.id && user?.email) {
+          const existing = savedResponses?.find(r => r.page_id === pageId);
+          if (existing) {
+            base44.entities.WorkbookResponse.update(existing.id, {
+              responses: pageResponses,
+              last_saved: new Date().toISOString()
+            }).then(() => {
+              setLastSaved(new Date());
+              queryClient.invalidateQueries(['workbook-responses']);
+            });
+          } else {
+            base44.entities.WorkbookResponse.create({
+              enrollment_id: enrollment.id,
+              participant_email: user.email,
+              page_id: pageId,
+              responses: pageResponses,
+              last_saved: new Date().toISOString()
+            }).then(() => {
+              setLastSaved(new Date());
+              queryClient.invalidateQueries(['workbook-responses']);
+            });
+          }
+        }
+      }, 1500);
+
+      return next;
+    });
   };
 
   const handleSave = async () => {
