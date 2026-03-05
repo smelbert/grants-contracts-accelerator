@@ -467,7 +467,7 @@ export default function IncubateHerWorkbook() {
                     </Button>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap justify-end">
                     {lastSaved && (
                       <span className="text-xs text-slate-600 flex items-center gap-1">
                         <Check className="w-3 h-3 text-green-600" />
@@ -484,9 +484,19 @@ export default function IncubateHerWorkbook() {
                         className="bg-white"
                       >
                         <Save className="w-4 h-4 mr-2" />
-                        Save Progress
+                        Save
                       </Button>
                     )}
+
+                    <Button
+                      size="sm"
+                      variant={completedPages[currentPage.id] ? 'default' : 'outline'}
+                      onClick={() => togglePageComplete(currentPage.id)}
+                      className={completedPages[currentPage.id] ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-green-600 text-green-700 hover:bg-green-50'}
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      {completedPages[currentPage.id] ? 'Completed' : 'Mark Complete'}
+                    </Button>
 
                     <Button
                       size="sm"
