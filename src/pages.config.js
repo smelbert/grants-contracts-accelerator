@@ -201,6 +201,7 @@ import TermsOfService from './pages/TermsOfService';
 import TestimonialManagement from './pages/TestimonialManagement';
 import TrainingFramework from './pages/TrainingFramework';
 import TrainingFrameworkEditor from './pages/TrainingFrameworkEditor';
+import TrainingLiveSessions from './pages/TrainingLiveSessions';
 import TrainingPostAssessment from './pages/TrainingPostAssessment';
 import TrainingPreAssessment from './pages/TrainingPreAssessment';
 import UserActivityAnalytics from './pages/UserActivityAnalytics';
@@ -210,7 +211,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import TrainingLiveSessions from './pages/TrainingLiveSessions';
 import __Layout from './Layout.jsx';
 
 
@@ -369,6 +369,7 @@ export const PAGES = {
     "TestimonialManagement": TestimonialManagement,
     "TrainingFramework": TrainingFramework,
     "TrainingFrameworkEditor": TrainingFrameworkEditor,
+    "TrainingLiveSessions": TrainingLiveSessions,
     "TrainingPostAssessment": TrainingPostAssessment,
     "TrainingPreAssessment": TrainingPreAssessment,
     "UserActivityAnalytics": UserActivityAnalytics,
@@ -378,7 +379,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "TrainingLiveSessions": TrainingLiveSessions,
 }
 
 export const pagesConfig = {
