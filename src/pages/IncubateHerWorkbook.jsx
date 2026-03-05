@@ -9,7 +9,8 @@ import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import WorkbookPage from '@/components/incubateher/WorkbookPage';
 import WorkbookProgressTracker from '@/components/incubateher/WorkbookProgressTracker';
 import { WORKBOOK_PAGES, getSections } from '@/components/incubateher/workbookContent';
-import { ChevronLeft, ChevronRight, Save, Download, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, Download, Check, CheckCircle2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 
