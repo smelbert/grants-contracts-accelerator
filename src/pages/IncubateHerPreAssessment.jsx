@@ -309,6 +309,51 @@ export default function IncubateHerPreAssessment() {
     }
   };
 
+  const handleDownloadPDF = (data, scoreData) => {
+    const doc = new jsPDF('p', 'mm', 'letter');
+    const margin = 20;
+    let y = 30;
+
+    doc.setFontSize(18); doc.setTextColor(20, 58, 80);
+    doc.text('IncubateHer Pre-Assessment', margin, y); y += 10;
+    doc.setFontSize(11); doc.setTextColor(100, 100, 100);
+    doc.text(`Participant: ${user?.full_name || user?.email || ''}`, margin, y); y += 7;
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, margin, y); y += 12;
+
+    doc.setDrawColor(229, 192, 137); doc.line(margin, y, 196, y); y += 8;
+
+    if (scoreData) {
+      doc.setFontSize(13); doc.setTextColor(20, 58, 80);
+      doc.text(`Total Score: ${scoreData.total_score}`, margin, y); y += 8;
+      [
+        ['Grants vs Contracts Knowledge', scoreData.grants_vs_contracts_score],
+        ['Legal Readiness', scoreData.legal_readiness_score],
+        ['Financial Readiness', scoreData.financial_readiness_score],
+        ['Confidence Level', scoreData.confidence_score],
+      ].forEach(([label, val]) => {
+        doc.setFontSize(10); doc.setTextColor(60, 60, 60);
+        doc.text(`  ${label}: ${val}`, margin, y); y += 7;
+      });
+      y += 5;
+    }
+
+    const allQs = [...QUESTIONS.grants_vs_contracts, ...QUESTIONS.legal_readiness, ...QUESTIONS.financial_readiness, ...QUESTIONS.confidence];
+    allQs.forEach((q) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      doc.setFontSize(10); doc.setTextColor(20, 58, 80); doc.setFont(undefined, 'bold');
+      const qLines = doc.splitTextToSize(q.question, 170);
+      qLines.forEach(l => { doc.text(l, margin, y); y += 6; });
+      doc.setFont(undefined, 'normal'); doc.setTextColor(60, 60, 60);
+      const ans = data[q.id];
+      const ansText = q.options ? (q.options.find(o => o.value === ans)?.text || ans || '(no answer)') : (ans || '(no answer)');
+      doc.text(`  → ${ansText}`, margin, y); y += 8;
+    });
+
+    doc.setFontSize(8); doc.setTextColor(130, 130, 130);
+    doc.text('Funded by Columbus Urban League | Delivered by Elbert Innovative Solutions', 108, 280, { align: 'center' });
+    doc.save(`IncubateHer_Pre_Assessment_${user?.full_name?.replace(/\s+/g, '_') || 'Participant'}.pdf`);
+  };
+
   const getReadinessProfile = (totalScore) => {
     if (totalScore >= 80) return { level: 'Strong', color: BRAND_COLORS.eisGold, message: 'You have strong funding readiness foundations!' };
     if (totalScore >= 60) return { level: 'Developing', color: BRAND_COLORS.eisNavy, message: 'You\'re building good foundations—keep going!' };
