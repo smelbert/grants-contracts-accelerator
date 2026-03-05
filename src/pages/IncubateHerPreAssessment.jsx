@@ -382,6 +382,9 @@ export default function IncubateHerPreAssessment() {
                   {profile.level} Readiness
                 </Badge>
               </div>
+              <Button variant="outline" onClick={() => handleDownloadPDF(existingAssessment.responses || {}, existingAssessment)} className="mt-2">
+                <Download className="w-4 h-4 mr-2" /> Download PDF
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -415,6 +418,9 @@ export default function IncubateHerPreAssessment() {
                   {profile.level} Readiness
                 </Badge>
               </div>
+              <Button variant="outline" className="mt-4" onClick={() => handleDownloadPDF(responses, scores)}>
+                <Download className="w-4 h-4 mr-2" /> Download PDF
+              </Button>
             </CardContent>
           </Card>
 
