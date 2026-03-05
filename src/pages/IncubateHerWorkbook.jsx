@@ -73,6 +73,34 @@ export default function IncubateHerWorkbook() {
     enabled: !!enrollment?.id
   });
 
+  // Track manually completed pages
+  const completedPages = React.useMemo(() => {
+    if (!savedResponses) return {};
+    const map = {};
+    savedResponses.forEach(r => { if (r.is_completed) map[r.page_id] = true; });
+    return map;
+  }, [savedResponses]);
+
+  const togglePageComplete = async (pageId) => {
+    if (!enrollment?.id || !user?.email) return;
+    const existing = savedResponses?.find(r => r.page_id === pageId);
+    const newVal = !completedPages[pageId];
+    if (existing) {
+      await base44.entities.WorkbookResponse.update(existing.id, { is_completed: newVal });
+    } else {
+      await base44.entities.WorkbookResponse.create({
+        enrollment_id: enrollment.id,
+        participant_email: user.email,
+        page_id: pageId,
+        responses: {},
+        is_completed: newVal,
+        last_saved: new Date().toISOString()
+      });
+    }
+    queryClient.invalidateQueries(['workbook-responses']);
+    toast.success(newVal ? 'Page marked as complete!' : 'Page marked as incomplete');
+  };
+
   const { data: customPages = [] } = useQuery({
     queryKey: ['workbook-custom-pages'],
     queryFn: () => base44.entities.WorkbookPageContent.list(),
