@@ -166,6 +166,11 @@ export default function IncubateHerEvaluation() {
                   Rating: {existingEvaluation.responses?.overall_rating}/10
                 </Badge>
               )}
+              <div className="mt-4">
+                <Button variant="outline" onClick={() => handleDownloadPDF((existingEvaluation || { responses: {} }).responses)}>
+                  <Download className="w-4 h-4 mr-2" /> Download PDF
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
