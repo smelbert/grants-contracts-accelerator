@@ -251,20 +251,22 @@ export default function IncubateHerConsultations() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <Checkbox 
-                      checked={enrollment.pre_assessment_completed}
-                      disabled
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <p className="font-medium text-slate-700">Pre-Assessment Completed</p>
-                      <p className="text-sm text-slate-500">Required to book consultation</p>
+                  {[
+                    { label: 'Pre-Assessment', done: enrollment.pre_assessment_completed },
+                    { label: 'Post-Assessment', done: enrollment.post_assessment_completed },
+                    { label: 'Program Evaluation', done: enrollment.program_evaluation_completed },
+                  ].map(item => (
+                    <div key={item.label} className="flex items-start gap-3">
+                      <Checkbox checked={item.done} disabled className="mt-1" />
+                      <div className="flex-1">
+                        <p className="font-medium text-slate-700">{item.label}</p>
+                        <p className="text-sm text-slate-500">Required to book consultation</p>
+                      </div>
+                      <Badge variant="outline" className={item.done ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'}>
+                        {item.done ? 'Complete' : 'Pending'}
+                      </Badge>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700">
-                      Complete
-                    </Badge>
-                  </div>
+                  ))}
 
                   <div className="flex items-start gap-3">
                     <Checkbox 
