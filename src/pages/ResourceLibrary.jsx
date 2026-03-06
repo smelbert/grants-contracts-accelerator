@@ -396,17 +396,9 @@ export default function ResourceLibrary() {
                       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white px-6 py-3 rounded-t-lg">
                         <h2 className="text-xl font-bold">Template Content</h2>
                       </div>
-                      <div className="border-2 border-[#143A50] rounded-b-lg p-6 bg-white">
+                      <div className="border-2 border-[#143A50] rounded-b-lg bg-white">
                         <BrandedTemplateWrapper>
-                          <div 
-                            className="prose prose-slate max-w-none"
-                            style={{
-                              fontFamily: 'Georgia, "Times New Roman", serif',
-                              lineHeight: '1.8'
-                            }}
-                          >
-                            <div dangerouslySetInnerHTML={{ __html: previewResource.template_content }} />
-                          </div>
+                          <div dangerouslySetInnerHTML={{ __html: previewResource.template_content }} />
                         </BrandedTemplateWrapper>
                       </div>
                     </div>
