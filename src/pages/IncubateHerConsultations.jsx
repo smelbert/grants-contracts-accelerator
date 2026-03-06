@@ -418,7 +418,7 @@ export default function IncubateHerConsultations() {
                                     type="date"
                                     value={state.date}
                                     onChange={(e) => setState({ ...state, date: e.target.value })}
-                                    min={new Date().toISOString().split('T')[0]}
+                                    min={new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
                                   />
                                 </div>
                                 <div>
