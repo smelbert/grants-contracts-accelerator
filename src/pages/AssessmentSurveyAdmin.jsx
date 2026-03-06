@@ -172,8 +172,9 @@ export default function AssessmentSurveyAdmin() {
           </Card>
         </div>
 
-        <Tabs defaultValue="training">
-          <TabsList>
+        <Tabs defaultValue="incubateher">
+          <TabsList className="flex flex-wrap gap-1 h-auto">
+            <TabsTrigger value="incubateher">IncubateHer Program</TabsTrigger>
             <TabsTrigger value="training">Training Pre/Post</TabsTrigger>
             <TabsTrigger value="events">Event Surveys</TabsTrigger>
             <TabsTrigger value="competency">Competency</TabsTrigger>
