@@ -286,8 +286,9 @@ export default function AssessmentSurveyAdmin() {
                   }}>
                     <Download className="w-4 h-4 mr-2" /> Export CSV
                   </Button>
-                </div>
-              </CardHeader>
+                  </div>
+                  </div>
+                  </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
