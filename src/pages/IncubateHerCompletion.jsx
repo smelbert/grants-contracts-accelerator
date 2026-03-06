@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, Circle, Award, Download } from 'lucide-react';
+import { CheckCircle2, Circle, Award, Download, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
@@ -12,8 +12,6 @@ import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { toast } from 'sonner';
 
 export default function IncubateHerCompletion() {
-  const queryClient = useQueryClient();
-
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -30,219 +28,245 @@ export default function IncubateHerCompletion() {
     enabled: !!user?.email
   });
 
-  const updateDocumentsMutation = useMutation({
-    mutationFn: async (verified) => {
-      await base44.entities.ProgramEnrollment.update(enrollment.id, {
-        documents_verified: verified
-      });
+  const { data: myAttendance = [] } = useQuery({
+    queryKey: ['my-attendance-completion', enrollment?.id],
+    queryFn: () => base44.entities.SessionAttendance.filter({ enrollment_id: enrollment.id }),
+    enabled: !!enrollment?.id
+  });
+
+  const { data: workbookResponses = [] } = useQuery({
+    queryKey: ['workbook-responses-completion', user?.email],
+    queryFn: () => base44.entities.WorkbookResponse.filter({ user_email: user.email }),
+    enabled: !!user?.email
+  });
+
+  const updateEnrollmentMutation = useMutation({
+    mutationFn: async (updates) => {
+      await base44.entities.ProgramEnrollment.update(enrollment.id, updates);
     },
     onSuccess: () => {
       refetch();
-      toast.success('Document verification updated');
+      toast.success('Progress updated');
     }
   });
 
-  const milestones = [
-    {
-      id: 'day1_attendance',
-      title: 'Day 1 Session Attendance',
-      description: 'Attend Day 1: Introduction & Legal Foundations',
-      completed: enrollment?.day1_attended || false,
-      required: true,
-      selfSelect: false
-    },
-    {
-      id: 'day2_attendance',
-      title: 'Day 2 Session Attendance',
-      description: 'Attend Day 2: Financial Systems & Program Design',
-      completed: enrollment?.day2_attended || false,
-      required: true,
-      selfSelect: false
-    },
-    {
-      id: 'day3_attendance',
-      title: 'Day 3 Session Attendance',
-      description: 'Attend Day 3: Strategy & Application Excellence',
-      completed: enrollment?.day3_attended || false,
-      required: true,
-      selfSelect: false
-    },
+  const sessionsAttended = myAttendance.filter(a => a.attended || a.watched_recording).length;
+  const workbookCompleted = workbookResponses.filter(r => r.responses && Object.keys(r.responses).length > 0).length;
+
+  // ─── REQUIRED milestones (non-negotiable) ───
+  const requiredMilestones = [
     {
       id: 'pre_assessment',
       title: 'Pre-Assessment',
-      description: 'Complete the pre-program assessment',
+      description: 'Complete the pre-program readiness assessment',
       completed: enrollment?.pre_assessment_completed || false,
-      required: true,
-      selfSelect: false
+      selfSelect: false,
+      link: '/IncubateHerPreAssessment'
     },
     {
       id: 'post_assessment',
       title: 'Post-Assessment',
       description: 'Complete the post-program assessment',
       completed: enrollment?.post_assessment_completed || false,
-      required: true,
-      selfSelect: false
+      selfSelect: false,
+      link: '/IncubateHerPostAssessment'
     },
     {
       id: 'program_evaluation',
       title: 'Program Evaluation',
       description: 'Complete the program evaluation survey',
       completed: enrollment?.program_evaluation_completed || false,
-      required: true,
-      selfSelect: false
+      selfSelect: false,
+      link: '/IncubateHerEvaluation'
+    }
+  ];
+
+  // ─── OPTIONAL milestones (self-reported / self-select) ───
+  const optionalMilestones = [
+    {
+      id: 'attendance',
+      title: 'Session Attendance',
+      description: `Attend sessions in-person or watch recordings (${sessionsAttended} session(s) counted)`,
+      completed: sessionsAttended > 0,
+      selfSelect: false, // tracked via attendance system
+      optional: true
     },
     {
       id: 'workbook',
       title: 'Workbook Exercises',
-      description: 'Complete at least 50% of workbook exercises',
-      completed: (enrollment?.workbook_progress || 0) >= 50,
-      required: true,
+      description: `Complete workbook exercises — ${workbookCompleted} page(s) with responses`,
+      completed: workbookCompleted > 0,
       selfSelect: false,
-      progress: enrollment?.workbook_progress || 0
+      optional: true,
+      progress: workbookCompleted
     },
     {
       id: 'documents',
       title: 'Required Documents Completed',
-      description: 'Verify all required documents are completed (self-reported)',
+      description: 'Self-report: verify that your required funding documents are ready',
       completed: enrollment?.documents_verified || false,
-      required: true,
-      selfSelect: true
+      selfSelect: true,
+      optional: true
     }
   ];
 
-  const completedCount = milestones.filter(m => m.completed).length;
-  const totalCount = milestones.filter(m => m.required).length;
-  const completionPercentage = Math.round((completedCount / totalCount) * 100);
-  const allComplete = completedCount === totalCount;
+  const completedRequired = requiredMilestones.filter(m => m.completed).length;
+  const allRequiredComplete = completedRequired === requiredMilestones.length;
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <CoBrandedHeader 
+      <CoBrandedHeader
         title="Completion Tracker"
-        subtitle="Your progress toward program completion"
+        subtitle="Track your progress toward program completion"
       />
 
       <div className="max-w-4xl mx-auto p-6 space-y-6">
+        {/* Overall required progress */}
         <Card className="border-l-4 border-l-[#143A50]">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Overall Progress</CardTitle>
+              <CardTitle>Required Progress</CardTitle>
               <Badge variant="outline" className="text-lg px-4 py-1">
-                {completedCount} / {totalCount}
+                {completedRequired} / {requiredMilestones.length} Required
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <Progress value={completionPercentage} className="h-3" />
+          <CardContent className="space-y-3">
+            <Progress value={Math.round((completedRequired / requiredMilestones.length) * 100)} className="h-3" />
             <p className="text-sm text-slate-600">
-              You have completed <strong>{completionPercentage}%</strong> of the program requirements
+              You have completed <strong>{completedRequired} of {requiredMilestones.length}</strong> required items.
             </p>
+            {allRequiredComplete && (
+              <p className="text-green-700 font-semibold text-sm">
+                ✅ You meet the minimum requirements for one-on-one consultations and the giveaway!
+              </p>
+            )}
           </CardContent>
         </Card>
 
-        {allComplete && (
+        {allRequiredComplete && (
           <Card className="border-l-4 border-l-green-500 bg-gradient-to-r from-green-50 to-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-900">
                 <Award className="w-6 h-6" />
-                Congratulations! Program Complete
+                Requirements Met — You're Eligible!
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-green-800">
-                You have successfully completed all requirements for the IncubateHer Funding Readiness program. Your certificate is now available!
+                You've completed all three required assessments. You're eligible to request a one-on-one consultation and apply for the giveaway!
               </p>
-              <div className="flex gap-3">
-                <Button className="bg-green-700 hover:bg-green-800">
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Certificate
+              <div className="flex gap-3 flex-wrap">
+                <Button className="bg-green-700 hover:bg-green-800" onClick={() => window.location.href = '/IncubateHerConsultations'}>
+                  Book a Consultation
                 </Button>
-                <Button variant="outline">
-                  View Giveaway Status
+                <Button variant="outline" onClick={() => window.location.href = '/IncubateHerGiveaway'}>
+                  Apply for Giveaway
                 </Button>
               </div>
             </CardContent>
           </Card>
         )}
 
-        <div className="space-y-4">
-          {milestones.map((milestone) => (
-            <Card 
-              key={milestone.id}
-              className={milestone.completed ? 'bg-green-50 border-green-200' : ''}
-            >
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-4">
-                  {milestone.selfSelect ? (
-                    <Checkbox
-                      checked={milestone.completed}
-                      onCheckedChange={(checked) => updateDocumentsMutation.mutate(checked)}
-                      className="mt-1"
-                    />
-                  ) : (
-                    <div className={`mt-1 ${milestone.completed ? 'text-green-600' : 'text-slate-300'}`}>
-                      {milestone.completed ? (
-                        <CheckCircle2 className="w-6 h-6" />
-                      ) : (
-                        <Circle className="w-6 h-6" />
-                      )}
+        {/* Required milestones */}
+        <div>
+          <h2 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-[#AC1A5B] text-white text-xs flex items-center justify-center">!</span>
+            Required Items
+          </h2>
+          <div className="space-y-3">
+            {requiredMilestones.map((milestone) => (
+              <Card key={milestone.id} className={milestone.completed ? 'bg-green-50 border-green-200' : 'border-amber-200 bg-amber-50/30'}>
+                <CardContent className="pt-5">
+                  <div className="flex items-start gap-4">
+                    <div className={`mt-0.5 ${milestone.completed ? 'text-green-600' : 'text-amber-500'}`}>
+                      {milestone.completed ? <CheckCircle2 className="w-6 h-6" /> : <Circle className="w-6 h-6" />}
                     </div>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-slate-900 mb-1">
-                      {milestone.title}
-                      {milestone.required && (
-                        <Badge variant="outline" className="ml-2 text-xs">
-                          Required
-                        </Badge>
-                      )}
-                      {milestone.selfSelect && (
-                        <Badge variant="outline" className="ml-2 text-xs bg-blue-50 text-blue-700 border-blue-200">
-                          Self-Select
-                        </Badge>
-                      )}
-                    </h3>
-                    <p className="text-slate-600 text-sm">{milestone.description}</p>
-                    {milestone.progress !== undefined && (
-                      <div className="mt-2">
-                        <Progress value={milestone.progress} className="h-2" />
-                        <p className="text-xs text-slate-500 mt-1">{milestone.progress}% completed</p>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-slate-900">{milestone.title}</h3>
+                        <Badge className="bg-red-100 text-red-700 border-red-200 text-xs">Required</Badge>
                       </div>
+                      <p className="text-slate-600 text-sm mt-1">{milestone.description}</p>
+                    </div>
+                    {milestone.completed ? (
+                      <Badge className="bg-green-600 text-white">Complete</Badge>
+                    ) : (
+                      milestone.link && (
+                        <Button size="sm" variant="outline" onClick={() => window.location.href = milestone.link}>
+                          Go Complete
+                        </Button>
+                      )
                     )}
                   </div>
-                  {milestone.completed && (
-                    <Badge className="bg-green-600">
-                      Complete
-                    </Badge>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
+        {/* Optional milestones */}
+        <div>
+          <h2 className="text-lg font-bold text-slate-900 mb-1 flex items-center gap-2">
+            <Star className="w-5 h-5 text-[#E5C089]" />
+            Optional Items
+          </h2>
+          <p className="text-sm text-slate-500 mb-3">
+            These are not required but show your engagement and are noted in your giveaway application.
+          </p>
+          <div className="space-y-3">
+            {optionalMilestones.map((milestone) => (
+              <Card key={milestone.id} className={milestone.completed ? 'bg-slate-50 border-slate-200' : ''}>
+                <CardContent className="pt-5">
+                  <div className="flex items-start gap-4">
+                    {milestone.selfSelect ? (
+                      <Checkbox
+                        checked={milestone.completed}
+                        onCheckedChange={(checked) => updateEnrollmentMutation.mutate({ documents_verified: checked })}
+                        className="mt-1 cursor-pointer"
+                      />
+                    ) : (
+                      <div className={`mt-0.5 ${milestone.completed ? 'text-green-600' : 'text-slate-300'}`}>
+                        {milestone.completed ? <CheckCircle2 className="w-6 h-6" /> : <Circle className="w-6 h-6" />}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-slate-900">{milestone.title}</h3>
+                        <Badge variant="outline" className="text-slate-500 text-xs">Optional</Badge>
+                        {milestone.selfSelect && <Badge variant="outline" className="text-blue-700 border-blue-200 bg-blue-50 text-xs">Self-Select</Badge>}
+                      </div>
+                      <p className="text-slate-600 text-sm mt-1">{milestone.description}</p>
+                    </div>
+                    {milestone.completed && (
+                      <Badge className="bg-slate-500 text-white">Done</Badge>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Next steps */}
         <Card>
-          <CardHeader>
-            <CardTitle>Next Steps</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Next Steps</CardTitle></CardHeader>
           <CardContent>
-            {!allComplete ? (
+            {!allRequiredComplete ? (
               <div className="space-y-2">
-                <p className="text-slate-700 mb-3">To complete the program, you still need to:</p>
+                <p className="text-slate-700 mb-3 font-medium">Complete these required items to unlock consultations and the giveaway:</p>
                 <ul className="space-y-2">
-                  {milestones
-                    .filter(m => !m.completed && m.required)
-                    .map(m => (
-                      <li key={m.id} className="flex items-start gap-2 text-slate-600">
-                        <span className="text-[#E5C089] mt-1">•</span>
-                        <span>{m.title}</span>
-                      </li>
-                    ))}
+                  {requiredMilestones.filter(m => !m.completed).map(m => (
+                    <li key={m.id} className="flex items-center gap-2 text-slate-600">
+                      <span className="text-[#AC1A5B]">→</span>
+                      <span>{m.title}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             ) : (
               <p className="text-slate-700">
-                Check the Giveaway page to see your eligibility status for the funding opportunity drawing.
+                You've completed all required items! Head to the <strong>Consultations</strong> page to book your one-on-one, or visit the <strong>Giveaway</strong> page to apply.
               </p>
             )}
           </CardContent>
