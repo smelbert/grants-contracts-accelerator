@@ -477,7 +477,7 @@ function TemplateViewDialog({ template, onClose }) {
               {template.template_content && (
                 <div>
                   <h3 className="font-semibold mb-2 text-lg">Template Content</h3>
-                  <div className="rounded-lg border-2 border-slate-200 shadow-lg overflow-hidden">
+                  <div className="rounded-lg border-2 border-slate-200 shadow-lg">
                     <BrandedTemplateWrapper>
                       <div 
                         className="prose prose-slate max-w-none"
