@@ -375,14 +375,14 @@ export default function TemplateLibraryPage() {
   );
 }
 
-function TemplateCard({ template, onView, onEdit, onDelete, config, isFavorite, onToggleFavorite }) {
+function TemplateCard({ template, onView, onEdit, onDelete, onTogglePublish, config, isFavorite, onToggleFavorite }) {
   return (
     <Card className="hover:shadow-lg transition-shadow relative">
       <CardHeader>
         <div className="flex items-start justify-between">
-          <CardTitle className="text-base">{template.template_name}</CardTitle>
-          <div className="flex items-center gap-2">
-            <Badge className={`bg-${config.color}-100 text-${config.color}-700`}>
+          <CardTitle className="text-base leading-tight">{template.template_name}</CardTitle>
+          <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+            <Badge className={`bg-${config?.color}-100 text-${config?.color}-700 text-xs`}>
               {template.maturity_level}
             </Badge>
             {onToggleFavorite && (
@@ -395,19 +395,42 @@ function TemplateCard({ template, onView, onEdit, onDelete, config, isFavorite, 
             )}
           </div>
         </div>
+        {/* Published status badge */}
+        {onTogglePublish && (
+          <div className="mt-1">
+            <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
+              template.is_published 
+                ? 'bg-green-100 text-green-700' 
+                : 'bg-slate-100 text-slate-500'
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${template.is_published ? 'bg-green-500' : 'bg-slate-400'}`} />
+              {template.is_published ? 'Published' : 'Draft'}
+            </span>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         {template.purpose && (
-          <p className="text-sm text-slate-600 mb-3">{template.purpose}</p>
+          <p className="text-sm text-slate-600 mb-3 line-clamp-2">{template.purpose}</p>
         )}
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button size="sm" variant="outline" onClick={() => onView(template)}>
-            <Eye className="w-4 h-4 mr-2" />
+            <Eye className="w-4 h-4 mr-1" />
             View
           </Button>
           {onEdit && (
             <Button size="sm" variant="ghost" onClick={() => onEdit(template)}>
               <Edit className="w-4 h-4" />
+            </Button>
+          )}
+          {onTogglePublish && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onTogglePublish(template)}
+              className={template.is_published ? 'text-amber-600 hover:bg-amber-50' : 'text-green-600 hover:bg-green-50'}
+            >
+              {template.is_published ? 'Unpublish' : 'Publish'}
             </Button>
           )}
           {onDelete && (
