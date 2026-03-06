@@ -368,7 +368,17 @@ export default function AssessmentSurveyAdmin() {
                                   <Badge className="bg-purple-100 text-purple-800 cursor-pointer hover:bg-purple-200">{ev.responses?.overall_rating || '?'}/10 <Eye className="w-3 h-3 inline ml-1" /></Badge>
                                 </button>
                               ) : (
-                                <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
+                                <button onClick={() => {
+                                  setSelectedAssessment({
+                                    assessment_type: 'evaluation',
+                                    participant_email: e.participant_email,
+                                    prefilled: true,
+                                    responses: {}
+                                  });
+                                  setSelectedParticipantName(e.participant_name);
+                                }}>
+                                  <Badge className="bg-slate-100 text-slate-500 cursor-pointer hover:bg-slate-200 text-xs">Not submitted <Eye className="w-3 h-3 inline ml-1" /></Badge>
+                                </button>
                               )}
                             </td>
                           </tr>
