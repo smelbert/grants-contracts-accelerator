@@ -91,6 +91,7 @@ const getUserPortalNav = () => [
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
       // Giveaway hidden until March 5, 2026 (Thursday)
       ...(new Date() >= new Date('2026-03-05T00:00:00') ? [{ name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles }] : []),
+      { name: 'My Attendance', page: 'IncubateHerAttendance', icon: Calendar },
     ]
   },
   {
