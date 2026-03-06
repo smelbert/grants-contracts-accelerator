@@ -290,16 +290,7 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
       }
       // Hide items for IncubateHer participants
       if (item.hideForIncubateHer && isIncubateHerParticipant) {
-        // Check if feature has been unlocked
-        const featureUnlocks = userAccess?.feature_unlocks || {};
-        const unlockDate = featureUnlocks[item.page];
-        
-        if (!unlockDate) return false; // Not unlocked yet
-        
-        // Check if unlock date has passed
-        const now = new Date();
-        const unlock = new Date(unlockDate);
-        if (now < unlock) return false; // Not unlocked yet
+        return false; // Always hide for IncubateHer users
       }
       // Hide tabs disabled by admin
       if (userAccess?.disabled_tabs?.[item.page]) return false;
