@@ -494,16 +494,7 @@ function TemplateViewDialog({ template, onClose }) {
                   </div>
                   <div className="border-2 border-[#143A50] rounded-b-lg">
                     <BrandedTemplateWrapper>
-                      <div 
-                        className="prose prose-slate max-w-none"
-                        style={{
-                          fontFamily: 'Georgia, "Times New Roman", serif',
-                          lineHeight: '2',
-                          fontSize: '15px'
-                        }}
-                      >
-                        <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
-                      </div>
+                      <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
                     </BrandedTemplateWrapper>
                   </div>
                 </div>
