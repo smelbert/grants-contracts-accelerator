@@ -100,39 +100,123 @@ function inferResponsesFromJotform(jotformData) {
   if (!jotformData) return {};
   const inferred = {};
 
-  // q3: Legal structure — map org_type
   const orgType = (jotformData.org_type || '').toLowerCase();
-  if (orgType.includes('501') || orgType.includes('nonprofit')) inferred['q3'] = 'a';
-  else if (orgType.includes('llc') || orgType.includes('corporation') || orgType.includes('corp')) inferred['q3'] = 'b';
-  else if (orgType.includes('sole') || orgType.includes('proprietor')) inferred['q3'] = 'c';
-
-  // q4: Board — infer from org type (nonprofits typically have boards)
-  if (orgType.includes('501') || orgType.includes('nonprofit')) inferred['q4'] = 'a';
-
-  // q5: Financial statements — infer from annual_revenue
+  const grantExp = (jotformData.grant_experience || '').toLowerCase();
   const revenue = (jotformData.annual_revenue || '').toLowerCase();
-  if (revenue.includes('100k') || revenue.includes('250k') || revenue.includes('500k') || revenue.includes('1m') || parseInt(revenue) > 100000) {
-    inferred['q5'] = 'a';
-  } else if (revenue && revenue !== 'none' && revenue !== '$0' && revenue !== '0') {
-    inferred['q5'] = 'b';
+  const existingItems = (jotformData.existing_items || '').toLowerCase();
+  const fundingBarrier = (jotformData.funding_barrier || '').toLowerCase();
+  const documents = (jotformData.documents_needed || '').toLowerCase();
+  const participationPlan = (jotformData.participation_plan || '').toLowerCase();
+
+  // ─── q1: Grants vs Contracts primary difference ───────────────────────────
+  // If they have grant experience, they likely understand the difference
+  if (grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('applied many') || grantExp.includes('awarded')) {
+    inferred['q1'] = 'b'; // Correct: grants fund mission, contracts pay for deliverables
+  } else if (grantExp.includes('some') || grantExp.includes('intermediate') || grantExp.includes('applied')) {
+    inferred['q1'] = 'b'; // Still likely to know this
+  }
+  // Beginners left blank — let them answer honestly
+
+  // ─── q2: Who reviews grant applications ───────────────────────────────────
+  // Similarly, experienced applicants know this
+  if (grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('applied many') || grantExp.includes('awarded')) {
+    inferred['q2'] = 'b'; // Program officers and review committees
   }
 
-  // q6: Expense tracking — infer from grant_experience
-  const grantExp = (jotformData.grant_experience || '').toLowerCase();
-  if (grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('applied many')) inferred['q6'] = 'a';
-  else if (grantExp.includes('some') || grantExp.includes('applied') || grantExp.includes('intermediate')) inferred['q6'] = 'b';
-  else if (grantExp.includes('little') || grantExp.includes('beginner') || grantExp.includes('new')) inferred['q6'] = 'c';
+  // ─── q3: Legal structure ──────────────────────────────────────────────────
+  if (orgType.includes('501') || orgType.includes('nonprofit') || orgType.includes('non-profit')) {
+    inferred['q3'] = 'a'; // 501(c)(3) nonprofit with EIN
+  } else if (orgType.includes('llc') || orgType.includes('corporation') || orgType.includes('corp') || orgType.includes('inc')) {
+    inferred['q3'] = 'b'; // LLC or Corporation with EIN
+  } else if (orgType.includes('sole') || orgType.includes('proprietor') || orgType.includes('individual')) {
+    inferred['q3'] = 'c'; // Sole proprietor with EIN
+  } else if (orgType.includes('no') || orgType.includes('none') || orgType.includes('not yet') || orgType.includes('informal')) {
+    inferred['q3'] = 'd'; // No formal structure
+  }
 
-  // q7 & q8: Confidence — infer from grant_experience level
-  if (grantExp.includes('advanced') || grantExp.includes('experienced')) {
+  // ─── q4: Governing board ──────────────────────────────────────────────────
+  // Nonprofits are required to have boards
+  if (orgType.includes('501') || orgType.includes('nonprofit') || orgType.includes('non-profit')) {
+    // Check existing_items for board-related mentions
+    if (existingItems.includes('board') && (existingItems.includes('minutes') || existingItems.includes('bylaws') || existingItems.includes('formal'))) {
+      inferred['q4'] = 'a'; // Yes, with regular meetings and minutes
+    } else if (existingItems.includes('board')) {
+      inferred['q4'] = 'b'; // Yes, but informal
+    } else {
+      inferred['q4'] = 'b'; // Default for nonprofits — likely have some form of board
+    }
+  } else if (orgType.includes('llc') || orgType.includes('corp')) {
+    if (existingItems.includes('board') || existingItems.includes('advisory')) {
+      inferred['q4'] = 'b'; // Yes, informal advisory
+    } else {
+      inferred['q4'] = 'c'; // Working on forming one
+    }
+  }
+
+  // ─── q5: Financial statements ─────────────────────────────────────────────
+  // Use existing_items (what they already have) + revenue level
+  const hasFinancials = existingItems.includes('financial') || existingItems.includes('budget') || existingItems.includes('audit') || existingItems.includes('balance sheet') || existingItems.includes('990');
+  const needsFinancials = documents.includes('financial') || documents.includes('audit') || documents.includes('budget') || documents.includes('990');
+
+  const highRevenue = revenue.includes('250k') || revenue.includes('500k') || revenue.includes('1m') || revenue.includes('750k') || revenue.includes('million') || revenue.match(/\$[2-9]\d{2}/) || revenue.match(/\$\d{1,3}[,.]?\d{3}k?/);
+  const someRevenue = revenue.includes('100k') || revenue.includes('50k') || revenue.includes('25k') || (revenue && revenue !== 'none' && revenue !== '$0' && revenue !== '0' && revenue !== 'n/a');
+
+  if (hasFinancials && !needsFinancials && (highRevenue || someRevenue)) {
+    inferred['q5'] = 'a'; // Professionally prepared and current
+  } else if (hasFinancials || (someRevenue && !needsFinancials)) {
+    inferred['q5'] = 'b'; // Yes, but need updating
+  } else if (someRevenue || needsFinancials) {
+    inferred['q5'] = 'c'; // Basic tracking
+  } else if (!someRevenue || revenue === '$0' || revenue === '0' || revenue === 'none') {
+    inferred['q5'] = 'd'; // No formal documents
+  }
+
+  // ─── q6: Expense tracking by program/project ──────────────────────────────
+  const hasAccounting = existingItems.includes('quickbooks') || existingItems.includes('accounting') || existingItems.includes('software') || existingItems.includes('bookkeep');
+  const hasSpreadsheet = existingItems.includes('spreadsheet') || existingItems.includes('excel') || existingItems.includes('google sheet');
+
+  if (hasAccounting) {
+    inferred['q6'] = 'a'; // Accounting software
+  } else if (hasSpreadsheet) {
+    inferred['q6'] = 'b'; // Spreadsheets
+  } else if (grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('awarded')) {
+    inferred['q6'] = 'b'; // Likely has tracking if experienced with grants
+  } else if (grantExp.includes('some') || grantExp.includes('intermediate') || grantExp.includes('applied')) {
+    inferred['q6'] = 'c'; // Somewhat
+  } else if (grantExp.includes('never') || grantExp.includes('none') || grantExp.includes('no experience') || grantExp.includes('beginner') || grantExp.includes('new')) {
+    inferred['q6'] = 'd'; // No tracking
+  }
+
+  // ─── q7: Confidence explaining mission ────────────────────────────────────
+  // Use grant_experience + years_in_business + org maturity
+  const years = parseInt(jotformData.years_in_business) || 0;
+  const matureOrg = years >= 5 || highRevenue;
+  const establishedOrg = years >= 2 || someRevenue;
+
+  if ((grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('awarded')) && matureOrg) {
+    inferred['q7'] = '9';
+  } else if ((grantExp.includes('advanced') || grantExp.includes('experienced')) || matureOrg) {
     inferred['q7'] = '8';
-    inferred['q8'] = '7';
-  } else if (grantExp.includes('some') || grantExp.includes('intermediate')) {
+  } else if ((grantExp.includes('some') || grantExp.includes('intermediate') || grantExp.includes('applied')) && establishedOrg) {
+    inferred['q7'] = '7';
+  } else if (grantExp.includes('some') || grantExp.includes('intermediate') || establishedOrg) {
     inferred['q7'] = '6';
-    inferred['q8'] = '5';
-  } else if (grantExp.includes('little') || grantExp.includes('beginner') || grantExp.includes('new') || grantExp.includes('none')) {
+  } else if (grantExp.includes('little') || grantExp.includes('beginner') || grantExp.includes('new')) {
     inferred['q7'] = '4';
+  } else if (grantExp.includes('never') || grantExp.includes('none') || grantExp.includes('no experience')) {
+    inferred['q7'] = '3';
+  }
+
+  // ─── q8: Confidence preparing a grant proposal ────────────────────────────
+  // More specific to grant writing skill — typically one level below mission confidence
+  if (grantExp.includes('advanced') || grantExp.includes('experienced') || grantExp.includes('awarded') || grantExp.includes('applied many')) {
+    inferred['q8'] = '8';
+  } else if (grantExp.includes('some') || grantExp.includes('intermediate') || grantExp.includes('applied')) {
+    inferred['q8'] = '6';
+  } else if (grantExp.includes('little') || grantExp.includes('beginner') || grantExp.includes('new')) {
     inferred['q8'] = '3';
+  } else if (grantExp.includes('never') || grantExp.includes('none') || grantExp.includes('no experience')) {
+    inferred['q8'] = '2';
   }
 
   return inferred;
