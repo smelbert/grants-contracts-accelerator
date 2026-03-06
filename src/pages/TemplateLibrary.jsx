@@ -563,6 +563,118 @@ function TemplateViewDialog({ template, onClose }) {
   );
 }
 
+function AIEnhancePanel({ content, templateName, onApply }) {
+  const [open, setOpen] = useState(false);
+  const [orgType, setOrgType] = useState('');
+  const [prompt, setPrompt] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState('');
+
+  const QUICK_PROMPTS = [
+    { label: 'Add callout boxes for key tips', value: 'Add visually distinct callout boxes (using HTML blockquote or styled divs) for the most important tips and warnings throughout this template.' },
+    { label: 'Make it nonprofit-specific', value: 'Rewrite this template to be specifically tailored for 501(c)(3) nonprofit organizations, including compliance language and governance references.' },
+    { label: 'Make it for-profit specific', value: 'Rewrite this template to be specifically tailored for for-profit small businesses, removing nonprofit-specific language and adding business-relevant framing.' },
+    { label: 'Add section headers & formatting', value: 'Improve the visual structure by adding clear section headers, subheadings, and better HTML formatting with consistent spacing.' },
+    { label: 'Add placeholder examples', value: 'Add realistic placeholder examples in brackets (e.g., [Your Organization Name]) throughout so users know exactly what to fill in.' },
+    { label: 'Make more concise', value: 'Tighten the language throughout — remove redundancy, make sentences direct, and ensure each section is as concise as possible without losing meaning.' },
+  ];
+
+  const handleEnhance = async () => {
+    setLoading(true);
+    setResult('');
+    const finalPrompt = `You are enhancing a professional funding template called "${templateName}".
+${orgType ? `This template is specifically for: ${orgType} organizations.` : ''}
+${prompt}
+
+Here is the current template HTML content:
+${content}
+
+Return ONLY the improved HTML content — no explanations, no markdown code fences, just the raw HTML.`;
+
+    const res = await base44.integrations.Core.InvokeLLM({ prompt: finalPrompt });
+    setResult(res);
+    setLoading(false);
+  };
+
+  return (
+    <div className="border-2 border-purple-200 rounded-xl bg-purple-50 overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-3 text-left"
+      >
+        <span className="flex items-center gap-2 font-semibold text-purple-800">
+          <Wand2 className="w-5 h-5" /> AI Enhance This Template
+        </span>
+        {open ? <ChevronUp className="w-4 h-4 text-purple-600" /> : <ChevronDown className="w-4 h-4 text-purple-600" />}
+      </button>
+      {open && (
+        <div className="px-5 pb-5 space-y-4 border-t border-purple-200">
+          <p className="text-sm text-purple-700 pt-3">Use AI to reformat, specialize, or enhance the template content.</p>
+
+          <div className="grid grid-cols-2 gap-2">
+            {QUICK_PROMPTS.map(qp => (
+              <button
+                key={qp.label}
+                onClick={() => setPrompt(qp.value)}
+                className={`text-xs px-3 py-2 rounded-lg border text-left transition-all ${prompt === qp.value ? 'border-purple-500 bg-purple-100 text-purple-800' : 'border-slate-200 bg-white text-slate-600 hover:border-purple-300'}`}
+              >
+                {qp.label}
+              </button>
+            ))}
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-600 mb-1 block">Target Org Type (optional)</label>
+            <select
+              value={orgType}
+              onChange={(e) => setOrgType(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
+            >
+              <option value="">General (all org types)</option>
+              <option value="Nonprofit 501(c)(3)">Nonprofit 501(c)(3)</option>
+              <option value="For-profit small business">For-profit small business</option>
+              <option value="Solopreneur / sole proprietor">Solopreneur / sole proprietor</option>
+              <option value="Community-based organization">Community-based organization</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-slate-600 mb-1 block">Custom instruction (or edit the quick prompt above)</label>
+            <Textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              rows={3}
+              placeholder="e.g., Add callout boxes for tips, restructure the sections, make it more specific to faith-based orgs..."
+            />
+          </div>
+
+          <Button
+            onClick={handleEnhance}
+            disabled={!prompt.trim() || loading}
+            className="bg-purple-600 hover:bg-purple-700 w-full"
+          >
+            {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Enhancing...</> : <><Wand2 className="w-4 h-4 mr-2" />Enhance with AI</>}
+          </Button>
+
+          {result && (
+            <div className="space-y-2">
+              <div className="border border-purple-200 rounded-lg bg-white p-3 max-h-48 overflow-y-auto text-sm text-slate-700" dangerouslySetInnerHTML={{ __html: result }} />
+              <div className="flex gap-2">
+                <Button onClick={() => onApply(result)} className="flex-1 bg-green-600 hover:bg-green-700">
+                  Apply to Template
+                </Button>
+                <Button variant="outline" onClick={() => setResult('')} className="flex-1">
+                  Discard
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TemplateEditDialog({ template, onClose, onSave }) {
   const [changeSummary, setChangeSummary] = useState('');
   const { data: user } = useQuery({
