@@ -16,6 +16,8 @@ import ActiveEditors from '@/components/templates/ActiveEditors';
 import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
 import TemplateAISuggestions from '@/components/ai/TemplateAISuggestions';
 import AIContentGenerator from '@/components/ai/AIContentGenerator';
+import TemplateSectionBuilder from '@/components/templates/TemplateSectionBuilder';
+import SectionRenderer from '@/components/templates/SectionRenderer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { 
   BookOpen, FileText, DollarSign, RefreshCw, Briefcase, 
