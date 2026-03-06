@@ -496,7 +496,7 @@ function TemplateViewDialog({ template, onClose }) {
                 </div>
               </div>
 
-              {/* 4-box guidance grid */}
+              {/* 4-box guidance grid - always 2x2 layout */}
               {(template.when_to_use || template.when_not_to_use || template.what_funders_look_for || template.common_mistakes) && (
                 <div className="grid grid-cols-2 gap-4">
                   {template.when_to_use && (
@@ -506,7 +506,7 @@ function TemplateViewDialog({ template, onClose }) {
                       </h3>
                       <p className="text-sm text-emerald-900 leading-relaxed">{template.when_to_use}</p>
                     </div>
-                  )}
+                  ) || <div className="p-4 rounded-lg border-2 border-slate-200 bg-slate-50 opacity-50"><p className="text-sm text-slate-500">When to Use</p></div>}
                   {template.when_not_to_use && (
                     <div className="p-4 rounded-lg border-2 border-red-200 bg-red-50">
                       <h3 className="font-bold text-red-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
@@ -514,7 +514,7 @@ function TemplateViewDialog({ template, onClose }) {
                       </h3>
                       <p className="text-sm text-red-900 leading-relaxed">{template.when_not_to_use}</p>
                     </div>
-                  )}
+                  ) || <div className="p-4 rounded-lg border-2 border-slate-200 bg-slate-50 opacity-50"><p className="text-sm text-slate-500">When NOT to Use</p></div>}
                   {template.what_funders_look_for && (
                     <div className="p-4 rounded-lg border-2 border-blue-200 bg-blue-50">
                       <h3 className="font-bold text-blue-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
@@ -522,7 +522,7 @@ function TemplateViewDialog({ template, onClose }) {
                       </h3>
                       <p className="text-sm text-blue-900 leading-relaxed">{template.what_funders_look_for}</p>
                     </div>
-                  )}
+                  ) || <div className="p-4 rounded-lg border-2 border-slate-200 bg-slate-50 opacity-50"><p className="text-sm text-slate-500">What Funders Look For</p></div>}
                   {template.common_mistakes && (
                     <div className="p-4 rounded-lg border-2 border-amber-200 bg-amber-50">
                       <h3 className="font-bold text-amber-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
@@ -530,7 +530,7 @@ function TemplateViewDialog({ template, onClose }) {
                       </h3>
                       <p className="text-sm text-amber-900 leading-relaxed">{template.common_mistakes}</p>
                     </div>
-                  )}
+                  ) || <div className="p-4 rounded-lg border-2 border-slate-200 bg-slate-50 opacity-50"><p className="text-sm text-slate-500">Common Mistakes</p></div>}
                 </div>
               )}
 
