@@ -103,8 +103,8 @@ export default function IncubateHerCompletion() {
     {
       id: 'documents',
       title: 'Required Documents Completed',
-      description: 'Self-report: verify that your required funding documents are ready',
-      completed: enrollment?.documents_verified || false,
+      description: 'Self-report: check this box to confirm your required funding documents are ready',
+      completed: enrollment?.documents_uploaded || false,
       selfSelect: true,
       optional: true
     }
