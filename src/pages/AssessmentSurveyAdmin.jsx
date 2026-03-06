@@ -319,7 +319,20 @@ export default function AssessmentSurveyAdmin() {
                                   <Badge className="bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200">{pre.total_score} pts <Eye className="w-3 h-3 inline ml-1" /></Badge>
                                 </button>
                               ) : (
-                                <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
+                                <button onClick={() => {
+                                  // Show a placeholder with any jotform-inferred data
+                                  setSelectedAssessment({
+                                    assessment_type: 'pre',
+                                    participant_email: e.participant_email,
+                                    prefilled: true,
+                                    responses: {},
+                                    total_score: null,
+                                    jotform_data: e.jotform_data
+                                  });
+                                  setSelectedParticipantName(e.participant_name);
+                                }}>
+                                  <Badge className="bg-slate-100 text-slate-500 cursor-pointer hover:bg-slate-200 text-xs">Not submitted <Eye className="w-3 h-3 inline ml-1" /></Badge>
+                                </button>
                               )}
                             </td>
                             <td className="py-2 px-3 text-center">
@@ -328,7 +341,18 @@ export default function AssessmentSurveyAdmin() {
                                   <Badge className="bg-green-100 text-green-800 cursor-pointer hover:bg-green-200">{post.total_score} pts <Eye className="w-3 h-3 inline ml-1" /></Badge>
                                 </button>
                               ) : (
-                                <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
+                                <button onClick={() => {
+                                  setSelectedAssessment({
+                                    assessment_type: 'post',
+                                    participant_email: e.participant_email,
+                                    prefilled: true,
+                                    responses: {},
+                                    total_score: null
+                                  });
+                                  setSelectedParticipantName(e.participant_name);
+                                }}>
+                                  <Badge className="bg-slate-100 text-slate-500 cursor-pointer hover:bg-slate-200 text-xs">Not submitted <Eye className="w-3 h-3 inline ml-1" /></Badge>
+                                </button>
                               )}
                             </td>
                             <td className="py-2 px-3 text-center">
