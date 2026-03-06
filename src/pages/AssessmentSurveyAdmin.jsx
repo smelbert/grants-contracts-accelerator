@@ -526,7 +526,17 @@ export default function AssessmentSurveyAdmin() {
           </TabsContent>
         </Tabs>
 
-        {selectedAssessment && (
+        {/* IncubateHer assessment modal — shown when assessment has assessment_type of pre/post/evaluation */}
+        {selectedAssessment && ['pre', 'post', 'evaluation'].includes(selectedAssessment.assessment_type) && (
+          <AssessmentDetailModal
+            assessment={selectedAssessment}
+            participantName={selectedParticipantName}
+            onClose={() => { setSelectedAssessment(null); setSelectedParticipantName(null); }}
+          />
+        )}
+
+        {/* Generic modal for other assessment types (training, coach, etc.) */}
+        {selectedAssessment && !['pre', 'post', 'evaluation'].includes(selectedAssessment.assessment_type) && (
           <Dialog open onOpenChange={() => {
             setSelectedAssessment(null);
             setEditMode(false);
@@ -541,7 +551,7 @@ export default function AssessmentSurveyAdmin() {
                 <pre className="text-xs bg-slate-50 p-4 rounded-lg overflow-x-auto">
                   {JSON.stringify(selectedAssessment, null, 2)}
                 </pre>
-                {editMode && selectedAssessment.assessment_type && (
+                {editMode && (
                   <div className="space-y-4">
                     <div>
                       <Label>Notes/Comments</Label>
@@ -564,18 +574,11 @@ export default function AssessmentSurveyAdmin() {
                         Delete
                       </Button>
                       <div className="flex gap-3">
-                        <Button variant="outline" onClick={() => setEditMode(false)}>
-                          Cancel
-                        </Button>
+                        <Button variant="outline" onClick={() => setEditMode(false)}>Cancel</Button>
                         <Button onClick={() => {
                           const notes = document.getElementById('notes').value;
-                          updateGrantAssessmentMutation.mutate({
-                            id: selectedAssessment.id,
-                            data: { reviewer_notes: notes }
-                          });
-                        }}>
-                          Save Changes
-                        </Button>
+                          updateGrantAssessmentMutation.mutate({ id: selectedAssessment.id, data: { reviewer_notes: notes } });
+                        }}>Save Changes</Button>
                       </div>
                     </div>
                   </div>
