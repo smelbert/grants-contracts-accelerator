@@ -286,14 +286,18 @@ export default function AssessmentSurveyAdmin() {
                             </td>
                             <td className="py-2 px-3 text-center">
                               {pre ? (
-                                <Badge className="bg-blue-100 text-blue-800">{pre.total_score} pts</Badge>
+                                <button onClick={() => { setSelectedAssessment(pre); setSelectedParticipantName(e.participant_name); }}>
+                                  <Badge className="bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200">{pre.total_score} pts <Eye className="w-3 h-3 inline ml-1" /></Badge>
+                                </button>
                               ) : (
                                 <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
                               )}
                             </td>
                             <td className="py-2 px-3 text-center">
                               {post ? (
-                                <Badge className="bg-green-100 text-green-800">{post.total_score} pts</Badge>
+                                <button onClick={() => { setSelectedAssessment(post); setSelectedParticipantName(e.participant_name); }}>
+                                  <Badge className="bg-green-100 text-green-800 cursor-pointer hover:bg-green-200">{post.total_score} pts <Eye className="w-3 h-3 inline ml-1" /></Badge>
+                                </button>
                               ) : (
                                 <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
                               )}
@@ -307,7 +311,9 @@ export default function AssessmentSurveyAdmin() {
                             </td>
                             <td className="py-2 px-3 text-center">
                               {ev ? (
-                                <Badge className="bg-purple-100 text-purple-800">{ev.responses?.overall_rating || '?'}/10</Badge>
+                                <button onClick={() => { setSelectedAssessment(ev); setSelectedParticipantName(e.participant_name); }}>
+                                  <Badge className="bg-purple-100 text-purple-800 cursor-pointer hover:bg-purple-200">{ev.responses?.overall_rating || '?'}/10 <Eye className="w-3 h-3 inline ml-1" /></Badge>
+                                </button>
                               ) : (
                                 <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
                               )}
