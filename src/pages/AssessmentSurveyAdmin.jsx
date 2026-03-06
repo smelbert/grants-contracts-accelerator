@@ -182,6 +182,147 @@ export default function AssessmentSurveyAdmin() {
             <TabsTrigger value="coach">Coach Intakes</TabsTrigger>
           </TabsList>
 
+          {/* IncubateHer Program Tab */}
+          <TabsContent value="incubateher" className="mt-6">
+            {/* Completion Rate Summary */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              {[
+                { label: 'Pre-Assessment', count: incubatePre.length, rate: preRate, avg: avgPre, color: 'blue', avgLabel: 'Avg Score' },
+                { label: 'Post-Assessment', count: incubatePost.length, rate: postRate, avg: avgPost, color: 'green', avgLabel: 'Avg Score' },
+                { label: 'Program Evaluation', count: incubateEval.length, rate: evalRate, avg: avgEvalRating, color: 'purple', avgLabel: 'Avg Rating (/10)' },
+              ].map(({ label, count, rate, avg, color, avgLabel }) => (
+                <Card key={label}>
+                  <CardContent className="pt-5">
+                    <p className="text-sm font-semibold text-slate-700 mb-3">{label}</p>
+                    <div className="flex items-end gap-3 mb-3">
+                      <p className="text-4xl font-bold" style={{ color: color === 'blue' ? '#3b82f6' : color === 'green' ? '#22c55e' : '#a855f7' }}>
+                        {rate}%
+                      </p>
+                      <p className="text-sm text-slate-500 mb-1">{count} / {totalParticipants} participants</p>
+                    </div>
+                    <div className="w-full bg-slate-100 rounded-full h-2 mb-3">
+                      <div
+                        className="h-2 rounded-full transition-all"
+                        style={{ width: `${rate}%`, backgroundColor: color === 'blue' ? '#3b82f6' : color === 'green' ? '#22c55e' : '#a855f7' }}
+                      />
+                    </div>
+                    <p className="text-xs text-slate-500">{avgLabel}: <span className="font-semibold text-slate-700">{avg}</span></p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Growth Indicator */}
+            {incubatePre.length > 0 && incubatePost.length > 0 && (
+              <Card className="mb-6 bg-slate-900 text-white">
+                <CardContent className="pt-5 flex items-center justify-center gap-10">
+                  <div className="text-center">
+                    <p className="text-sm text-slate-400 mb-1">Pre-Assessment Avg</p>
+                    <p className="text-4xl font-bold">{avgPre}</p>
+                  </div>
+                  <TrendingUp className="w-10 h-10 text-yellow-400" />
+                  <div className="text-center">
+                    <p className="text-sm text-slate-400 mb-1">Post-Assessment Avg</p>
+                    <p className="text-4xl font-bold text-green-400">{avgPost}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-slate-400 mb-1">Growth</p>
+                    <p className="text-4xl font-bold text-yellow-400">+{avgPost - avgPre}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Per-participant table */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Per-Participant Breakdown</CardTitle>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    const rows = enrollments.map(e => {
+                      const pre = incubatePre.find(a => a.participant_email === e.participant_email);
+                      const post = incubatePost.find(a => a.participant_email === e.participant_email);
+                      const ev = incubateEval.find(a => a.participant_email === e.participant_email);
+                      return {
+                        name: e.participant_name,
+                        email: e.participant_email,
+                        pre_score: pre?.total_score || '',
+                        post_score: post?.total_score || '',
+                        growth: (pre && post) ? (post.total_score - pre.total_score) : '',
+                        eval_rating: ev?.responses?.overall_rating || '',
+                      };
+                    });
+                    handleExportCSV(rows, 'incubateher-assessments.csv');
+                  }}>
+                    <Download className="w-4 h-4 mr-2" /> Export CSV
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-2 px-3 text-slate-600 font-medium">Participant</th>
+                        <th className="text-center py-2 px-3 text-slate-600 font-medium">Pre-Assessment</th>
+                        <th className="text-center py-2 px-3 text-slate-600 font-medium">Post-Assessment</th>
+                        <th className="text-center py-2 px-3 text-slate-600 font-medium">Growth</th>
+                        <th className="text-center py-2 px-3 text-slate-600 font-medium">Evaluation</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {enrollments.map((e) => {
+                        const pre = incubatePre.find(a => a.participant_email === e.participant_email);
+                        const post = incubatePost.find(a => a.participant_email === e.participant_email);
+                        const ev = incubateEval.find(a => a.participant_email === e.participant_email);
+                        const growth = (pre && post) ? post.total_score - pre.total_score : null;
+                        return (
+                          <tr key={e.id} className="border-b hover:bg-slate-50">
+                            <td className="py-2 px-3">
+                              <p className="font-medium text-slate-800">{e.participant_name}</p>
+                              <p className="text-xs text-slate-500">{e.participant_email}</p>
+                            </td>
+                            <td className="py-2 px-3 text-center">
+                              {pre ? (
+                                <Badge className="bg-blue-100 text-blue-800">{pre.total_score} pts</Badge>
+                              ) : (
+                                <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
+                              )}
+                            </td>
+                            <td className="py-2 px-3 text-center">
+                              {post ? (
+                                <Badge className="bg-green-100 text-green-800">{post.total_score} pts</Badge>
+                              ) : (
+                                <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
+                              )}
+                            </td>
+                            <td className="py-2 px-3 text-center">
+                              {growth !== null ? (
+                                <span className={`font-bold text-sm ${growth >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                  {growth >= 0 ? '+' : ''}{growth}
+                                </span>
+                              ) : <span className="text-slate-300">—</span>}
+                            </td>
+                            <td className="py-2 px-3 text-center">
+                              {ev ? (
+                                <Badge className="bg-purple-100 text-purple-800">{ev.responses?.overall_rating || '?'}/10</Badge>
+                              ) : (
+                                <XCircle className="w-4 h-4 text-slate-300 mx-auto" />
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  {enrollments.length === 0 && (
+                    <p className="text-center text-slate-400 py-8">No participants found.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="training" className="mt-6">
             <Card>
               <CardHeader>
