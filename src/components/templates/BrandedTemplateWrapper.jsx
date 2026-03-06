@@ -54,7 +54,65 @@ export default function BrandedTemplateWrapper({ children }) {
 
       {/* Template Content */}
       <div className="px-8 py-8">
-        {children}
+        <style>{`
+          .eis-template-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+          }
+          .eis-template-body table th {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+            font-weight: 600;
+          }
+          .eis-template-body table td {
+            padding: 9px 12px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+          }
+          .eis-template-body h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+          }
+          .eis-template-body h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #E5C089;
+          }
+          .eis-template-body h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #1E4F58;
+          }
+          .eis-template-body p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+          }
+          .eis-template-body ul, .eis-template-body ol {
+            margin: 8px 0 12px 24px;
+            line-height: 1.7;
+          }
+          .eis-template-body li {
+            margin-bottom: 4px;
+          }
+          .eis-template-body hr {
+            border: none;
+            border-top: 2px solid #E5C089;
+            margin: 24px 0;
+          }
+        `}</style>
+        <div className="eis-template-body">
+          {children}
+        </div>
       </div>
 
       {/* Branded Footer */}
