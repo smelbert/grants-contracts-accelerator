@@ -402,8 +402,9 @@ export default function LiveRoomManagement() {
               </Button>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+          </DialogContent>
+          </Dialog>
+          </div>
+          </div>
+          );
+          }
