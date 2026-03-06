@@ -13,6 +13,7 @@ import { FileText, Users, Calendar, Download, Eye, Edit, Trash2, CheckCircle2, X
 import { toast } from 'sonner';
 import moment from 'moment';
 import AssessmentDetailModal from '@/components/incubateher/AssessmentDetailModal';
+import SurveyBuilder from '@/components/incubateher/SurveyBuilder';
 
 export default function AssessmentSurveyAdmin() {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
@@ -199,6 +200,7 @@ export default function AssessmentSurveyAdmin() {
             <TabsTrigger value="competency">Competency</TabsTrigger>
             <TabsTrigger value="readiness">Readiness</TabsTrigger>
             <TabsTrigger value="coach">Coach Intakes</TabsTrigger>
+            <TabsTrigger value="builder">Survey Builder</TabsTrigger>
           </TabsList>
 
           {/* IncubateHer Program Tab */}
@@ -563,6 +565,10 @@ export default function AssessmentSurveyAdmin() {
                 ))}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="builder" className="mt-6">
+            <SurveyBuilder />
           </TabsContent>
 
           <TabsContent value="coach" className="mt-6">
