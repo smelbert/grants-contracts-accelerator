@@ -375,7 +375,7 @@ export default function TemplateLibraryPage() {
   );
 }
 
-function TemplateCard({ template, onView, onEdit, config, isFavorite, onToggleFavorite }) {
+function TemplateCard({ template, onView, onEdit, onDelete, config, isFavorite, onToggleFavorite }) {
   return (
     <Card className="hover:shadow-lg transition-shadow relative">
       <CardHeader>
