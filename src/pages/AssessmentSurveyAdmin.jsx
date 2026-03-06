@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { FileText, Users, Calendar, Download, Eye, Edit, Trash2 } from 'lucide-react';
+import { FileText, Users, Calendar, Download, Eye, Edit, Trash2, CheckCircle2, XCircle, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import moment from 'moment';
 
