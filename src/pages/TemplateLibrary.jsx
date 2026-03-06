@@ -756,7 +756,8 @@ function TemplateEditDialog({ template, onClose, onSave }) {
     what_funders_look_for: '',
     common_mistakes: '',
     ai_assist_notes: '',
-    template_content: ''
+    template_content: '',
+    sections: template?.sections || []
   });
 
   const quillModules = {
