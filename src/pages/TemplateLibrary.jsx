@@ -331,6 +331,7 @@ export default function TemplateLibraryPage() {
                   onView={setViewTemplate}
                   onEdit={isAdmin ? setEditTemplate : null}
                   onDelete={isAdmin ? handleDelete : null}
+                  onTogglePublish={isAdmin ? togglePublishMutation.mutate : null}
                   config={CATEGORY_CONFIG[template.category]}
                   isFavorite={favorites.some(f => f.template_id === template.id)}
                   onToggleFavorite={toggleFavoriteMutation.mutate}
