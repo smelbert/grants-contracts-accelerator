@@ -169,6 +169,11 @@ export default function TemplateLibraryPage() {
     onSuccess: () => queryClient.invalidateQueries(['templates'])
   });
 
+  const togglePublishMutation = useMutation({
+    mutationFn: (template) => base44.entities.Template.update(template.id, { is_published: !template.is_published }),
+    onSuccess: () => queryClient.invalidateQueries(['templates'])
+  });
+
   const handleDelete = (template) => {
     if (window.confirm(`Are you sure you want to permanently delete "${template.template_name}"? This cannot be undone.`)) {
       deleteTemplateMutation.mutate(template.id);
