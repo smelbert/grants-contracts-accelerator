@@ -281,14 +281,14 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
           )}
 
           {/* Submitted date */}
-          {assessment.created_date && (
+          {!notSubmitted && assessment.created_date && (
             <p className="text-xs text-slate-400">
               Submitted: {moment(assessment.created_date).format('MMM D, YYYY [at] h:mm A')}
             </p>
           )}
 
           {/* Pre or Post: show questions */}
-          {(isPre || isPost) && (
+          {!notSubmitted && (isPre || isPost) && (
             <div className="space-y-4">
               {['grants_vs_contracts', 'legal_readiness', 'financial_readiness', 'confidence'].map(section => {
                 const sectionLabel = {
