@@ -919,31 +919,63 @@ function TemplateEditDialog({ template, onClose, onSave }) {
             </div>
           </div>
 
-          {/* AI Enhance Panel */}
-          <AIEnhancePanel
-            content={formData.template_content}
-            templateName={formData.template_name}
-            onApply={(enhanced) => setFormData({ ...formData, template_content: enhanced })}
-          />
+          {/* Tabs for Section Builder vs Rich Text */}
+          <Tabs defaultValue="sections" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="sections">
+                <FileText className="w-4 h-4 mr-2" />
+                Section Builder
+              </TabsTrigger>
+              <TabsTrigger value="richtext">
+                <FileText className="w-4 h-4 mr-2" />
+                Rich Text Editor
+              </TabsTrigger>
+            </TabsList>
 
-          <div>
-            <label className="text-sm font-medium mb-2 block flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Template Content (Rich Text Editor)
-            </label>
-            <div className="border-2 border-slate-200 rounded-lg overflow-hidden bg-white">
-              <ReactQuill
-                theme="snow"
-                value={formData.template_content}
-                onChange={(content) => setFormData({...formData, template_content: content})}
-                modules={quillModules}
-                formats={quillFormats}
-                className="min-h-[400px]"
-                placeholder="Start writing your template content here. Use the toolbar to format text, add headers with different colors, lists, etc."
-                style={{ height: '500px' }}
+            <TabsContent value="sections" className="space-y-4">
+              <div className="text-sm text-slate-600 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                Drag sections to reorder, customize each one, and see the preview update instantly.
+              </div>
+              <TemplateSectionBuilder
+                sections={formData.sections}
+                onChange={(sections) => setFormData({ ...formData, sections })}
               />
-            </div>
-          </div>
+              <div className="mt-6">
+                <p className="text-sm font-medium text-slate-700 mb-3">Preview</p>
+                <div className="border-2 border-slate-200 rounded-lg p-6 bg-slate-50">
+                  <SectionRenderer sections={formData.sections} preview={true} />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="richtext" className="space-y-4">
+              {/* AI Enhance Panel */}
+              <AIEnhancePanel
+                content={formData.template_content}
+                templateName={formData.template_name}
+                onApply={(enhanced) => setFormData({ ...formData, template_content: enhanced })}
+              />
+
+              <div>
+                <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Template Content (Rich Text Editor)
+                </label>
+                <div className="border-2 border-slate-200 rounded-lg overflow-hidden bg-white">
+                  <ReactQuill
+                    theme="snow"
+                    value={formData.template_content}
+                    onChange={(content) => setFormData({...formData, template_content: content})}
+                    modules={quillModules}
+                    formats={quillFormats}
+                    className="min-h-[400px]"
+                    placeholder="Start writing your template content here. Use the toolbar to format text, add headers with different colors, lists, etc."
+                    style={{ height: '500px' }}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
 
           {template && (
             <div>
