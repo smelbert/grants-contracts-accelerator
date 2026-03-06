@@ -273,7 +273,7 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
   }
   
   // Check if user is an IncubateHer participant with restricted access
-  const isIncubateHerParticipant = incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program';
+  const isIncubateHerParticipant = !!incubateHerEnrollment;
   
   // Filter user portal items based on access and role
   const userNav = getUserPortalNav();
