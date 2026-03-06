@@ -310,7 +310,7 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
           )}
 
           {/* Evaluation: show all response fields */}
-          {isEval && (
+          {!notSubmitted && isEval && (
             <div className="space-y-2">
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Evaluation Responses</p>
               {[
