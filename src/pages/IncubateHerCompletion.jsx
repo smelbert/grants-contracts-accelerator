@@ -86,9 +86,9 @@ export default function IncubateHerCompletion() {
     {
       id: 'attendance',
       title: 'Session Attendance',
-      description: `Attend sessions in-person or watch recordings (${sessionsAttended} session(s) counted)`,
+      description: `Attend sessions in-person or watch recordings — tracked by admin (${sessionsAttended} session(s) counted so far)`,
       completed: sessionsAttended > 0,
-      selfSelect: false, // tracked via attendance system
+      selfSelect: false,
       optional: true
     },
     {
