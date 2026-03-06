@@ -21,7 +21,7 @@ import {
   BookOpen, FileText, DollarSign, RefreshCw, Briefcase, 
   Heart, Building2, TrendingUp, Sparkles, CheckSquare, 
   AlertCircle, Plus, Edit, Eye, Download, Star, MessageSquare,
-  History, Save
+  History, Save, Trash2
 } from 'lucide-react';
 
 const CATEGORY_CONFIG = {
