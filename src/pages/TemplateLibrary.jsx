@@ -856,6 +856,13 @@ function TemplateEditDialog({ template, onClose, onSave }) {
             </div>
           </div>
 
+          {/* AI Enhance Panel */}
+          <AIEnhancePanel
+            content={formData.template_content}
+            templateName={formData.template_name}
+            onApply={(enhanced) => setFormData({ ...formData, template_content: enhanced })}
+          />
+
           <div>
             <label className="text-sm font-medium mb-2 block flex items-center gap-2">
               <FileText className="w-4 h-4" />
