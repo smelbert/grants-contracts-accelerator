@@ -207,67 +207,40 @@ export default function IncubateHerConsultations() {
           </CardContent>
         </Card>
 
-        {(!enrollment?.pre_assessment_completed || !workbookRequirementMet) && (
+        {/* Required: pre, post, evaluation */}
+        {(!enrollment?.pre_assessment_completed || !enrollment?.post_assessment_completed || !enrollment?.program_evaluation_completed) && (
           <Card className="border-l-4 border-l-amber-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-amber-900">
                 <AlertCircle className="w-5 h-5" />
-                Requirements Not Met
+                Required Assessments Not Yet Complete
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {!enrollment?.pre_assessment_completed && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="w-4 h-4 text-amber-600" />
-                    <p className="font-medium text-slate-900">Pre-Assessment Required</p>
+            <CardContent className="space-y-3">
+              {[
+                { label: 'Pre-Assessment', done: enrollment?.pre_assessment_completed, link: '/IncubateHerPreAssessment' },
+                { label: 'Post-Assessment', done: enrollment?.post_assessment_completed, link: '/IncubateHerPostAssessment' },
+                { label: 'Program Evaluation', done: enrollment?.program_evaluation_completed, link: '/IncubateHerEvaluation' },
+              ].map(item => (
+                <div key={item.label} className={`flex items-center justify-between p-3 rounded-lg ${item.done ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`}>
+                  <div className="flex items-center gap-2">
+                    {item.done ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <AlertCircle className="w-4 h-4 text-amber-600" />}
+                    <span className="font-medium text-slate-800">{item.label}</span>
                   </div>
-                  <p className="text-slate-700 text-sm mb-3">
-                    You must complete the pre-assessment before booking your consultation.
-                  </p>
-                  <Button className="bg-[#143A50]">
-                    Complete Pre-Assessment
-                  </Button>
-                </div>
-              )}
-              
-              {!workbookRequirementMet && (
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-amber-600" />
-                      <p className="font-medium text-slate-900">Workbook Completion Required</p>
-                    </div>
-                    <Badge variant="outline" className="text-amber-600 border-amber-600">
-                      {workbookCompletionPercent}% Complete
-                    </Badge>
-                  </div>
-                  <p className="text-slate-700 text-sm mb-3">
-                    Complete at least 50% of the required workbook pages ({completedRequiredPages.length} of {requiredPages.length} completed).
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <Button className="bg-[#143A50]" onClick={() => window.location.href = '/IncubateHerWorkbook'}>
-                      Continue Workbook
+                  {item.done ? (
+                    <Badge className="bg-green-100 text-green-800">Complete</Badge>
+                  ) : (
+                    <Button size="sm" className="bg-[#143A50]" onClick={() => window.location.href = item.link}>
+                      Complete Now
                     </Button>
-                    <Button
-                      variant="outline"
-                      className="border-[#143A50] text-[#143A50]"
-                      onClick={() => {
-                        const el = document.getElementById('contact-charles-section');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                    >
-                      <MessageSquare className="w-4 h-4 mr-2" />
-                      Contact Charles
-                    </Button>
-                  </div>
+                  )}
                 </div>
-              )}
+              ))}
             </CardContent>
           </Card>
         )}
 
-        {enrollment?.pre_assessment_completed && workbookRequirementMet && (
+        {enrollment?.pre_assessment_completed && enrollment?.post_assessment_completed && enrollment?.program_evaluation_completed && (
           <>
             <Card>
               <CardHeader>
