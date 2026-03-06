@@ -164,6 +164,17 @@ export default function TemplateLibraryPage() {
     }
   });
 
+  const deleteTemplateMutation = useMutation({
+    mutationFn: (id) => base44.entities.Template.delete(id),
+    onSuccess: () => queryClient.invalidateQueries(['templates'])
+  });
+
+  const handleDelete = (template) => {
+    if (window.confirm(`Are you sure you want to permanently delete "${template.template_name}"? This cannot be undone.`)) {
+      deleteTemplateMutation.mutate(template.id);
+    }
+  };
+
   const toggleFavoriteMutation = useMutation({
     mutationFn: async (templateId) => {
       const existing = favorites.find(f => f.template_id === templateId);
