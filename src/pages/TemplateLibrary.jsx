@@ -412,13 +412,13 @@ function TemplateViewDialog({ template, onClose }) {
 
   return (
     <Dialog open={!!template} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader>
-          <DialogTitle>{template.template_name}</DialogTitle>
+      <DialogContent className="max-w-6xl max-h-[92vh] flex flex-col overflow-hidden">
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle className="text-xl font-bold text-slate-900">{template.template_name}</DialogTitle>
         </DialogHeader>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-          <TabsList className="mb-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 overflow-hidden">
+          <TabsList className="mb-4 flex-shrink-0">
             <TabsTrigger value="content">
               <FileText className="w-4 h-4 mr-2" />
               Content
@@ -433,57 +433,73 @@ function TemplateViewDialog({ template, onClose }) {
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex-1 overflow-y-auto">
-            <TabsContent value="content" className="mt-0 space-y-4">
-          <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-lg">
-            <div>
-              <p className="text-xs text-slate-600 mb-1">Category</p>
-              <Badge>{CATEGORY_CONFIG[template.category]?.label}</Badge>
-            </div>
-            <div>
-              <p className="text-xs text-slate-600 mb-1">Maturity Level</p>
-              <Badge variant="outline">{template.maturity_level}</Badge>
-            </div>
-          </div>
+          <div className="flex-1 overflow-y-auto pr-1">
+            <TabsContent value="content" className="mt-0 space-y-6">
 
-          {template.when_to_use && (
-            <div>
-              <h3 className="font-semibold mb-2 text-emerald-700">When to Use</h3>
-              <p className="text-sm text-slate-700">{template.when_to_use}</p>
-            </div>
-          )}
+              {/* Meta badges */}
+              <div className="flex gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                <div>
+                  <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-medium">Category</p>
+                  <Badge>{CATEGORY_CONFIG[template.category]?.label}</Badge>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 mb-1 uppercase tracking-wide font-medium">Maturity Level</p>
+                  <Badge variant="outline">{template.maturity_level}</Badge>
+                </div>
+              </div>
 
-          {template.when_not_to_use && (
-            <div>
-              <h3 className="font-semibold mb-2 text-red-700">When NOT to Use</h3>
-              <p className="text-sm text-slate-700">{template.when_not_to_use}</p>
-            </div>
-          )}
+              {/* 4-box guidance grid */}
+              {(template.when_to_use || template.when_not_to_use || template.what_funders_look_for || template.common_mistakes) && (
+                <div className="grid grid-cols-2 gap-4">
+                  {template.when_to_use && (
+                    <div className="p-4 rounded-lg border-2 border-emerald-200 bg-emerald-50">
+                      <h3 className="font-bold text-emerald-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+                        <span className="text-lg">✓</span> When to Use
+                      </h3>
+                      <p className="text-sm text-emerald-900 leading-relaxed">{template.when_to_use}</p>
+                    </div>
+                  )}
+                  {template.when_not_to_use && (
+                    <div className="p-4 rounded-lg border-2 border-red-200 bg-red-50">
+                      <h3 className="font-bold text-red-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+                        <span className="text-lg">✗</span> When NOT to Use
+                      </h3>
+                      <p className="text-sm text-red-900 leading-relaxed">{template.when_not_to_use}</p>
+                    </div>
+                  )}
+                  {template.what_funders_look_for && (
+                    <div className="p-4 rounded-lg border-2 border-blue-200 bg-blue-50">
+                      <h3 className="font-bold text-blue-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+                        <span className="text-lg">👁</span> What Funders Look For
+                      </h3>
+                      <p className="text-sm text-blue-900 leading-relaxed">{template.what_funders_look_for}</p>
+                    </div>
+                  )}
+                  {template.common_mistakes && (
+                    <div className="p-4 rounded-lg border-2 border-amber-200 bg-amber-50">
+                      <h3 className="font-bold text-amber-800 mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
+                        <span className="text-lg">⚠</span> Common Mistakes
+                      </h3>
+                      <p className="text-sm text-amber-900 leading-relaxed">{template.common_mistakes}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
-          {template.what_funders_look_for && (
-            <div>
-              <h3 className="font-semibold mb-2 text-blue-700">What Funders Look For</h3>
-              <p className="text-sm text-slate-700">{template.what_funders_look_for}</p>
-            </div>
-          )}
-
-          {template.common_mistakes && (
-            <div>
-              <h3 className="font-semibold mb-2 text-amber-700">Common Mistakes</h3>
-              <p className="text-sm text-slate-700">{template.common_mistakes}</p>
-            </div>
-          )}
-
+              {/* Template Content */}
               {template.template_content && (
                 <div>
-                  <h3 className="font-semibold mb-2 text-lg">Template Content</h3>
-                  <div className="rounded-lg border-2 border-slate-200 shadow-lg">
+                  <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white px-6 py-3 rounded-t-lg">
+                    <h2 className="text-lg font-bold">Template Content</h2>
+                  </div>
+                  <div className="border-2 border-[#143A50] rounded-b-lg">
                     <BrandedTemplateWrapper>
                       <div 
                         className="prose prose-slate max-w-none"
                         style={{
                           fontFamily: 'Georgia, "Times New Roman", serif',
-                          lineHeight: '1.8'
+                          lineHeight: '2',
+                          fontSize: '15px'
                         }}
                       >
                         <div dangerouslySetInnerHTML={{ __html: template.template_content }} />
