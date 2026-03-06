@@ -48,34 +48,10 @@ export default function IncubateHerConsultations() {
     enabled: !!user?.email
   });
 
-  // Check workbook completion
-  const { data: workbookPages = [] } = useQuery({
-    queryKey: ['workbook-pages'],
-    queryFn: () => base44.entities.WorkbookPageContent.list()
-  });
-
-  const { data: workbookResponses = [] } = useQuery({
-    queryKey: ['workbook-responses', user?.email],
-    queryFn: async () => {
-      return base44.entities.WorkbookResponse.filter({
-        user_email: user.email
-      });
-    },
-    enabled: !!user?.email
-  });
-
-  // Calculate workbook completion percentage
-  const requiredPages = workbookPages.filter(p => p.required_for_consultation);
-  const completedRequiredPages = requiredPages.filter(page => 
-    workbookResponses.some(r => r.page_id === page.page_id && r.responses && Object.keys(r.responses).length > 0)
-  );
-  const workbookCompletionPercent = requiredPages.length > 0 
-    ? Math.round((completedRequiredPages.length / requiredPages.length) * 100)
-    : 0;
-  const workbookRequirementMet = workbookCompletionPercent >= 50;
-
-  const allChecklistComplete = enrollment?.pre_assessment_completed && 
-    workbookRequirementMet &&
+  // Only required: pre, post, and evaluation assessments
+  const allChecklistComplete = enrollment?.pre_assessment_completed &&
+    enrollment?.post_assessment_completed &&
+    enrollment?.program_evaluation_completed &&
     Object.values(checklist).every(v => v);
 
   const saveChecklistMutation = useMutation({
