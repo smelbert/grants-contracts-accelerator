@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { FileText, Users, Calendar, Download, Eye, Edit, Trash2, CheckCircle2, XCircle, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import moment from 'moment';
+import AssessmentDetailModal from '@/components/incubateher/AssessmentDetailModal';
 
 export default function AssessmentSurveyAdmin() {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
