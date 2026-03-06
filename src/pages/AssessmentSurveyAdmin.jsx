@@ -547,20 +547,69 @@ export default function AssessmentSurveyAdmin() {
           <TabsContent value="readiness" className="mt-6">
             <Card>
               <CardHeader>
-                <CardTitle>Funding Readiness Assessments</CardTitle>
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <CardTitle>Funding Readiness Assessments</CardTitle>
+                  <Button variant="outline" size="sm" onClick={() => handleExportCSV(readinessAssessments.map(a => ({
+                    email: a.user_email,
+                    score: a.overall_score,
+                    level: a.readiness_level,
+                    legal_status: a.legal_status,
+                    financial_records: a.financial_records,
+                    program_clarity: a.program_clarity,
+                    capacity: a.capacity,
+                    date: a.assessment_date,
+                    notes: a.notes,
+                  })), 'readiness-assessments.csv')}>
+                    <Download className="w-4 h-4 mr-2" /> Export CSV
+                  </Button>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
+                {readinessAssessments.length === 0 && (
+                  <p className="text-center text-slate-400 py-8">No readiness assessments on file.</p>
+                )}
                 {readinessAssessments.map((assessment) => (
-                  <div key={assessment.id} className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                    <div className="flex items-center justify-between">
+                  <div key={assessment.id} className="p-4 bg-amber-50 border border-amber-200 rounded-xl space-y-3">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
                       <div>
-                        <p className="font-medium text-slate-900">{assessment.user_email}</p>
-                        <p className="text-sm text-slate-600">Score: {assessment.overall_score}%</p>
+                        <p className="font-semibold text-slate-900">{assessment.user_email}</p>
+                        {assessment.assessment_date && (
+                          <p className="text-xs text-slate-500">{moment(assessment.assessment_date).format('MMM D, YYYY')}</p>
+                        )}
                       </div>
-                      <Button size="sm" variant="outline" onClick={() => setSelectedAssessment(assessment)}>
-                        <Eye className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        {assessment.readiness_level && (
+                          <Badge className={{
+                            highly_ready: 'bg-green-100 text-green-800',
+                            ready: 'bg-blue-100 text-blue-800',
+                            building_readiness: 'bg-amber-100 text-amber-800',
+                            not_ready: 'bg-red-100 text-red-800',
+                          }[assessment.readiness_level] || 'bg-slate-100 text-slate-700'}>
+                            {assessment.readiness_level?.replace(/_/g, ' ')}
+                          </Badge>
+                        )}
+                        <Badge className="bg-amber-200 text-amber-900 font-bold">{assessment.overall_score ?? '—'}%</Badge>
+                      </div>
                     </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                      {[
+                        { label: 'Legal Status', value: assessment.legal_status },
+                        { label: 'Financial Records', value: assessment.financial_records },
+                        { label: 'Program Clarity', value: assessment.program_clarity },
+                        { label: 'Capacity', value: assessment.capacity },
+                      ].map(({ label, value }) => value ? (
+                        <div key={label} className="bg-white rounded-lg px-3 py-2 border border-amber-100">
+                          <p className="text-xs text-slate-500 mb-0.5">{label}</p>
+                          <p className="font-medium text-slate-800 capitalize">{value.replace(/_/g, ' ')}</p>
+                        </div>
+                      ) : null)}
+                    </div>
+                    {assessment.notes && (
+                      <div className="bg-white rounded-lg px-3 py-2 border border-amber-100 text-sm">
+                        <p className="text-xs text-slate-500 mb-0.5">Notes</p>
+                        <p className="text-slate-700">{assessment.notes}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </CardContent>
