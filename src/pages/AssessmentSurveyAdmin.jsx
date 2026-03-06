@@ -16,6 +16,7 @@ import AssessmentDetailModal from '@/components/incubateher/AssessmentDetailModa
 
 export default function AssessmentSurveyAdmin() {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
+  const [selectedParticipantName, setSelectedParticipantName] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const queryClient = useQueryClient();
 
