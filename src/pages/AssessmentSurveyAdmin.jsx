@@ -86,6 +86,32 @@ export default function AssessmentSurveyAdmin() {
   const preAssessments = grantWritingAssessments.filter(a => a.assessment_type === 'pre');
   const postAssessments = grantWritingAssessments.filter(a => a.assessment_type === 'post');
 
+  // IncubateHer / AccelerateHer program assessments
+  const { data: enrollments = [] } = useQuery({
+    queryKey: ['all-program-enrollments'],
+    queryFn: () => base44.entities.ProgramEnrollment.filter({ role: 'participant' })
+  });
+
+  const { data: programAssessments = [] } = useQuery({
+    queryKey: ['all-program-assessments'],
+    queryFn: () => base44.entities.ProgramAssessment.list('-created_date')
+  });
+
+  const totalParticipants = enrollments.length;
+  const incubatePre = programAssessments.filter(a => a.assessment_type === 'pre');
+  const incubatePost = programAssessments.filter(a => a.assessment_type === 'post');
+  const incubateEval = programAssessments.filter(a => a.assessment_type === 'evaluation');
+
+  const preRate = totalParticipants > 0 ? Math.round((incubatePre.length / totalParticipants) * 100) : 0;
+  const postRate = totalParticipants > 0 ? Math.round((incubatePost.length / totalParticipants) * 100) : 0;
+  const evalRate = totalParticipants > 0 ? Math.round((incubateEval.length / totalParticipants) * 100) : 0;
+
+  const avgPre = incubatePre.length > 0 ? Math.round(incubatePre.reduce((s, a) => s + (a.total_score || 0), 0) / incubatePre.length) : 0;
+  const avgPost = incubatePost.length > 0 ? Math.round(incubatePost.reduce((s, a) => s + (a.total_score || 0), 0) / incubatePost.length) : 0;
+  const avgEvalRating = incubateEval.length > 0
+    ? (incubateEval.reduce((s, a) => s + (a.responses?.overall_rating || 0), 0) / incubateEval.length).toFixed(1)
+    : 0;
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
