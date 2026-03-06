@@ -318,8 +318,8 @@ export default function IncubateHerParticipants() {
                     </div>
                   </div>
 
-                  {/* JotForm Profile Toggle */}
-                  <div className="mt-3">
+                  {/* Profile & Activity Toggles */}
+                  <div className="mt-3 flex gap-3">
                     <button
                       onClick={() => setExpandedProfiles(prev => ({ ...prev, [enrollment.id]: !prev[enrollment.id] }))}
                       className="flex items-center gap-1 text-xs font-medium hover:underline"
@@ -328,12 +328,23 @@ export default function IncubateHerParticipants() {
                       {expandedProfiles[enrollment.id] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                       {expandedProfiles[enrollment.id] ? 'Hide' : 'View'} Registration Profile
                     </button>
-                    {expandedProfiles[enrollment.id] && (
-                      <div className="mt-3">
-                        <JotFormProfile enrollment={enrollment} />
-                      </div>
-                    )}
+                    <button
+                      onClick={() => setExpandedProfiles(prev => ({ ...prev, [`activity_${enrollment.id}`]: !prev[`activity_${enrollment.id}`] }))}
+                      className="flex items-center gap-1 text-xs font-medium hover:underline"
+                      style={{ color: BRAND_COLORS.culRed }}
+                    >
+                      <Activity className="w-3 h-3" />
+                      {expandedProfiles[`activity_${enrollment.id}`] ? 'Hide' : 'View'} Activity Detail
+                    </button>
                   </div>
+                  {expandedProfiles[enrollment.id] && (
+                    <div className="mt-3">
+                      <JotFormProfile enrollment={enrollment} />
+                    </div>
+                  )}
+                  {expandedProfiles[`activity_${enrollment.id}`] && (
+                    <ParticipantActivityDetail enrollment={enrollment} />
+                  )}
 
                   {/* Overall Status */}
                   <div className="mt-3 pt-3 border-t">
