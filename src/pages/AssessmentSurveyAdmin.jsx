@@ -105,6 +105,22 @@ export default function AssessmentSurveyAdmin() {
   const incubatePost = programAssessments.filter(a => a.assessment_type === 'post');
   const incubateEval = programAssessments.filter(a => a.assessment_type === 'evaluation');
 
+  const sendPreAssessmentReminders = async () => {
+    setSendingReminder(true);
+    const nonCompleters = enrollments.filter(e => !incubatePre.find(a => a.participant_email === e.participant_email));
+    let sent = 0;
+    for (const e of nonCompleters) {
+      await base44.integrations.Core.SendEmail({
+        to: e.participant_email,
+        subject: 'Action Required: Complete Your IncubateHer Pre-Assessment',
+        body: `Hi ${e.participant_name || 'Participant'},\n\nThis is a friendly reminder to complete your IncubateHer Pre-Assessment as soon as possible. The pre-assessment helps us understand your starting point and is required to unlock consultations and the giveaway.\n\nLog in to your portal and navigate to Assessments & Evaluations → Pre-Assessment to complete it.\n\nThank you!\nElbert Innovative Solutions`
+      });
+      sent++;
+    }
+    setSendingReminder(false);
+    toast.success(`Reminders sent to ${sent} participant(s) who haven't completed the pre-assessment.`);
+  };
+
   const preRate = totalParticipants > 0 ? Math.round((incubatePre.length / totalParticipants) * 100) : 0;
   const postRate = totalParticipants > 0 ? Math.round((incubatePost.length / totalParticipants) * 100) : 0;
   const evalRate = totalParticipants > 0 ? Math.round((incubateEval.length / totalParticipants) * 100) : 0;
