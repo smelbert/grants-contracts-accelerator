@@ -268,23 +268,6 @@ export default function IncubateHerConsultations() {
 
                   <div className="flex items-start gap-3">
                     <Checkbox 
-                      checked={workbookRequirementMet}
-                      disabled
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <p className="font-medium text-slate-700">Workbook Completion</p>
-                      <p className="text-sm text-slate-500">
-                        {completedRequiredPages.length} of {requiredPages.length} required pages completed ({workbookCompletionPercent}%)
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700">
-                      Complete
-                    </Badge>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <Checkbox 
                       checked={checklist.documents}
                       onCheckedChange={(checked) => setChecklist(prev => ({ ...prev, documents: checked }))}
                       className="mt-1"
