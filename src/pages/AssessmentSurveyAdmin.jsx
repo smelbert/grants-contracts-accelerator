@@ -255,9 +255,20 @@ export default function AssessmentSurveyAdmin() {
             {/* Per-participant table */}
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Per-Participant Breakdown</CardTitle>
-                  <Button variant="outline" size="sm" onClick={() => {
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                     <CardTitle>Per-Participant Breakdown</CardTitle>
+                     <div className="flex gap-2 flex-wrap">
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={sendPreAssessmentReminders}
+                       disabled={sendingReminder}
+                       className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                     >
+                       <Bell className="w-4 h-4 mr-1" />
+                       {sendingReminder ? 'Sending...' : `Remind Non-Completers (${enrollments.filter(e => !incubatePre.find(a => a.participant_email === e.participant_email)).length})`}
+                     </Button>
+                     <Button variant="outline" size="sm" onClick={() => {
                     const rows = enrollments.map(e => {
                       const pre = incubatePre.find(a => a.participant_email === e.participant_email);
                       const post = incubatePost.find(a => a.participant_email === e.participant_email);
