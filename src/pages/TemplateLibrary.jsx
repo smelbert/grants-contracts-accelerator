@@ -410,6 +410,11 @@ function TemplateCard({ template, onView, onEdit, onDelete, config, isFavorite, 
               <Edit className="w-4 h-4" />
             </Button>
           )}
+          {onDelete && (
+            <Button size="sm" variant="ghost" onClick={() => onDelete(template)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
