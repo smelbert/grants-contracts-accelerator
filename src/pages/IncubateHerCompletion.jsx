@@ -221,8 +221,8 @@ export default function IncubateHerCompletion() {
                   <div className="flex items-start gap-4">
                     {milestone.selfSelect ? (
                       <Checkbox
-                        checked={milestone.completed}
-                        onCheckedChange={(checked) => updateEnrollmentMutation.mutate({ documents_verified: checked })}
+                        checked={!!milestone.completed}
+                        onCheckedChange={(checked) => updateEnrollmentMutation.mutate({ documents_uploaded: !!checked })}
                         className="mt-1 cursor-pointer"
                       />
                     ) : (
