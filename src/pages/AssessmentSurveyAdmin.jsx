@@ -18,6 +18,7 @@ export default function AssessmentSurveyAdmin() {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
   const [selectedParticipantName, setSelectedParticipantName] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [sendingReminder, setSendingReminder] = useState(false);
   const queryClient = useQueryClient();
 
   // Fetch all assessment types
