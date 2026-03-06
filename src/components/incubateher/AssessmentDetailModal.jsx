@@ -230,6 +230,7 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
 
   const typeLabel = isPre ? 'Pre-Assessment' : isPost ? 'Post-Assessment' : 'Program Evaluation';
   const typeColor = isPre ? 'bg-blue-100 text-blue-800' : isPost ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800';
+  const notSubmitted = isPreFilled && !assessment.id;
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -238,13 +239,32 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
           <DialogTitle className="flex items-center gap-2 flex-wrap">
             <span>{participantName || assessment.participant_email}</span>
             <Badge className={typeColor}>{typeLabel}</Badge>
-            {isPreFilled && <Badge className="bg-amber-100 text-amber-800">Pre-filled from registration</Badge>}
+            {notSubmitted && <Badge className="bg-red-100 text-red-700">Not Yet Submitted</Badge>}
           </DialogTitle>
         </DialogHeader>
 
+        {notSubmitted && (
+          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+            This participant has not yet submitted their {typeLabel}. No responses are available.
+            {assessment.jotform_data && (
+              <div className="mt-3">
+                <p className="font-semibold mb-1">Registration data on file:</p>
+                <div className="space-y-1">
+                  {Object.entries(assessment.jotform_data).filter(([,v]) => v).map(([k, v]) => (
+                    <div key={k} className="flex gap-2 text-xs">
+                      <span className="font-medium text-amber-900 capitalize">{k.replace(/_/g, ' ')}:</span>
+                      <span className="text-amber-800">{String(v)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="space-y-4">
           {/* Score summary */}
-          {(isPre || isPost) && (
+          {!notSubmitted && (isPre || isPost) && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { label: 'Total Score', value: assessment.total_score },
