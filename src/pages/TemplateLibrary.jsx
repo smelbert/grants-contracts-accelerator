@@ -461,8 +461,26 @@ function TemplateViewDialog({ template, onClose }) {
   return (
     <Dialog open={!!template} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[92vh] flex flex-col overflow-hidden">
-        <DialogHeader className="flex-shrink-0">
+        <DialogHeader className="flex-shrink-0 flex items-center justify-between">
           <DialogTitle className="text-xl font-bold text-slate-900">{template.template_name}</DialogTitle>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={async () => {
+              const res = await base44.functions.invoke('exportTemplate', { templateId: template.id, templateName: template.template_name, templateContent: template.template_content });
+              const url = window.URL.createObjectURL(new Blob([res.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', `${template.template_name.replace(/\s+/g, '_')}.pdf`);
+              document.body.appendChild(link);
+              link.click();
+              link.parentChild.removeChild(link);
+            }}
+            className="gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Export PDF
+          </Button>
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 overflow-hidden">

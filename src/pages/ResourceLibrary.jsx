@@ -343,6 +343,24 @@ export default function ResourceLibrary() {
                 <DialogTitle className="flex items-center justify-between">
                   <span>{previewResource.template_name}</span>
                   <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={async () => {
+                        const res = await base44.functions.invoke('exportTemplate', { templateId: previewResource.id, templateName: previewResource.template_name, templateContent: previewResource.template_content });
+                        const url = window.URL.createObjectURL(new Blob([res.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `${previewResource.template_name.replace(/\s+/g, '_')}.pdf`);
+                        document.body.appendChild(link);
+                        link.click();
+                        link.parentChild.removeChild(link);
+                      }}
+                      className="gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Export PDF
+                    </Button>
                     {previewResource.org_type?.length > 0 && (
                       <div className="flex gap-1">
                         {previewResource.org_type.map(ot => (
