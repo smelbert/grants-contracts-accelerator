@@ -133,53 +133,62 @@ export default function LiveRoomManagement() {
   const pastRooms = rooms.filter(r => r.status === 'ended');
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-            <Video className="w-8 h-8 text-purple-600" />
-            Live Rooms
-          </h1>
-          <p className="text-slate-600 mt-2">Interactive video sessions for your community</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50/30 p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-slate-900 flex items-center gap-3">
+              <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-2.5 rounded-lg">
+                <Video className="w-7 h-7 text-white" />
+              </div>
+              Live Rooms
+            </h1>
+            <p className="text-slate-600 mt-2">Create and manage interactive video sessions</p>
+          </div>
+          <Button onClick={() => setShowDialog(true)} className="bg-purple-600 hover:bg-purple-700 shadow-lg">
+            <Plus className="w-4 h-4 mr-2" />
+            Schedule Room
+          </Button>
         </div>
-        <Button onClick={() => setShowDialog(true)} className="bg-purple-600 hover:bg-purple-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Schedule Room
-        </Button>
-      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
+        <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Upcoming Sessions</p>
-                <p className="text-2xl font-bold">{upcomingRooms.length}</p>
+                <p className="text-sm text-slate-600 font-medium">Upcoming Sessions</p>
+                <p className="text-3xl font-bold text-slate-900 mt-1">{upcomingRooms.length}</p>
               </div>
-              <Calendar className="w-8 h-8 text-blue-600" />
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <Calendar className="w-6 h-6 text-blue-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Live Now</p>
-                <p className="text-2xl font-bold">{rooms.filter(r => r.status === 'live').length}</p>
+                <p className="text-sm text-slate-600 font-medium">Live Now</p>
+                <p className="text-3xl font-bold text-slate-900 mt-1">{rooms.filter(r => r.status === 'live').length}</p>
               </div>
-              <Play className="w-8 h-8 text-green-600" />
+              <div className="bg-green-100 p-3 rounded-lg">
+                <Play className="w-6 h-6 text-green-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-600">Total Recordings</p>
-                <p className="text-2xl font-bold">{rooms.filter(r => r.recording_url).length}</p>
+                <p className="text-sm text-slate-600 font-medium">Total Recordings</p>
+                <p className="text-3xl font-bold text-slate-900 mt-1">{rooms.filter(r => r.recording_url).length}</p>
               </div>
-              <Square className="w-8 h-8 text-purple-600" />
+              <div className="bg-purple-100 p-3 rounded-lg">
+                <Square className="w-6 h-6 text-purple-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -187,46 +196,53 @@ export default function LiveRoomManagement() {
 
       {/* Upcoming Rooms */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Upcoming Sessions</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <div className="w-1 h-6 bg-purple-600 rounded"></div>
+          Upcoming Sessions
+        </h2>
         {upcomingRooms.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-12">
-              <Video className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-              <p className="text-slate-600">No upcoming sessions scheduled</p>
+          <Card className="border-0 shadow-sm">
+            <CardContent className="text-center py-16">
+              <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Video className="w-8 h-8 text-slate-400" />
+              </div>
+              <p className="text-slate-600 font-medium">No upcoming sessions scheduled</p>
+              <p className="text-sm text-slate-500 mt-1">Create your first live room to get started</p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {upcomingRooms.map(room => (
-              <Card key={room.id} className="hover:shadow-lg transition-shadow">
+              <Card key={room.id} className="border-0 shadow-md hover:shadow-xl transition-all overflow-hidden">
+                <div className={`h-1 ${room.status === 'live' ? 'bg-green-500' : 'bg-blue-500'}`}></div>
                 <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <Badge className={getStatusColor(room.status)}>{room.status}</Badge>
+                  <div className="flex items-start justify-between mb-3">
+                    <Badge className={`${getStatusColor(room.status)} capitalize font-medium`}>{room.status}</Badge>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(room)}>
-                        <Edit className="w-4 h-4" />
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(room)} className="hover:bg-slate-100">
+                        <Edit className="w-4 h-4 text-slate-600" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => deleteRoomMutation.mutate(room.id)}>
+                      <Button variant="ghost" size="icon" onClick={() => deleteRoomMutation.mutate(room.id)} className="hover:bg-red-50">
                         <Trash2 className="w-4 h-4 text-red-500" />
                       </Button>
                     </div>
                   </div>
-                  <CardTitle className="text-lg">{room.room_name}</CardTitle>
-                  <p className="text-sm text-slate-600">{room.description}</p>
+                  <CardTitle className="text-lg text-slate-900">{room.room_name}</CardTitle>
+                  {room.description && <p className="text-sm text-slate-600 mt-1 line-clamp-2">{room.description}</p>}
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      <span>{format(new Date(room.scheduled_start), 'MMM d, yyyy • h:mm a')}</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <Calendar className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                      <span className="font-medium">{format(new Date(room.scheduled_start), 'MMM d, yyyy • h:mm a')}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-slate-400" />
-                      <span>{room.participants?.length || 0} / {room.max_participants} participants</span>
+                    <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <Users className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                      <span className="font-medium">{room.participants?.length || 0} / {room.max_participants} participants</span>
                     </div>
-                    <div className="flex gap-2 mt-3">
-                      <Badge variant="outline">{room.room_type}</Badge>
-                      {room.recording_enabled && <Badge variant="outline">Recording</Badge>}
+                    <div className="flex gap-2 flex-wrap pt-2">
+                      <Badge variant="outline" className="text-xs">{room.room_type}</Badge>
+                      {room.recording_enabled && <Badge variant="outline" className="text-xs bg-purple-50">🎥 Recording</Badge>}
                     </div>
                   </div>
                 </CardContent>
@@ -239,21 +255,25 @@ export default function LiveRoomManagement() {
       {/* Past Rooms */}
       {pastRooms.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold mb-4">Past Sessions</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <div className="w-1 h-6 bg-slate-400 rounded"></div>
+            Past Sessions
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {pastRooms.slice(0, 6).map(room => (
-              <Card key={room.id}>
+              <Card key={room.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                <div className="h-1 bg-slate-400"></div>
                 <CardHeader>
-                  <Badge className={getStatusColor(room.status)}>{room.status}</Badge>
-                  <CardTitle className="text-lg mt-2">{room.room_name}</CardTitle>
+                  <Badge className={`${getStatusColor(room.status)} capitalize font-medium w-fit`}>{room.status}</Badge>
+                  <CardTitle className="text-lg text-slate-900 mt-3">{room.room_name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <p className="text-slate-600">{format(new Date(room.scheduled_start), 'MMM d, yyyy')}</p>
+                  <div className="space-y-3">
+                    <p className="text-sm text-slate-600">{format(new Date(room.scheduled_start), 'MMM d, yyyy')}</p>
                     {room.recording_url && (
-                      <Button variant="outline" size="sm" className="w-full" asChild>
+                      <Button variant="outline" size="sm" className="w-full hover:bg-purple-50 border-purple-200" asChild>
                         <a href={room.recording_url} target="_blank" rel="noopener noreferrer">
-                          View Recording
+                          📹 View Recording
                         </a>
                       </Button>
                     )}
@@ -269,7 +289,8 @@ export default function LiveRoomManagement() {
       <Dialog open={showDialog} onOpenChange={(open) => !open && resetForm()}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingRoom ? 'Edit Live Room' : 'Schedule Live Room'}</DialogTitle>
+            <DialogTitle className="text-2xl">{editingRoom ? 'Edit Live Room' : 'Schedule New Live Room'}</DialogTitle>
+            <p className="text-sm text-slate-600 mt-1">{editingRoom ? 'Update session details' : 'Create a new interactive video session'}</p>
           </DialogHeader>
           <div className="space-y-4">
             <div>
