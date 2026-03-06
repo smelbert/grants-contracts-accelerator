@@ -383,11 +383,22 @@ export default function TemplateLibraryPage() {
 }
 
 function TemplateCard({ template, onView, onEdit, onDelete, onTogglePublish, config, isFavorite, onToggleFavorite }) {
+  const isUnpublished = !template.is_published;
+  const completionStatus = {
+    hasName: !!template.template_name,
+    hasPurpose: !!template.purpose,
+    hasGuidance: !!template.when_to_use || !!template.when_not_to_use || !!template.what_funders_look_for || !!template.common_mistakes,
+    hasContent: !!template.template_content
+  };
+  const completionPercent = Object.values(completionStatus).filter(Boolean).length;
+  
   return (
-    <Card className="hover:shadow-lg transition-shadow relative">
+    <Card className={`hover:shadow-lg transition-all relative ${
+      isUnpublished ? 'border-2 border-amber-200 bg-amber-50' : ''
+    }`}>
       <CardHeader>
         <div className="flex items-start justify-between">
-          <CardTitle className="text-base leading-tight">{template.template_name}</CardTitle>
+          <CardTitle className="text-base leading-tight">{template.template_name || '(Untitled Template)'}</CardTitle>
           <div className="flex items-center gap-1 flex-shrink-0 ml-2">
             <Badge className={`bg-${config?.color}-100 text-${config?.color}-700 text-xs`}>
               {template.maturity_level}
@@ -404,15 +415,18 @@ function TemplateCard({ template, onView, onEdit, onDelete, onTogglePublish, con
         </div>
         {/* Published status badge */}
         {onTogglePublish && (
-          <div className="mt-1">
+          <div className="mt-2 flex items-center justify-between">
             <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
               template.is_published 
                 ? 'bg-green-100 text-green-700' 
-                : 'bg-slate-100 text-slate-500'
+                : 'bg-amber-100 text-amber-700'
             }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${template.is_published ? 'bg-green-500' : 'bg-slate-400'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${template.is_published ? 'bg-green-500' : 'bg-amber-500'}`} />
               {template.is_published ? 'Published' : 'Draft'}
             </span>
+            {isUnpublished && (
+              <span className="text-xs text-amber-700 font-medium">{completionPercent}/4 sections</span>
+            )}
           </div>
         )}
       </CardHeader>
@@ -420,13 +434,39 @@ function TemplateCard({ template, onView, onEdit, onDelete, onTogglePublish, con
         {template.purpose && (
           <p className="text-sm text-slate-600 mb-3 line-clamp-2">{template.purpose}</p>
         )}
+        
+        {/* Completion checklist for unpublished templates */}
+        {isUnpublished && (
+          <div className="mb-4 p-3 bg-white rounded-lg border border-amber-100 text-xs space-y-1">
+            <p className="font-medium text-amber-800 mb-2">Complete to publish:</p>
+            <div className="space-y-1">
+              <div className={`flex items-center gap-2 ${completionStatus.hasName ? 'text-emerald-700' : 'text-slate-600'}`}>
+                <span className={completionStatus.hasName ? '✓' : '◯'}></span>
+                Template name
+              </div>
+              <div className={`flex items-center gap-2 ${completionStatus.hasPurpose ? 'text-emerald-700' : 'text-slate-600'}`}>
+                <span className={completionStatus.hasPurpose ? '✓' : '◯'}></span>
+                Purpose & description
+              </div>
+              <div className={`flex items-center gap-2 ${completionStatus.hasGuidance ? 'text-emerald-700' : 'text-slate-600'}`}>
+                <span className={completionStatus.hasGuidance ? '✓' : '◯'}></span>
+                Guidance (When to use, etc.)
+              </div>
+              <div className={`flex items-center gap-2 ${completionStatus.hasContent ? 'text-emerald-700' : 'text-slate-600'}`}>
+                <span className={completionStatus.hasContent ? '✓' : '◯'}></span>
+                Template content
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="flex gap-2 flex-wrap">
           <Button size="sm" variant="outline" onClick={() => onView(template)}>
             <Eye className="w-4 h-4 mr-1" />
             View
           </Button>
           {onEdit && (
-            <Button size="sm" variant="ghost" onClick={() => onEdit(template)}>
+            <Button size="sm" variant="ghost" onClick={() => onEdit(template)} className={isUnpublished ? 'text-amber-600 hover:bg-amber-100' : ''}>
               <Edit className="w-4 h-4" />
             </Button>
           )}
@@ -435,7 +475,9 @@ function TemplateCard({ template, onView, onEdit, onDelete, onTogglePublish, con
               size="sm"
               variant="ghost"
               onClick={() => onTogglePublish(template)}
+              disabled={isUnpublished && completionPercent < 4}
               className={template.is_published ? 'text-amber-600 hover:bg-amber-50' : 'text-green-600 hover:bg-green-50'}
+              title={isUnpublished && completionPercent < 4 ? 'Complete all sections to publish' : ''}
             >
               {template.is_published ? 'Unpublish' : 'Publish'}
             </Button>
