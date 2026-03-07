@@ -409,23 +409,47 @@ Provide a professional, concise response suitable for funding applications (2-3 
             </div>
           ))}
 
-          <div className="flex items-center justify-between pt-6 border-t">
-            <div>
+          <div className="flex items-center justify-between pt-6 border-t gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              {lastSaved && (
+                <div className="text-xs text-slate-500">
+                  Last saved: {lastSaved.toLocaleTimeString()}
+                </div>
+              )}
               {isComplete && (
                 <div className="flex items-center gap-2 text-green-600">
                   <CheckCircle2 className="w-5 h-5" />
-                  <span className="font-semibold">Document Complete!</span>
+                  <span className="font-semibold">Complete!</span>
                 </div>
               )}
             </div>
-            <Button
-              onClick={handleDownload}
-              className="bg-[#143A50] hover:bg-[#1E4F58]"
-              size="lg"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Download PDF
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleManualSave}
+                disabled={saving}
+                variant="outline"
+                size="lg"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {saving ? 'Saving...' : 'Save to My Documents'}
+              </Button>
+              <Button
+                onClick={handleDownload}
+                variant="outline"
+                size="lg"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download PDF
+              </Button>
+              <Button
+                onClick={handleDownloadDocx}
+                className="bg-[#143A50] hover:bg-[#1E4F58]"
+                size="lg"
+              >
+                <FileDown className="w-4 h-4 mr-2" />
+                Download Word
+              </Button>
+            </div>
           </div>
         </div>
 
