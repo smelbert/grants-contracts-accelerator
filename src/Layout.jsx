@@ -697,7 +697,7 @@ export default function Layout({ children, currentPageName }) {
                 Proprietary content protected by intellectual property law.
               </p>
             </div>
-            <div className="flex flex-wrap gap-4 text-sm">
+            <div className="flex flex-wrap gap-4 text-sm items-center">
               <Link to={createPageUrl('TermsOfService')} className="text-slate-600 hover:text-[#143A50]">
                 Terms of Service
               </Link>
@@ -707,6 +707,15 @@ export default function Layout({ children, currentPageName }) {
               <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-[#143A50]">
                 Visit Our Website
               </a>
+              {user && (
+                <SubmitTestimonialForm
+                  trigger={
+                    <button className="text-slate-600 hover:text-[#143A50] text-sm underline underline-offset-2">
+                      Leave a Testimonial / Give Feedback
+                    </button>
+                  }
+                />
+              )}
             </div>
           </div>
         </div>
