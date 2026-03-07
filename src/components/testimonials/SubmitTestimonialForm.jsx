@@ -82,14 +82,36 @@ export default function SubmitTestimonialForm({ trigger }) {
           <DialogTitle>Share Your Experience</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <Label>Your Name</Label>
-            <Input name="user_name" defaultValue={user?.full_name} required />
-          </div>
-
-          <div>
-            <Label>Organization Name</Label>
-            <Input name="organization_name" defaultValue={organization?.name} />
+          <div className="flex gap-4 items-start">
+            <div className="flex-shrink-0">
+              {photoUrl ? (
+                <img src={photoUrl} alt="Your photo" className="w-16 h-16 rounded-full object-cover border-2 border-yellow-300" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center border-2 border-dashed border-slate-300">
+                  <User className="w-7 h-7 text-slate-400" />
+                </div>
+              )}
+              <label className="block mt-2 cursor-pointer text-center">
+                <span className="text-xs text-blue-600 underline">{photoUploading ? 'Uploading...' : 'Add photo'}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={photoUploading}
+                  onChange={e => handlePhotoUpload(e.target.files[0])}
+                />
+              </label>
+            </div>
+            <div className="flex-1 space-y-3">
+              <div>
+                <Label>Your Name</Label>
+                <Input name="user_name" defaultValue={user?.full_name} required />
+              </div>
+              <div>
+                <Label>Organization Name</Label>
+                <Input name="organization_name" defaultValue={organization?.name} />
+              </div>
+            </div>
           </div>
 
           <div>
