@@ -597,6 +597,22 @@ export default function OpportunitiesPage() {
           </div>
         </div>
 
+        {/* Funder Research Banner */}
+        <div className="mb-6 bg-gradient-to-r from-[#143A50] to-[#1E4F58] rounded-2xl p-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <FlaskConical className="w-6 h-6 text-[#E5C089] shrink-0" />
+            <div>
+              <p className="font-semibold text-white text-sm">Funder Research & 990 Lookup</p>
+              <p className="text-white/70 text-xs">Search any nonprofit or foundation — pull financials, grants paid, and 990 filing history. Powered by ProPublica (free).</p>
+            </div>
+          </div>
+          <Link to={createPageUrl('FunderResearch')}>
+            <button className="shrink-0 bg-[#E5C089] text-[#143A50] font-semibold text-sm px-4 py-2 rounded-lg hover:bg-[#d4af76] transition-colors whitespace-nowrap">
+              Open Funder Research →
+            </button>
+          </Link>
+        </div>
+
         {/* Tabs */}
         <Tabs defaultValue="active">
           <TabsList className="mb-6 bg-white border border-slate-200 p-1 rounded-xl h-auto gap-1">
