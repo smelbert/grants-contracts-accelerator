@@ -226,6 +226,203 @@ function CourseCard({ content, progress }) {
   );
 }
 
+// ─── Consultation Prep Guide (inline) ────────────────────────────────────────
+function ConsultationGuideInline() {
+  const sections = [
+    {
+      title: 'What the Consultation IS (and Is NOT)',
+      content: (
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+            <h4 className="font-semibold text-green-900 mb-2 text-sm">✓ What IS Included</h4>
+            <ul className="space-y-1 text-xs text-green-800">
+              {['Review/feedback on 1–2 documents you bring','Strategic guidance on grants vs. contracts alignment','Honest assessment of your funding readiness','Personalized next-step recommendations','Answers to your 2–3 most important questions — in depth'].map((i,k)=><li key={k} className="flex gap-1.5"><span>✓</span>{i}</li>)}
+            </ul>
+          </div>
+          <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+            <h4 className="font-semibold text-red-900 mb-2 text-sm">✗ What Is NOT Included</h4>
+            <ul className="space-y-1 text-xs text-red-800">
+              {['Writing or rewriting grant applications for you','Conducting grant searches on your behalf','Ongoing consulting beyond the booked time','Legal, accounting, or financial advice','A guarantee of funding readiness or award outcomes'].map((i,k)=><li key={k} className="flex gap-1.5"><span>✗</span>{i}</li>)}
+            </ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'Eligibility Requirements',
+      content: (
+        <div className="space-y-2">
+          <p className="text-sm text-slate-600 mb-3">You must complete all three before booking:</p>
+          {[{r:'Pre-Assessment',d:'Establishes your baseline readiness for the consultant to benchmark growth.'},{r:'Post-Assessment',d:'Demonstrates you engaged with program content — sessions build on what you learned.'},{r:'Program Evaluation',d:'Required for all post-program benefits including the consultation.'}].map((item,i)=>(
+            <div key={i} className="flex items-start gap-3 p-3 bg-[#143A50]/5 border border-[#143A50]/20 rounded-lg">
+              <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0"/>
+              <div><span className="font-semibold text-sm text-[#143A50]">{item.r}</span><p className="text-xs text-slate-600 mt-0.5">{item.d}</p></div>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    {
+      title: 'Full Preparation Checklist',
+      content: (
+        <div className="space-y-3">
+          {[{label:'Business & Legal',color:'bg-blue-50 border-blue-200',items:['Know your legal structure (LLC, nonprofit 501(c)(3), sole proprietor, etc.)','Confirm your business is registered and in good standing','Know your EIN (Employer Identification Number)','Know your SAM.gov registration status if pursuing federal funding']},{label:'Funding Goals',color:'bg-purple-50 border-purple-200',items:['Identify whether you are pursuing grants, contracts, or both','Have a specific program or initiative in mind to fund','Know the approximate funding amount you are seeking','Identify 1–2 specific funders or opportunity types you are interested in']},{label:'Documents to Bring (1–2 max)',color:'bg-green-50 border-green-200',items:['Business/organizational overview (1–2 pages — drafts OK)','Draft project description or scope of work','Budget outline or budget narrative (even rough numbers)','Any existing grant application or proposal draft']},{label:'Your Questions (exactly 2–3)',color:'bg-amber-50 border-amber-200',items:['Write your questions down — do not try to remember them','Prioritize: your most important question is Question #1','Focus on strategy and readiness, not "where do I find grants?"','Example: "Am I better positioned for grants or contracts right now, and why?"']}].map((s,si)=>(
+            <div key={si} className={`p-4 border rounded-xl ${s.color}`}>
+              <h5 className="font-bold text-sm text-slate-800 mb-2">{s.label}</h5>
+              <ul className="space-y-1">{s.items.map((it,ii)=><li key={ii} className="flex items-start gap-2 text-xs text-slate-700"><div className="w-3.5 h-3.5 rounded border-2 border-slate-400 flex-shrink-0 mt-0.5"/>{it}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    {
+      title: 'During & After Your Consultation',
+      content: (
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <h5 className="font-bold text-sm text-[#143A50] mb-2">During the Session</h5>
+            <ul className="space-y-1.5">{['Lead with your most important question first','Be specific and honest — not optimistic','Take notes in real time','Ask for clarification when unclear','End by summarizing your 3 action items out loud'].map((t,i)=><li key={i} className="text-xs text-slate-700 flex gap-2"><ArrowRight className="w-3 h-3 text-[#1E4F58] mt-0.5 flex-shrink-0"/>{t}</li>)}</ul>
+          </div>
+          <div>
+            <h5 className="font-bold text-sm text-[#143A50] mb-2">After the Session</h5>
+            <ul className="space-y-1.5">{['Within 24 hrs: organize notes into an action list','Within 48 hrs: send a brief thank-you email','Create a 30-day action plan with specific deadlines','Connect guidance back to your workbook and documents','Follow up on any resources or referrals mentioned'].map((t,i)=><li key={i} className="text-xs text-slate-700 flex gap-2"><ArrowRight className="w-3 h-3 text-green-600 mt-0.5 flex-shrink-0"/>{t}</li>)}</ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'Sample Strong Questions',
+      content: (
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
+            <p className="font-semibold text-xs text-green-900 mb-2">✓ Strong Questions</p>
+            {['"Based on my profile, am I better positioned for foundation grants or government contracts right now?"','"Here is my project description. What is the weakest section from a funder\'s perspective?"','"What is the single most important thing I need to fix before applying anywhere?"'].map((q,i)=><p key={i} className="text-xs text-green-800 italic mb-1.5 border-l-2 border-green-400 pl-2">{q}</p>)}
+          </div>
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
+            <p className="font-semibold text-xs text-red-900 mb-2">✗ Weak Questions (avoid)</p>
+            {['"Where do I find grants?" — too broad, use databases for this','"Can you write my grant for me?" — not in scope','"Am I ready to apply?" — without documents and context, unanswerable'].map((q,i)=><p key={i} className="text-xs text-red-800 mb-1.5 border-l-2 border-red-400 pl-2">{q}</p>)}
+          </div>
+        </div>
+      )
+    }
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="p-5 bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-xl">
+        <h3 className="text-lg font-bold mb-1">Your consultation is a premium program benefit — arrive prepared.</h3>
+        <p className="text-white/80 text-sm">Work through this guide before booking your one-on-one session with Dr. Elbert or an EIS consultant.</p>
+      </div>
+      {sections.map((s, i) => (
+        <div key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h4 className="font-bold text-[#143A50] mb-3">{s.title}</h4>
+          {s.content}
+        </div>
+      ))}
+      <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-xl text-center">
+        <p className="text-sm font-semibold text-amber-900 mb-2">Ready to book your consultation?</p>
+        <Link to={createPageUrl('IncubateHerConsultations')} className="inline-block">
+          <Button size="sm" className="bg-[#143A50] hover:bg-[#1E4F58] text-white">Go to Consultations Booking</Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ─── Post-Program / Wrap Guide (inline) ──────────────────────────────────────
+function WrapGuideInline() {
+  const sections = [
+    {
+      title: "What You've Accomplished",
+      content: (
+        <div className="grid md:grid-cols-2 gap-2">
+          {['Built foundational literacy in how grants and contracts work','Learned how funders evaluate applicants','Developed or strengthened your funding documents','Completed pre/post assessments and tracked your growth','Received personalized consultation feedback','Connected with peers navigating the same landscape','Established knowledge most competitors in the funding space lack','Demonstrated discipline to complete a structured program'].map((item,i)=>(
+            <div key={i} className="flex items-start gap-2 p-2.5 bg-[#E5C089]/20 border border-[#E5C089]/40 rounded-lg">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#143A50] mt-0.5 flex-shrink-0"/>
+              <span className="text-xs text-slate-700">{item}</span>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    {
+      title: 'Your First 30 Days: Priority Actions',
+      content: (
+        <div className="space-y-3">
+          {[{days:'Days 1–7',color:'bg-green-50 border-green-300',title:'Consolidate & Organize',actions:['Gather all program materials into one funding readiness file','Review post-assessment results and identify areas still needing work','Write down the 3 most important things from your consultation','Identify any unfinished documents that need to be completed']},{days:'Days 8–14',color:'bg-blue-50 border-blue-300',title:'Finish What You Started',actions:['Complete any program documents still in draft form','Finalize your organizational overview','Clean up your project description so it is submission-ready','Identify your single most important compliance gap and plan to close it']},{days:'Days 15–21',color:'bg-purple-50 border-purple-300',title:'Research & Identify',actions:['Search for 2–3 funding opportunities aligned to your goals (Grants.gov, Foundation Directory)','For each: read the full RFP, check eligibility, note the deadline','Make an honest go/no-go assessment for each opportunity','If you find a strong opportunity with a near deadline — prioritize it']},{days:'Days 22–30',color:'bg-rose-50 border-rose-300',title:'Pursue & Submit',actions:['Start your application for the highest-priority opportunity','Use EIS templates as structural frameworks','Apply the needs statement and outcomes writing practices from the program','Set an internal deadline 5 days before the actual deadline','Submit — even imperfect. A submitted application beats a perfect one never sent']}].map((phase,i)=>(
+            <div key={i} className={`p-3 border-2 rounded-xl ${phase.color}`}>
+              <div className="flex items-center gap-2 mb-2"><Badge className="bg-slate-800 text-white text-xs">{phase.days}</Badge><span className="font-bold text-sm text-slate-900">{phase.title}</span></div>
+              <ul className="space-y-1">{phase.actions.map((a,ai)=><li key={ai} className="flex items-start gap-1.5 text-xs text-slate-700"><ArrowRight className="w-2.5 h-2.5 text-slate-500 mt-0.5 flex-shrink-0"/>{a}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    {
+      title: 'Key Funding Research Resources',
+      content: (
+        <div className="grid md:grid-cols-2 gap-3">
+          {[{name:'Grants.gov',desc:'All federal grant opportunities. Create a free account and set up alerts.',url:'https://www.grants.gov'},{name:'SAM.gov',desc:'Required for federal grants and contracts. Register your organization here.',url:'https://sam.gov'},{name:'Candid / Foundation Directory',desc:'Most comprehensive foundation grants database. Check your library for free access.',url:'https://candid.org'},{name:'SBA.gov',desc:'Loans, surety bonds, and small business programs from the federal government.',url:'https://www.sba.gov/funding-programs'},{name:'MBDA.gov',desc:'Grants, contracts, and resources specifically for minority-owned businesses.',url:'https://www.mbda.gov'},{name:'GrantSpace (Candid Learning)',desc:'Free webinars, guides, and templates covering proposal writing and funder research.',url:'https://grantspace.org'}].map((r,i)=>(
+            <div key={i} className="p-3 bg-white border border-slate-200 rounded-lg">
+              <div className="flex items-center justify-between mb-1"><span className="font-semibold text-sm text-slate-900">{r.name}</span><a href={r.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[#143A50] underline">Visit →</a></div>
+              <p className="text-xs text-slate-600">{r.desc}</p>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    {
+      title: 'Maintaining Organizational Readiness',
+      content: (
+        <div className="space-y-3">
+          {[{cat:'Documentation Hygiene',items:['Keep your org overview current — update whenever programs, leadership, or data change','Maintain a current, board-approved strategic plan — funders ask for this routinely','Keep financial statements audit-ready at all times (current year + 2 prior years)','Maintain a running outcomes database: people served, changes, measurements']},{cat:'Compliance Calendar',items:['Track: state registration renewal dates, SAM.gov expiration (annual), 990 filing deadlines','Set 30-day advance alerts for every compliance deadline — late filings disqualify you','Track your indirect cost rate if pursuing federal grants regularly']},{cat:'Funder Relationship Development',items:['Follow funders on social media. Read their annual reports. Attend their info sessions','If you receive funding: report on time, spend correctly, communicate proactively','If declined, ask professionally for feedback — often more valuable than a small award']}].map((s,si)=>(
+            <div key={si} className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+              <h5 className="font-bold text-xs text-slate-800 mb-2 uppercase tracking-wide">{s.cat}</h5>
+              <ul className="space-y-1">{s.items.map((it,ii)=><li key={ii} className="flex items-start gap-1.5 text-xs text-slate-700"><div className="w-1.5 h-1.5 rounded-full bg-[#1E4F58] mt-1.5 flex-shrink-0"/>{it}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    {
+      title: 'The Long-Game Mindset',
+      content: (
+        <div className="space-y-2">
+          {[{t:'Rejection is data, not failure',b:'Ask for reviewer feedback, study funded applications, improve and reapply. An organization that stops after one rejection will never win.'},{t:'Start with smaller, accessible opportunities',b:'Build your track record with appropriately-scaled opportunities. Funders look for track record. You build it by winning smaller awards and executing them well.'},{t:'Relationships compound over time',b:'Funders who see your name and quality work consistently over 2–3 years look at your applications differently. One touchpoint rarely creates a relationship.'},{t:'Quality is always worth the extra hour',b:'The difference between funded and unfunded is often one vague section or one unsupported claim. Don\'t rush the final review.'},{t:'Celebrate every win',b:'A $5,000 seed grant is a win. It\'s a line on your track record and proof your application quality is award-worthy.'}].map((insight,i)=>(
+            <div key={i} className="p-3 border-l-4 border-[#E5C089] bg-amber-50/40 rounded-r-lg">
+              <p className="font-semibold text-xs text-[#143A50] mb-0.5">{insight.t}</p>
+              <p className="text-xs text-slate-700">{insight.b}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="p-5 bg-gradient-to-br from-[#143A50] to-[#AC1A5B]/40 text-white rounded-xl">
+        <h3 className="text-lg font-bold mb-1">The program ends. Your journey doesn't.</h3>
+        <p className="text-white/80 text-sm">Use this guide to apply what you learned, find opportunities, and stay connected with EIS beyond the program.</p>
+      </div>
+      {sections.map((s, i) => (
+        <div key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h4 className="font-bold text-[#143A50] mb-3">{s.title}</h4>
+          {s.content}
+        </div>
+      ))}
+      <div className="p-4 bg-[#143A50]/5 border border-[#143A50]/20 rounded-xl">
+        <p className="text-sm font-semibold text-[#143A50] mb-3">Stay connected with EIS</p>
+        <div className="flex flex-wrap gap-2">
+          <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer"><Button size="sm" className="bg-[#143A50] hover:bg-[#1E4F58] text-white text-xs">Visit EIS Website</Button></a>
+          <a href="mailto:info@elbertinnovativesolutions.org"><Button size="sm" variant="outline" className="text-xs">Email EIS</Button></a>
+          <Link to={createPageUrl('ResourceLibrary')}><Button size="sm" variant="outline" className="text-xs">Resource Library</Button></Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function IncubateHerLearning() {
   const [activeModule, setActiveModule] = useState('all');
