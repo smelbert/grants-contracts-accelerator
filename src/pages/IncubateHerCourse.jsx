@@ -9,6 +9,8 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
+import CourseTipsPanel from '@/components/incubateher/CourseTipsPanel';
+import CourseResourcesPanel from '@/components/incubateher/CourseResourcesPanel';
 import { 
   CheckCircle2, 
   BookOpen, 
@@ -24,6 +26,7 @@ import {
   Sparkles,
   Home,
   ChevronRight,
+  ChevronDown,
   Play,
   FileText,
   Video,
