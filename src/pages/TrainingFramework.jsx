@@ -703,7 +703,7 @@ export default function TrainingFrameworkPage() {
                       </tr>
                       <tr className="border-b border-slate-200 bg-blue-50/50">
                         <td className="p-3 font-semibold text-blue-800">🔵 Level 2</td>
-                        <td className="p-3 text-slate-700">Modules 8–14</td>
+                        <td className="p-3 text-slate-700">Modules 8–14, 20</td>
                         <td className="p-3 text-slate-700">Within 90 days of Level 1 promotion</td>
                         <td className="p-3 text-slate-700">Level 2 Competency Assessment</td>
                       </tr>
