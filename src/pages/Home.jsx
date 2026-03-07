@@ -458,6 +458,11 @@ export default function HomePage() {
           </Card>
         </div>
 
+        {/* Deadline Calendar */}
+        <div className="grid grid-cols-1">
+          <DeadlineCalendar userEmail={user.email} savedOpportunities={savedOpportunities} />
+        </div>
+
         {/* Notifications Center */}
         <Card>
           <CardHeader>
