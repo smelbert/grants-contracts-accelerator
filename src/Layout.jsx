@@ -708,22 +708,26 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
 
-      {/* IncubateHer Program Gate — replaces generic legal modal for IncubateHer participants */}
+      {/* IncubateHer Program Gate — full-screen blocker for IncubateHer participants */}
       {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && !userAccess?.legal_acknowledged && (
-        <IncubateHerProgramGate
-          user={user}
-          userAccess={userAccess}
-          enrollment={incubateHerEnrollment}
-          onComplete={() => refetchAccess()}
-        />
+        <div className="fixed inset-0 z-[9999] bg-white overflow-auto">
+          <IncubateHerProgramGate
+            user={user}
+            userAccess={userAccess}
+            enrollment={incubateHerEnrollment}
+            onComplete={() => refetchAccess()}
+          />
+        </div>
       )}
 
-      {/* Generic Legal Acknowledgement — for all other users */}
-      {user && !(incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program') && (
-        <LegalAcknowledgement
-          open={showLegalAcknowledgement}
-          onAccept={handleLegalAccept}
-        />
+      {/* Generic Legal Acknowledgement — full-screen blocker for all other users */}
+      {user && !(incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program') && showLegalAcknowledgement && (
+        <div className="fixed inset-0 z-[9999] bg-white overflow-auto flex items-center justify-center p-4">
+          <LegalAcknowledgement
+            open={true}
+            onAccept={handleLegalAccept}
+          />
+        </div>
       )}
 
       {/* IncubateHer Onboarding Tour — only after legal gate is cleared */}
