@@ -632,6 +632,70 @@ const MODULES_DATA = [
     outputs: ['Feasibility assessment memo', 'Scope of work document']
   },
   {
+    number: 20,
+    title: 'Prompt Engineering for Grant Writing',
+    subtitle: 'Rhetorical, ethical, and strategic AI prompting',
+    levelRequired: 'level-2',
+    critical: false,
+    purpose: 'Equip Level 2 consultants with a structured, rhetorically grounded method for using AI tools to draft, refine, and improve grant proposals — without sacrificing strategic judgment, voice compliance, or ethical standards.',
+    rationale: 'AI tools are now a fixture in the grant writing landscape. Consultants who cannot use them effectively are at a competitive disadvantage. Consultants who use them recklessly create compliance and reputational risk. This module bridges that gap with a principled, proven framework.',
+    competencies: [
+      'Apply the Rhetorical Prompt Engineering Method to grant writing tasks',
+      'Use the Four Qualifiers to produce ethical, accurate AI output',
+      'Scale the Rhet Shot framework across a full grant proposal',
+      'Prompt AI to align with specific grant proposal goals and funder priorities',
+      'Apply the Do\'s and Don\'ts of AI-assisted grant writing',
+      'Prompt engineer a grant proposal from scratch using a structured approach',
+      'Use AI prompting to strengthen and improve an existing grant proposal',
+      'Integrate AI output into the full proposal development workflow'
+    ],
+    keyContent: [
+      {
+        title: 'The Rhetorical Prompt Engineering Method',
+        body: 'Rhetorical prompt engineering applies classical rhetorical principles — ethos, pathos, logos — to the design of AI prompts. Rather than typing a vague request and hoping for a useful output, the consultant constructs a prompt that establishes the speaker\'s authority (ethos), the emotional and relational context (pathos), and the logical structure of the expected output (logos). This method produces dramatically more targeted, usable AI content than generic prompting — and the rhetorical frame ensures the output serves the evaluator, not just the writer.'
+      },
+      {
+        title: 'Four Qualifiers for Ethical Output',
+        body: 'Every AI-assisted output at EIS must pass four qualifiers before it can be incorporated into a proposal: (1) Accuracy — Is every factual claim verifiable? AI hallucinations are a real risk; all data, statistics, and program references must be independently confirmed. (2) Authenticity — Does the output reflect the client\'s actual programs, values, and voice — not a generic nonprofit? (3) Alignment — Does the output match the funder\'s stated priorities and scoring criteria? (4) Accountability — Can the consultant stand behind this content professionally? If any qualifier fails, the output requires revision before use. These four qualifiers are non-negotiable at EIS.'
+      },
+      {
+        title: 'Scaling Rhet Shot and the Framework for Grant Writing',
+        body: 'Rhet Shot is the structured prompt unit in the Rhetorical Prompt Engineering Method — a single, purpose-built prompt designed to produce one specific, high-quality output. Scaling Rhet Shot means systematically applying this prompt architecture across all sections of a grant proposal: needs statement, program description, outcomes, evaluation plan, budget narrative, and organizational capacity. Each Rhet Shot is calibrated to the funder\'s rubric, the client\'s voice, and the specific section\'s evaluator expectations. The result is a proposal-wide AI workflow that maintains consistency and quality rather than generating patchwork outputs.'
+      },
+      {
+        title: 'Helping AI Match the Goals of Your Grant Proposal',
+        body: 'AI tools do not automatically understand the strategic goals of a grant proposal — the consultant must encode that intelligence into the prompt. This requires: feeding the AI the funder\'s priorities and scoring language, specifying the client\'s theory of change and target population, setting the desired tone and voice parameters, and establishing the outcome logic before asking for narrative. A prompt that includes strategic context produces strategic output. A prompt without context produces generic output that cannot be used without extensive revision.'
+      },
+      {
+        title: 'The Don\'ts and Do\'s of AI-Assisted Grant Writing',
+        body: 'DON\'T: Submit AI output without reading and editing every sentence. DON\'T: Use AI-generated statistics as verified fact. DON\'T: Allow AI to write strategy — it synthesizes patterns, it does not create competitive positioning. DON\'T: Use AI to manufacture client data, impact claims, or program credentials the client does not have. DON\'T: Skip the EIS QA checklist because AI wrote the draft. DO: Use AI for structural outlines and first drafts that you then substantially revise. DO: Use AI to pressure-test your own logic and identify gaps. DO: Use AI for language alternatives when your draft feels flat. DO: Apply the Four Qualifiers to every AI-assisted section before submission. DO: Disclose AI use in your internal submission notes.'
+      },
+      {
+        title: 'How to Prompt Engineer Your Grant Proposal From Scratch',
+        body: 'A from-scratch AI-assisted grant proposal follows this sequence: (1) Input the funder\'s RFP, scoring rubric, and priority language into your prompt context. (2) Feed the client\'s program description, data, and theory of change. (3) Build a Rhet Shot prompt for the needs statement — setting rhetorical context, specifying data requirements, and structuring the evaluator journey. (4) Review, fact-check, and revise the output against EIS voice standards and the Four Qualifiers. (5) Repeat for each section in architectural sequence. (6) Conduct a complete QA review before internal submission. The AI accelerates drafting — the consultant provides strategy, judgment, and verification.'
+      },
+      {
+        title: 'How to Prompt Engineer to Improve an Existing Grant Proposal',
+        body: 'When improving an existing proposal, AI prompting follows a different workflow: (1) Paste the existing section into context and identify what is weak — vague outcomes, missing data, passive voice, misalignment with funder priorities. (2) Construct a targeted Rhet Shot prompt that addresses the specific weakness while preserving the client\'s voice and existing strengths. (3) Ask the AI to suggest alternative framings, stronger evidence language, or SMART outcome conversions. (4) Do not wholesale replace the existing section — use AI output as improvement scaffolding, not replacement content. (5) Apply the Four Qualifiers and EIS QA checklist before the revised section enters the proposal.'
+      },
+      {
+        title: 'Bringing It All Together',
+        body: 'Prompt engineering for grant writing is not a shortcut — it is a professional skill that requires judgment, strategy, and discipline. The Rhetorical Prompt Engineering Method, the Four Qualifiers, and the Rhet Shot framework together create a reproducible, quality-controlled system for AI-assisted proposal development. Consultants who master this method can produce higher-quality first drafts faster, improve existing proposals with greater precision, and maintain the EIS quality standard throughout. The AI is the tool. The consultant is the strategist. Never reverse those roles.'
+      }
+    ],
+    exercises: [
+      { title: 'Rhet Shot Construction Exercise', description: 'Build three Rhet Shot prompts for a provided grant opportunity: one for the needs statement, one for the program description, and one for the outcomes section. For each prompt, identify the rhetorical elements (ethos, pathos, logos) you embedded and explain why. Submit the prompts and the AI outputs they generated.' },
+      { title: 'Four Qualifiers Audit', description: 'Review an AI-generated grant section provided by your supervisor. Apply all Four Qualifiers (Accuracy, Authenticity, Alignment, Accountability) to the content. Document every failure identified and write the corrected version for each.' },
+      { title: 'Full Proposal AI Workflow', description: 'Using the Rhet Shot framework, prompt engineer a complete first draft of all major narrative sections for a provided fictional grant opportunity. Submit both the prompts used AND the revised, QA-checked draft sections — showing your revision work via change log.' }
+    ],
+    levels: { level1: 'N/A — complete Modules 1–7 foundational competencies before applying AI tools to proposal work', level2: 'Apply Rhetorical Prompt Engineering and the Four Qualifiers independently across all proposal sections', level3: 'Oversee AI-assisted proposal quality — coach Level 1 and 2 consultants on ethical prompting standards' },
+    outputs: [
+      'Rhet Shot construction exercise (3 prompts with rhetorical analysis)',
+      'Four Qualifiers audit of AI-generated content with corrections',
+      'Full proposal AI workflow: prompts used + revised draft sections with change log'
+    ]
+  },
+  {
     number: 19,
     title: 'Training & Onboarding New Consultants',
     subtitle: 'Support role — NOT independent trainer authorization',
