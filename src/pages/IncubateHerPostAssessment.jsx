@@ -14,82 +14,82 @@ import { CheckCircle2, AlertCircle, TrendingUp, Award, Download } from 'lucide-r
 import { toast } from 'react-hot-toast';
 
 const QUESTIONS = {
-  grants_vs_contracts: [
+  legal_structure: [
     {
       id: 'q1',
-      question: 'What is the primary difference between grants and contracts?',
+      question: 'Which of the following documents is required to demonstrate legal fundability?',
       options: [
-        { value: 'a', text: 'Grants are for nonprofits only, contracts are for businesses', points: 25 },
-        { value: 'b', text: 'Grants fund your mission, contracts pay for specific deliverables', points: 100 },
-        { value: 'c', text: 'Grants are easier to get than contracts', points: 0 },
-        { value: 'd', text: 'There is no real difference', points: 0 }
+        { value: 'a', text: 'Articles of Incorporation or Organization', points: 100 },
+        { value: 'b', text: 'Social media following list', points: 0 },
+        { value: 'c', text: 'Informal partnership agreement', points: 25 },
+        { value: 'd', text: 'Only a business name', points: 0 }
       ]
     },
     {
       id: 'q2',
-      question: 'Who typically reviews grant applications?',
+      question: 'What is the primary purpose of having an up-to-date Board Resolution or Bylaws?',
       options: [
-        { value: 'a', text: 'Procurement officers', points: 0 },
-        { value: 'b', text: 'Program officers and review committees', points: 100 },
-        { value: 'c', text: 'Legal departments', points: 25 },
-        { value: 'd', text: 'Not sure', points: 0 }
+        { value: 'a', text: 'To show funders that your organization has formal governance structure', points: 100 },
+        { value: 'b', text: 'To make your website look more professional', points: 0 },
+        { value: 'c', text: 'Only nonprofits need these documents', points: 25 },
+        { value: 'd', text: 'They are not really important', points: 0 }
       ]
     }
   ],
-  legal_readiness: [
+  financial_systems: [
     {
       id: 'q3',
-      question: 'What is your current business legal structure?',
+      question: 'Why is tracking expenses by program or project important for funders?',
       options: [
-        { value: 'a', text: '501(c)(3) nonprofit with EIN', points: 100 },
-        { value: 'b', text: 'LLC or Corporation with EIN', points: 75 },
-        { value: 'c', text: 'Sole proprietor with EIN', points: 50 },
-        { value: 'd', text: 'No formal structure yet', points: 0 }
+        { value: 'a', text: 'It proves you can manage money and deliver on promises', points: 100 },
+        { value: 'b', text: 'It is just a nice-to-have administrative task', points: 0 },
+        { value: 'c', text: 'Only large organizations need to do this', points: 25 },
+        { value: 'd', text: 'Funders do not actually care about expense tracking', points: 0 }
       ]
     },
     {
       id: 'q4',
-      question: 'Do you have a governing board or advisory committee?',
+      question: 'What should your financial documentation include to be funding-ready?',
       options: [
-        { value: 'a', text: 'Yes, with regular meetings and minutes', points: 100 },
-        { value: 'b', text: 'Yes, but informal', points: 50 },
-        { value: 'c', text: 'Working on forming one', points: 25 },
-        { value: 'd', text: 'No', points: 0 }
+        { value: 'a', text: 'Program-level budgets, expense tracking system, and a method to match spending to funding sources', points: 100 },
+        { value: 'b', text: 'Just a general estimate of spending', points: 0 },
+        { value: 'c', text: 'Personal bank statements', points: 25 },
+        { value: 'd', text: 'Monthly receipts in a shoebox', points: 0 }
       ]
     }
   ],
-  financial_readiness: [
+  data_measurement: [
     {
       id: 'q5',
-      question: 'Do you have financial statements (budget, balance sheet)?',
+      question: 'What is the relationship between data collection and funding renewal?',
       options: [
-        { value: 'a', text: 'Yes, professionally prepared and current', points: 100 },
-        { value: 'b', text: 'Yes, but need updating', points: 50 },
-        { value: 'c', text: 'I have basic tracking', points: 25 },
-        { value: 'd', text: 'No formal financial documents', points: 0 }
+        { value: 'a', text: 'You cannot get renewed if you cannot report measurable outcomes', points: 100 },
+        { value: 'b', text: 'Data collection is optional', points: 0 },
+        { value: 'c', text: 'You can collect data after you get funded', points: 25 },
+        { value: 'd', text: 'Funders only care about money spent, not results', points: 0 }
       ]
     },
     {
       id: 'q6',
-      question: 'Can you track expenses by program or project?',
+      question: 'Which of the following is a critical component of a data collection system?',
       options: [
-        { value: 'a', text: 'Yes, with accounting software', points: 100 },
-        { value: 'b', text: 'Yes, using spreadsheets', points: 75 },
-        { value: 'c', text: 'Somewhat', points: 25 },
-        { value: 'd', text: 'No', points: 0 }
+        { value: 'a', text: 'A clear method to track who you serve, what services they receive, and what changes occur', points: 100 },
+        { value: 'b', text: 'Just counting how many people attend events', points: 25 },
+        { value: 'c', text: 'Collecting data only when a grant requires it', points: 0 },
+        { value: 'd', text: 'Keeping everything in email threads', points: 0 }
       ]
     }
   ],
   confidence: [
     {
       id: 'q7',
-      question: 'How confident are you in explaining your business mission to a funder?',
+      question: 'How confident are you in preparing your organizational legal and governance documents for a funder?',
       type: 'scale',
       scale: { min: 1, max: 10 }
     },
     {
       id: 'q8',
-      question: 'How confident are you in preparing a grant proposal?',
+      question: 'How confident are you in setting up and maintaining a financial tracking system by program?',
       type: 'scale',
       scale: { min: 1, max: 10 }
     }
@@ -238,47 +238,47 @@ export default function IncubateHerPostAssessment() {
   };
 
   const calculateScores = () => {
-    let grantsContractsScore = 0;
-    let legalScore = 0;
-    let financialScore = 0;
+    let legalStructureScore = 0;
+    let financialSystemsScore = 0;
+    let dataScore = 0;
     let confidenceScore = 0;
 
-    QUESTIONS.grants_vs_contracts.forEach(q => {
+    QUESTIONS.legal_structure.forEach(q => {
       const answer = responses[q.id];
       if (answer) {
         const option = q.options.find(o => o.value === answer);
-        if (option) grantsContractsScore += option.points;
+        if (option) legalStructureScore += option.points;
       }
     });
-    grantsContractsScore = (grantsContractsScore / 200) * 100;
+    legalStructureScore = (legalStructureScore / 200) * 100;
 
-    QUESTIONS.legal_readiness.forEach(q => {
+    QUESTIONS.financial_systems.forEach(q => {
       const answer = responses[q.id];
       if (answer) {
         const option = q.options.find(o => o.value === answer);
-        if (option) legalScore += option.points;
+        if (option) financialSystemsScore += option.points;
       }
     });
-    legalScore = (legalScore / 200) * 100;
+    financialSystemsScore = (financialSystemsScore / 200) * 100;
 
-    QUESTIONS.financial_readiness.forEach(q => {
+    QUESTIONS.data_measurement.forEach(q => {
       const answer = responses[q.id];
       if (answer) {
         const option = q.options.find(o => o.value === answer);
-        if (option) financialScore += option.points;
+        if (option) dataScore += option.points;
       }
     });
-    financialScore = (financialScore / 200) * 100;
+    dataScore = (dataScore / 200) * 100;
 
     const confidenceResponses = QUESTIONS.confidence.map(q => parseInt(responses[q.id]) || 0);
     confidenceScore = (confidenceResponses.reduce((a, b) => a + b, 0) / confidenceResponses.length) * 10;
 
-    const totalScore = Math.round((grantsContractsScore + legalScore + financialScore + confidenceScore) / 4);
+    const totalScore = Math.round((legalStructureScore + financialSystemsScore + dataScore + confidenceScore) / 4);
 
     return {
-      grants_vs_contracts_score: Math.round(grantsContractsScore),
-      legal_readiness_score: Math.round(legalScore),
-      financial_readiness_score: Math.round(financialScore),
+      legal_structure_score: Math.round(legalStructureScore),
+      financial_systems_score: Math.round(financialSystemsScore),
+      data_measurement_score: Math.round(dataScore),
       confidence_score: Math.round(confidenceScore),
       total_score: totalScore
     };
@@ -488,10 +488,10 @@ export default function IncubateHerPostAssessment() {
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Legal Structure Readiness</CardTitle>
+            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Financial Systems & Tracking (Day 2)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {QUESTIONS.legal_readiness.map((q) => (
+            {QUESTIONS.financial_systems.map((q) => (
               <div key={q.id}>
                 <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
                   {q.question}
@@ -513,10 +513,10 @@ export default function IncubateHerPostAssessment() {
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Financial & Document Readiness</CardTitle>
+            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Data & Outcome Measurement (Day 2)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {QUESTIONS.financial_readiness.map((q) => (
+            {QUESTIONS.data_measurement.map((q) => (
               <div key={q.id}>
                 <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
                   {q.question}
