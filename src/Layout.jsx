@@ -10,6 +10,8 @@ import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import AIOnboardingAssistant from '@/components/onboarding/AIOnboardingAssistant';
 import IncubateHerOnboarding from '@/components/incubateher/IncubateHerOnboarding';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import GlobalActivityTracker from '@/components/activity/GlobalActivityTracker';
+import SubmitTestimonialForm from '@/components/testimonials/SubmitTestimonialForm';
 import LegalAcknowledgement from '@/components/legal/LegalAcknowledgement';
 import IncubateHerProgramGate from '@/components/incubateher/IncubateHerProgramGate';
 import { 
