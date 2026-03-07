@@ -694,11 +694,11 @@ export default function IncubateHerCourse() {
                   />
                 )}
 
-                {/* Section Content */}
+                {/* Section Content — accordion for recap/session content, standard for others */}
                 {currentSectionData?.content && (
-                  <div 
-                    className="prose max-w-none p-6 rounded-lg bg-slate-50 border border-slate-200"
-                    dangerouslySetInnerHTML={{ __html: currentSectionData.content }}
+                  <AccordionContent
+                    title={currentSectionData.title}
+                    content={currentSectionData.content}
                   />
                 )}
 
