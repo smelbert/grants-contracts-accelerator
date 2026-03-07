@@ -130,7 +130,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
             </div>
           </ScrollArea>
 
-          <div className="border-t pt-4 space-y-3">
+          <div className="border-t p-6 space-y-3">
             <div className="flex items-start gap-3">
               <Checkbox id="terms" checked={termsChecked} onCheckedChange={setTermsChecked} className="mt-1" />
               <label htmlFor="terms" className="text-sm text-slate-700 cursor-pointer leading-relaxed">
