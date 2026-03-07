@@ -679,6 +679,8 @@ export default function Layout({ children, currentPageName }) {
       </AnimatePresence>
 
       {/* Main Content */}
+      {user && <GlobalActivityTracker userEmail={user.email} />}
+
       <main className="lg:pl-64">
         {children}
       </main>
