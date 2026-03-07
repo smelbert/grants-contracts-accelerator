@@ -53,16 +53,16 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
   if (step === 'terms') {
     return (
       <Dialog open={true} onOpenChange={() => {}}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[90vh] p-0 overflow-hidden flex flex-col">
+          <div className="p-6 border-b">
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Shield className="w-6 h-6 text-[#AC1A5B]" />
               Welcome to IncubateHer / AccelerateHer — Please Review & Sign
             </DialogTitle>
             <DialogDescription className="text-sm text-slate-500 mt-1">Step 1 of 2 — Terms of Service</DialogDescription>
-          </DialogHeader>
+          </div>
 
-          <ScrollArea className="flex-1 pr-4 my-2">
+          <ScrollArea className="flex-1 px-6">
             <div className="space-y-5 text-slate-700">
 
               <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white p-4 rounded-lg">
