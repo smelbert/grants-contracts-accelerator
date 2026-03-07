@@ -36,6 +36,8 @@ export default function DocumentViewer({
   const isCoach = userRole === 'coach' || userRole === 'owner' || userRole === 'admin';
   const canEdit = document?.status === 'draft' || document?.status === 'needs_revision';
   const aiAssisted = document?.ai_assisted;
+  const [lastSaved, setLastSaved] = useState(null);
+  const autoSaveTimerRef = React.useRef(null);
 
   // Fetch comments
   const { data: comments = [] } = useQuery({
