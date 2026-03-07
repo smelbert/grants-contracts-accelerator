@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Shield, Search, Users, MousePointer, BookOpen, TrendingUp, Clock } from 'lucide-react';
+import { Loader2, Search, Users, MousePointer, BookOpen, TrendingUp, Clock, Activity } from 'lucide-react';
 import { format, subDays, isAfter } from 'date-fns';
 
 const EVENT_LABELS = {
