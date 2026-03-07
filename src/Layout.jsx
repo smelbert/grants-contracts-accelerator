@@ -32,6 +32,7 @@ import {
   AlertTriangle,
   DollarSign,
   Bell,
+  Gift,
   HelpCircle,
   Calculator,
   Plus,
