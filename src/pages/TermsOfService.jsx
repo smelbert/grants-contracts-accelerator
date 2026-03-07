@@ -1,14 +1,36 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 export default function TermsOfService() {
   const companyName = "Elbert Innovative Solutions";
   const companyEmail = "info@elbertinnovativesolutions.org";
   const currentYear = new Date().getFullYear();
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
+        {user && (
+          <div className="flex justify-center mb-6">
+            <Link to={createPageUrl('Home')}>
+              <Button className="bg-[#143A50] hover:bg-[#1E4F58] flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Dashboard
+              </Button>
+            </Link>
+          </div>
+        )}
+        
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-[#143A50] mb-2">Terms of Service</h1>
           <p className="text-slate-600">Last Updated: {new Date().toLocaleDateString()}</p>
@@ -167,6 +189,17 @@ export default function TermsOfService() {
             </p>
           </CardContent>
         </Card>
+
+        {user && (
+          <div className="flex justify-center mt-8">
+            <Link to={createPageUrl('Home')}>
+              <Button className="bg-[#143A50] hover:bg-[#1E4F58] flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Dashboard
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
