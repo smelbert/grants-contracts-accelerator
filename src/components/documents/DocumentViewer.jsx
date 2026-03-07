@@ -37,7 +37,18 @@ export default function DocumentViewer({
   const canEdit = document?.status === 'draft' || document?.status === 'needs_revision';
   const aiAssisted = document?.ai_assisted;
   const [lastSaved, setLastSaved] = useState(null);
-  const autoSaveTimerRef = React.useRef(null);
+  const autoSaveTimerRef = useRef(null);
+
+  const handleContentChange = (value) => {
+    setEditedContent(value);
+    // Debounce auto-save: 2s after last keystroke
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(() => {
+      saveDocumentMutation.mutate({ content: value }, {
+        onSuccess: () => setLastSaved(new Date())
+      });
+    }, 2000);
+  };
 
   // Fetch comments
   const { data: comments = [] } = useQuery({
