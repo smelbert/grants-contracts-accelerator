@@ -37,6 +37,45 @@ import { createPageUrl } from '@/utils';
 import { toast } from 'react-hot-toast';
 import confetti from 'canvas-confetti';
 
+// Accordion wrapper for HTML content — collapses lengthy session recaps
+function AccordionContent({ title, content }) {
+  const isRecap = /recap|night|day \d|session \d/i.test(title || '');
+  const [open, setOpen] = useState(!isRecap); // recaps start collapsed, others start open
+
+  if (!isRecap) {
+    return (
+      <div
+        className="rounded-lg bg-slate-50 border border-slate-200 p-5"
+        style={{ fontSize: '0.875rem', lineHeight: '1.65' }}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left font-semibold text-sm text-white transition-colors"
+        style={{ backgroundColor: open ? BRAND_COLORS.culRed : BRAND_COLORS.eisNavy }}
+      >
+        <span className="flex items-center gap-2">
+          <BookOpen className="w-4 h-4 flex-shrink-0" />
+          {title} — Session Recap
+        </span>
+        <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div
+          className="p-5 bg-white"
+          style={{ fontSize: '0.8rem', lineHeight: '1.7' }}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      )}
+    </div>
+  );
+}
+
 export default function IncubateHerCourse() {
   const queryClient = useQueryClient();
   const [currentSection, setCurrentSection] = useState(0);
