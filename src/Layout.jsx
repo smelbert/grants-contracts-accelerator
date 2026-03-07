@@ -14,9 +14,6 @@ import GlobalActivityTracker from '@/components/activity/GlobalActivityTracker';
 import SubmitTestimonialForm from '@/components/testimonials/SubmitTestimonialForm';
 import LegalAcknowledgement from '@/components/legal/LegalAcknowledgement';
 import IncubateHerProgramGate from '@/components/incubateher/IncubateHerProgramGate';
-
-// Public pages that skip the authenticated layout entirely
-const PUBLIC_PAGES = ['PublicHome', 'AboutEIS', 'IncubateHerPublic', 'Blog', 'BlogPost', 'TermsOfService', 'Register', 'Landing', 'Pricing'];
 import { 
   LayoutDashboard, 
   Search, 
@@ -53,6 +50,9 @@ import {
   Settings,
   Flag
 } from 'lucide-react';
+
+// Public pages that skip the authenticated layout entirely
+const PUBLIC_PAGES = ['PublicHome', 'AboutEIS', 'IncubateHerPublic', 'Blog', 'BlogPost', 'TermsOfService', 'Register', 'Landing', 'Pricing'];
 
 // User Portal Navigation with Groups
 const getUserPortalNav = () => [
@@ -271,7 +271,6 @@ const getAdminPortalNav = () => [
 ];
 
 const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) => {
-  // All portals now return grouped arrays
   if (portalView === 'coach') {
     const items = getCoachPortalNav();
     return [{ groupName: 'Menu', items }];
@@ -280,27 +279,21 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
     return getAdminPortalNav();
   }
   
-  // Check if user is an IncubateHer participant with restricted access
   const isIncubateHerParticipant = !!incubateHerEnrollment;
   
-  // Filter user portal items based on access and role
   const userNav = getUserPortalNav();
   const filteredNav = userNav.map(group => ({
     ...group,
     items: group.items.filter(item => {
-      // Filter out Learning Hub if access is disabled
       if (item.requiresAccess === 'learning_hub' && userAccess && !userAccess.learning_hub_access) {
         return false;
       }
-      // Filter out admin-only items
       if (item.requiresRole === 'admin' && userRole !== 'admin') {
         return false;
       }
-      // Hide items for IncubateHer participants
       if (item.hideForIncubateHer && isIncubateHerParticipant) {
-        return false; // Always hide for IncubateHer users
+        return false;
       }
-      // Hide tabs disabled by admin
       if (userAccess?.disabled_tabs?.[item.page]) return false;
       return true;
     })
@@ -309,11 +302,13 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
   return filteredNav;
 };
 
+// Wrapper that bypasses layout for public pages
+function PublicWrapper({ children }) {
+  return <>{children}</>;
+}
+
 export default function Layout({ children, currentPageName }) {
-  // Render public pages without any authenticated layout
-  if (PUBLIC_PAGES.includes(currentPageName)) {
-    return <>{children}</>;
-  }
+  const isPublic = PUBLIC_PAGES.includes(currentPageName);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLegalAcknowledgement, setShowLegalAcknowledgement] = useState(false);
@@ -324,6 +319,7 @@ export default function Layout({ children, currentPageName }) {
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
+    enabled: !isPublic,
   });
 
   const { data: userAccess, refetch: refetchAccess } = useQuery({
@@ -335,33 +331,29 @@ export default function Layout({ children, currentPageName }) {
       });
       return access[0];
     },
-    enabled: !!user?.email
+    enabled: !isPublic && !!user?.email
   });
 
-  // Check if user needs to acknowledge legal terms
   React.useEffect(() => {
+    if (isPublic) return;
     if (user && userAccess !== undefined) {
       if (!userAccess) {
-        // No access record exists, show legal acknowledgement
         setShowLegalAcknowledgement(true);
       } else if (!userAccess.legal_acknowledged) {
-        // Access exists but hasn't acknowledged
         setShowLegalAcknowledgement(true);
       }
     }
-  }, [user, userAccess]);
+  }, [user, userAccess, isPublic]);
 
   const handleLegalAccept = async () => {
     if (!user?.email) return;
     
     if (userAccess?.id) {
-      // Update existing record
       await base44.entities.UserAccessLevel.update(userAccess.id, {
         legal_acknowledged: true,
         legal_acknowledged_date: new Date().toISOString()
       });
     } else {
-      // Create new record
       await base44.entities.UserAccessLevel.create({
         user_email: user.email,
         access_level: 'community_only',
@@ -384,7 +376,7 @@ export default function Layout({ children, currentPageName }) {
       });
       return enrollments.find(e => e.cohort_id) || null;
     },
-    enabled: !!user?.email
+    enabled: !isPublic && !!user?.email
   });
 
   const handlePortalChange = (view) => {
@@ -392,17 +384,15 @@ export default function Layout({ children, currentPageName }) {
     localStorage.setItem('portalView', view);
   };
 
+  // Render public pages without any authenticated layout
+  if (isPublic) {
+    return <>{children}</>;
+  }
+
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
   const navItems = getNavItems(effectiveRole, userAccess, user?.role, incubateHerEnrollment);
+  const handleLogout = () => { base44.auth.logout(); };
 
-  // Show onboarding flow for all users
-  const showOnboardingFlow = user && currentPageName !== 'CoachProfileSetup';
-
-  const handleLogout = () => {
-    base44.auth.logout();
-  };
-
-  // Portal color schemes - EIS Brand Colors
   const portalColors = {
     user: { bg: 'bg-[#E5C089]/10', border: 'border-[#E5C089]', accent: 'bg-[#143A50]', accentHover: 'hover:bg-[#1E4F58]', text: 'text-[#143A50]' },
     coach: { bg: 'bg-[#1E4F58]/10', border: 'border-[#1E4F58]', accent: 'bg-[#1E4F58]', accentHover: 'hover:bg-[#143A50]', text: 'text-[#1E4F58]' },
@@ -411,7 +401,6 @@ export default function Layout({ children, currentPageName }) {
 
   const currentPortalColors = portalColors[effectiveRole] || portalColors.user;
 
-  // Skip layout for onboarding and coach setup
   if ((currentPageName === 'Home' || currentPageName === 'CoachProfileSetup') && !user) {
     return children;
   }
@@ -729,7 +718,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
 
-      {/* IncubateHer Program Gate — full-screen blocker for IncubateHer participants */}
+      {/* IncubateHer Program Gate */}
       {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && !userAccess?.legal_acknowledged && (
         <div className="fixed inset-0 z-[9999] bg-white overflow-auto">
           <IncubateHerProgramGate
@@ -741,7 +730,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       )}
 
-      {/* Generic Legal Acknowledgement — full-screen blocker for all other users */}
+      {/* Generic Legal Acknowledgement */}
       {user && !(incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program') && showLegalAcknowledgement && (
         <div className="fixed inset-0 z-[9999] bg-white overflow-auto flex items-center justify-center p-4">
           <LegalAcknowledgement
@@ -751,7 +740,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
       )}
 
-      {/* IncubateHer Onboarding Tour — only after legal gate is cleared */}
+      {/* IncubateHer Onboarding Tour */}
       {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && userAccess?.legal_acknowledged && (
         <IncubateHerOnboarding
           userEmail={user.email}
