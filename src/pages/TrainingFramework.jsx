@@ -116,7 +116,7 @@ const LEVELS_DATA = {
       'Certify or promote Level 1 consultants'
     ],
     promotionGates: [
-      'Complete all required outputs for Modules 8–14',
+      'Complete all required outputs for Modules 8–14 and Module 20',
       'Lead at least 3 successful proposal processes end-to-end',
       'Complete the EIS Level 2 → 3 Competency Assessment',
       'Demonstrate effective mentorship of at least one Level 1 consultant',
