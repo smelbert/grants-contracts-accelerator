@@ -786,107 +786,12 @@ export default function IncubateHerCourse() {
 
               {/* Tips Tab */}
               <TabsContent value="tips" className="space-y-4">
-                {course.tips && course.tips.length > 0 ? (
-                  course.tips.map((tip, idx) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-lg border-l-4 bg-slate-50"
-                      style={{
-                        borderColor: tip.category === 'warning' ? BRAND_COLORS.culRed : BRAND_COLORS.eisGold
-                      }}
-                    >
-                      <div className="flex items-start gap-3">
-                        <Star className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: BRAND_COLORS.eisGold }} />
-                        <div>
-                          <h4 className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
-                            {tip.title}
-                          </h4>
-                          <p className="text-sm text-slate-600">
-                            {tip.content}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-slate-600">No tips available for this course yet.</p>
-                )}
+                <CourseTipsPanel course={course} />
               </TabsContent>
 
               {/* Resources Tab */}
               <TabsContent value="resources" className="space-y-4">
-                {course.handouts && course.handouts.length > 0 ? (
-                  course.handouts.map((handout, idx) => {
-                    const isHtml = handout.source_type === 'html' || (handout.html_content && !handout.file_url);
-                    const isVideo = handout.file_url && (
-                      handout.file_url.match(/\.(mp4|webm|ogg)(\?|$)/i) ||
-                      handout.file_url.includes('youtube.com') ||
-                      handout.file_url.includes('youtu.be') ||
-                      handout.file_url.includes('vimeo.com') ||
-                      (handout.file_url.includes('drive.google.com') && (handout.file_type || '').includes('video'))
-                    );
-                    const isPdfOrDrive = !isVideo && handout.file_url && (
-                      handout.file_url.includes('drive.google.com') || handout.file_url.match(/\.pdf(\?|$)/i)
-                    );
-
-                    return (
-                      <div key={idx} className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
-                        <div className="p-4 border-b border-slate-200 flex items-start justify-between gap-3">
-                          <div>
-                            <h4 className="font-medium text-slate-900">{handout.title}</h4>
-                            {handout.description && <p className="text-sm text-slate-600 mt-1">{handout.description}</p>}
-                          </div>
-                          {/* Always show download/open buttons */}
-                          {handout.file_url && (
-                            <div className="flex gap-2 shrink-0">
-                              <a href={handout.file_url} download target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" style={{ backgroundColor: BRAND_COLORS.eisGold, color: 'white' }}>
-                                  <Download className="w-4 h-4 mr-1" />
-                                  Download
-                                </Button>
-                              </a>
-                              <a href={handout.file_url} target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" variant="outline">
-                                  <ExternalLink className="w-4 h-4 mr-1" />
-                                  Open
-                                </Button>
-                              </a>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* HTML content renders inline */}
-                        {isHtml && (
-                          <div className="p-4 prose prose-sm max-w-none bg-white" dangerouslySetInnerHTML={{ __html: handout.html_content }} />
-                        )}
-
-                        {/* Video preview */}
-                        {isVideo && handout.file_url.match(/\.(mp4|webm|ogg)(\?|$)/i) && (
-                          <video controls className="w-full bg-black" style={{ maxHeight: '400px' }}>
-                            <source src={handout.file_url} />
-                          </video>
-                        )}
-
-                        {/* PDF / Google Drive inline preview */}
-                        {isPdfOrDrive && (
-                          <div className="bg-white">
-                            <iframe
-                              src={handout.file_url.includes('drive.google.com')
-                                ? handout.file_url.replace('/view', '/preview').replace(/\/edit.*$/, '/preview')
-                                : handout.file_url}
-                              className="w-full"
-                              style={{ height: '500px', border: 'none' }}
-                              title={handout.title}
-                              allow="autoplay"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-slate-600">No downloadable resources for this course yet.</p>
-                )}
+                <CourseResourcesPanel course={course} />
               </TabsContent>
 
               {/* Notes Tab */}
