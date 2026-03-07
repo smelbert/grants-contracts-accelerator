@@ -10,8 +10,10 @@ import {
   Search, DollarSign, Calendar, Bookmark, BookmarkCheck,
   ExternalLink, MapPin, TrendingUp, X, ShieldCheck,
   AlertTriangle, Flag, Clock, Archive, ChevronRight,
-  Link2, CheckCircle2, RefreshCw, Building2
+  Link2, CheckCircle2, RefreshCw, Building2, FlaskConical
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
 import { format, differenceInDays, isPast, isWithinInterval, addDays } from 'date-fns';
 import QuickPasteOpportunity from '@/components/opportunities/QuickPasteOpportunity';
