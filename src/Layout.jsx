@@ -353,13 +353,22 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['incubateher-enrollment', user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
-      const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        role: 'participant'
-      });
-      return enrollments.find(e => e.cohort_id) || null;
+      try {
+        const enrollments = await base44.entities.ProgramEnrollment.filter({
+          participant_email: user.email,
+          role: 'participant'
+        });
+        console.log(`[IncubateHer] Found ${enrollments.length} enrollments for ${user.email}`, enrollments);
+        const result = enrollments.find(e => e.cohort_id) || null;
+        console.log(`[IncubateHer] Selected enrollment:`, result);
+        return result;
+      } catch (error) {
+        console.error(`[IncubateHer] Enrollment query error for ${user.email}:`, error);
+        return null;
+      }
     },
-    enabled: !isPublic && !!user?.email
+    enabled: !isPublic && !!user?.email,
+    retry: 1
   });
 
   React.useEffect(() => {
