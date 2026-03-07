@@ -73,6 +73,85 @@ const DEFAULT_EVALUATION_QUESTIONS = {
     question: 'What other training topics would you like to see?',
     type: 'text',
     required: false
+  },
+  post_support: {
+    label: 'Post-Incubator Support',
+    question: 'After completing the incubator, what support would help you most?',
+    type: 'multiselect',
+    options: [
+      'Accountability sessions',
+      'Working sessions',
+      'Expert workshops',
+      'Funding support',
+      'Networking',
+      'Emotional support/community',
+      'Mentorship'
+    ],
+    required: true
+  },
+  participation_frequency: {
+    label: 'Participation Frequency',
+    question: 'How often would you participate in ongoing support sessions?',
+    type: 'multiselect',
+    options: [
+      'Monthly',
+      'Quarterly',
+      'Only when I need it'
+    ],
+    required: true
+  },
+  implementation_challenges: {
+    label: 'Implementation Challenges',
+    question: 'What are your biggest challenges implementing what you learned?',
+    type: 'multiselect',
+    options: [
+      'Time',
+      'Systems',
+      'Funding',
+      'Marketing',
+      'Strategy',
+      'Confidence',
+      'Accountability'
+    ],
+    required: true
+  },
+  ongoing_topics: {
+    label: 'Ongoing Session Topics',
+    question: 'What topics would you want covered in ongoing sessions?',
+    type: 'multiselect_custom',
+    options: [
+      'Grant writing and compliance',
+      'Financial management and systems',
+      'Strategic planning',
+      'Marketing and fundraising',
+      'Team building and leadership',
+      'Operations and scaling',
+      'Social impact measurement',
+      'Legal and governance'
+    ],
+    required: true
+  },
+  community_interest: {
+    label: 'Community Interest',
+    question: 'Would you be interested in joining an ongoing entrepreneurial community after the incubator ends?',
+    type: 'yesno',
+    required: true
+  },
+  community_entailment: {
+    label: 'Community Details',
+    question: 'What should an ongoing entrepreneurial community entail?',
+    type: 'multiselect',
+    options: [
+      'Monthly virtual meetups',
+      'Peer mentoring partnerships',
+      'Resource library access',
+      'Expert speaker series',
+      'Accountability partnerships',
+      'Funding opportunities board',
+      'Collaborative projects',
+      'Social events and networking'
+    ],
+    required: false
   }
 };
 
