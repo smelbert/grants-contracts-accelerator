@@ -499,14 +499,16 @@ export default function IncubateHerWorkbook() {
                       {completedPages[currentPage.id] ? 'Completed' : 'Mark Complete'}
                     </Button>
 
-                    <Button
-                      size="sm"
-                      onClick={handleDownloadPDF}
-                      className="bg-[#143A50]"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download PDF
-                    </Button>
+                    <PDFExporter
+                      type="workbook"
+                      workbookData={{
+                        pages: WORKBOOK_PAGES,
+                        responses: allResponses,
+                        customPages: customPages,
+                      }}
+                      organizationName={organizationProfile?.organization_name || enrollment?.organization_name}
+                      userName={user?.full_name}
+                    />
                   </div>
                 </div>
 
