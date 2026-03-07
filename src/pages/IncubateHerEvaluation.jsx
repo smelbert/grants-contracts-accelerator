@@ -12,6 +12,7 @@ import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import { CheckCircle2, Star, MessageSquare, Download } from 'lucide-react';
 import jsPDF from 'jspdf';
 import { toast } from 'react-hot-toast';
+import SubmitTestimonialForm from '@/components/testimonials/SubmitTestimonialForm';
 
 const AUTOSAVE_KEY = 'eis_evaluation_draft';
 const DEFAULT_RESPONSES = {
