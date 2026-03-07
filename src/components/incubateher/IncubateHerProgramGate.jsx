@@ -18,6 +18,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
   const [step, setStep] = useState('terms');
   const [termsChecked, setTermsChecked] = useState(false);
   const [loginChecked, setLoginChecked] = useState(false);
+  const [ipAcknowledged, setIpAcknowledged] = useState(false);
   const currentYear = new Date().getFullYear();
 
   const acceptTermsMutation = useMutation({
@@ -145,9 +146,15 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
                 my credentials with anyone. I understand this platform was provided to me as a program participant.
               </label>
             </div>
+            <div className="flex items-start gap-3">
+              <Checkbox id="ip" checked={ipAcknowledged} onCheckedChange={setIpAcknowledged} className="mt-1" />
+              <label htmlFor="ip" className="text-sm text-slate-700 cursor-pointer leading-relaxed">
+                I understand that all materials, frameworks, tools, and content provided by Elbert Innovative Solutions, LLC (EIS) are proprietary and protected intellectual property. I agree not to copy, distribute, teach, or create derivative programs or services based on EIS materials without prior written permission.
+              </label>
+            </div>
             <Button
               onClick={() => acceptTermsMutation.mutate()}
-              disabled={!termsChecked || !loginChecked || acceptTermsMutation.isPending}
+              disabled={!termsChecked || !loginChecked || !ipAcknowledged || acceptTermsMutation.isPending}
               className="w-full bg-[#143A50] hover:bg-[#1E4F58]"
             >
               {acceptTermsMutation.isPending ? 'Saving...' : 'I Agree — Continue to Setup'}
