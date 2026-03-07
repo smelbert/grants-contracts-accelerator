@@ -182,6 +182,17 @@ export default function DocumentsPage() {
                         <Button variant="ghost" size="sm" onClick={() => deleteMutation.mutate(doc.id)}>
                           <Trash2 className="w-3 h-3 text-red-500" />
                         </Button>
+                        <PDFExporter
+                          type="document"
+                          document={doc}
+                          organizationName={user?.organization_name}
+                          userName={user?.full_name}
+                          trigger={
+                            <Button variant="ghost" size="sm" title="Export PDF">
+                              <Download className="w-3 h-3 text-[#143A50]" />
+                            </Button>
+                          }
+                        />
                       </div>
                     </CardContent>
                   </Card>
