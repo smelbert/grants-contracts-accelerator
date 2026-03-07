@@ -350,13 +350,13 @@ export default function Layout({ children, currentPageName }) {
   });
 
   React.useEffect(() => {
-    if (isPublic) return;
-    if (user && userAccess !== undefined) {
-      if (!userAccess) {
-        setShowLegalAcknowledgement(true);
-      } else if (!userAccess.legal_acknowledged) {
-        setShowLegalAcknowledgement(true);
-      }
+    if (isPublic || !user) return;
+    if (userAccess === null) {
+      // New user without UserAccessLevel record—show legal acknowledgement
+      setShowLegalAcknowledgement(true);
+    } else if (userAccess && !userAccess.legal_acknowledged) {
+      // Existing user who hasn't acknowledged legal terms
+      setShowLegalAcknowledgement(true);
     }
   }, [user, userAccess, isPublic]);
 
