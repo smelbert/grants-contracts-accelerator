@@ -485,9 +485,7 @@ export default function AssessmentSurveyAdmin() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold text-slate-900 mb-2">Program Evaluations</h3>
                   <p className="text-sm text-slate-600 mb-4">Edit the IncubateHer program evaluation form questions and options.</p>
-                  <a href="/pages/IncubateHerEvaluationEditor">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Edit Evaluation Form</Button>
-                  </a>
+                  <EvaluationEditorModal />
                 </CardContent>
               </Card>
             </div>
