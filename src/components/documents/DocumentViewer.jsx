@@ -274,14 +274,25 @@ export default function DocumentViewer({
                 )}
 
                 {canEdit && (
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {lastSaved && !saveDocumentMutation.isPending && (
+                      <span className="text-xs text-emerald-600 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Saved {lastSaved.toLocaleTimeString()}
+                      </span>
+                    )}
+                    {saveDocumentMutation.isPending && (
+                      <span className="text-xs text-slate-400 flex items-center gap-1">
+                        <Save className="w-3.5 h-3.5 animate-pulse" /> Saving...
+                      </span>
+                    )}
                     <Button 
                       onClick={handleSave}
                       disabled={saveDocumentMutation.isPending}
                       className="bg-blue-600 hover:bg-blue-700"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      {saveDocumentMutation.isPending ? 'Saving...' : 'Save Changes'}
+                      Save
                     </Button>
                     {document?.status === 'draft' && (
                       <Button variant="outline" onClick={onRequestReview}>
