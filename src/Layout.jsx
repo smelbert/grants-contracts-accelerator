@@ -27,6 +27,7 @@ import {
   ChevronRight,
   Shield,
   CheckCircle2,
+  Star,
   Badge as BadgeIcon,
   Video,
   AlertTriangle,
