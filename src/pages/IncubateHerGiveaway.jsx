@@ -81,7 +81,7 @@ export default function IncubateHerGiveaway() {
       await base44.integrations.Core.SendEmail({
         to: 'admin@elbertinnovativesolutions.org',
         subject: `IncubateHer Giveaway Application: ${user.full_name}`,
-        body: `A new giveaway application has been submitted.\n\nParticipant: ${user.full_name} (${user.email})\n\nSelf-Report:\n- Sessions attended live: ${selfReport.sessions_attended_live}\n- Videos watched: ${selfReport.videos_watched}\n- Workbook completed: ${selfReport.workbook_percent}%\n- Documents completed: ${selfReport.has_documents ? 'Yes' : 'No'}\n- Pre-Assessment: ${enrollment?.pre_assessment_completed ? '✓' : '✗'}\n- Post-Assessment: ${enrollment?.post_assessment_completed ? '✓' : '✗'}\n\nNotes: ${selfReport.additional_notes || 'None'}\n\nLog in to review: https://app.elbertinnovativesolutions.org`
+        body: `A new giveaway application has been submitted.\n\nParticipant: ${user.full_name} (${user.email})\n\nSelf-Report:\n- Sessions attended live: ${selfReport.sessions_attended_live}\n- Videos watched: ${selfReport.videos_watched}\n- Workbook completed: ${selfReport.workbook_percent}%\n- Documents completed: ${selfReport.has_documents ? 'Yes' : 'No'}\n- Pre-Assessment: ${enrollment?.pre_assessment_completed ? '✓' : '✗'}\n- Post-Assessment: ${enrollment?.post_assessment_completed ? '✓' : '✗'}\n- Program Evaluation: ${enrollment?.evaluation_completed ? '✓' : '✗'}\n\nNotes: ${selfReport.additional_notes || 'None'}\n\nLog in to review: https://app.elbertinnovativesolutions.org`
       });
     },
     onSuccess: () => {
