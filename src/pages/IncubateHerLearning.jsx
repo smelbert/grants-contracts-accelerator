@@ -603,7 +603,7 @@ export default function IncubateHerLearning() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[1,2,3].map(i => <div key={i} className="h-48 bg-slate-200 rounded-xl animate-pulse" />)}
               </div>
-            ) : filteredContent.length === 0 ? (
+            ) : filteredContent.length === 0 && activeModule !== 'consultation' && activeModule !== 'wrap' ? (
               <Card className="border-0 shadow-sm">
                 <CardContent className="py-16 text-center">
                   <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
