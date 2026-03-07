@@ -335,12 +335,18 @@ export default function Layout({ children, currentPageName }) {
     queryKey: ['userAccess', user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
-      const access = await base44.entities.UserAccessLevel.filter({
-        user_email: user.email
-      });
-      return access[0];
+      try {
+        const access = await base44.entities.UserAccessLevel.filter({
+          user_email: user.email
+        });
+        return access[0] || null; // Return null if no record exists
+      } catch (error) {
+        console.error('UserAccess query error:', error);
+        return null; // Return null on error to allow app to continue
+      }
     },
-    enabled: !isPublic && !!user?.email
+    enabled: !isPublic && !!user?.email,
+    retry: 1,
   });
 
   React.useEffect(() => {
