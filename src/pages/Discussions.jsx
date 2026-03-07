@@ -145,275 +145,135 @@ export default function DiscussionsPage() {
   const categories = ['general', 'grants', 'contracts', 'donors', 'strategy'];
   const selectedSpaceData = communitySpaces.find(s => s.id === selectedSpace);
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Breadcrumb Navigation */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-6 py-3">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Link to={createPageUrl('Community')} className="hover:text-[#143A50] flex items-center gap-1">
-              <Home className="w-4 h-4" />
-              Community
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-slate-900 font-medium">Discussions</span>
-            {selectedSpaceData && (
-              <>
-                <ChevronRight className="w-4 h-4" />
-                <span className="text-[#143A50] font-medium">{selectedSpaceData.space_name}</span>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+  // ── FOCUSED SPACE VIEW (when coming from a space card) ──
+  if (selectedSpace !== 'all' && selectedSpaceData) {
+    const spaceColor = selectedSpaceData.icon === 'Target' || selectedSpaceData.slug === 'incubateher-program'
+      ? { bg: 'from-[#AC1A5B] to-[#A65D40]', accent: 'text-[#AC1A5B]', activeBg: 'bg-[#AC1A5B] text-white', border: 'border-[#AC1A5B]/30' }
+      : { bg: 'from-[#143A50] to-[#1E4F58]', accent: 'text-[#143A50]', activeBg: 'bg-[#143A50] text-white', border: 'border-[#143A50]/30' };
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-6">
-              {/* Create Button - Mobile */}
+    return (
+      <div className="min-h-screen bg-slate-50">
+        {/* Space Hero Banner */}
+        <div className={`bg-gradient-to-r ${spaceColor.bg} text-white`}>
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <Link
+              to={createPageUrl('Community')}
+              className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-4 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Community Spaces
+            </Link>
+            <div className="flex items-start justify-between flex-wrap gap-4">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">{selectedSpaceData.space_name}</h1>
+                <p className="text-white/80 max-w-2xl">{selectedSpaceData.description || selectedSpaceData.welcome_message}</p>
+                <div className="flex items-center gap-4 mt-3 text-sm text-white/70">
+                  <span className="flex items-center gap-1"><Users className="w-4 h-4" />{selectedSpaceData.member_count || 0} members</span>
+                  <span className="flex items-center gap-1"><MessageSquare className="w-4 h-4" />{filteredDiscussions.length} discussions</span>
+                </div>
+              </div>
               {canCreateDiscussions && (
-                <Button 
-                  onClick={() => setShowNewPostForm(true)} 
-                  className="w-full lg:hidden bg-[#143A50] hover:bg-[#1E4F58]"
-                >
+                <Button onClick={() => setShowNewPostForm(true)} className="bg-white/20 hover:bg-white/30 border border-white/30">
                   <Plus className="w-4 h-4 mr-2" />
-                  New Discussion
+                  New Post
                 </Button>
               )}
-
-              {/* Spaces Filter */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Community Spaces</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <button
-                    onClick={() => setSelectedSpace('all')}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                      selectedSpace === 'all' 
-                        ? 'bg-[#143A50] text-white' 
-                        : 'hover:bg-slate-100'
-                    }`}
-                  >
-                    All Spaces
-                  </button>
-                  {communitySpaces.map(space => (
-                    <button
-                      key={space.id}
-                      onClick={() => setSelectedSpace(space.id)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                        selectedSpace === space.id 
-                          ? 'bg-[#143A50] text-white' 
-                          : 'hover:bg-slate-100'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">{space.space_name}</span>
-                        <Badge variant="outline" className="text-xs">
-                          {space.content_count || 0}
-                        </Badge>
-                      </div>
-                    </button>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Categories Filter */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Categories</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <button
-                    onClick={() => setSelectedCategory('all')}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                      selectedCategory === 'all' 
-                        ? 'bg-[#143A50] text-white' 
-                        : 'hover:bg-slate-100'
-                    }`}
-                  >
-                    All Categories
-                  </button>
-                  {categories.map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition capitalize ${
-                        selectedCategory === cat 
-                          ? 'bg-[#143A50] text-white' 
-                          : 'hover:bg-slate-100'
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Community Stats</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-600">Discussions</span>
-                    <span className="font-semibold text-[#143A50]">{discussions.length}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-600">Total Replies</span>
-                    <span className="font-semibold text-[#143A50]">
-                      {discussions.reduce((sum, d) => sum + (d.total_replies || 0), 0)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-600">Active Today</span>
-                    <span className="font-semibold text-green-600">
-                      {discussions.filter(d => {
-                        const today = new Date().toDateString();
-                        return new Date(d.created_date).toDateString() === today;
-                      }).length}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
+        </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {/* Header */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h1 className="text-3xl font-bold text-slate-900">
-                    {selectedSpaceData ? selectedSpaceData.space_name : 'All Discussions'}
-                  </h1>
-                  <p className="text-slate-600 mt-1">
-                    {selectedSpaceData?.welcome_message || selectedSpaceData?.description || 'Browse all community discussions'}
-                  </p>
-                </div>
-                {canCreateDiscussions && (
-                  <Button 
-                    onClick={() => setShowNewPostForm(true)} 
-                    className="hidden lg:flex bg-[#143A50] hover:bg-[#1E4F58]"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Discussion
-                  </Button>
-                )}
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Sidebar — subtopics only */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-6 space-y-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Channels</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-1 pt-0">
+                    {SPACE_SUBTOPICS.map(({ key, label, icon: Icon }) => (
+                      <button
+                        key={key}
+                        onClick={() => setSelectedCategory(key === 'introductions' ? 'introductions' : key)}
+                        className={`w-full text-left px-3 py-2 rounded-lg transition flex items-center gap-2 text-sm ${
+                          (key === 'all' && selectedCategory === 'all') || selectedCategory === key
+                            ? spaceColor.activeBg
+                            : 'text-slate-700 hover:bg-slate-100'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4 flex-shrink-0" />
+                        {label}
+                      </button>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="pt-4 space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-600">Posts today</span>
+                      <span className="font-semibold">
+                        {filteredDiscussions.filter(d => new Date(d.created_date).toDateString() === new Date().toDateString()).length}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-600">Total posts</span>
+                      <span className="font-semibold">{filteredDiscussions.length}</span>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
+            </div>
 
-              {/* Search and Sort */}
+            {/* Main feed */}
+            <div className="lg:col-span-3 space-y-4">
+              {/* Search + sort bar */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <Input
-                    placeholder="Search discussions..."
+                    placeholder={`Search in ${selectedSpaceData.space_name}...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
                   />
                 </div>
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-full sm:w-48">
+                  <SelectTrigger className="w-full sm:w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="recent">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Most Recent
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="popular">
-                      <div className="flex items-center gap-2">
-                        <Heart className="w-4 h-4" />
-                        Most Popular
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="active">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4" />
-                        Most Active
-                      </div>
-                    </SelectItem>
+                    <SelectItem value="recent"><div className="flex items-center gap-2"><Clock className="w-4 h-4" />Recent</div></SelectItem>
+                    <SelectItem value="popular"><div className="flex items-center gap-2"><Heart className="w-4 h-4" />Popular</div></SelectItem>
+                    <SelectItem value="active"><div className="flex items-center gap-2"><TrendingUp className="w-4 h-4" />Active</div></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Active Filters Display */}
-              {(selectedCategory !== 'all' || selectedSpace !== 'all' || searchQuery) && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  <span className="text-sm text-slate-600">Active filters:</span>
-                  {selectedCategory !== 'all' && (
-                    <Badge variant="outline" className="capitalize">
-                      {selectedCategory}
-                      <button onClick={() => setSelectedCategory('all')} className="ml-2">×</button>
-                    </Badge>
-                  )}
-                  {selectedSpace !== 'all' && selectedSpaceData && (
-                    <Badge variant="outline">
-                      {selectedSpaceData.space_name}
-                      <button onClick={() => setSelectedSpace('all')} className="ml-2">×</button>
-                    </Badge>
-                  )}
-                  {searchQuery && (
-                    <Badge variant="outline">
-                      Search: "{searchQuery}"
-                      <button onClick={() => setSearchQuery('')} className="ml-2">×</button>
-                    </Badge>
-                  )}
-                  <button
-                    onClick={() => {
-                      setSelectedCategory('all');
-                      setSelectedSpace('all');
-                      setSearchQuery('');
-                    }}
-                    className="text-xs text-[#143A50] hover:underline"
-                  >
-                    Clear all
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Pinned Posts */}
-            {pinnedPosts.length > 0 && (
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                  <Pin className="w-5 h-5 text-[#E5C089]" />
-                  Pinned Discussions
-                </h2>
-                <div className="space-y-4">
-                  {pinnedPosts.map(discussion => (
-                    <DiscussionCard 
-                      key={discussion.id} 
-                      discussion={discussion} 
-                      user={user}
-                      isPinned
-                      isExpanded={expandedDiscussion === discussion.id}
-                      onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
-                      onLike={() => likeDiscussionMutation.mutate(discussion)}
+              {/* Pinned */}
+              {pinnedPosts.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                    <Pin className="w-4 h-4 text-[#E5C089]" /> Pinned
+                  </h3>
+                  {pinnedPosts.map(d => (
+                    <DiscussionCard key={d.id} discussion={d} user={user} isPinned
+                      isExpanded={expandedDiscussion === d.id}
+                      onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === d.id ? null : d.id)}
+                      onLike={() => likeDiscussionMutation.mutate(d)}
                     />
                   ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Regular Posts */}
-            <div className="space-y-4">
+              {/* Posts */}
               {regularPosts.length > 0 ? (
-                regularPosts.map(discussion => (
-                  <DiscussionCard 
-                    key={discussion.id} 
-                    discussion={discussion}
-                    user={user}
-                    isExpanded={expandedDiscussion === discussion.id}
-                    onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === discussion.id ? null : discussion.id)}
-                    onLike={() => likeDiscussionMutation.mutate(discussion)}
+                regularPosts.map(d => (
+                  <DiscussionCard key={d.id} discussion={d} user={user}
+                    isExpanded={expandedDiscussion === d.id}
+                    onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === d.id ? null : d.id)}
+                    onLike={() => likeDiscussionMutation.mutate(d)}
                   />
                 ))
               ) : (
@@ -421,17 +281,12 @@ export default function DiscussionsPage() {
                   <CardContent className="p-12 text-center">
                     <MessageSquare className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                      {searchQuery ? 'No discussions found' : 'No discussions yet'}
+                      {searchQuery ? 'No discussions found' : 'No posts yet in this channel'}
                     </h3>
-                    <p className="text-slate-600 mb-4">
-                      {searchQuery 
-                        ? 'Try adjusting your search or filters' 
-                        : 'Be the first to start a conversation!'}
-                    </p>
-                    {canCreateDiscussions && !searchQuery && (
+                    <p className="text-slate-500 mb-4">Be the first to start a conversation!</p>
+                    {canCreateDiscussions && (
                       <Button onClick={() => setShowNewPostForm(true)} className="bg-[#143A50] hover:bg-[#1E4F58]">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Create First Post
+                        <Plus className="w-4 h-4 mr-2" />Start the Conversation
                       </Button>
                     )}
                   </CardContent>
@@ -446,7 +301,140 @@ export default function DiscussionsPage() {
           onOpenChange={setShowNewPostForm}
           userEmail={user?.email}
           userName={user?.full_name}
-          spaceId={selectedSpace !== 'all' ? selectedSpace : null}
+          spaceId={selectedSpace}
+        />
+      </div>
+    );
+  }
+
+  // ── DEFAULT: ALL SPACES VIEW ──
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-6 py-3">
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Link to={createPageUrl('Community')} className="hover:text-[#143A50] flex items-center gap-1">
+              <Home className="w-4 h-4" />
+              Community
+            </Link>
+            <ChevronRight className="w-4 h-4" />
+            <span className="text-slate-900 font-medium">All Discussions</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-6">
+              {canCreateDiscussions && (
+                <Button onClick={() => setShowNewPostForm(true)} className="w-full lg:hidden bg-[#143A50] hover:bg-[#1E4F58]">
+                  <Plus className="w-4 h-4 mr-2" />New Discussion
+                </Button>
+              )}
+              <Card>
+                <CardHeader><CardTitle className="text-base">Community Spaces</CardTitle></CardHeader>
+                <CardContent className="space-y-2">
+                  {communitySpaces.map(space => (
+                    <Link key={space.id} to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                      <div className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100 transition flex items-center justify-between">
+                        <span className="text-sm font-medium">{space.space_name}</span>
+                        <Badge variant="outline" className="text-xs">{space.content_count || 0}</Badge>
+                      </div>
+                    </Link>
+                  ))}
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader><CardTitle className="text-base">Categories</CardTitle></CardHeader>
+                <CardContent className="space-y-2">
+                  {['all', 'general', 'grants', 'contracts', 'donors', 'strategy'].map(cat => (
+                    <button key={cat} onClick={() => setSelectedCategory(cat)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition capitalize ${selectedCategory === cat ? 'bg-[#143A50] text-white' : 'hover:bg-slate-100'}`}>
+                      {cat === 'all' ? 'All Categories' : cat}
+                    </button>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          <div className="lg:col-span-3">
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <h1 className="text-3xl font-bold text-slate-900">All Discussions</h1>
+                {canCreateDiscussions && (
+                  <Button onClick={() => setShowNewPostForm(true)} className="hidden lg:flex bg-[#143A50] hover:bg-[#1E4F58]">
+                    <Plus className="w-4 h-4 mr-2" />New Discussion
+                  </Button>
+                )}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Input placeholder="Search discussions..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
+                </div>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-48"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="recent"><div className="flex items-center gap-2"><Clock className="w-4 h-4" />Most Recent</div></SelectItem>
+                    <SelectItem value="popular"><div className="flex items-center gap-2"><Heart className="w-4 h-4" />Most Popular</div></SelectItem>
+                    <SelectItem value="active"><div className="flex items-center gap-2"><TrendingUp className="w-4 h-4" />Most Active</div></SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {pinnedPosts.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                  <Pin className="w-5 h-5 text-[#E5C089]" />Pinned Discussions
+                </h2>
+                <div className="space-y-4">
+                  {pinnedPosts.map(d => (
+                    <DiscussionCard key={d.id} discussion={d} user={user} isPinned
+                      isExpanded={expandedDiscussion === d.id}
+                      onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === d.id ? null : d.id)}
+                      onLike={() => likeDiscussionMutation.mutate(d)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {regularPosts.length > 0 ? (
+                regularPosts.map(d => (
+                  <DiscussionCard key={d.id} discussion={d} user={user}
+                    isExpanded={expandedDiscussion === d.id}
+                    onToggleExpand={() => setExpandedDiscussion(expandedDiscussion === d.id ? null : d.id)}
+                    onLike={() => likeDiscussionMutation.mutate(d)}
+                  />
+                ))
+              ) : (
+                <Card>
+                  <CardContent className="p-12 text-center">
+                    <MessageSquare className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">{searchQuery ? 'No discussions found' : 'No discussions yet'}</h3>
+                    <p className="text-slate-600 mb-4">{searchQuery ? 'Try adjusting your search' : 'Be the first to start a conversation!'}</p>
+                    {canCreateDiscussions && !searchQuery && (
+                      <Button onClick={() => setShowNewPostForm(true)} className="bg-[#143A50] hover:bg-[#1E4F58]">
+                        <Plus className="w-4 h-4 mr-2" />Create First Post
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <CreateDiscussionForm
+          open={showNewPostForm}
+          onOpenChange={setShowNewPostForm}
+          userEmail={user?.email}
+          userName={user?.full_name}
+          spaceId={null}
         />
       </div>
     </div>
