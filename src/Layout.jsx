@@ -750,7 +750,7 @@ export default function Layout({ children, currentPageName }) {
       </footer>
 
       {/* IncubateHer Program Gate */}
-      {user && incubateHerEnrollment && userAccess?.entry_point === 'incubateher_program' && !userAccess?.legal_acknowledged && (
+      {user && incubateHerEnrollment && (!userAccess || !userAccess?.legal_acknowledged) && (
         <div className="fixed inset-0 z-[9999] bg-white overflow-auto">
           <IncubateHerProgramGate
             user={user}
