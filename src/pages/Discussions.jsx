@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MessageSquare, Heart, Pin, Plus, TrendingUp, Clock, Search, Home, ChevronRight, Filter } from 'lucide-react';
+import { MessageSquare, Heart, Pin, Plus, TrendingUp, Clock, Search, Home, ChevronRight, Users, Sparkles, ArrowLeft, Hash, UserPlus } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
