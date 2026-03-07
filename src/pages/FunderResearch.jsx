@@ -11,6 +11,213 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Search, Loader2, CheckCircle2, AlertCircle, Sparkles, TrendingUp, DollarSign, ExternalLink, FileText, Building2, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 
+function ProPublicaLookup() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [einQuery, setEinQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [orgDetail, setOrgDetail] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [expandedFilings, setExpandedFilings] = useState(false);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    setLoading(true);
+    setSearchResults(null);
+    setOrgDetail(null);
+    const res = await base44.functions.invoke('propublicaLookup', { action: 'search', query: searchQuery });
+    setSearchResults(res.data);
+    setLoading(false);
+  };
+
+  const handleGetOrg = async (ein) => {
+    setLoading(true);
+    setOrgDetail(null);
+    setExpandedFilings(false);
+    const res = await base44.functions.invoke('propublicaLookup', { action: 'get_org', ein });
+    setOrgDetail(res.data);
+    setLoading(false);
+  };
+
+  const fmt = (n) => n != null ? `$${Number(n).toLocaleString()}` : '—';
+
+  return (
+    <div className="space-y-6">
+      {/* Search by name */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Search className="w-5 h-5 text-[#143A50]" />
+            Search by Organization Name
+          </CardTitle>
+          <CardDescription>Find any U.S. nonprofit or foundation. Powered by ProPublica Nonprofit Explorer (free, no key needed).</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSearch} className="flex gap-3">
+            <Input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="e.g., Gates Foundation, United Way of Columbus..."
+              className="flex-1"
+            />
+            <Button type="submit" disabled={loading} style={{ backgroundColor: '#143A50', color: 'white' }}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* OR lookup by EIN */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-[#AC1A5B]" />
+            Lookup by EIN
+          </CardTitle>
+          <CardDescription>Enter a known EIN to pull full 990 filing history.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            <Input
+              value={einQuery}
+              onChange={e => setEinQuery(e.target.value)}
+              placeholder="e.g., 91-1433402"
+              className="flex-1"
+            />
+            <Button onClick={() => handleGetOrg(einQuery)} disabled={loading || !einQuery.trim()} style={{ backgroundColor: '#AC1A5B', color: 'white' }}>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Lookup'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Search Results List */}
+      {searchResults && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Search Results ({searchResults.total || searchResults.organizations?.length || 0} found)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {searchResults.organizations?.length === 0 && (
+              <p className="text-slate-500 text-sm">No results found. Try a different name or spelling.</p>
+            )}
+            <div className="divide-y">
+              {searchResults.organizations?.map((org, idx) => (
+                <div key={idx} className="py-3 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-slate-900 truncate">{org.name}</p>
+                    <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                      {org.city && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{org.city}, {org.state}</span>}
+                      {org.ein && <span>EIN: {org.ein}</span>}
+                      {org.filing_count > 0 && <span>{org.filing_count} filings</span>}
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" onClick={() => handleGetOrg(org.ein)}>
+                    View 990s
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Org Detail + Filings */}
+      {orgDetail && (
+        <>
+          {orgDetail.error ? (
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="p-4">
+                <p className="text-red-600 text-sm flex items-center gap-2"><AlertCircle className="w-4 h-4" />{orgDetail.error}</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              <Card className="border-[#143A50]/20">
+                <CardHeader className="pb-3" style={{ background: 'linear-gradient(135deg,#143A50,#1E4F58)', borderRadius: '8px 8px 0 0' }}>
+                  <CardTitle className="text-white text-lg flex items-center gap-2">
+                    <Building2 className="w-5 h-5" />
+                    {orgDetail.organization?.name}
+                  </CardTitle>
+                  <CardDescription className="text-white/80">
+                    EIN: {orgDetail.organization?.ein} &nbsp;|&nbsp; {orgDetail.organization?.city}, {orgDetail.organization?.state}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-4">
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500 mb-1">Total Revenue</p>
+                      <p className="font-bold text-slate-900">{fmt(orgDetail.most_recent?.totrevenue)}</p>
+                      <p className="text-xs text-slate-400">Most recent</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500 mb-1">Total Assets</p>
+                      <p className="font-bold text-slate-900">{fmt(orgDetail.most_recent?.totassetsend)}</p>
+                      <p className="text-xs text-slate-400">Most recent</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500 mb-1">Grants Paid</p>
+                      <p className="font-bold text-[#AC1A5B]">{fmt(orgDetail.most_recent?.grntspaidnet)}</p>
+                      <p className="text-xs text-slate-400">Most recent</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500 mb-1">Contributions</p>
+                      <p className="font-bold text-[#143A50]">{fmt(orgDetail.most_recent?.grscontrib)}</p>
+                      <p className="text-xs text-slate-400">Most recent</p>
+                    </div>
+                  </div>
+
+                  <Button variant="ghost" size="sm" className="text-slate-500" onClick={() => setExpandedFilings(!expandedFilings)}>
+                    {expandedFilings ? <ChevronUp className="w-4 h-4 mr-1" /> : <ChevronDown className="w-4 h-4 mr-1" />}
+                    {expandedFilings ? 'Hide' : 'Show'} all {orgDetail.filings?.length} filings
+                  </Button>
+
+                  {expandedFilings && (
+                    <div className="mt-4 border rounded-lg overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead className="bg-slate-100 text-slate-600">
+                          <tr>
+                            <th className="text-left px-4 py-2">Year</th>
+                            <th className="text-right px-4 py-2">Revenue</th>
+                            <th className="text-right px-4 py-2">Assets</th>
+                            <th className="text-right px-4 py-2">Grants Paid</th>
+                            <th className="text-right px-4 py-2">Contributions</th>
+                            <th className="px-4 py-2"></th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                          {orgDetail.filings?.map((f, i) => (
+                            <tr key={i} className="hover:bg-slate-50">
+                              <td className="px-4 py-2 font-medium">{f.tax_prd_yr}</td>
+                              <td className="px-4 py-2 text-right">{fmt(f.totrevenue)}</td>
+                              <td className="px-4 py-2 text-right">{fmt(f.totassetsend)}</td>
+                              <td className="px-4 py-2 text-right text-[#AC1A5B] font-medium">{fmt(f.grntspaidnet)}</td>
+                              <td className="px-4 py-2 text-right">{fmt(f.grscontrib)}</td>
+                              <td className="px-4 py-2 text-right">
+                                {f.pdf_url && (
+                                  <a href={f.pdf_url} target="_blank" rel="noopener noreferrer">
+                                    <Button size="sm" variant="ghost" className="h-7 text-xs">
+                                      <ExternalLink className="w-3 h-3 mr-1" />PDF
+                                    </Button>
+                                  </a>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function FunderResearch() {
   const queryClient = useQueryClient();
   const [isResearching, setIsResearching] = useState(false);
