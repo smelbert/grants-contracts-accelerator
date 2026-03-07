@@ -214,6 +214,7 @@ const getAdminPortalNav = () => [
       { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: Calendar },
       { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
       { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
+      { name: 'Giveaway Draw', page: 'IncubateHerGiveawayDraw', icon: Gift },
     ]
   },
   {
