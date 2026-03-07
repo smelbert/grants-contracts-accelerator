@@ -83,7 +83,38 @@ export default function TermsOfService() {
               <li>Post, upload, or share our materials on any third-party platform</li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">5. User Accounts</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">5. Protection of EIS Frameworks and Materials — No Derivative Works / No Teaching</h2>
+            <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10 p-6 rounded-lg border-2 border-[#AC1A5B] my-4">
+              <h3 className="font-bold text-[#143A50] mb-4">Intellectual Property Protection</h3>
+              <p className="mb-4">
+                All materials, frameworks, methods, tools, templates, and information provided by {companyName}, LLC ("EIS") are proprietary intellectual property. These materials may include, but are not limited to:
+              </p>
+              <ul className="list-disc pl-6 space-y-2 mb-4 text-sm">
+                <li>Training content and course modules</li>
+                <li>Workshops, slides, and presentations</li>
+                <li>Worksheets, templates, and tools</li>
+                <li>Videos, recordings, and live sessions</li>
+                <li>Strategic frameworks and methodologies</li>
+                <li>Written guides, exercises, and program materials</li>
+              </ul>
+              <p className="mb-4">
+                These materials are provided solely for the personal or professional development of the participant. You are permitted to apply the knowledge gained to your own work, business, or professional practice.
+              </p>
+              <div className="bg-white p-4 rounded-lg border-l-4 border-[#E5C089] my-4">
+                <p className="font-semibold text-[#143A50] mb-2">You may NOT:</p>
+                <ul className="list-disc pl-6 space-y-2 text-sm">
+                  <li>Copy, reproduce, or distribute EIS materials or frameworks for any purpose</li>
+                  <li>Teach, license, sell, publish, or otherwise repurpose EIS materials or frameworks without prior written consent</li>
+                  <li>Create derivative programs, trainings, courses, consulting services, or products that replicate, adapt, or are substantially based on EIS content, frameworks, or methodologies</li>
+                  <li>Reuse EIS frameworks or methodologies in your commercial offerings or services</li>
+                </ul>
+              </div>
+              <p className="text-sm italic text-slate-600">
+                Any unauthorized use, reproduction, distribution, or creation of derivative works based on EIS materials may result in immediate removal from the program and may subject the participant to legal action to protect EIS intellectual property rights.
+              </p>
+            </div>
+
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">6. User Accounts</h2>
             <p>
               You are responsible for maintaining the confidentiality of your account credentials. You agree to:
             </p>
@@ -94,7 +125,7 @@ export default function TermsOfService() {
               <li>Accept responsibility for all activities that occur under your account</li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">6. Program Participation</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">7. Program Participation</h2>
             <p>
               When you enroll in a program, cohort, or workshop:
             </p>
@@ -105,17 +136,17 @@ export default function TermsOfService() {
               <li>You acknowledge that results depend on your own effort and implementation</li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">7. Payment and Refunds</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">8. Payment and Refunds</h2>
             <p>
               All fees are non-refundable unless otherwise stated in writing for a specific program. Payment is due at the time of registration unless an approved payment plan is in place.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">8. Privacy and Data</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">9. Privacy and Data</h2>
             <p>
               We collect and use your information as described in our Privacy Policy. By using our services, you consent to our data practices. We will never sell your personal information to third parties.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">9. Communications</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">10. Communications</h2>
             <p>
               By creating an account, you agree to receive:
             </p>
@@ -128,7 +159,7 @@ export default function TermsOfService() {
               You may unsubscribe from non-essential communications at any time by clicking the unsubscribe link in any email.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">10. Disclaimers</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">11. Disclaimers</h2>
             <p>
               {companyName} provides educational content and resources. We do not guarantee specific results. Your success depends on your own effort, implementation, organizational capacity, and circumstances.
             </p>
@@ -136,12 +167,12 @@ export default function TermsOfService() {
               Our content is provided "as is" without warranties of any kind, either express or implied. We do not warrant that our services will be uninterrupted or error-free.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">11. Limitation of Liability</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">12. Limitation of Liability</h2>
             <p>
               To the maximum extent permitted by law, {companyName} shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use our services.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">12. Termination</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">13. Termination</h2>
             <p>
               We reserve the right to suspend or terminate your access to our platform if you violate these Terms of Service. Upon termination:
             </p>
@@ -151,17 +182,17 @@ export default function TermsOfService() {
               <li>All provisions regarding intellectual property and confidentiality continue to apply</li>
             </ul>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">13. Changes to Terms</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">14. Changes to Terms</h2>
             <p>
               We may update these Terms of Service from time to time. We will notify you of material changes by email or through the platform. Your continued use of our services after changes take effect constitutes acceptance of the updated terms.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">14. Governing Law</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">15. Governing Law</h2>
             <p>
               These Terms of Service are governed by the laws of the State of Ohio, United States. Any disputes shall be resolved in the courts of Franklin County, Ohio.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">15. Contact Information</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">16. Contact Information</h2>
             <p>
               If you have questions about these Terms of Service, please contact us at:
             </p>
@@ -170,12 +201,12 @@ export default function TermsOfService() {
               <p>Email: <a href={`mailto:${companyEmail}`} className="text-[#AC1A5B] underline">{companyEmail}</a></p>
             </div>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">16. Severability</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">17. Severability</h2>
             <p>
               If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary, and the remaining provisions will remain in full force and effect.
             </p>
 
-            <h2 className="text-xl font-bold text-[#143A50] mt-6">17. Entire Agreement</h2>
+            <h2 className="text-xl font-bold text-[#143A50] mt-6">18. Entire Agreement</h2>
             <p>
               These Terms of Service, together with our Privacy Policy, constitute the entire agreement between you and {companyName} regarding your use of our services and supersede all prior agreements.
             </p>
