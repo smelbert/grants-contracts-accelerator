@@ -416,7 +416,7 @@ function WrapGuideInline() {
         <div className="flex flex-wrap gap-2">
           <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer"><Button size="sm" className="bg-[#143A50] hover:bg-[#1E4F58] text-white text-xs">Visit EIS Website</Button></a>
           <a href="mailto:info@elbertinnovativesolutions.org"><Button size="sm" variant="outline" className="text-xs">Email EIS</Button></a>
-          <Link to={createPageUrl('ResourceLibrary')}><Button size="sm" variant="outline" className="text-xs">Resource Library</Button></Link>
+          <Link to={createPageUrl('IncubateHerDocuments')}><Button size="sm" variant="outline" className="text-xs">Document Templates</Button></Link>
         </div>
       </div>
     </div>
