@@ -228,10 +228,17 @@ export default function UserActivityAnalytics() {
                           <span className="text-xs text-slate-500 truncate">{e.user_email}</span>
                         </div>
                         {e.course_title && (
-                          <p className="text-xs text-slate-500 mt-1 truncate">Content: {e.course_title}</p>
+                          <p className="text-xs text-slate-500 mt-1 truncate">
+                            {e.source === 'page_visit' ? `Page: ${e.course_title}` : `Content: ${e.course_title}`}
+                          </p>
                         )}
                         {e.progress_percent != null && (
                           <p className="text-xs text-slate-500">Progress: {e.progress_percent}%</p>
+                        )}
+                        {e.source === 'page_visit' && (
+                          <p className="text-xs text-slate-400">
+                            {e.duration != null ? `${e.duration}s` : ''}{e.clicks != null ? ` · ${e.clicks} clicks` : ''}{e.keystrokes != null ? ` · ${e.keystrokes} keys` : ''}
+                          </p>
                         )}
                       </div>
                       <span className="text-xs text-slate-400 whitespace-nowrap">
