@@ -553,7 +553,7 @@ export default function IncubateHerCourse() {
             </div>
 
             <Tabs defaultValue="content" className="w-full">
-              <TabsList className="mb-6">
+              <TabsList className="mb-6 bg-slate-100 p-1">
                 <TabsTrigger value="content">
                   <BookOpen className="w-4 h-4 mr-2" />
                   Content
