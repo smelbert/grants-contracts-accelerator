@@ -72,7 +72,6 @@ export default function IncubateHerGiveaway() {
         additional_notes: selfReport.additional_notes,
         pre_assessment_completed: enrollment?.pre_assessment_completed || false,
         post_assessment_completed: enrollment?.post_assessment_completed || false,
-        program_evaluation_completed: enrollment?.program_evaluation_completed || false,
         applied_date: new Date().toISOString(),
         status: 'pending_review'
       });
