@@ -124,6 +124,21 @@ export default function UserActivityAnalytics() {
   const totalCourseCompletions = allProgress.filter(p => p.is_completed).length;
   const activeUserCount = Object.keys(userSummary).length;
   const recentEvents = events.filter(e => isAfter(new Date(e.timestamp), subDays(new Date(), 7)));
+  const pageVisitEvents = events.filter(e => e.source === 'page_visit');
+  const totalKeystrokes = pageVisitEvents.reduce((sum, e) => sum + (e.keystrokes || 0), 0);
+  const totalClicks = pageVisitEvents.reduce((sum, e) => sum + (e.clicks || 0), 0);
+
+  // Top pages
+  const pageCounts = {};
+  pageVisitEvents.forEach(e => {
+    const p = e.course_title || 'unknown';
+    if (!pageCounts[p]) pageCounts[p] = { page: p, visits: 0, total_duration: 0, total_clicks: 0, total_keys: 0 };
+    pageCounts[p].visits++;
+    pageCounts[p].total_duration += e.duration || 0;
+    pageCounts[p].total_clicks += e.clicks || 0;
+    pageCounts[p].total_keys += e.keystrokes || 0;
+  });
+  const topPages = Object.values(pageCounts).sort((a, b) => b.visits - a.visits).slice(0, 15);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
