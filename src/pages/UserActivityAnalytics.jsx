@@ -285,8 +285,29 @@ export default function UserActivityAnalytics() {
           </Card>
         </div>
 
-        {/* Per-User Summary */}
-        <div>
+        {/* Per-User Summary + Top Pages */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Top Pages Visited</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {topPages.length === 0 ? (
+                  <p className="text-sm text-slate-400 text-center py-4">No page visit data yet</p>
+                ) : topPages.map(p => (
+                  <div key={p.page} className="flex items-center justify-between p-2 rounded-lg border border-slate-100 hover:bg-slate-50">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-medium text-slate-700 truncate">{p.page.replace(/^\//, '') || 'home'}</p>
+                      <p className="text-xs text-slate-400">{p.total_clicks} clicks · {p.total_keys} keys · {Math.round(p.total_duration / 60)}m</p>
+                    </div>
+                    <Badge className="bg-purple-100 text-purple-800 ml-2 text-xs">{p.visits}</Badge>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Top Users by Activity</CardTitle>
