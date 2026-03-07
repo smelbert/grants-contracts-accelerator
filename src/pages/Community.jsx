@@ -46,17 +46,15 @@ export default function CommunityPage() {
 
   const { data: spaces = [], isLoading } = useQuery({
     queryKey: ['communitySpaces'],
-    queryFn: () => base44.entities.CommunitySpace.filter({ is_active: true }, 'display_order'),
-  });
-
-  const { data: recentDiscussions = [] } = useQuery({
-    queryKey: ['recentDiscussions', selectedSpace?.id],
-    queryFn: () => base44.entities.Discussion.filter(
-      selectedSpace ? { space_id: selectedSpace.id } : {},
-      '-created_date',
-      5
-    ),
-    enabled: !!selectedSpace,
+    queryFn: async () => {
+      try {
+        const result = await base44.entities.CommunitySpace.filter({ is_active: true }, 'display_order');
+        return Array.isArray(result) ? result : [];
+      } catch (error) {
+        console.error('Error loading spaces:', error);
+        return [];
+      }
+    },
   });
 
   const { data: userActivity = [] } = useQuery({
