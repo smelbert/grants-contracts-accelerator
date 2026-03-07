@@ -118,6 +118,7 @@ import IncubateHerCourse from './pages/IncubateHerCourse';
 import IncubateHerDocuments from './pages/IncubateHerDocuments';
 import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
 import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
+import IncubateHerEvaluationEditor from './pages/IncubateHerEvaluationEditor';
 import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
 import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
 import IncubateHerGiveawayDraw from './pages/IncubateHerGiveawayDraw';
@@ -156,7 +157,6 @@ import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
 import Opportunities from './pages/Opportunities';
 import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
-import Pricing from './pages/Pricing';
 import OpportunityMatchingProfile from './pages/OpportunityMatchingProfile';
 import OpportunityReports from './pages/OpportunityReports';
 import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
@@ -166,6 +166,7 @@ import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformManagement from './pages/PlatformManagement';
 import PlatformSettings from './pages/PlatformSettings';
+import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
@@ -214,7 +215,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerEvaluationEditor from './pages/IncubateHerEvaluationEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -290,6 +290,7 @@ export const PAGES = {
     "IncubateHerDocuments": IncubateHerDocuments,
     "IncubateHerEmailTemplates": IncubateHerEmailTemplates,
     "IncubateHerEvaluation": IncubateHerEvaluation,
+    "IncubateHerEvaluationEditor": IncubateHerEvaluationEditor,
     "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
     "IncubateHerGiveaway": IncubateHerGiveaway,
     "IncubateHerGiveawayDraw": IncubateHerGiveawayDraw,
@@ -328,7 +329,6 @@ export const PAGES = {
     "Notifications": Notifications,
     "Opportunities": Opportunities,
     "OpportunitiesDirectory": OpportunitiesDirectory,
-    "Pricing": Pricing,
     "OpportunityMatchingProfile": OpportunityMatchingProfile,
     "OpportunityReports": OpportunityReports,
     "OpportunityScannerAdmin": OpportunityScannerAdmin,
@@ -338,6 +338,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "PlatformManagement": PlatformManagement,
     "PlatformSettings": PlatformSettings,
+    "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
@@ -386,7 +387,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerEvaluationEditor": IncubateHerEvaluationEditor,
 }
 
 export const pagesConfig = {

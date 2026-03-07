@@ -4,12 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
-import { Search, Calendar, User, BookOpen } from 'lucide-react';
+import { Search, Calendar, User, BookOpen, ArrowLeft } from 'lucide-react';
 import moment from 'moment';
 
 export default function Blog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blog-posts'],
@@ -60,15 +65,24 @@ export default function Blog() {
               />
             </Link>
             <div className="hidden md:flex items-center gap-8">
-              <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-[#143A50] font-medium">Home</Link>
-              <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-[#143A50] font-medium">About</Link>
-              <Link to={createPageUrl('Blog')} className="text-[#143A50] font-semibold">Blog</Link>
-              <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] hover:text-[#9A1826] font-semibold">IncubateHer</Link>
-              <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
-              <Link to={createPageUrl('Register')}>
-                <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
-              </Link>
-            </div>
+               <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-[#143A50] font-medium">Home</Link>
+               <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-[#143A50] font-medium">About</Link>
+               <Link to={createPageUrl('Blog')} className="text-[#143A50] font-semibold">Blog</Link>
+               <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] hover:text-[#9A1826] font-semibold">IncubateHer</Link>
+               <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
+               {user ? (
+                 <Link to={createPageUrl('Home')}>
+                   <Button className="bg-[#1E4F58] hover:bg-[#143A50] flex items-center gap-2">
+                     <ArrowLeft className="w-4 h-4" />
+                     Back to Dashboard
+                   </Button>
+                 </Link>
+               ) : (
+                 <Link to={createPageUrl('Register')}>
+                   <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
+                 </Link>
+               )}
+             </div>
           </div>
         </div>
       </nav>
