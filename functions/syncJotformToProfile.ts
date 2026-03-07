@@ -26,8 +26,8 @@ Deno.serve(async (req) => {
       }
       enrollments = await base44.asServiceRole.entities.ProgramEnrollment.filter({ cohort_id });
     } else if (enrollment_id) {
-      const e = await base44.asServiceRole.entities.ProgramEnrollment.get('ProgramEnrollment', enrollment_id);
-      if (e) enrollments = [e];
+      const allE = await base44.asServiceRole.entities.ProgramEnrollment.filter({ id: enrollment_id });
+      if (allE[0]) enrollments = [allE[0]];
     } else {
       // Sync current user's own enrollment
       const myEnrollments = await base44.entities.ProgramEnrollment.filter({ participant_email: user.email });
