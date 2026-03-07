@@ -58,7 +58,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
               <Shield className="w-6 h-6 text-[#AC1A5B]" />
               Welcome to IncubateHer / AccelerateHer — Please Review & Sign
             </DialogTitle>
-            <p className="text-sm text-slate-500 mt-1">Step 1 of 2 — Terms of Service</p>
+            <DialogDescription className="text-sm text-slate-500 mt-1">Step 1 of 2 — Terms of Service</DialogDescription>
           </DialogHeader>
 
           <ScrollArea className="flex-1 pr-4 my-2">
