@@ -14,7 +14,7 @@ import { CheckCircle2, AlertCircle, TrendingUp, Award, Download } from 'lucide-r
 import { toast } from 'react-hot-toast';
 
 const QUESTIONS = {
-  legal_structure: [
+  grants_vs_contracts: [
     {
       id: 'q1',
       question: 'Which of the following documents is required to demonstrate legal fundability?',
@@ -33,6 +33,50 @@ const QUESTIONS = {
         { value: 'b', text: 'To make your website look more professional', points: 0 },
         { value: 'c', text: 'Only nonprofits need these documents', points: 25 },
         { value: 'd', text: 'They are not really important', points: 0 }
+      ]
+    }
+  ],
+  legal_readiness: [
+    {
+      id: 'q1',
+      question: 'Which of the following documents is required to demonstrate legal fundability?',
+      options: [
+        { value: 'a', text: 'Articles of Incorporation or Organization', points: 100 },
+        { value: 'b', text: 'Social media following list', points: 0 },
+        { value: 'c', text: 'Informal partnership agreement', points: 25 },
+        { value: 'd', text: 'Only a business name', points: 0 }
+      ]
+    },
+    {
+      id: 'q2',
+      question: 'What is the primary purpose of having an up-to-date Board Resolution or Bylaws?',
+      options: [
+        { value: 'a', text: 'To show funders that your organization has formal governance structure', points: 100 },
+        { value: 'b', text: 'To make your website look more professional', points: 0 },
+        { value: 'c', text: 'Only nonprofits need these documents', points: 25 },
+        { value: 'd', text: 'They are not really important', points: 0 }
+      ]
+    }
+  ],
+  financial_readiness: [
+    {
+      id: 'q3',
+      question: 'Why is tracking expenses by program or project important for funders?',
+      options: [
+        { value: 'a', text: 'It proves you can manage money and deliver on promises', points: 100 },
+        { value: 'b', text: 'It is just a nice-to-have administrative task', points: 0 },
+        { value: 'c', text: 'Only large organizations need to do this', points: 25 },
+        { value: 'd', text: 'Funders do not actually care about expense tracking', points: 0 }
+      ]
+    },
+    {
+      id: 'q4',
+      question: 'What should your financial documentation include to be funding-ready?',
+      options: [
+        { value: 'a', text: 'Program-level budgets, expense tracking system, and a method to match spending to funding sources', points: 100 },
+        { value: 'b', text: 'Just a general estimate of spending', points: 0 },
+        { value: 'c', text: 'Personal bank statements', points: 25 },
+        { value: 'd', text: 'Monthly receipts in a shoebox', points: 0 }
       ]
     }
   ],
@@ -213,7 +257,7 @@ export default function IncubateHerPostAssessment() {
       doc.setFontSize(13); doc.setTextColor(20, 58, 80);
       doc.text(`Total Score: ${scoreData.total_score || scoreData.total_score}`, margin, y); y += 12;
     }
-    const allQs = [...QUESTIONS.grants_vs_contracts, ...QUESTIONS.legal_readiness, ...QUESTIONS.financial_readiness, ...QUESTIONS.confidence];
+    const allQs = [...(QUESTIONS.grants_vs_contracts || []), ...(QUESTIONS.legal_readiness || []), ...(QUESTIONS.financial_readiness || []), ...(QUESTIONS.confidence || [])];
     allQs.forEach((q) => {
       if (y > 260) { doc.addPage(); y = 20; }
       doc.setFontSize(10); doc.setTextColor(20, 58, 80); doc.setFont(undefined, 'bold');
@@ -238,47 +282,47 @@ export default function IncubateHerPostAssessment() {
   };
 
   const calculateScores = () => {
-    let legalStructureScore = 0;
-    let financialSystemsScore = 0;
-    let dataScore = 0;
+    let grantsContractsScore = 0;
+    let legalReadinessScore = 0;
+    let financialReadinessScore = 0;
     let confidenceScore = 0;
 
-    QUESTIONS.legal_structure.forEach(q => {
+    QUESTIONS.grants_vs_contracts.forEach(q => {
       const answer = responses[q.id];
       if (answer) {
         const option = q.options.find(o => o.value === answer);
-        if (option) legalStructureScore += option.points;
+        if (option) grantsContractsScore += option.points;
       }
     });
-    legalStructureScore = (legalStructureScore / 200) * 100;
+    grantsContractsScore = (grantsContractsScore / 200) * 100;
 
-    QUESTIONS.financial_systems.forEach(q => {
+    QUESTIONS.legal_readiness.forEach(q => {
       const answer = responses[q.id];
       if (answer) {
         const option = q.options.find(o => o.value === answer);
-        if (option) financialSystemsScore += option.points;
+        if (option) legalReadinessScore += option.points;
       }
     });
-    financialSystemsScore = (financialSystemsScore / 200) * 100;
+    legalReadinessScore = (legalReadinessScore / 200) * 100;
 
-    QUESTIONS.data_measurement.forEach(q => {
+    QUESTIONS.financial_readiness.forEach(q => {
       const answer = responses[q.id];
       if (answer) {
         const option = q.options.find(o => o.value === answer);
-        if (option) dataScore += option.points;
+        if (option) financialReadinessScore += option.points;
       }
     });
-    dataScore = (dataScore / 200) * 100;
+    financialReadinessScore = (financialReadinessScore / 200) * 100;
 
     const confidenceResponses = QUESTIONS.confidence.map(q => parseInt(responses[q.id]) || 0);
     confidenceScore = (confidenceResponses.reduce((a, b) => a + b, 0) / confidenceResponses.length) * 10;
 
-    const totalScore = Math.round((legalStructureScore + financialSystemsScore + dataScore + confidenceScore) / 4);
+    const totalScore = Math.round((grantsContractsScore + legalReadinessScore + financialReadinessScore + confidenceScore) / 4);
 
     return {
-      legal_structure_score: Math.round(legalStructureScore),
-      financial_systems_score: Math.round(financialSystemsScore),
-      data_measurement_score: Math.round(dataScore),
+      grants_vs_contracts_score: Math.round(grantsContractsScore),
+      legal_readiness_score: Math.round(legalReadinessScore),
+      financial_readiness_score: Math.round(financialReadinessScore),
       confidence_score: Math.round(confidenceScore),
       total_score: totalScore
     };
