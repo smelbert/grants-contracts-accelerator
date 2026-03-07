@@ -14,6 +14,17 @@ import CreateDiscussionForm from '@/components/discussions/CreateDiscussionForm'
 import DiscussionReplies from '@/components/discussions/DiscussionReplies';
 import { hasPermission, PERMISSIONS } from '@/components/lib/permissions';
 
+// Subtopics/channels within a space
+const SPACE_SUBTOPICS = [
+  { key: 'all', label: 'All Posts', icon: Hash },
+  { key: 'introductions', label: 'Introductions', icon: UserPlus },
+  { key: 'general', label: 'General', icon: MessageSquare },
+  { key: 'grants', label: 'Grants', icon: TrendingUp },
+  { key: 'contracts', label: 'Contracts', icon: TrendingUp },
+  { key: 'donors', label: 'Donors', icon: Heart },
+  { key: 'strategy', label: 'Strategy', icon: Sparkles },
+];
+
 export default function DiscussionsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedSpace, setSelectedSpace] = useState('all');
@@ -21,7 +32,6 @@ export default function DiscussionsPage() {
   const [sortBy, setSortBy] = useState('recent');
   const [expandedDiscussion, setExpandedDiscussion] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
