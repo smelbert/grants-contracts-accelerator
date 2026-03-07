@@ -97,49 +97,8 @@ export default function IncubateHerGiveaway() {
   const requiredItems = [
     { label: 'Pre-Assessment', met: enrollment?.pre_assessment_completed || false },
     { label: 'Post-Assessment', met: enrollment?.post_assessment_completed || false },
-    { label: 'Program Evaluation', met: enrollment?.program_evaluation_completed || false },
   ];
   const allRequiredMet = requiredItems.every(r => r.met);
-
-  if (!giveawayRevealed) {
-    return (
-      <div className="min-h-screen bg-slate-50">
-        <CoBrandedHeader title="Program Giveaway" subtitle="Exclusive opportunity for program completers" />
-        <div className="max-w-4xl mx-auto p-6 space-y-6">
-          <Card className="text-center py-12 border-2 border-dashed border-[#E5C089] bg-gradient-to-br from-[#E5C089]/10 to-white">
-            <CardContent>
-              <Gift className="w-20 h-20 text-[#AC1A5B] animate-pulse mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-[#143A50] mb-3">Something Special is Coming...</h3>
-              <p className="text-slate-600 max-w-lg mx-auto">
-                Details will be revealed during your final program session. Complete your pre-assessment, post-assessment, and program evaluation to be eligible!
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white">
-              <CardTitle className="flex items-center gap-2"><Trophy className="w-5 h-5" /> Non-Negotiable Requirements</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-3">
-              {[
-                '✅ Complete Pre-Assessment (REQUIRED)',
-                '✅ Complete Post-Assessment (REQUIRED)',
-                '✅ Complete Program Evaluation (REQUIRED)',
-                '⭐ Attend sessions in person or watch recordings (optional, but noted)',
-                '⭐ Complete workbook exercises (optional, but noted)',
-                '⭐ Documents completed (optional, but noted)',
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                  <span className="text-slate-700 text-sm">{item}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-        <CoBrandedFooter />
-      </div>
-    );
-  }
 
   const isWinner = enrollment?.giveaway_winner || false;
   const alreadyApplied = existingApplication || applicationSubmitted;
