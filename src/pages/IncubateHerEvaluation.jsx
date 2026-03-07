@@ -19,7 +19,9 @@ const DEFAULT_RESPONSES = {
   overall_rating: '', content_quality: '', facilitation_effectiveness: '',
   materials_usefulness: '', workbook_quality: '', schedule_format: '',
   consultation_experience: '', most_valuable: '', suggestions: '',
-  facilitator_feedback: '', would_recommend: '', additional_comments: ''
+  facilitator_feedback: '', would_recommend: '', additional_comments: '',
+  post_support: '', participation_frequency: '', implementation_challenges: '',
+  ongoing_topics: '', community_interest: '', community_entailment: ''
 };
 
 export default function IncubateHerEvaluation() {
@@ -521,6 +523,163 @@ export default function IncubateHerEvaluation() {
                 <Label htmlFor="recommend-no" className="cursor-pointer">No - Would not recommend</Label>
               </div>
             </RadioGroup>
+          </CardContent>
+        </Card>
+
+        {/* Post-Incubator Support */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Post-Incubator Support</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                After completing the incubator, what support would help you most?
+              </Label>
+              <div className="space-y-2">
+                {['Accountability sessions', 'Working sessions', 'Expert workshops', 'Funding support', 'Networking', 'Emotional support/community', 'Mentorship'].map((option) => (
+                  <div key={option} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`support-${option}`}
+                      checked={(responses.post_support || []).includes(option)}
+                      onChange={(e) => {
+                        const current = responses.post_support || [];
+                        const updated = e.target.checked ? [...current, option] : current.filter(v => v !== option);
+                        handleChange('post_support', updated);
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor={`support-${option}`} className="cursor-pointer">{option}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                How often would you participate in ongoing support sessions?
+              </Label>
+              <RadioGroup value={responses.participation_frequency} onValueChange={(val) => handleChange('participation_frequency', val)}>
+                <div className="flex items-center space-x-2 mb-2">
+                  <RadioGroupItem value="monthly" id="freq-monthly" />
+                  <Label htmlFor="freq-monthly" className="cursor-pointer">Monthly</Label>
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <RadioGroupItem value="quarterly" id="freq-quarterly" />
+                  <Label htmlFor="freq-quarterly" className="cursor-pointer">Quarterly</Label>
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <RadioGroupItem value="as_needed" id="freq-needed" />
+                  <Label htmlFor="freq-needed" className="cursor-pointer">Only when I need it</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div>
+              <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                What are your biggest challenges implementing what you learned?
+              </Label>
+              <div className="space-y-2">
+                {['Time', 'Systems', 'Funding', 'Marketing', 'Strategy', 'Confidence', 'Accountability'].map((challenge) => (
+                  <div key={challenge} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`challenge-${challenge}`}
+                      checked={(responses.implementation_challenges || []).includes(challenge)}
+                      onChange={(e) => {
+                        const current = responses.implementation_challenges || [];
+                        const updated = e.target.checked ? [...current, challenge] : current.filter(v => v !== challenge);
+                        handleChange('implementation_challenges', updated);
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor={`challenge-${challenge}`} className="cursor-pointer">{challenge}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                What topics would you want covered in ongoing sessions?
+              </Label>
+              <div className="space-y-2 mb-3">
+                {['Grant writing and compliance', 'Financial management and systems', 'Strategic planning', 'Marketing and fundraising', 'Team building and leadership', 'Operations and scaling', 'Social impact measurement', 'Legal and governance'].map((topic) => (
+                  <div key={topic} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`topic-${topic}`}
+                      checked={(responses.ongoing_topics || []).includes(topic)}
+                      onChange={(e) => {
+                        const current = responses.ongoing_topics || [];
+                        const updated = e.target.checked ? [...current, topic] : current.filter(v => v !== topic);
+                        handleChange('ongoing_topics', updated);
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <Label htmlFor={`topic-${topic}`} className="cursor-pointer">{topic}</Label>
+                  </div>
+                ))}
+              </div>
+              <Textarea
+                value={responses.ongoing_topics_custom || ''}
+                onChange={(e) => handleChange('ongoing_topics_custom', e.target.value)}
+                placeholder="Other topics not listed above..."
+                rows={2}
+                className="w-full"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Community Interest */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Ongoing Community</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                Would you be interested in joining an ongoing entrepreneurial community after the incubator ends?
+              </Label>
+              <RadioGroup value={responses.community_interest} onValueChange={(val) => handleChange('community_interest', val)}>
+                <div className="flex items-center space-x-2 mb-2">
+                  <RadioGroupItem value="yes" id="community-yes" />
+                  <Label htmlFor="community-yes" className="cursor-pointer">Yes</Label>
+                </div>
+                <div className="flex items-center space-x-2 mb-2">
+                  <RadioGroupItem value="no" id="community-no" />
+                  <Label htmlFor="community-no" className="cursor-pointer">No</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {responses.community_interest === 'yes' && (
+              <div>
+                <Label className="text-base mb-3 block" style={{ color: BRAND_COLORS.neutralDark }}>
+                  What should an ongoing entrepreneurial community entail?
+                </Label>
+                <div className="space-y-2">
+                  {['Monthly virtual meetups', 'Peer mentoring partnerships', 'Resource library access', 'Expert speaker series', 'Accountability partnerships', 'Funding opportunities board', 'Collaborative projects', 'Social events and networking'].map((item) => (
+                    <div key={item} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`community-${item}`}
+                        checked={(responses.community_entailment || []).includes(item)}
+                        onChange={(e) => {
+                          const current = responses.community_entailment || [];
+                          const updated = e.target.checked ? [...current, item] : current.filter(v => v !== item);
+                          handleChange('community_entailment', updated);
+                        }}
+                        className="w-4 h-4"
+                      />
+                      <Label htmlFor={`community-${item}`} className="cursor-pointer">{item}</Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
