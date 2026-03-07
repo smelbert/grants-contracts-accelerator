@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import PersonalizedDashboard from '@/components/dashboard/PersonalizedDashboard';
+import DeadlineCalendar from '@/components/dashboard/DeadlineCalendar';
 import { 
   TrendingUp, 
   Calendar, 
