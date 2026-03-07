@@ -322,7 +322,8 @@ export default function FunderResearch() {
 
       <Tabs defaultValue="research">
         <TabsList>
-          <TabsTrigger value="research">New Research</TabsTrigger>
+          <TabsTrigger value="propublica">ProPublica 990 Lookup</TabsTrigger>
+          <TabsTrigger value="research">AI Research</TabsTrigger>
           <TabsTrigger value="funders">Researched Funders ({aiResearchedFunders.length})</TabsTrigger>
           <TabsTrigger value="990s">990 Data ({funder990s.length})</TabsTrigger>
         </TabsList>
