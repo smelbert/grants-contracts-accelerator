@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Download, Loader2, FileText, BookOpen } from 'lucide-react';
@@ -21,7 +21,7 @@ import { format } from 'date-fns';
 export default function PDFExporter({ type = 'document', document, workbookData, organizationName, userName, trigger }) {
   const [open, setOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const templateRef = React.useRef(null);
+  const templateRef = useRef(null);
 
   const orgName = organizationName || 'Your Organization';
   const participantName = userName || 'Participant';
