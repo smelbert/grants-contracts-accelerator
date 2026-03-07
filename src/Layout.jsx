@@ -351,6 +351,10 @@ export default function Layout({ children, currentPageName }) {
 
   React.useEffect(() => {
     if (isPublic || !user) return;
+    // Skip legal acknowledgement for IncubateHer participants—they go through IncubateHerProgramGate instead
+    if (incubateHerEnrollment) {
+      return;
+    }
     if (userAccess === null) {
       // New user without UserAccessLevel record—show legal acknowledgement
       setShowLegalAcknowledgement(true);
@@ -358,7 +362,7 @@ export default function Layout({ children, currentPageName }) {
       // Existing user who hasn't acknowledged legal terms
       setShowLegalAcknowledgement(true);
     }
-  }, [user, userAccess, isPublic]);
+  }, [user, userAccess, isPublic, incubateHerEnrollment]);
 
   const handleLegalAccept = async () => {
     if (!user?.email) return;
