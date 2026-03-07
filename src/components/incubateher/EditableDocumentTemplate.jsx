@@ -19,6 +19,15 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
   const autoSaveTimerRef = useRef(null);
   const userEmailRef = useRef(null);
 
+  // Get current user
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await base44.auth.me();
+      userEmailRef.current = user?.email;
+    };
+    getUser();
+  }, []);
+
   // Auto-fill from profile, workbook, AND uploaded documents
   useEffect(() => {
     if (open) {
@@ -79,6 +88,27 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
       setFormData(prefillData);
     }
   }, [organizationProfile, workbookResponses, uploadedDocsData, open, template]);
+
+  // Auto-save functionality
+  useEffect(() => {
+    if (!open || !userEmailRef.current || Object.keys(formData).length === 0) return;
+
+    // Clear existing timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    // Set new timer for auto-save after 2 seconds of inactivity
+    autoSaveTimerRef.current = setTimeout(() => {
+      handleAutoSave();
+    }, 2000);
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [formData, open]);
 
   const handleChange = (fieldId, value) => {
     setFormData(prev => ({
