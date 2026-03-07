@@ -112,8 +112,24 @@ export default function IncubateHerProfileIntake() {
       hasLoadedInitialData.current = true;
       setFormData(prev => ({ ...prev, ...existingProfile }));
       setLastSaved(new Date(existingProfile.updated_date));
+    } else if (!existingProfile && enrollment && !hasLoadedInitialData.current) {
+      // Pre-fill from JotForm registration data if no org profile yet
+      const jd = enrollment.jotform_data || {};
+      const prefill = {};
+      if (enrollment.organization_name) prefill.organization_name = enrollment.organization_name;
+      if (enrollment.participant_name) prefill.executive_director = enrollment.participant_name;
+      if (enrollment.phone_number) prefill.phone = enrollment.phone_number;
+      if (jd.org_type) prefill.organization_type = jd.org_type;
+      if (jd.annual_revenue) prefill.annual_budget = jd.annual_revenue;
+      if (jd.goals) prefill.funding_goals = jd.goals;
+      if (jd.existing_items) prefill.programs_offered = jd.existing_items;
+      if (jd.funding_barrier) prefill.capacity_building_needs = jd.funding_barrier;
+      if (jd.employees) prefill.staff_count = jd.employees;
+      if (Object.keys(prefill).length > 0) {
+        setFormData(prev => ({ ...prev, ...prefill }));
+      }
     }
-  }, [existingProfile]);
+  }, [existingProfile, enrollment]);
 
   const saveProfileMutation = useMutation({
     mutationFn: async (data) => {
