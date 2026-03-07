@@ -135,7 +135,10 @@ export default function DocumentViewer({
   };
 
   const handleSave = () => {
-    saveDocumentMutation.mutate({ content: editedContent });
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    saveDocumentMutation.mutate({ content: editedContent }, {
+      onSuccess: () => setLastSaved(new Date())
+    });
   };
 
   const handleApprove = () => {
