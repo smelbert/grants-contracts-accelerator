@@ -288,7 +288,11 @@ export default function IncubateHerPreAssessment() {
 
   const submitAssessmentMutation = useMutation({
     mutationFn: async (data) => {
-      const assessment = await base44.entities.ProgramAssessment.create(data);
+      if (existingAssessment) {
+        await base44.entities.ProgramAssessment.update(existingAssessment.id, data);
+      } else {
+        await base44.entities.ProgramAssessment.create(data);
+      }
       
       if (enrollment) {
         await base44.entities.ProgramEnrollment.update(enrollment.id, {
@@ -307,12 +311,10 @@ export default function IncubateHerPreAssessment() {
           // Continue even if email fails
         }
       }
-      
-      return assessment;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['enrollment']);
-      queryClient.invalidateQueries(['pre-assessment']);
+      queryClient.invalidateQueries({ queryKey: ['enrollment'] });
+      queryClient.invalidateQueries({ queryKey: ['pre-assessment'] });
       toast.success('Assessment submitted successfully!');
     }
   });

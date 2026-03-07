@@ -165,7 +165,11 @@ export default function IncubateHerPostAssessment() {
 
   const submitAssessmentMutation = useMutation({
     mutationFn: async (data) => {
-      const assessment = await base44.entities.ProgramAssessment.create(data);
+      if (existingPostAssessment) {
+        await base44.entities.ProgramAssessment.update(existingPostAssessment.id, data);
+      } else {
+        await base44.entities.ProgramAssessment.create(data);
+      }
       
       if (enrollment) {
         await base44.entities.ProgramEnrollment.update(enrollment.id, {
@@ -174,12 +178,10 @@ export default function IncubateHerPostAssessment() {
           post_assessment_score: data.total_score
         });
       }
-      
-      return assessment;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['enrollment']);
-      queryClient.invalidateQueries(['post-assessment']);
+      queryClient.invalidateQueries({ queryKey: ['enrollment'] });
+      queryClient.invalidateQueries({ queryKey: ['post-assessment'] });
       toast.success('Post-assessment submitted successfully!');
     }
   });

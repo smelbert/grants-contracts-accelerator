@@ -72,7 +72,11 @@ export default function IncubateHerEvaluation() {
 
   const submitEvaluationMutation = useMutation({
     mutationFn: async (data) => {
-      await base44.entities.ProgramAssessment.create(data);
+      if (existingEvaluation) {
+        await base44.entities.ProgramAssessment.update(existingEvaluation.id, data);
+      } else {
+        await base44.entities.ProgramAssessment.create(data);
+      }
       
       if (enrollment) {
         await base44.entities.ProgramEnrollment.update(enrollment.id, {
@@ -82,8 +86,8 @@ export default function IncubateHerEvaluation() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['enrollment']);
-      queryClient.invalidateQueries(['evaluation']);
+      queryClient.invalidateQueries({ queryKey: ['enrollment'] });
+      queryClient.invalidateQueries({ queryKey: ['evaluation'] });
       toast.success('Thank you for your feedback!');
       setSubmitted(true);
     }
