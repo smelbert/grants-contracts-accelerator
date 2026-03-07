@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import {
   BookOpen, CheckCircle2, Clock, Award, Trophy, Lock, Play,
   Video, ChevronRight, Circle, RotateCcw, Calendar, MapPin,
-  ExternalLink, ChevronDown
+  ExternalLink, ChevronDown, ArrowRight, Star, FileText, Users, Target, MessageSquare, Lightbulb, Briefcase, Globe, Shield, Zap
 } from 'lucide-react';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
