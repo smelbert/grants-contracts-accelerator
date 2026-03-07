@@ -123,7 +123,7 @@ const LEVELS_DATA = {
       'Receive Level 3 consultant evaluation recommending advancement',
       'Complete advanced strategy brief and capture strategy submissions'
     ],
-    modules: [8, 9, 10, 11, 12, 13, 14]
+    modules: [8, 9, 10, 11, 12, 13, 14, 20]
   },
   'level-3': {
     title: 'Level 3: Senior Consultants',

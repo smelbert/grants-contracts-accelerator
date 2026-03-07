@@ -118,6 +118,7 @@ import IncubateHerEmailTemplates from './pages/IncubateHerEmailTemplates';
 import IncubateHerEvaluation from './pages/IncubateHerEvaluation';
 import IncubateHerFacilitatorConsole from './pages/IncubateHerFacilitatorConsole';
 import IncubateHerGiveaway from './pages/IncubateHerGiveaway';
+import IncubateHerGiveawayDraw from './pages/IncubateHerGiveawayDraw';
 import IncubateHerLearning from './pages/IncubateHerLearning';
 import IncubateHerOverview from './pages/IncubateHerOverview';
 import IncubateHerParticipantWorkbooks from './pages/IncubateHerParticipantWorkbooks';
@@ -155,8 +156,8 @@ import Opportunities from './pages/Opportunities';
 import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
 import OpportunityMatchingProfile from './pages/OpportunityMatchingProfile';
 import OpportunityReports from './pages/OpportunityReports';
-import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import Pricing from './pages/Pricing';
+import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
 import PaymentCancelled from './pages/PaymentCancelled';
@@ -211,7 +212,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerGiveawayDraw from './pages/IncubateHerGiveawayDraw';
 import __Layout from './Layout.jsx';
 
 
@@ -287,6 +287,7 @@ export const PAGES = {
     "IncubateHerEvaluation": IncubateHerEvaluation,
     "IncubateHerFacilitatorConsole": IncubateHerFacilitatorConsole,
     "IncubateHerGiveaway": IncubateHerGiveaway,
+    "IncubateHerGiveawayDraw": IncubateHerGiveawayDraw,
     "IncubateHerLearning": IncubateHerLearning,
     "IncubateHerOverview": IncubateHerOverview,
     "IncubateHerParticipantWorkbooks": IncubateHerParticipantWorkbooks,
@@ -324,8 +325,8 @@ export const PAGES = {
     "OpportunitiesDirectory": OpportunitiesDirectory,
     "OpportunityMatchingProfile": OpportunityMatchingProfile,
     "OpportunityReports": OpportunityReports,
-    "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "Pricing": Pricing,
+    "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
     "PaymentCancelled": PaymentCancelled,
@@ -380,7 +381,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerGiveawayDraw": IncubateHerGiveawayDraw,
 }
 
 export const pagesConfig = {
