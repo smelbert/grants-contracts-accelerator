@@ -318,9 +318,17 @@ export default function Layout({ children, currentPageName }) {
 
   const { data: user, isLoading: userIsLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: async () => {
+      try {
+        return await base44.auth.me();
+      } catch (error) {
+        console.error('Auth error:', error);
+        return null;
+      }
+    },
     enabled: !isPublic,
-    staleTime: 1000 * 60 * 5, // Keep user data fresh for 5 minutes to prevent unnecessary refetches
+    staleTime: 1000 * 60 * 5,
+    retry: false, // Don't retry on auth failures
   });
 
   const { data: userAccess, refetch: refetchAccess } = useQuery({
