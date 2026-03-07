@@ -516,7 +516,6 @@ export default function TrainingFrameworkPage() {
               {[
                 { label: 'Level 1 Modules', count: level1Modules.length, desc: 'All Consultants', color: 'border-green-300 bg-green-50', text: 'text-green-800' },
                 { label: 'Level 2 Modules', count: level2Modules.length, desc: 'Intermediate+', color: 'border-blue-300 bg-blue-50', text: 'text-blue-800' },
-
                 { label: 'Level 3 Modules', count: level3Modules.length, desc: 'Senior Only', color: 'border-purple-300 bg-purple-50', text: 'text-purple-800' }
               ].map(item => (
                 <Card key={item.label} className={`border-2 ${item.color}`}>
