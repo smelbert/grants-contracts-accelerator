@@ -30,14 +30,12 @@ export default function UserActivityAnalytics() {
   const { data: events = [], isLoading: eventsLoading } = useQuery({
     queryKey: ['analytics-events'],
     queryFn: async () => {
-      // Use UserActivity as a proxy for analytics events since analytics are tracked there
-      // Also pull LearningActivity and UserProgress for real usage data
-      const [activities, progress] = await Promise.all([
+      const [activities, progress, pageVisits] = await Promise.all([
         base44.entities.LearningActivity.list('-created_date', 200),
         base44.entities.UserProgress.list('-updated_date', 200),
+        base44.entities.UserActivity.filter({ activity_type: 'page_visit' }, '-created_date', 500),
       ]);
 
-      // Normalize into unified event list
       const activityEvents = (activities || []).map(a => ({
         id: a.id,
         event: a.activity_type || 'learning_activity',
@@ -59,7 +57,20 @@ export default function UserActivityAnalytics() {
         source: 'progress'
       }));
 
-      return [...activityEvents, ...progressEvents].sort(
+      const pageEvents = (pageVisits || []).map(v => ({
+        id: v.id,
+        event: 'page_visit',
+        user_email: v.user_email || '',
+        course_title: v.metadata?.page || '',
+        timestamp: v.created_date,
+        duration: v.metadata?.duration_seconds,
+        clicks: v.metadata?.clicks,
+        keystrokes: v.metadata?.keystrokes,
+        details: v,
+        source: 'page_visit'
+      }));
+
+      return [...activityEvents, ...progressEvents, ...pageEvents].sort(
         (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
       );
     },
