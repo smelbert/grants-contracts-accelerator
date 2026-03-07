@@ -17,7 +17,7 @@ export default function IncubateHerOverview() {
     queryKey: ['incubateher-cohort'],
     queryFn: async () => {
       const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
+        program_code: 'incubateher-2026'
       });
       return cohorts[0] || null;
     }

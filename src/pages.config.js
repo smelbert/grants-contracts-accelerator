@@ -107,10 +107,12 @@ import IncubateHerAccessControl from './pages/IncubateHerAccessControl';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
 import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
 import IncubateHerAgenda from './pages/IncubateHerAgenda';
+import IncubateHerAlumni from './pages/IncubateHerAlumni';
 import IncubateHerAssessments from './pages/IncubateHerAssessments';
 import IncubateHerAttendance from './pages/IncubateHerAttendance';
 import IncubateHerCULDashboard from './pages/IncubateHerCULDashboard';
 import IncubateHerCompletion from './pages/IncubateHerCompletion';
+import IncubateHerConsultationGuide from './pages/IncubateHerConsultationGuide';
 import IncubateHerConsultations from './pages/IncubateHerConsultations';
 import IncubateHerCourse from './pages/IncubateHerCourse';
 import IncubateHerDocuments from './pages/IncubateHerDocuments';
@@ -154,9 +156,9 @@ import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
 import Opportunities from './pages/Opportunities';
 import OpportunitiesDirectory from './pages/OpportunitiesDirectory';
+import Pricing from './pages/Pricing';
 import OpportunityMatchingProfile from './pages/OpportunityMatchingProfile';
 import OpportunityReports from './pages/OpportunityReports';
-import Pricing from './pages/Pricing';
 import OpportunityScannerAdmin from './pages/OpportunityScannerAdmin';
 import OrganizationSettings from './pages/OrganizationSettings';
 import OrganizationsOverview from './pages/OrganizationsOverview';
@@ -212,8 +214,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import IncubateHerConsultationGuide from './pages/IncubateHerConsultationGuide';
-import IncubateHerAlumni from './pages/IncubateHerAlumni';
 import __Layout from './Layout.jsx';
 
 
@@ -278,10 +278,12 @@ export const PAGES = {
     "IncubateHerAdmin": IncubateHerAdmin,
     "IncubateHerAdminConsole": IncubateHerAdminConsole,
     "IncubateHerAgenda": IncubateHerAgenda,
+    "IncubateHerAlumni": IncubateHerAlumni,
     "IncubateHerAssessments": IncubateHerAssessments,
     "IncubateHerAttendance": IncubateHerAttendance,
     "IncubateHerCULDashboard": IncubateHerCULDashboard,
     "IncubateHerCompletion": IncubateHerCompletion,
+    "IncubateHerConsultationGuide": IncubateHerConsultationGuide,
     "IncubateHerConsultations": IncubateHerConsultations,
     "IncubateHerCourse": IncubateHerCourse,
     "IncubateHerDocuments": IncubateHerDocuments,
@@ -325,9 +327,9 @@ export const PAGES = {
     "Notifications": Notifications,
     "Opportunities": Opportunities,
     "OpportunitiesDirectory": OpportunitiesDirectory,
+    "Pricing": Pricing,
     "OpportunityMatchingProfile": OpportunityMatchingProfile,
     "OpportunityReports": OpportunityReports,
-    "Pricing": Pricing,
     "OpportunityScannerAdmin": OpportunityScannerAdmin,
     "OrganizationSettings": OrganizationSettings,
     "OrganizationsOverview": OrganizationsOverview,
@@ -383,8 +385,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "IncubateHerConsultationGuide": IncubateHerConsultationGuide,
-    "IncubateHerAlumni": IncubateHerAlumni,
 }
 
 export const pagesConfig = {
