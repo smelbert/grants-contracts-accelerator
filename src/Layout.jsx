@@ -14,6 +14,9 @@ import GlobalActivityTracker from '@/components/activity/GlobalActivityTracker';
 import SubmitTestimonialForm from '@/components/testimonials/SubmitTestimonialForm';
 import LegalAcknowledgement from '@/components/legal/LegalAcknowledgement';
 import IncubateHerProgramGate from '@/components/incubateher/IncubateHerProgramGate';
+
+// Public pages that skip the authenticated layout entirely
+const PUBLIC_PAGES = ['PublicHome', 'AboutEIS', 'IncubateHerPublic', 'Blog', 'BlogPost', 'TermsOfService', 'Register', 'Landing', 'Pricing'];
 import { 
   LayoutDashboard, 
   Search, 
