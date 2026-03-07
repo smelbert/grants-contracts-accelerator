@@ -16,7 +16,7 @@ const SECTIONS = [
   {
     id: 'congratulations',
     icon: <Award className="w-5 h-5 text-[#E5C089]" />,
-    title: 'Completing the Program: What You've Accomplished',
+    title: "Completing the Program: What You've Accomplished",
     color: 'border-l-[#E5C089]',
     content: (
       <div className="space-y-4">
