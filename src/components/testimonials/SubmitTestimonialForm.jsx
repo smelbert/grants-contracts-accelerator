@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Star, MessageSquare } from 'lucide-react';
+import { Star, MessageSquare, Upload, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SubmitTestimonialForm({ trigger }) {
