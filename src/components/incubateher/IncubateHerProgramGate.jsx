@@ -167,7 +167,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
             <Target className="w-6 h-6 text-[#143A50]" />
             Complete Your Setup
           </DialogTitle>
-          <p className="text-sm text-slate-500 mt-1">Step 2 of 2 — Before you dive in, please complete these two quick steps</p>
+          <DialogDescription className="text-sm text-slate-500 mt-1">Step 2 of 2 — Before you dive in, please complete these two quick steps</DialogDescription>
         </DialogHeader>
 
         <div className="py-4 space-y-4">
