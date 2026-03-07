@@ -96,6 +96,7 @@ export default function IncubateHerGiveaway() {
   const requiredItems = [
     { label: 'Pre-Assessment', met: enrollment?.pre_assessment_completed || false },
     { label: 'Post-Assessment', met: enrollment?.post_assessment_completed || false },
+    { label: 'Program Evaluation', met: enrollment?.evaluation_completed || false },
   ];
   const allRequiredMet = requiredItems.every(r => r.met);
 
