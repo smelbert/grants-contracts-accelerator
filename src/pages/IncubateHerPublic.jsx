@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
-import { CheckCircle2, Users, Target, Calendar, Award, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Users, Target, Calendar, Award, ArrowRight, ArrowLeft } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { toast } from 'react-hot-toast';
 
@@ -19,6 +20,11 @@ export default function IncubateHerPublic() {
     email: '',
     organization: '',
     phone: ''
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
   });
 
   const enrollMutation = useMutation({
@@ -381,6 +387,17 @@ export default function IncubateHerPublic() {
         </div>
       )}
 
+      {user && (
+        <div className="bg-[#143A50] text-center py-8">
+          <Link to={createPageUrl('Home')}>
+            <Button className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 flex items-center gap-2 mx-auto">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
+        </div>
+      )}
+      
       <CoBrandedFooter />
     </div>
   );
