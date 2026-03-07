@@ -188,6 +188,24 @@ export default function UserActivityAnalytics() {
             <p className="text-2xl font-bold">{allEnrollments.length}</p>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="flex items-center gap-2 mb-1">
+              <MousePointer className="w-4 h-4 text-pink-500" />
+              <span className="text-xs text-slate-500">Total Clicks</span>
+            </div>
+            <p className="text-2xl font-bold">{totalClicks.toLocaleString()}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Activity className="w-4 h-4 text-teal-500" />
+              <span className="text-xs text-slate-500">Keystrokes</span>
+            </div>
+            <p className="text-2xl font-bold">{totalKeystrokes.toLocaleString()}</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
