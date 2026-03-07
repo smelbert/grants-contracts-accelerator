@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Search, Loader2, CheckCircle2, AlertCircle, Sparkles, TrendingUp, DollarSign } from 'lucide-react';
+import { Search, Loader2, CheckCircle2, AlertCircle, Sparkles, TrendingUp, DollarSign, ExternalLink, FileText, Building2, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function FunderResearch() {
