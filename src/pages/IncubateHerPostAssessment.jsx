@@ -337,11 +337,35 @@ export default function IncubateHerPostAssessment() {
       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
         <CoBrandedHeader title="Post-Assessment Results" />
         <div className="max-w-4xl mx-auto px-6 py-12">
+          <Card className="mb-6" style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2, backgroundColor: '#fffbf0' }}>
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
+                <div>
+                  <p className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+                    Assessment Updated
+                  </p>
+                  <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                    We've updated the post-assessment to better measure what you've learned during the program. Would you like to retake it to get a more accurate picture of your growth?
+                  </p>
+                  <Button 
+                    size="sm" 
+                    className="mt-3"
+                    style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
+                    onClick={() => setSubmitted(false)}
+                  >
+                    Retake Assessment
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardContent className="pt-8 text-center">
               <Award className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
               <h2 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.neutralDark }}>
-                You've completed the program!
+                Your Previous Results
               </h2>
               <div className="flex justify-center items-center gap-8 mb-6">
                 <div>
