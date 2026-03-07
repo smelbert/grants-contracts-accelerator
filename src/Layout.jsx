@@ -90,6 +90,8 @@ const getUserPortalNav = () => [
       { name: 'Assessments & Evaluations', page: 'IncubateHerAssessments', icon: CheckCircle2 },
       { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
       { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
+      { name: 'Consultation Guide', page: 'IncubateHerConsultationGuide', icon: BookOpen },
+      { name: 'Post-Program & Alumni', page: 'IncubateHerAlumni', icon: Star },
       // Giveaway hidden until March 5, 2026 (Thursday)
       ...(new Date() >= new Date('2026-03-05T00:00:00') ? [{ name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles }] : []),
       { name: 'My Attendance', page: 'IncubateHerAttendance', icon: Calendar, hideForIncubateHer: true },
