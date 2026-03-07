@@ -210,7 +210,10 @@ export default function IncubateHerEvaluation() {
   const isComplete = responses.overall_rating && responses.content_quality && 
                      responses.facilitation_effectiveness && responses.materials_usefulness &&
                      responses.workbook_quality && responses.schedule_format && 
-                     responses.consultation_experience && responses.would_recommend;
+                     responses.consultation_experience && responses.would_recommend &&
+                     responses.post_support && responses.participation_frequency &&
+                     responses.implementation_challenges && responses.ongoing_topics &&
+                     responses.community_interest;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
