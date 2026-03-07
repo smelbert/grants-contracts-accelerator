@@ -639,6 +639,34 @@ export default function IncubateHerLearning() {
                       </div>
                     ))}
                   </div>
+                ) : activeModule === 'consultation' ? (
+                  <div className="space-y-6">
+                    <ConsultationGuideInline />
+                    {filteredContent.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold text-slate-700 mb-3">Additional Course Materials</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                          {filteredContent.map(content => (
+                            <CourseCard key={content.id} content={content} progress={progressMap[content.id]} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : activeModule === 'wrap' ? (
+                  <div className="space-y-6">
+                    <WrapGuideInline />
+                    {filteredContent.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold text-slate-700 mb-3">Additional Course Materials</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                          {filteredContent.map(content => (
+                            <CourseCard key={content.id} content={content} progress={progressMap[content.id]} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     {filteredContent.map(content => (
