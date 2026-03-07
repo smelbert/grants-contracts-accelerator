@@ -251,14 +251,14 @@ export default function IncubateHerPreAssessment() {
   const { data: enrollment } = useQuery({
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
-      if (!user?.email || !cohort?.id) return null;
+      if (!user?.email) return null;
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        cohort_id: cohort.id
+        participant_email: user.email
       });
-      return enrollments[0];
+      // Prefer active enrollment, fallback to first found
+      return enrollments.find(e => e.enrollment_status === 'active') || enrollments[0] || null;
     },
-    enabled: !!user?.email && !!cohort?.id
+    enabled: !!user?.email
   });
 
   // Pre-fill responses from JotForm data when enrollment loads
