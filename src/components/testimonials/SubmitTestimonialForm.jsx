@@ -15,6 +15,8 @@ export default function SubmitTestimonialForm({ trigger }) {
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(5);
   const [approvedForWebsite, setApprovedForWebsite] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoUploading, setPhotoUploading] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
