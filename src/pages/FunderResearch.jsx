@@ -320,7 +320,7 @@ export default function FunderResearch() {
         </Card>
       </div>
 
-      <Tabs defaultValue="research">
+      <Tabs defaultValue="propublica">
         <TabsList>
           <TabsTrigger value="propublica">ProPublica 990 Lookup</TabsTrigger>
           <TabsTrigger value="research">AI Research</TabsTrigger>
