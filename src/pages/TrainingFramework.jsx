@@ -555,7 +555,7 @@ export default function TrainingFrameworkPage() {
               <div className="flex items-center gap-3 mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center"><span className="text-white text-sm font-bold">2</span></div>
                 <div>
-                  <h3 className="font-bold text-blue-900">Level 2 — Intermediate Modules (Modules 8–14)</h3>
+                  <h3 className="font-bold text-blue-900">Level 2 — Intermediate Modules (Modules 8–14, 20)</h3>
                   <p className="text-sm text-blue-700">Requires Level 1 promotion gate completion.</p>
                 </div>
               </div>
