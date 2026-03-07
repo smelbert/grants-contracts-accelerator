@@ -13,7 +13,6 @@ import { ChevronLeft, ChevronRight, Save, Check, CheckCircle2 } from 'lucide-rea
 import PDFExporter from '@/components/export/PDFExporter';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import jsPDF from 'jspdf';
 
 export default function IncubateHerWorkbook() {
   const queryClient = useQueryClient();
