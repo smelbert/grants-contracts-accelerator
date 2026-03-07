@@ -480,6 +480,18 @@ export default function AssessmentSurveyAdmin() {
           </TabsContent>
 
           <TabsContent value="events" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <Card className="border-blue-200 bg-blue-50">
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold text-slate-900 mb-2">Program Evaluations</h3>
+                  <p className="text-sm text-slate-600 mb-4">Edit the IncubateHer program evaluation form questions and options.</p>
+                  <a href="/pages/IncubateHerEvaluationEditor">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Edit Evaluation Form</Button>
+                  </a>
+                </CardContent>
+              </Card>
+            </div>
+
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
