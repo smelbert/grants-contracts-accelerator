@@ -316,10 +316,11 @@ export default function Layout({ children, currentPageName }) {
     return localStorage.getItem('portalView') || 'auto';
   });
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userIsLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
     enabled: !isPublic,
+    staleTime: 1000 * 60 * 5, // Keep user data fresh for 5 minutes to prevent unnecessary refetches
   });
 
   const { data: userAccess, refetch: refetchAccess } = useQuery({
@@ -387,6 +388,18 @@ export default function Layout({ children, currentPageName }) {
   // Render public pages without any authenticated layout
   if (isPublic) {
     return <>{children}</>;
+  }
+
+  // Show loading screen while user is being fetched (prevents white flash)
+  if (userIsLoading && !user) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-8 h-8 border-4 border-[#143A50] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
