@@ -167,11 +167,32 @@ export default function IncubateHerEvaluation() {
                   Rating: {existingEvaluation.responses?.overall_rating}/10
                 </Badge>
               )}
-              <div className="mt-4">
+              <div className="mt-4 flex flex-wrap gap-3 justify-center">
                 <Button variant="outline" onClick={() => handleDownloadPDF((existingEvaluation || { responses: {} }).responses)}>
                   <Download className="w-4 h-4 mr-2" /> Download PDF
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Testimonial CTA */}
+          <Card className="mt-6" style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2 }}>
+            <CardContent className="pt-6 text-center">
+              <Star className="w-10 h-10 mx-auto mb-3" style={{ color: BRAND_COLORS.eisGold }} />
+              <h3 className="text-lg font-bold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+                Would You Share Your Story?
+              </h3>
+              <p className="text-sm mb-4" style={{ color: BRAND_COLORS.eisNavy }}>
+                Help other entrepreneurs discover IncubateHer by sharing a testimonial. You can include your name and photo, or stay anonymous.
+              </p>
+              <SubmitTestimonialForm
+                trigger={
+                  <Button style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}>
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Share My Testimonial
+                  </Button>
+                }
+              />
             </CardContent>
           </Card>
         </div>
