@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { CheckCircle2, Download, Sparkles, Loader2 } from 'lucide-react';
+import { CheckCircle2, Download, Sparkles, Loader2, Save, FileDown } from 'lucide-react';
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import LegalFooter from '../legal/LegalFooter';
@@ -14,6 +14,10 @@ import SignatureField from '../legal/SignatureField';
 export default function EditableDocumentTemplate({ template, open, onOpenChange, organizationProfile, workbookResponses = {}, uploadedDocsData = {} }) {
   const [formData, setFormData] = useState({});
   const [generating, setGenerating] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
+  const autoSaveTimerRef = useRef(null);
+  const userEmailRef = useRef(null);
 
   // Auto-fill from profile, workbook, AND uploaded documents
   useEffect(() => {
