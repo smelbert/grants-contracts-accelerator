@@ -328,6 +328,10 @@ export default function FunderResearch() {
           <TabsTrigger value="990s">990 Data ({funder990s.length})</TabsTrigger>
         </TabsList>
 
+        <TabsContent value="propublica" className="mt-6">
+          <ProPublicaLookup />
+        </TabsContent>
+
         <TabsContent value="research" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Research Form */}
