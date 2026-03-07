@@ -160,6 +160,7 @@ const getAdminPortalNav = () => [
       { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
       { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
       { name: 'Community Spaces Manager', page: 'CommunityAdmin', icon: MessageCircle },
+      { name: 'Community Moderation', page: 'CommunityModerationDashboard', icon: AlertTriangle },
     ]
   },
   {
