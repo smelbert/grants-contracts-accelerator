@@ -760,14 +760,12 @@ export default function Layout({ children, currentPageName }) {
 
       {/* IncubateHer Program Gate */}
       {user && incubateHerEnrollment && (!userAccess || !userAccess?.legal_acknowledged) && (
-        <div className="fixed inset-0 z-[9999] bg-white overflow-auto">
-          <IncubateHerProgramGate
-            user={user}
-            userAccess={userAccess}
-            enrollment={incubateHerEnrollment}
-            onComplete={() => refetchAccess()}
-          />
-        </div>
+        <IncubateHerProgramGate
+          user={user}
+          userAccess={userAccess}
+          enrollment={incubateHerEnrollment}
+          onComplete={() => refetchAccess()}
+        />
       )}
 
       {/* Generic Legal Acknowledgement */}
