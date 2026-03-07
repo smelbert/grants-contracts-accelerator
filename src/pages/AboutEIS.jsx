@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { 
   Award, 
   BookOpen, 
   Users, 
   Heart,
   ArrowRight,
+  ArrowLeft,
   GraduationCap,
   Target,
   Sparkles,
@@ -16,6 +19,11 @@ import {
 } from 'lucide-react';
 
 export default function AboutEISPage() {
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -37,9 +45,18 @@ export default function AboutEISPage() {
                 IncubateHer
               </Link>
               <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
-              <Link to={createPageUrl('Register')}>
-                <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
-              </Link>
+              {user ? (
+                <Link to={createPageUrl('Home')}>
+                  <Button className="bg-[#1E4F58] hover:bg-[#143A50] flex items-center gap-2">
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <Link to={createPageUrl('Register')}>
+                  <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -299,9 +316,26 @@ export default function AboutEISPage() {
               </p>
             </div>
           </div>
-          <div className="border-t border-[#1E4F58] mt-8 pt-8 text-center text-sm">
-            <p>&copy; 2026 Elbert Innovative Solutions. All rights reserved.</p>
-          </div>
+          {user && (
+            <div className="border-t border-[#1E4F58] mt-8 pt-8">
+              <div className="flex justify-center mb-6">
+                <Link to={createPageUrl('Home')}>
+                  <Button className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 flex items-center gap-2">
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Dashboard
+                  </Button>
+                </Link>
+              </div>
+              <div className="text-center text-sm">
+                <p>&copy; 2026 Elbert Innovative Solutions. All rights reserved.</p>
+              </div>
+            </div>
+          )}
+          {!user && (
+            <div className="border-t border-[#1E4F58] mt-8 pt-8 text-center text-sm">
+              <p>&copy; 2026 Elbert Innovative Solutions. All rights reserved.</p>
+            </div>
+          )}
         </div>
       </footer>
     </div>
