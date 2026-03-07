@@ -349,6 +349,19 @@ export default function Layout({ children, currentPageName }) {
     retry: 1,
   });
 
+  const { data: incubateHerEnrollment } = useQuery({
+    queryKey: ['incubateher-enrollment', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return null;
+      const enrollments = await base44.entities.ProgramEnrollment.filter({
+        participant_email: user.email,
+        role: 'participant'
+      });
+      return enrollments.find(e => e.cohort_id) || null;
+    },
+    enabled: !isPublic && !!user?.email
+  });
+
   React.useEffect(() => {
     if (isPublic || !user) return;
     // Skip legal acknowledgement for IncubateHer participants—they go through IncubateHerProgramGate instead
@@ -384,19 +397,6 @@ export default function Layout({ children, currentPageName }) {
     setShowLegalAcknowledgement(false);
     refetchAccess();
   };
-
-  const { data: incubateHerEnrollment } = useQuery({
-    queryKey: ['incubateher-enrollment', user?.email],
-    queryFn: async () => {
-      if (!user?.email) return null;
-      const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        role: 'participant'
-      });
-      return enrollments.find(e => e.cohort_id) || null;
-    },
-    enabled: !isPublic && !!user?.email
-  });
 
   const handlePortalChange = (view) => {
     setPortalView(view);
