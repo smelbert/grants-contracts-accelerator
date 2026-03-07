@@ -510,7 +510,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
 
       {/* Footer Band */}
       <div className="footer-band">
-        <div>Elbert Innovative Solutions × Columbus Urban League</div>
+        <div>©{new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.</div>
         <div>Page {page.order || 1}</div>
       </div>
     </div>

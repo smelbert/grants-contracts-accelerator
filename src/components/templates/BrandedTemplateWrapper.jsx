@@ -146,7 +146,7 @@ export default function BrandedTemplateWrapper({ children }) {
               className="text-xs mt-1"
               style={{ color: EIS_COLORS.tan }}
             >
-              © {new Date().getFullYear()} All Rights Reserved
+              ©{new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.
             </p>
           </div>
         </div>

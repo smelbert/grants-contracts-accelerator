@@ -46,6 +46,9 @@ export default function HandoutsSection({ handouts }) {
                 {open && (
                   <div className="px-4 pb-4 border-t border-slate-100 pt-4">
                     <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: handout.html_content }} />
+                    <div className="text-xs text-slate-400 mt-4 pt-4 border-t border-slate-100">
+                      ©{new Date().getFullYear()} Elbert Innovative Solutions. All rights reserved.
+                    </div>
                   </div>
                 )}
               </CardContent>
