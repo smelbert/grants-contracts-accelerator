@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import moment from 'moment';
 import AssessmentDetailModal from '@/components/incubateher/AssessmentDetailModal';
 import SurveyBuilder from '@/components/incubateher/SurveyBuilder';
+import EvaluationEditorModal from '@/components/admin/EvaluationEditorModal';
 
 export default function AssessmentSurveyAdmin() {
   const [selectedAssessment, setSelectedAssessment] = useState(null);
