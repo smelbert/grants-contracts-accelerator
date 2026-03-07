@@ -216,6 +216,7 @@ import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import CommunityAdmin from './pages/CommunityAdmin';
+import CommunityModerationDashboard from './pages/CommunityModerationDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -389,6 +390,7 @@ export const PAGES = {
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
     "CommunityAdmin": CommunityAdmin,
+    "CommunityModerationDashboard": CommunityModerationDashboard,
 }
 
 export const pagesConfig = {
