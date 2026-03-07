@@ -42,6 +42,14 @@ export default function SubmitTestimonialForm({ trigger }) {
     }
   });
 
+  const handlePhotoUpload = async (file) => {
+    if (!file) return;
+    setPhotoUploading(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setPhotoUrl(file_url);
+    setPhotoUploading(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -54,6 +62,7 @@ export default function SubmitTestimonialForm({ trigger }) {
       rating: rating,
       program_type: formData.get('program_type'),
       approved_for_website: approvedForWebsite,
+      photo_url: photoUrl || '',
       submitted_date: new Date().toISOString()
     });
   };
