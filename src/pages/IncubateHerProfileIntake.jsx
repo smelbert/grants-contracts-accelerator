@@ -267,13 +267,26 @@ Provide a concise, professional response. Be inclusive — this could be a nonpr
   );
 
   const calculateProgress = () => {
-    const fields = Object.keys(formData);
-    const filledFields = fields.filter(key => {
+    // Only count the fields that actually matter for profile completeness
+    const importantFields = [
+      'organization_name', 'organization_type', 'founding_year', 'website',
+      'mission_statement', 'vision_statement', 'organizational_values',
+      'programs_offered', 'target_population', 'geographic_service_area',
+      'annual_people_served', 'mailing_address', 'phone',
+      'annual_budget', 'revenue_stage', 'funding_sources',
+      'grant_experience_level', 'funding_goals', 'capacity_building_needs',
+      'technical_assistance_needed',
+    ];
+    const filled = importantFields.filter(key => {
       const value = formData[key];
-      if (typeof value === 'boolean') return true;
       return value && value.toString().trim().length > 0;
     });
-    return Math.round((filledFields.length / fields.length) * 100);
+    // Add a point for each system checkbox checked
+    const systemsChecked = ['has_strategic_plan', 'has_financial_systems', 'has_evaluation_system', 'has_data_tracking']
+      .filter(f => formData[f]).length;
+    const total = importantFields.length + 1; // +1 for "at least one system checked"
+    const filledCount = filled.length + (systemsChecked > 0 ? 1 : 0);
+    return Math.round((filledCount / total) * 100);
   };
 
   const progress = calculateProgress();
