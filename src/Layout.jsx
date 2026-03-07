@@ -310,6 +310,11 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) =>
 };
 
 export default function Layout({ children, currentPageName }) {
+  // Render public pages without any authenticated layout
+  if (PUBLIC_PAGES.includes(currentPageName)) {
+    return <>{children}</>;
+  }
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLegalAcknowledgement, setShowLegalAcknowledgement] = useState(false);
   const [portalView, setPortalView] = useState(() => {
