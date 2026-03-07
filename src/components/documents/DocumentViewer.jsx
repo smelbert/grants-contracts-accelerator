@@ -261,7 +261,7 @@ export default function DocumentViewer({
                 {canEdit ? (
                   <Textarea
                     value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
+                    onChange={(e) => handleContentChange(e.target.value)}
                     className="min-h-[400px] font-mono text-sm"
                     placeholder="Document content..."
                   />
