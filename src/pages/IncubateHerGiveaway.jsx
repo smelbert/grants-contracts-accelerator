@@ -301,7 +301,6 @@ export default function IncubateHerGiveaway() {
               <ul className="space-y-1">
                 <li className="flex gap-2"><span className="text-[#143A50] font-bold">✓</span><span>Complete the pre-assessment</span></li>
                 <li className="flex gap-2"><span className="text-[#143A50] font-bold">✓</span><span>Complete the post-assessment</span></li>
-                <li className="flex gap-2"><span className="text-[#143A50] font-bold">✓</span><span>Complete the program evaluation</span></li>
               </ul>
             </div>
             <div>
