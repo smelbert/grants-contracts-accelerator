@@ -25,7 +25,8 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
       if (userAccess?.id) {
         await base44.entities.UserAccessLevel.update(userAccess.id, {
           legal_acknowledged: true,
-          legal_acknowledged_date: new Date().toISOString()
+          legal_acknowledged_date: new Date().toISOString(),
+          entry_point: 'incubateher_program'
         });
       } else {
         await base44.entities.UserAccessLevel.create({
