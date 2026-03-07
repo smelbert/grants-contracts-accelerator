@@ -117,6 +117,73 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
     }));
   };
 
+  const handleAutoSave = async () => {
+    if (!userEmailRef.current || !template.id) return;
+
+    try {
+      await base44.entities.Document.create({
+        doc_name: `${template.title} (Auto-saved)`,
+        doc_type: 'proposal',
+        status: 'draft',
+        content: JSON.stringify(formData),
+        visibility: 'private'
+      });
+      setLastSaved(new Date());
+    } catch (error) {
+      // Silent auto-save error - don't interrupt user
+      console.error('Auto-save failed:', error);
+    }
+  };
+
+  const handleManualSave = async () => {
+    if (!userEmailRef.current || !template.id) return;
+
+    setSaving(true);
+    try {
+      await base44.entities.Document.create({
+        doc_name: template.title,
+        doc_type: 'proposal',
+        status: 'draft',
+        content: JSON.stringify(formData),
+        visibility: 'private'
+      });
+      setLastSaved(new Date());
+      toast.success('Document saved to your Documents folder!');
+    } catch (error) {
+      toast.error('Failed to save document');
+      console.error('Save error:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDownloadDocx = async () => {
+    try {
+      // Create Word doc content
+      const docContent = template.fields
+        ?.map(field => `${field.label}\n${formData[field.id] || '(Not completed)'}\n`)
+        .join('\n---\n\n');
+
+      const blob = new Blob([`${template.title}\n\n${docContent}`], { type: 'text/plain' });
+      const file = new File([blob], `${template.title}.docx`, { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      
+      // Upload to storage
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      
+      // Create a temporary link and download
+      const link = document.createElement('a');
+      link.href = file_url;
+      link.download = `${template.title}.docx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success('Document downloaded!');
+    } catch (error) {
+      toast.error('Failed to download Word document');
+    }
+  };
+
   const handleAIComplete = async (fieldId, prompt) => {
     setGenerating(true);
     try {
