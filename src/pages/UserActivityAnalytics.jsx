@@ -192,6 +192,7 @@ export default function UserActivityAnalytics() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Events</SelectItem>
+                    <SelectItem value="page_visit">Page Visits</SelectItem>
                     <SelectItem value="course_completed">Completions</SelectItem>
                     <SelectItem value="course_progress_updated">Progress</SelectItem>
                     <SelectItem value="learning_activity">Activities</SelectItem>
