@@ -35,9 +35,136 @@ export default function RegistrationManagement() {
     queryFn: () => base44.asServiceRole.entities.User.list('-created_date')
   });
 
-  const { data: submissions = [] } = useQuery({
+  const { data: submissions = [], refetch: refetchSubmissions } = useQuery({
     queryKey: ['registrationSubmissions'],
     queryFn: () => base44.entities.RegistrationSubmission.list('-created_date')
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: async (sub) => {
+      const program = sub.registration_data?.program_id || 'incubateher';
+      const cohortCode = sub.registration_data?.program_id === 'accelerateher'
+        ? 'accelerateher'
+        : 'incubateher_funding_readiness';
+      const cohortName = sub.registration_data?.program_id === 'accelerateher'
+        ? 'AccelerateHer Program'
+        : 'IncubateHer – Funding Readiness: Preparing for Grants & Contracts';
+
+      // Get or create cohort
+      const cohorts = await base44.entities.ProgramCohort.filter({ program_code: cohortCode });
+      let cohort = cohorts[0];
+      if (!cohort) {
+        cohort = await base44.entities.ProgramCohort.create({
+          program_name: cohortName,
+          program_code: cohortCode,
+          funder_organization: 'Columbus Urban League',
+          delivery_organization: 'Elbert Innovative Solutions',
+          is_active: true,
+        });
+      }
+
+      // Get or create community space
+      const spaces = await base44.entities.CommunitySpace.filter({ slug: 'incubateher' });
+      let communitySpace = spaces[0];
+      if (!communitySpace) {
+        communitySpace = await base44.entities.CommunitySpace.create({
+          space_name: 'IncubateHer Program',
+          slug: 'incubateher',
+          description: 'Exclusive community for IncubateHer participants',
+          space_type: 'posts',
+          visibility: 'private',
+          icon: 'Target',
+          is_active: true,
+        });
+      }
+
+      // Invite to platform
+      await base44.users.inviteUser(sub.user_email, 'user');
+
+      // Create enrollment
+      const rd = sub.registration_data || {};
+      await base44.entities.ProgramEnrollment.create({
+        cohort_id: cohort.id,
+        participant_email: sub.user_email,
+        participant_name: sub.user_name,
+        phone_number: rd.phone || '',
+        organization_name: rd.organization_name || '',
+        role: 'participant',
+        enrollment_status: 'active',
+        enrolled_date: new Date().toISOString(),
+        jotform_data: {
+          submission_date: rd.submission_date || new Date().toISOString(),
+          cohort: rd.program || '',
+          participation_plan: rd.participation_plan || '',
+          attend_in_person: rd.attend_in_person || '',
+          interested_in_consultation: rd.interested_in_consultation || '',
+          documents_needed: Array.isArray(rd.documents_needed) ? rd.documents_needed.join(', ') : '',
+          funding_barrier: rd.funding_barrier || '',
+          existing_items: Array.isArray(rd.existing_items) ? rd.existing_items.join(', ') : '',
+          org_type: rd.org_type || '',
+          years_in_business: rd.years_in_business || '',
+          annual_revenue: rd.annual_revenue || '',
+          employees: rd.employees || '',
+          grant_experience: rd.grant_experience || '',
+          how_heard: rd.how_heard || '',
+          goals: rd.goals || '',
+        },
+      });
+
+      // Set access level
+      const existingAccess = await base44.entities.UserAccessLevel.filter({ user_email: sub.user_email });
+      if (existingAccess.length > 0) {
+        await base44.entities.UserAccessLevel.update(existingAccess[0].id, {
+          access_level: 'full_platform',
+          entry_point: 'incubateher_program',
+          allowed_community_spaces: [communitySpace.id],
+        });
+      } else {
+        await base44.entities.UserAccessLevel.create({
+          user_email: sub.user_email,
+          access_level: 'full_platform',
+          entry_point: 'incubateher_program',
+          allowed_community_spaces: [communitySpace.id],
+        });
+      }
+
+      // Mark submission as approved
+      await base44.entities.RegistrationSubmission.update(sub.id, { access_granted: true, access_granted_date: new Date().toISOString() });
+
+      // Send welcome email
+      await base44.integrations.Core.SendEmail({
+        from_name: 'IncubateHer Program',
+        to: sub.user_email,
+        subject: `You're In! Welcome to ${rd.program || 'the Program'} 🎉`,
+        body: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <div style="background-color: #143A50; padding: 30px; text-align: center;">
+              <h1 style="color: #E5C089; margin: 0;">You're Enrolled!</h1>
+              <p style="color: #fff; margin-top: 8px;">${rd.program || 'Program'}</p>
+            </div>
+            <div style="padding: 30px;">
+              <p>Hi ${sub.user_name},</p>
+              <p>Great news — your application has been reviewed and approved! You are now officially enrolled in <strong>${rd.program || 'the program'}</strong>.</p>
+              <h3 style="color: #143A50;">📋 Your Next Steps</h3>
+              <ol>
+                <li>Check your email for your platform login invitation</li>
+                <li>Complete your profile intake</li>
+                <li>Start your Pre-Assessment</li>
+                <li>Review the program schedule</li>
+              </ol>
+              <p><strong>Questions?</strong> Email <a href="mailto:info@elbertinnovativesolutions.org" style="color: #AC1A5B;">info@elbertinnovativesolutions.org</a></p>
+              <p>Warm regards,<br><strong>Dr. Shawnté Elbert</strong><br>Elbert Innovative Solutions</p>
+            </div>
+          </div>
+        `,
+      });
+    },
+    onSuccess: () => {
+      toast.success('Enrollment approved! Participant invited and email sent.');
+      refetchSubmissions();
+      queryClient.invalidateQueries(['all-program-enrollments']);
+    },
+    onError: (err) => toast.error(err.message || 'Approval failed'),
   });
 
   const syncProfileMutation = useMutation({
