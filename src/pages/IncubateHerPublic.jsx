@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
+import ProgramRegistrationForm from '@/components/incubateher/ProgramRegistrationForm';
 import { CheckCircle2, Users, Target, Calendar, Award, ArrowRight, ArrowLeft } from 'lucide-react';
 import { createPageUrl } from '@/utils';
-import { toast } from 'react-hot-toast';
 
 export default function IncubateHerPublic() {
   const [showEnrollment, setShowEnrollment] = useState(false);
