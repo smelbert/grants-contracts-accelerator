@@ -79,6 +79,8 @@ import CoachTrainingLibrary from './pages/CoachTrainingLibrary';
 import CoachesStaff from './pages/CoachesStaff';
 import CohortManagement from './pages/CohortManagement';
 import Community from './pages/Community';
+import CommunityAdmin from './pages/CommunityAdmin';
+import CommunityModerationDashboard from './pages/CommunityModerationDashboard';
 import ConsultantOnboarding from './pages/ConsultantOnboarding';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
@@ -215,8 +217,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import CommunityAdmin from './pages/CommunityAdmin';
-import CommunityModerationDashboard from './pages/CommunityModerationDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -253,6 +253,8 @@ export const PAGES = {
     "CoachesStaff": CoachesStaff,
     "CohortManagement": CohortManagement,
     "Community": Community,
+    "CommunityAdmin": CommunityAdmin,
+    "CommunityModerationDashboard": CommunityModerationDashboard,
     "ConsultantOnboarding": ConsultantOnboarding,
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
@@ -389,8 +391,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "CommunityAdmin": CommunityAdmin,
-    "CommunityModerationDashboard": CommunityModerationDashboard,
 }
 
 export const pagesConfig = {

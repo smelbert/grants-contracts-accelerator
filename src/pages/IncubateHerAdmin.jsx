@@ -15,19 +15,18 @@ export default function IncubateHerAdmin() {
       const cohorts = await base44.entities.ProgramCohort.filter({
         program_code: 'incubateher_funding_readiness'
       });
-      return cohorts[0];
+      return cohorts[0] || null;
     }
   });
 
+  // Match the same query used in IncubateHerParticipants for accuracy
   const { data: enrollments = [] } = useQuery({
     queryKey: ['all-enrollments'],
     queryFn: async () => {
-      if (!cohort?.id) return [];
       return await base44.entities.ProgramEnrollment.filter({
-        cohort_id: cohort.id
+        role: 'participant'
       });
-    },
-    enabled: !!cohort?.id
+    }
   });
 
   const { data: assessments = [] } = useQuery({
