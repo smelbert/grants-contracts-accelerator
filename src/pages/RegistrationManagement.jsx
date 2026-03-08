@@ -277,7 +277,14 @@ export default function RegistrationManagement() {
           <TabsList className="mb-6">
             <TabsTrigger value="enrollments">Program Enrollments ({filteredEnrollments.length})</TabsTrigger>
             <TabsTrigger value="legal">Legal / ToS ({filteredAccess.length})</TabsTrigger>
-            <TabsTrigger value="submissions">Form Submissions ({filteredSubmissions.length})</TabsTrigger>
+            <TabsTrigger value="submissions">
+              Applications ({filteredSubmissions.length})
+              {submissions.filter(s => !s.access_granted).length > 0 && (
+                <span className="ml-2 bg-amber-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                  {submissions.filter(s => !s.access_granted).length} pending
+                </span>
+              )}
+            </TabsTrigger>
           </TabsList>
 
           {/* Enrollments */}
