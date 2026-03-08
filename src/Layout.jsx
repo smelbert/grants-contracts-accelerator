@@ -224,6 +224,7 @@ const getAdminPortalNav = () => [
       { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
       { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
       { name: 'Giveaway Draw', page: 'IncubateHerGiveawayDraw', icon: Gift },
+      { name: 'Content Export', page: 'AdminContentExport', icon: Download },
     ]
   },
   {
