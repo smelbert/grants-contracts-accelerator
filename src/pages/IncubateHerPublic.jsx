@@ -150,15 +150,14 @@ export default function IncubateHerPublic() {
             <p className="text-lg mb-6 opacity-90">
               This free program is funded by Columbus Urban League and delivered by Elbert Innovative Solutions
             </p>
-            <a href="https://form.jotform.com/260497242186058" target="_blank" rel="noopener noreferrer">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-6"
-                style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralDark }}
-              >
-                Enroll Now
-              </Button>
-            </a>
+            <Button
+              size="lg"
+              onClick={scrollToForm}
+              className="text-lg px-8 py-6"
+              style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralDark }}
+            >
+              Apply Now
+            </Button>
             <p className="text-sm mt-4 opacity-75">
               Limited spots available for this cohort
             </p>
