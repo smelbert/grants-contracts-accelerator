@@ -451,11 +451,11 @@ export default function RegistrationManagement() {
                       <tr className="border-b bg-slate-50">
                         <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Name</th>
                         <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Email</th>
-                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Entry</th>
-                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Payment</th>
-                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Survey</th>
+                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Program</th>
+                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Status</th>
                         <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Date</th>
                         <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Files</th>
+                        <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Action</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
