@@ -172,72 +172,17 @@ export default function IncubateHerPublic() {
             </p>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Enrollment Modal */}
-      {showEnrollment && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="max-w-md w-full">
-            <CardContent className="pt-6">
-              <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.culRed }}>
-                Enroll in IncubateHer
-              </h3>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label>Full Name *</Label>
-                  <Input
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>Email *</Label>
-                  <Input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>Organization/Business Name</Label>
-                  <Input
-                    value={formData.organization}
-                    onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>Phone Number</Label>
-                  <Input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => setShowEnrollment(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="flex-1 text-white"
-                    style={{ backgroundColor: BRAND_COLORS.eisGold }}
-                    disabled={enrollMutation.isPending}
-                  >
-                    {enrollMutation.isPending ? 'Enrolling...' : 'Complete Enrollment'}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+        {/* Registration Form */}
+        <div id="registration-form" className="mt-16 scroll-mt-8">
+          <div className="text-center mb-2">
+            <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: BRAND_COLORS.neutralLight }}>
+              Now Accepting Applications
+            </Badge>
+          </div>
+          <ProgramRegistrationForm />
         </div>
-      )}
+      </div>
 
       {user && (
         <div className="bg-[#143A50] text-center py-8">
