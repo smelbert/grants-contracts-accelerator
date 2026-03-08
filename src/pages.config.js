@@ -52,6 +52,7 @@ import AIDocumentReview from './pages/AIDocumentReview';
 import AIFundingMatcher from './pages/AIFundingMatcher';
 import AIGuardrails from './pages/AIGuardrails';
 import AboutEIS from './pages/AboutEIS';
+import AdminContentExport from './pages/AdminContentExport';
 import AdminDashboard from './pages/AdminDashboard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssessmentAnalytics from './pages/AssessmentAnalytics';
@@ -154,6 +155,7 @@ import MemberManagement from './pages/MemberManagement';
 import MentorDashboard from './pages/MentorDashboard';
 import MentorManagement from './pages/MentorManagement';
 import MyClassroom from './pages/MyClassroom';
+import Pricing from './pages/Pricing';
 import MyMentorship from './pages/MyMentorship';
 import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
@@ -168,7 +170,6 @@ import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformManagement from './pages/PlatformManagement';
 import PlatformSettings from './pages/PlatformSettings';
-import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
@@ -217,7 +218,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import AdminContentExport from './pages/AdminContentExport';
 import __Layout from './Layout.jsx';
 
 
@@ -227,6 +227,7 @@ export const PAGES = {
     "AIFundingMatcher": AIFundingMatcher,
     "AIGuardrails": AIGuardrails,
     "AboutEIS": AboutEIS,
+    "AdminContentExport": AdminContentExport,
     "AdminDashboard": AdminDashboard,
     "ApplicationTracker": ApplicationTracker,
     "AssessmentAnalytics": AssessmentAnalytics,
@@ -329,6 +330,7 @@ export const PAGES = {
     "MentorDashboard": MentorDashboard,
     "MentorManagement": MentorManagement,
     "MyClassroom": MyClassroom,
+    "Pricing": Pricing,
     "MyMentorship": MyMentorship,
     "MyProfile": MyProfile,
     "Notifications": Notifications,
@@ -343,7 +345,6 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "PlatformManagement": PlatformManagement,
     "PlatformSettings": PlatformSettings,
-    "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
@@ -392,7 +393,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "AdminContentExport": AdminContentExport,
 }
 
 export const pagesConfig = {
