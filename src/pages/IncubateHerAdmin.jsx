@@ -36,13 +36,16 @@ export default function IncubateHerAdmin() {
     }
   });
 
-  // Calculate metrics
-  const totalParticipants = enrollments.length;
-  const completedPreAssessment = enrollments.filter(e => e.pre_assessment_completed).length;
-  const completedPostAssessment = enrollments.filter(e => e.post_assessment_completed).length;
-  const completedConsultations = enrollments.filter(e => e.consultation_completed).length;
-  const completedProgram = enrollments.filter(e => e.program_completed).length;
-  const giveawayEligible = enrollments.filter(e => e.giveaway_eligible).length;
+  // Calculate metrics — filtered to active participants only
+  const activeEnrollments = enrollments.filter(e => e.enrollment_status !== 'withdrawn' && e.enrollment_status !== 'inactive');
+  const totalParticipants = activeEnrollments.length;
+  const completedPreAssessment = activeEnrollments.filter(e => e.pre_assessment_completed).length;
+  const completedPostAssessment = activeEnrollments.filter(e => e.post_assessment_completed).length;
+  const completedConsultations = activeEnrollments.filter(e => e.consultation_completed).length;
+  const completedAttendance = activeEnrollments.filter(e => e.attendance_complete).length;
+  const completedDocuments = activeEnrollments.filter(e => e.documents_uploaded).length;
+  const completedProgram = activeEnrollments.filter(e => e.program_completed).length;
+  const giveawayEligible = activeEnrollments.filter(e => e.giveaway_eligible).length;
 
   // Calculate average scores
   const preAssessments = assessments.filter(a => a.assessment_type === 'pre');
