@@ -145,6 +145,35 @@ export default function IncubateHerCompletion() {
         </Card>
 
         {allRequiredComplete && (
+          <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-white text-2xl">
+                <Heart className="w-6 h-6 text-[#E5C089]" />
+                Thank You for Completing the IncubateHer Program!
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-slate-200 text-lg">
+                Congratulations! You've completed all required assessments and evaluations. Your dedication to building your funding foundation is truly commendable.
+              </p>
+              <div className="bg-white/10 rounded-xl p-5 border border-[#E5C089]/40">
+                <p className="text-[#E5C089] font-semibold text-base mb-2">📅 Schedule Your One-on-One Consultation</p>
+                <p className="text-slate-200 mb-4">
+                  Please reach out to <strong className="text-white">Dr. Charles Watterson</strong> directly to schedule your personalized one-on-one consultation session.
+                </p>
+                <a
+                  href="mailto:cwatterson@columbusurbanleague.org"
+                  className="inline-flex items-center gap-2 bg-[#E5C089] text-[#143A50] font-semibold px-5 py-3 rounded-lg hover:bg-[#d4ae72] transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  cwatterson@columbusurbanleague.org
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {allRequiredComplete && (
           <Card className="border-l-4 border-l-green-500 bg-gradient-to-r from-green-50 to-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-900">
