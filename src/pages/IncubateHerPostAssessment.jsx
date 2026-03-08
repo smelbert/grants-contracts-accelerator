@@ -168,17 +168,16 @@ export default function IncubateHerPostAssessment() {
     }
   });
 
-  const { data: enrollment } = useQuery({
+  const { data: enrollment, isLoading: enrollmentLoading } = useQuery({
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
-      if (!user?.email || !cohort?.id) return null;
+      if (!user?.email) return null;
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        cohort_id: cohort.id
+        participant_email: user.email
       });
-      return enrollments[0];
+      return enrollments[0] || null;
     },
-    enabled: !!user?.email && !!cohort?.id
+    enabled: !!user?.email
   });
 
   const { data: preAssessment, isLoading: preAssessmentLoading } = useQuery({
