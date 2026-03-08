@@ -181,7 +181,7 @@ export default function IncubateHerPostAssessment() {
     enabled: !!user?.email && !!cohort?.id
   });
 
-  const { data: preAssessment } = useQuery({
+  const { data: preAssessment, isLoading: preAssessmentLoading } = useQuery({
     queryKey: ['pre-assessment', enrollment?.id],
     queryFn: async () => {
       if (!enrollment?.id) return null;
@@ -189,7 +189,7 @@ export default function IncubateHerPostAssessment() {
         enrollment_id: enrollment.id,
         assessment_type: 'pre'
       });
-      return assessments[0];
+      return assessments[0] || null;
     },
     enabled: !!enrollment?.id
   });
