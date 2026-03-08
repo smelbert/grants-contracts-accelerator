@@ -214,7 +214,7 @@ export default function IncubateHerPublic() {
             </p>
             <Button
               size="lg"
-              onClick={scrollToForm}
+              onClick={() => setShowRegistration(true)}
               className="text-lg px-8 py-6"
               style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralDark }}
             >
