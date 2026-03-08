@@ -47,9 +47,10 @@ export default function IncubateHerAdmin() {
   const completedProgram = activeEnrollments.filter(e => e.program_completed).length;
   const giveawayEligible = activeEnrollments.filter(e => e.giveaway_eligible).length;
 
-  // Calculate average scores
-  const preAssessments = assessments.filter(a => a.assessment_type === 'pre');
-  const postAssessments = assessments.filter(a => a.assessment_type === 'post');
+  // Only count assessments for active participants
+  const activeEmails = new Set(activeEnrollments.map(e => e.participant_email));
+  const preAssessments = assessments.filter(a => a.assessment_type === 'pre' && activeEmails.has(a.participant_email));
+  const postAssessments = assessments.filter(a => a.assessment_type === 'post' && activeEmails.has(a.participant_email));
   
   const avgPreScore = preAssessments.length > 0 
     ? Math.round(preAssessments.reduce((sum, a) => sum + (a.total_score || 0), 0) / preAssessments.length)
