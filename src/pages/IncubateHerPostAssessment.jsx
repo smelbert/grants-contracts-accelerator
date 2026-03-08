@@ -172,8 +172,12 @@ export default function IncubateHerPostAssessment() {
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
+      // Get the active cohort first, then find enrollment in it
+      const cohorts = await base44.entities.ProgramCohort.filter({ is_active: true });
+      const activeCohort = cohorts[0];
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email
+        participant_email: user.email,
+        ...(activeCohort?.id ? { cohort_id: activeCohort.id } : {})
       });
       return enrollments[0] || null;
     },
