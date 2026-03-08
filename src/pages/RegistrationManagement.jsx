@@ -465,21 +465,36 @@ export default function RegistrationManagement() {
                             className="hover:bg-slate-50 cursor-pointer"
                             onClick={() => setExpandedRow(expandedRow === sub.id ? null : sub.id)}
                           >
-                            <td className="px-4 py-3">{sub.user_name || '—'}</td>
-                            <td className="px-4 py-3 text-slate-600">{sub.user_email}</td>
-                            <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{sub.entry_point || '—'}</Badge></td>
+                            <td className="px-4 py-3 font-medium">{sub.user_name || '—'}</td>
+                            <td className="px-4 py-3 text-slate-600 text-xs">{sub.user_email}</td>
                             <td className="px-4 py-3">
-                              <Badge className={sub.payment_status === 'paid' ? 'bg-green-100 text-green-800' : sub.payment_status === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}>
-                                {sub.payment_status || 'n/a'}
-                              </Badge>
+                              <Badge variant="outline" className="text-xs">{sub.registration_data?.program || sub.entry_point || '—'}</Badge>
                             </td>
                             <td className="px-4 py-3">
-                              {sub.survey_completed ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Clock className="w-4 h-4 text-slate-300" />}
+                              {sub.access_granted
+                                ? <Badge className="bg-emerald-100 text-emerald-800 text-xs">Approved</Badge>
+                                : <Badge className="bg-amber-100 text-amber-800 text-xs">Pending Review</Badge>
+                              }
                             </td>
                             <td className="px-4 py-3 text-slate-500 text-xs">{new Date(sub.created_date).toLocaleDateString()}</td>
                             <td className="px-4 py-3 text-xs text-slate-500">
                               {(sub.attachments || []).length} file(s)
                               {expandedRow === sub.id ? <ChevronUp className="w-3 h-3 inline ml-1" /> : <ChevronDown className="w-3 h-3 inline ml-1" />}
+                            </td>
+                            <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                              {!sub.access_granted && (
+                                <Button
+                                  size="sm"
+                                  className="bg-[#143A50] hover:bg-[#1E4F58] text-white text-xs"
+                                  onClick={() => approveMutation.mutate(sub)}
+                                  disabled={approveMutation.isPending}
+                                >
+                                  {approveMutation.isPending ? 'Approving...' : 'Approve & Enroll'}
+                                </Button>
+                              )}
+                              {sub.access_granted && (
+                                <span className="text-xs text-emerald-600 font-medium">✓ Enrolled</span>
+                              )}
                             </td>
                           </tr>
                           {expandedRow === sub.id && (
