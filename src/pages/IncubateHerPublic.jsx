@@ -89,8 +89,6 @@ export default function IncubateHerPublic() {
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
-
-      <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <Badge className="mb-4" style={{ backgroundColor: BRAND_COLORS.culRed, color: BRAND_COLORS.neutralLight }}>
