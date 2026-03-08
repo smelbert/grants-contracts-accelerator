@@ -121,50 +121,25 @@ export default function IncubateHerAdmin() {
             <CardDescription>Track participant progress through program requirements</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <FileText className="w-10 h-10 mx-auto mb-2" style={{ color: BRAND_COLORS.eisNavy }} />
-                <p className="text-3xl font-bold" style={{ color: BRAND_COLORS.neutralDark }}>
-                  {completedPreAssessment}
-                </p>
-                <p className="text-sm text-slate-600">Pre-Assessments</p>
-                <Badge className="mt-2" style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                  {totalParticipants > 0 ? Math.round((completedPreAssessment / totalParticipants) * 100) : 0}%
-                </Badge>
-              </div>
-
-              <div className="text-center">
-                <Calendar className="w-10 h-10 mx-auto mb-2" style={{ color: BRAND_COLORS.eisNavy }} />
-                <p className="text-3xl font-bold" style={{ color: BRAND_COLORS.neutralDark }}>
-                  {completedConsultations}
-                </p>
-                <p className="text-sm text-slate-600">1:1 Consultations</p>
-                <Badge className="mt-2" style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                  {totalParticipants > 0 ? Math.round((completedConsultations / totalParticipants) * 100) : 0}%
-                </Badge>
-              </div>
-
-              <div className="text-center">
-                <FileText className="w-10 h-10 mx-auto mb-2" style={{ color: BRAND_COLORS.eisNavy }} />
-                <p className="text-3xl font-bold" style={{ color: BRAND_COLORS.neutralDark }}>
-                  {completedPostAssessment}
-                </p>
-                <p className="text-sm text-slate-600">Post-Assessments</p>
-                <Badge className="mt-2" style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                  {totalParticipants > 0 ? Math.round((completedPostAssessment / totalParticipants) * 100) : 0}%
-                </Badge>
-              </div>
-
-              <div className="text-center">
-                <CheckCircle2 className="w-10 h-10 mx-auto mb-2" style={{ color: BRAND_COLORS.eisNavy }} />
-                <p className="text-3xl font-bold" style={{ color: BRAND_COLORS.neutralDark }}>
-                  {completedProgram}
-                </p>
-                <p className="text-sm text-slate-600">Completed Program</p>
-                <Badge className="mt-2" style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                  {totalParticipants > 0 ? Math.round((completedProgram / totalParticipants) * 100) : 0}%
-                </Badge>
-              </div>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {[
+                { label: 'Pre-Assessments', count: completedPreAssessment, icon: FileText },
+                { label: 'Attendance', count: completedAttendance, icon: Calendar },
+                { label: '1:1 Consultations', count: completedConsultations, icon: Calendar },
+                { label: 'Documents', count: completedDocuments, icon: FileText },
+                { label: 'Post-Assessments', count: completedPostAssessment, icon: CheckCircle2 },
+              ].map(({ label, count, icon: Icon }) => (
+                <div key={label} className="text-center p-4 rounded-lg bg-slate-50">
+                  <Icon className="w-8 h-8 mx-auto mb-2" style={{ color: BRAND_COLORS.eisNavy }} />
+                  <p className="text-3xl font-bold" style={{ color: BRAND_COLORS.neutralDark }}>
+                    {count}
+                  </p>
+                  <p className="text-xs text-slate-600 mb-2">{label}</p>
+                  <Badge className="text-xs" style={{ backgroundColor: BRAND_COLORS.eisGold }}>
+                    {totalParticipants > 0 ? Math.round((count / totalParticipants) * 100) : 0}%
+                  </Badge>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
