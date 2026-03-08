@@ -517,7 +517,7 @@ export default function RegistrationManagement() {
                         </React.Fragment>
                       ))}
                       {filteredSubmissions.length === 0 && (
-                        <tr><td colSpan={7} className="px-4 py-12 text-center text-slate-500">No submissions found</td></tr>
+                        <tr><td colSpan={8} className="px-4 py-12 text-center text-slate-500">No applications found</td></tr>
                       )}
                     </tbody>
                   </table>
