@@ -345,7 +345,24 @@ export default function IncubateHerPostAssessment() {
     }
   };
 
-  if (!preAssessment) {
+  // Still loading — don't gate yet
+  const isStillLoading = !user || enrollmentLoading || (!!enrollment?.id && preAssessmentLoading);
+
+  // Pre-assessment is missing only once we've confirmed loading is done AND enrollment marks it incomplete
+  const preAssessmentMissing = !isStillLoading && !preAssessment && !enrollment?.pre_assessment_completed;
+
+  if (isStillLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
+        <div className="text-center">
+          <div className="inline-block w-8 h-8 border-4 border-[#143A50] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-slate-600">Loading your assessment...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (preAssessmentMissing) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
         <CoBrandedHeader title="Post-Assessment" />
