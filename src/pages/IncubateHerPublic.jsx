@@ -40,16 +40,15 @@ export default function IncubateHerPublic() {
           <p className="text-xl mb-8 max-w-3xl mx-auto" style={{ color: BRAND_COLORS.eisNavy }}>
             An intensive program helping entrepreneurs—especially women of color building nonprofit and for-profit businesses—understand what funders need to see before they say yes.
           </p>
-          <a href="https://form.jotform.com/260497242186058" target="_blank" rel="noopener noreferrer">
-            <Button
-              size="lg"
-              className="text-white text-lg px-8 py-6"
-              style={{ backgroundColor: BRAND_COLORS.eisGold }}
-            >
-              Enroll Now – Free Program
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </a>
+          <Button
+            size="lg"
+            onClick={scrollToForm}
+            className="text-white text-lg px-8 py-6"
+            style={{ backgroundColor: BRAND_COLORS.eisGold }}
+          >
+            Apply Now – Free Program
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
         </div>
 
         {/* Stats */}
