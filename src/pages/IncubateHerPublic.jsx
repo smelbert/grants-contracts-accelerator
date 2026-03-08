@@ -5,28 +5,90 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
+import { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import ProgramRegistrationForm from '@/components/incubateher/ProgramRegistrationForm';
-import { CheckCircle2, Users, Target, Calendar, Award, ArrowRight, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, Users, Target, Calendar, Award, ArrowRight, ArrowLeft, Menu, X } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 
 export default function IncubateHerPublic() {
+  const [showRegistration, setShowRegistration] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
 
-  const scrollToForm = () => {
-    document.getElementById('registration-form')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  if (showRegistration) {
+    return (
+      <div className="min-h-screen bg-white">
+        {/* Nav */}
+        <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link to={createPageUrl('PublicHome')}>
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" alt="EIS" className="h-12 w-auto" />
+            </Link>
+            <Button variant="outline" onClick={() => setShowRegistration(false)} className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Back to IncubateHer
+            </Button>
+          </div>
+        </nav>
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          <div className="text-center mb-8">
+            <Badge style={{ backgroundColor: BRAND_COLORS.culRed, color: BRAND_COLORS.neutralLight }}>
+              Now Accepting Applications
+            </Badge>
+            <h1 className="text-3xl font-bold mt-4 mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+              Apply for IncubateHer
+            </h1>
+            <p className="text-slate-600">Complete the form below to register for the program.</p>
+          </div>
+          <ProgramRegistrationForm />
+        </div>
+        <CoBrandedFooter />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-      <CoBrandedHeader 
-        title="IncubateHer – Funding Readiness"
-        subtitle="Preparing for Grants & Contracts"
-      />
+    <div className="min-h-screen bg-white">
+      {/* Main Site Navigation */}
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link to={createPageUrl('PublicHome')}>
+              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" alt="Elbert Innovative Solutions" className="h-12 w-auto" />
+            </Link>
+            <div className="hidden md:flex items-center gap-8">
+              <Link to={createPageUrl('PublicHome')} className="text-slate-700 hover:text-[#143A50] font-medium">Home</Link>
+              <Link to={createPageUrl('AboutEIS')} className="text-slate-700 hover:text-[#143A50] font-medium">About</Link>
+              <Link to={createPageUrl('Blog')} className="text-slate-700 hover:text-[#143A50] font-medium">Blog</Link>
+              <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] hover:text-[#9A1826] font-semibold">IncubateHer</Link>
+              <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
+              <Link to={createPageUrl('Register')}>
+                <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
+              </Link>
+            </div>
+            <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-slate-100 pt-4 flex flex-col gap-4">
+              <Link to={createPageUrl('PublicHome')} className="text-slate-700 font-medium">Home</Link>
+              <Link to={createPageUrl('AboutEIS')} className="text-slate-700 font-medium">About</Link>
+              <Link to={createPageUrl('Blog')} className="text-slate-700 font-medium">Blog</Link>
+              <Link to={createPageUrl('IncubateHerPublic')} className="text-[#B21F2D] font-semibold">IncubateHer</Link>
+              <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
+              <Link to={createPageUrl('Register')}><Button className="bg-[#143A50] w-full">Get Started</Button></Link>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      <div className="max-w-6xl mx-auto px-6 py-12">
 
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Hero Section */}
