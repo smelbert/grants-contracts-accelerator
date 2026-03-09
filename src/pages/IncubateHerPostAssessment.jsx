@@ -426,8 +426,8 @@ export default function IncubateHerPostAssessment() {
     );
   }
 
-  if (existingPostAssessment && !submitted) {
-    const delta = existingPostAssessment.total_score - preAssessment.total_score;
+  if (existingPostAssessment && !existingPostAssessment.is_draft && !submitted) {
+    const delta = existingPostAssessment.total_score - (preAssessment?.total_score || 0);
     
     return (
       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
