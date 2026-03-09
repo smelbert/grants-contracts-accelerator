@@ -256,6 +256,15 @@ export default function IncubateHerPostAssessment() {
     }
   });
 
+  // Load saved draft responses from DB when assessment loads
+  React.useEffect(() => {
+    if (existingPostAssessment?.is_draft && existingPostAssessment?.responses && Object.keys(responses).length === 0) {
+      setResponses(existingPostAssessment.responses);
+      if (existingPostAssessment.next_steps) setNextSteps(existingPostAssessment.next_steps);
+      toast('Draft loaded — pick up where you left off.', { icon: '💾', duration: 4000 });
+    }
+  }, [existingPostAssessment]);
+
   const handleResponseChange = (questionId, value) => {
     setResponses(prev => {
       const next = { ...prev, [questionId]: value };
