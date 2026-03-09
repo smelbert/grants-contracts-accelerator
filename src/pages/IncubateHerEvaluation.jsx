@@ -82,8 +82,7 @@ export default function IncubateHerEvaluation() {
       
       if (enrollment) {
         await base44.entities.ProgramEnrollment.update(enrollment.id, {
-          evaluation_completed: true,
-          evaluation_date: new Date().toISOString()
+          program_evaluation_completed: true
         });
       }
     },
