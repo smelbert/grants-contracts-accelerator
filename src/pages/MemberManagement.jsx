@@ -43,22 +43,22 @@ export default function MemberManagement() {
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['allUsers'],
-    queryFn: () => base44.asServiceRole.entities.User.list('-created_date')
+    queryFn: () => base44.entities.User.list('-created_date')
   });
 
   const { data: enrollments = [] } = useQuery({
     queryKey: ['all-enrollments-member'],
-    queryFn: () => base44.asServiceRole.entities.ProgramEnrollment.filter({ role: 'participant' })
+    queryFn: () => base44.entities.ProgramEnrollment.filter({ role: 'participant' })
   });
 
   const { data: allAccessLevels = [] } = useQuery({
     queryKey: ['all-access-levels'],
-    queryFn: () => base44.asServiceRole.entities.UserAccessLevel.list()
+    queryFn: () => base44.entities.UserAccessLevel.list()
   });
 
   const { data: organizations = [] } = useQuery({
     queryKey: ['all-organizations-member'],
-    queryFn: () => base44.asServiceRole.entities.Organization.list()
+    queryFn: () => base44.entities.Organization.list()
   });
 
   const updateRoleMutation = useMutation({
