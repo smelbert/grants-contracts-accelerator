@@ -210,6 +210,29 @@ export default function IncubateHerPostAssessment() {
     enabled: !!enrollment?.id
   });
 
+  const saveDraftMutation = useMutation({
+    mutationFn: async () => {
+      if (!enrollment) return;
+      const draftData = {
+        enrollment_id: enrollment.id,
+        participant_email: user.email,
+        assessment_type: 'post',
+        responses: responses,
+        next_steps: nextSteps,
+        is_draft: true
+      };
+      if (existingPostAssessment) {
+        await base44.entities.ProgramAssessment.update(existingPostAssessment.id, draftData);
+      } else {
+        await base44.entities.ProgramAssessment.create(draftData);
+      }
+      queryClient.invalidateQueries({ queryKey: ['post-assessment'] });
+    },
+    onSuccess: () => {
+      toast.success('Draft saved! You can come back and finish later.');
+    }
+  });
+
   const submitAssessmentMutation = useMutation({
     mutationFn: async (data) => {
       if (existingPostAssessment) {

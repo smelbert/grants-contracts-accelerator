@@ -286,6 +286,28 @@ export default function IncubateHerPreAssessment() {
     enabled: !!enrollment?.id
   });
 
+  const saveDraftMutation = useMutation({
+    mutationFn: async () => {
+      if (!enrollment) return;
+      const draftData = {
+        enrollment_id: enrollment.id,
+        participant_email: user.email,
+        assessment_type: 'pre',
+        responses: responses,
+        is_draft: true
+      };
+      if (existingAssessment) {
+        await base44.entities.ProgramAssessment.update(existingAssessment.id, draftData);
+      } else {
+        await base44.entities.ProgramAssessment.create(draftData);
+      }
+      queryClient.invalidateQueries({ queryKey: ['pre-assessment'] });
+    },
+    onSuccess: () => {
+      toast.success('Draft saved! You can come back and finish later.');
+    }
+  });
+
   const submitAssessmentMutation = useMutation({
     mutationFn: async (data) => {
       if (existingAssessment) {
