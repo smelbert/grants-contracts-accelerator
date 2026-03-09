@@ -218,6 +218,7 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
+import GrantGlossary from './pages/GrantGlossary';
 import __Layout from './Layout.jsx';
 
 
@@ -393,6 +394,7 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
+    "GrantGlossary": GrantGlossary,
 }
 
 export const pagesConfig = {
