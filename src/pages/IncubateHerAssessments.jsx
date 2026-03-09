@@ -162,6 +162,12 @@ export default function IncubateHerAssessments() {
                               Completed
                             </Badge>
                           )}
+                          {assessment.isInProgress && !assessment.isCompleted && (
+                            <Badge className="bg-amber-100 text-amber-800">
+                              <PenLine className="w-3 h-3 mr-1" />
+                              In Progress — Draft Saved
+                            </Badge>
+                          )}
                           {assessment.isLocked && (
                             <Badge className="bg-slate-100 text-slate-800">
                               <Lock className="w-3 h-3 mr-1" />
