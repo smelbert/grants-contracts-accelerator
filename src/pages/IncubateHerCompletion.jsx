@@ -84,7 +84,7 @@ export default function IncubateHerCompletion() {
       id: 'program_evaluation',
       title: 'Program Evaluation',
       description: 'Complete the program evaluation survey',
-      completed: enrollment?.program_evaluation_completed || false,
+      completed: evaluationCompleted,
       selfSelect: false,
       link: '/IncubateHerEvaluation'
     }
