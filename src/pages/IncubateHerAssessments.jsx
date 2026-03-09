@@ -27,6 +27,21 @@ export default function IncubateHerAssessments() {
     enabled: !!user?.email
   });
 
+  const { data: assessmentRecords = [] } = useQuery({
+    queryKey: ['all-assessments', enrollment?.id],
+    queryFn: () => base44.entities.ProgramAssessment.filter({ enrollment_id: enrollment.id }),
+    enabled: !!enrollment?.id
+  });
+
+  const preRecord = assessmentRecords.find(a => a.assessment_type === 'pre');
+  const postRecord = assessmentRecords.find(a => a.assessment_type === 'post');
+  // Evaluation is stored as post type with _form_type = evaluation, or check enrollment flag
+  const evaluationRecord = assessmentRecords.find(a => a._form_type === 'evaluation' || a.assessment_type === 'evaluation');
+  const evaluationCompleted = !!evaluationRecord && !evaluationRecord.is_draft;
+
+  const preInProgress = preRecord?.is_draft && !enrollment?.pre_assessment_completed;
+  const postInProgress = postRecord?.is_draft && !enrollment?.post_assessment_completed;
+
   // Check if readiness assessment is unlocked (after March 5, 2026)
   const currentDate = new Date();
   const unlockDate = new Date('2026-03-05T19:30:00'); // After Thursday session ends
