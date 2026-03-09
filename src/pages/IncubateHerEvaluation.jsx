@@ -36,27 +36,16 @@ export default function IncubateHerEvaluation() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: cohort } = useQuery({
-    queryKey: ['incubateher-cohort'],
-    queryFn: async () => {
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
-      });
-      return cohorts[0];
-    }
-  });
-
   const { data: enrollment } = useQuery({
     queryKey: ['enrollment', user?.email],
     queryFn: async () => {
-      if (!user?.email || !cohort?.id) return null;
+      if (!user?.email) return null;
       const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email,
-        cohort_id: cohort.id
+        participant_email: user.email
       });
-      return enrollments[0];
+      return enrollments.find(e => e.cohort_id) || enrollments[0] || null;
     },
-    enabled: !!user?.email && !!cohort?.id
+    enabled: !!user?.email
   });
 
   const { data: existingEvaluation } = useQuery({
