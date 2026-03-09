@@ -477,7 +477,7 @@ export default function IncubateHerPreAssessment() {
     return { level: 'Building', color: BRAND_COLORS.culRed, message: 'Perfect timing to build your funding readiness!' };
   };
 
-  if (existingAssessment && !submitted) {
+  if (existingAssessment && !existingAssessment.is_draft && !submitted) {
     const profile = getReadinessProfile(existingAssessment.total_score);
     
     return (
