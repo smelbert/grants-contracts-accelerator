@@ -194,11 +194,11 @@ export default function IncubateHerCompletion() {
                   Please reach out to <strong className="text-white">Dr. Charles Watterson</strong> directly to schedule your personalized one-on-one consultation session.
                 </p>
                 <a
-                  href="mailto:cwatterson@columbusurbanleague.org"
+                  href="mailto:charles@elbertinnovativesolutions.org"
                   className="inline-flex items-center gap-2 bg-[#E5C089] text-[#143A50] font-semibold px-5 py-3 rounded-lg hover:bg-[#d4ae72] transition-colors"
                 >
                   <Mail className="w-4 h-4" />
-                  cwatterson@columbusurbanleague.org
+                  charles@elbertinnovativesolutions.org
                 </a>
               </div>
             </CardContent>
