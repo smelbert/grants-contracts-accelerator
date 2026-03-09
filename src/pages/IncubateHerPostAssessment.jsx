@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -257,7 +257,7 @@ export default function IncubateHerPostAssessment() {
   });
 
   // Load saved draft responses from DB when assessment loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (existingPostAssessment?.is_draft && existingPostAssessment?.responses && Object.keys(responses).length === 0) {
       setResponses(existingPostAssessment.responses);
       if (existingPostAssessment.next_steps) setNextSteps(existingPostAssessment.next_steps);
