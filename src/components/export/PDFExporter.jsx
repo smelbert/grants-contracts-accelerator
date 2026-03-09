@@ -259,6 +259,13 @@ export default function PDFExporter({ type = 'document', document, workbookData,
                         </div>
                       </div>
 
+                      {/* Narrative content for handout/tips/consultation pages */}
+                      {page.content && (
+                        <div style={{ fontSize: 11, color: '#374151', lineHeight: 1.7, marginBottom: page.fields ? 12 : 0 }}
+                          dangerouslySetInnerHTML={{ __html: page.content }}
+                        />
+                      )}
+
                       {/* Fields */}
                       {page.fields && page.fields.map(field => {
                         const val = resp[field.id];
@@ -273,8 +280,8 @@ export default function PDFExporter({ type = 'document', document, workbookData,
                         );
                       })}
 
-                      {/* No responses message */}
-                      {page.fields && !page.fields.some(f => resp[f.id]) && (
+                      {/* No responses message — only for worksheet pages with no content block */}
+                      {page.fields && !page.content && !page.fields.some(f => resp[f.id]) && (
                         <div style={{ fontSize: 11, color: '#9ca3af', fontStyle: 'italic', paddingLeft: 12 }}>No responses recorded for this section.</div>
                       )}
                     </div>
