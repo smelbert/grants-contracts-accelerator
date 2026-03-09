@@ -88,6 +88,18 @@ export default function IncubateHerAssessments() {
       />
 
       <div className="max-w-5xl mx-auto p-6 space-y-6">
+
+        {/* Deadline Banner */}
+        <div className="bg-red-600 text-white rounded-xl p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-100" />
+          <div>
+            <p className="font-bold text-base">⏰ Assessment Deadline: March 10, 2026 at 5:00 PM</p>
+            <p className="text-red-100 text-sm mt-1">
+              All pre-assessments, post-assessments, and program evaluations must be completed by <strong>March 10th at 5:00 PM</strong>. Please do not wait — submit yours today!
+            </p>
+          </div>
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
