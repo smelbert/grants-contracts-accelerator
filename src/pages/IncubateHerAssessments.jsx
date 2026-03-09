@@ -197,7 +197,7 @@ export default function IncubateHerAssessments() {
                       ) : (
                         <Link to={createPageUrl(assessment.page)}>
                           <Button className={assessment.color}>
-                            {assessment.isCompleted ? 'Review' : 'Start'} Assessment
+                            {assessment.isCompleted ? 'Review' : assessment.isInProgress ? 'Continue' : 'Start'} Assessment
                           </Button>
                         </Link>
                       )}
