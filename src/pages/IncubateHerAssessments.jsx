@@ -56,6 +56,7 @@ export default function IncubateHerAssessments() {
       page: 'IncubateHerPreAssessment',
       color: 'bg-blue-600',
       isCompleted: enrollment?.pre_assessment_completed,
+      isInProgress: preInProgress,
       isLocked: false,
       availableNow: true
     },
@@ -67,6 +68,7 @@ export default function IncubateHerAssessments() {
       page: 'FundingReadinessAssessment',
       color: 'bg-[#143A50]',
       isCompleted: false,
+      isInProgress: false,
       isLocked: !isReadinessUnlocked,
       availableNow: isReadinessUnlocked,
       unlockDate: 'March 5, 2026 at 7:30 PM'
@@ -79,6 +81,7 @@ export default function IncubateHerAssessments() {
       page: 'IncubateHerPostAssessment',
       color: 'bg-green-600',
       isCompleted: enrollment?.post_assessment_completed,
+      isInProgress: postInProgress,
       isLocked: false,
       availableNow: true
     },
@@ -89,7 +92,8 @@ export default function IncubateHerAssessments() {
       icon: MessageSquare,
       page: 'IncubateHerEvaluation',
       color: 'bg-purple-600',
-      isCompleted: false,
+      isCompleted: evaluationCompleted,
+      isInProgress: false,
       isLocked: false,
       availableNow: true
     }
