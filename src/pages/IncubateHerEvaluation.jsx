@@ -53,12 +53,10 @@ export default function IncubateHerEvaluation() {
     queryFn: async () => {
       if (!enrollment?.id) return null;
       const evals = await base44.entities.ProgramAssessment.filter({
-        enrollment_id: enrollment.id,
-        assessment_type: 'post'
+        enrollment_id: enrollment.id
       });
-      // Filter to only program evaluations (not post-assessments)
-      const evaluations = evals.filter(e => e.responses?._form_type === 'program_evaluation');
-      return evaluations[0] || null;
+      // Find program evaluation record (by _form_type tag or assessment_type)
+      return evals.find(e => e._form_type === 'evaluation' || e.responses?._form_type === 'program_evaluation') || null;
     },
     enabled: !!enrollment?.id
   });
