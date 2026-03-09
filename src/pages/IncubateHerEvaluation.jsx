@@ -139,7 +139,8 @@ export default function IncubateHerEvaluation() {
     await submitEvaluationMutation.mutateAsync({
       enrollment_id: enrollment.id,
       participant_email: user.email,
-      assessment_type: 'post',
+      assessment_type: 'evaluation',
+      _form_type: 'evaluation',
       responses: { ...responses, _form_type: 'program_evaluation' },
       total_score: parseInt(responses.overall_rating) * 10 || 0
     });
