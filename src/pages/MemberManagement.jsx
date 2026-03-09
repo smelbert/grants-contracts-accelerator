@@ -63,7 +63,7 @@ export default function MemberManagement() {
 
   const updateRoleMutation = useMutation({
     mutationFn: async ({ userId, updates }) => {
-      return await base44.asServiceRole.entities.User.update(userId, updates);
+      return await base44.entities.User.update(userId, updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['allUsers']);
