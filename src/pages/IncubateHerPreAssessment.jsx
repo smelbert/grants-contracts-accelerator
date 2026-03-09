@@ -261,6 +261,14 @@ export default function IncubateHerPreAssessment() {
     enabled: !!user?.email
   });
 
+  // Load saved draft responses from DB when assessment loads (overrides localStorage)
+  React.useEffect(() => {
+    if (existingAssessment?.is_draft && existingAssessment?.responses && Object.keys(responses).length === 0) {
+      setResponses(existingAssessment.responses);
+      toast('Draft loaded — pick up where you left off.', { icon: '💾', duration: 4000 });
+    }
+  }, [existingAssessment]);
+
   // Pre-fill responses from JotForm data when enrollment loads
   React.useEffect(() => {
     if (enrollment?.jotform_data && !prefilled && Object.keys(responses).length === 0) {
