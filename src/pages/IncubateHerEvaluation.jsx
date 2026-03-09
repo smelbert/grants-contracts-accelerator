@@ -143,7 +143,10 @@ export default function IncubateHerEvaluation() {
   };
 
   const handleSubmit = async () => {
-    if (!enrollment) return;
+    if (!enrollment) {
+      toast.error('Unable to find your enrollment. Please refresh the page and try again.');
+      return;
+    }
     localStorage.removeItem(AUTOSAVE_KEY);
     await submitEvaluationMutation.mutateAsync({
       enrollment_id: enrollment.id,
