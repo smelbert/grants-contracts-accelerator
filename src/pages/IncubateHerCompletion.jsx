@@ -121,6 +121,29 @@ export default function IncubateHerCompletion() {
       />
 
       <div className="max-w-4xl mx-auto p-6 space-y-6">
+
+        {/* Deadline Banners */}
+        <div className="space-y-3">
+          <div className="bg-red-600 text-white rounded-xl p-4 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-100" />
+            <div>
+              <p className="font-bold text-base">⏰ Assessment Deadline: March 10, 2026 at 5:00 PM</p>
+              <p className="text-red-100 text-sm mt-1">
+                Pre-assessments, post-assessments, and program evaluations must be submitted by <strong>March 10th at 5:00 PM</strong>.
+              </p>
+            </div>
+          </div>
+          <div className="bg-amber-600 text-white rounded-xl p-4 flex items-start gap-3">
+            <Clock className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-100" />
+            <div>
+              <p className="font-bold text-base">📅 Consultation Request Deadline: March 16, 2026 at Midnight</p>
+              <p className="text-amber-100 text-sm mt-1">
+                All requests for one-on-one consultations must be submitted by <strong>March 16th at midnight</strong>. Once scheduled, consultations may take place anytime through <strong>May 2026</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Overall required progress */}
         <Card className="border-l-4 border-l-[#143A50]">
           <CardHeader>
