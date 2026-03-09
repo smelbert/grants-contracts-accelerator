@@ -40,6 +40,15 @@ export default function IncubateHerCompletion() {
     enabled: !!user?.email
   });
 
+  const { data: assessmentRecords = [] } = useQuery({
+    queryKey: ['all-assessments-completion', enrollment?.id],
+    queryFn: () => base44.entities.ProgramAssessment.filter({ enrollment_id: enrollment.id }),
+    enabled: !!enrollment?.id
+  });
+
+  const evaluationRecord = assessmentRecords.find(a => a._form_type === 'evaluation' || a.assessment_type === 'evaluation');
+  const evaluationCompleted = !!evaluationRecord && !evaluationRecord.is_draft;
+
   const updateEnrollmentMutation = useMutation({
     mutationFn: async (updates) => {
       await base44.entities.ProgramEnrollment.update(enrollment.id, updates);
