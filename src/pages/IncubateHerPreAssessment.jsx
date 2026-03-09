@@ -721,15 +721,26 @@ export default function IncubateHerPreAssessment() {
           </CardContent>
         </Card>
 
-        <Button
-          onClick={handleSubmit}
-          size="lg"
-          className="w-full text-white text-lg"
-          style={{ backgroundColor: BRAND_COLORS.eisGold }}
-          disabled={Object.keys(responses).length < 8}
-        >
-          Submit Pre-Assessment
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={() => saveDraftMutation.mutate()}
+            size="lg"
+            variant="outline"
+            className="flex-1 text-lg"
+            disabled={Object.keys(responses).length === 0 || saveDraftMutation.isPending}
+          >
+            {saveDraftMutation.isPending ? 'Saving...' : '💾 Save & Come Back Later'}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            size="lg"
+            className="flex-1 text-white text-lg"
+            style={{ backgroundColor: BRAND_COLORS.eisGold }}
+            disabled={Object.keys(responses).length < 8 || submitAssessmentMutation.isPending}
+          >
+            {submitAssessmentMutation.isPending ? 'Submitting...' : 'Submit Pre-Assessment'}
+          </Button>
+        </div>
       </div>
 
       <CoBrandedFooter />
