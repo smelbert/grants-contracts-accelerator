@@ -211,17 +211,12 @@ export default function IncubateHerEvaluation() {
     );
   }
 
-  const hasPostSupport = Array.isArray(responses.post_support) ? responses.post_support.length > 0 : !!responses.post_support;
-  const hasImplementationChallenges = Array.isArray(responses.implementation_challenges) ? responses.implementation_challenges.length > 0 : !!responses.implementation_challenges;
-  const hasOngoingTopics = Array.isArray(responses.ongoing_topics) ? responses.ongoing_topics.length > 0 : !!responses.ongoing_topics;
-
+  // Only require radio button fields — checkboxes are optional (empty = valid response)
   const isComplete = responses.overall_rating && responses.content_quality && 
                      responses.facilitation_effectiveness && responses.materials_usefulness &&
                      responses.workbook_quality && responses.schedule_format && 
                      responses.consultation_experience && responses.would_recommend &&
-                     hasPostSupport && responses.participation_frequency &&
-                     hasImplementationChallenges && hasOngoingTopics &&
-                     responses.community_interest;
+                     responses.participation_frequency && responses.community_interest;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
