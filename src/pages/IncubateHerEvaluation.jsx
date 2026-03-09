@@ -68,8 +68,8 @@ export default function IncubateHerEvaluation() {
         assessment_type: 'post'
       });
       // Filter to only program evaluations (not post-assessments)
-      return evals.filter(e => e.responses?._form_type === 'program_evaluation');
-      return evals[0];
+      const evaluations = evals.filter(e => e.responses?._form_type === 'program_evaluation');
+      return evaluations[0] || null;
     },
     enabled: !!enrollment?.id
   });
