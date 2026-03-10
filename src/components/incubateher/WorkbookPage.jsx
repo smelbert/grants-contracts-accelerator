@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -7,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp, Sparkles, Users } from 'lucide-react';
+import { FileText, Lightbulb, Target, CheckSquare, AlertCircle, TrendingUp, Sparkles, Users, CheckCircle2 } from 'lucide-react';
 import PersonalizedGuidance from './PersonalizedGuidance';
 import AIWorkbookGenerator from '../workbook/AIWorkbookGenerator';
 import AIFeedbackPanel from '../workbook/AIFeedbackPanel';
