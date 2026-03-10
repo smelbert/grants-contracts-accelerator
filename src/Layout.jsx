@@ -608,14 +608,14 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Global Top Bar - Desktop */}
-      <div className="hidden lg:block lg:pl-64 sticky top-0 z-30 bg-white border-b border-slate-200">
+      <div className="hidden lg:block lg:pl-64 sticky top-0 z-30 bg-white border-b border-slate-100">
         <div className="flex items-center justify-end gap-4 px-6 py-3">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="w-5 h-5 text-slate-600" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+          <Button variant="ghost" size="icon" className="relative text-[#143A50] hover:bg-[#143A50]/10">
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-[#AC1A5B] rounded-full"></span>
           </Button>
-          <Button variant="ghost" size="icon">
-            <HelpCircle className="w-5 h-5 text-slate-600" />
+          <Button variant="ghost" size="icon" className="text-[#143A50] hover:bg-[#143A50]/10">
+            <HelpCircle className="w-5 h-5" />
           </Button>
         </div>
       </div>
