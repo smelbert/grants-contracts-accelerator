@@ -86,6 +86,7 @@ import CommunityModerationDashboard from './pages/CommunityModerationDashboard';
 import ConsultantOnboarding from './pages/ConsultantOnboarding';
 import DeveloperTools from './pages/DeveloperTools';
 import Discussions from './pages/Discussions';
+import DocumentAssembly from './pages/DocumentAssembly';
 import DocumentTemplateEditor from './pages/DocumentTemplateEditor';
 import Documents from './pages/Documents';
 import DonorStewardshipPlanner from './pages/DonorStewardshipPlanner';
@@ -221,7 +222,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import DocumentAssembly from './pages/DocumentAssembly';
 import __Layout from './Layout.jsx';
 
 
@@ -265,6 +265,7 @@ export const PAGES = {
     "ConsultantOnboarding": ConsultantOnboarding,
     "DeveloperTools": DeveloperTools,
     "Discussions": Discussions,
+    "DocumentAssembly": DocumentAssembly,
     "DocumentTemplateEditor": DocumentTemplateEditor,
     "Documents": Documents,
     "DonorStewardshipPlanner": DonorStewardshipPlanner,
@@ -400,7 +401,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "DocumentAssembly": DocumentAssembly,
 }
 
 export const pagesConfig = {

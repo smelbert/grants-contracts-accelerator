@@ -72,7 +72,7 @@ export default function IncubateHerGiveaway() {
         additional_notes: selfReport.additional_notes,
         pre_assessment_completed: enrollment?.pre_assessment_completed || false,
         post_assessment_completed: enrollment?.post_assessment_completed || false,
-        program_evaluation_completed: enrollment?.evaluation_completed || false,
+        program_evaluation_completed: enrollment?.program_evaluation_completed || false,
         applied_date: new Date().toISOString(),
         status: 'pending_review'
       });
@@ -97,7 +97,7 @@ export default function IncubateHerGiveaway() {
   const requiredItems = [
     { label: 'Pre-Assessment', met: enrollment?.pre_assessment_completed || false },
     { label: 'Post-Assessment', met: enrollment?.post_assessment_completed || false },
-    { label: 'Program Evaluation', met: enrollment?.evaluation_completed || false },
+    { label: 'Program Evaluation', met: enrollment?.program_evaluation_completed || false },
   ];
   const allRequiredMet = requiredItems.every(r => r.met);
 
