@@ -100,6 +100,7 @@ import FunderResearch from './pages/FunderResearch';
 import FundingLane from './pages/FundingLane';
 import FundingReadinessAssessment from './pages/FundingReadinessAssessment';
 import GrantDashboard from './pages/GrantDashboard';
+import GrantGlossary from './pages/GrantGlossary';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
@@ -154,8 +155,8 @@ import LiveStreams from './pages/LiveStreams';
 import MemberManagement from './pages/MemberManagement';
 import MentorDashboard from './pages/MentorDashboard';
 import MentorManagement from './pages/MentorManagement';
-import MyClassroom from './pages/MyClassroom';
 import Pricing from './pages/Pricing';
+import MyClassroom from './pages/MyClassroom';
 import MyMentorship from './pages/MyMentorship';
 import MyProfile from './pages/MyProfile';
 import Notifications from './pages/Notifications';
@@ -218,7 +219,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import GrantGlossary from './pages/GrantGlossary';
 import __Layout from './Layout.jsx';
 
 
@@ -276,6 +276,7 @@ export const PAGES = {
     "FundingLane": FundingLane,
     "FundingReadinessAssessment": FundingReadinessAssessment,
     "GrantDashboard": GrantDashboard,
+    "GrantGlossary": GrantGlossary,
     "GrantReadinessAssessment": GrantReadinessAssessment,
     "GrantReadinessIntensive": GrantReadinessIntensive,
     "GrantSubmission": GrantSubmission,
@@ -330,8 +331,8 @@ export const PAGES = {
     "MemberManagement": MemberManagement,
     "MentorDashboard": MentorDashboard,
     "MentorManagement": MentorManagement,
-    "MyClassroom": MyClassroom,
     "Pricing": Pricing,
+    "MyClassroom": MyClassroom,
     "MyMentorship": MyMentorship,
     "MyProfile": MyProfile,
     "Notifications": Notifications,
@@ -394,7 +395,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "GrantGlossary": GrantGlossary,
 }
 
 export const pagesConfig = {
