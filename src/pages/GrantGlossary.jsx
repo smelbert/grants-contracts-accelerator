@@ -189,6 +189,7 @@ const CATEGORY_COLORS = {
   Contracts: 'bg-orange-100 text-orange-800 border-orange-200',
   Reporting: 'bg-red-100 text-red-800 border-red-200',
   Funders: 'bg-teal-100 text-teal-800 border-teal-200',
+  Common: 'bg-yellow-100 text-yellow-800 border-yellow-200',
 };
 
 const CATEGORY_BORDER = {
