@@ -62,7 +62,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
   };
 
   // Build a flat profile lookup map from all org profile fields
-  const profileValueMap = React.useMemo(() => {
+  const profileValueMap = useMemo(() => {
     if (!organizationProfile) return {};
     const op = organizationProfile;
     const leaderName = op.primary_leader_name || op.executive_director || '';
