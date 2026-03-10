@@ -112,15 +112,17 @@ export default function IncubateHerWorkbook() {
   });
 
   const { data: organizationProfile } = useQuery({
-    queryKey: ['organization-profile', enrollment?.id],
+    queryKey: ['organization-profile', enrollment?.id, user?.email],
     queryFn: async () => {
-      if (!enrollment?.id) return null;
-      const profiles = await base44.entities.Organization.filter({
-        enrollment_id: enrollment.id
-      });
-      return profiles[0];
+      if (!user?.email) return null;
+      if (enrollment?.id) {
+        const byEnrollment = await base44.entities.Organization.filter({ enrollment_id: enrollment.id });
+        if (byEnrollment[0]) return byEnrollment[0];
+      }
+      const byEmail = await base44.entities.Organization.filter({ primary_contact_email: user.email });
+      return byEmail[0] || null;
     },
-    enabled: !!enrollment?.id
+    enabled: !!user?.email
   });
 
   useEffect(() => {
