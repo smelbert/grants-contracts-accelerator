@@ -35,27 +35,70 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
       
       // First, map organization profile fields
       if (organizationProfile) {
+        const op = organizationProfile;
+        const leaderName = op.primary_leader_name || op.executive_director || '';
+        const leaderTitle = op.primary_leader_title || 'Executive Director';
         const profileMappings = {
-          'organization_name': organizationProfile.organization_name,
-          'org_name': organizationProfile.organization_name,
-          'mission': organizationProfile.mission_statement,
-          'mission_statement': organizationProfile.mission_statement,
-          'vision': organizationProfile.vision_statement,
-          'programs': organizationProfile.programs_offered,
-          'target_population': organizationProfile.target_population,
-          'service_area': organizationProfile.geographic_service_area,
-          'ein': organizationProfile.ein,
-          'phone': organizationProfile.phone,
-          'address': organizationProfile.mailing_address,
-          'website': organizationProfile.website,
-          'executive_director': organizationProfile.executive_director,
-          'board_chair': organizationProfile.board_chair,
-          'staff_count': organizationProfile.staff_count,
-          'annual_budget': organizationProfile.annual_budget,
-          'funding_sources': organizationProfile.funding_sources,
-          'years_operating': organizationProfile.founding_year ? `Since ${organizationProfile.founding_year}` : '',
-          'contact_info': organizationProfile.phone && organizationProfile.website ? 
-            `Phone: ${organizationProfile.phone}\nWebsite: ${organizationProfile.website}` : ''
+          // Org identity
+          'organization_name': op.organization_name,
+          'org_name': op.organization_name,
+          'organization_type': op.organization_type,
+          'ein': op.ein,
+          'founding_year': op.founding_year,
+          'years_operating': op.founding_year ? `Since ${op.founding_year}` : '',
+          'website': op.website,
+          // Mission / vision / values
+          'mission': op.mission_statement,
+          'mission_statement': op.mission_statement,
+          'vision': op.vision_statement,
+          'vision_statement': op.vision_statement,
+          'organizational_values': op.organizational_values,
+          'values': op.organizational_values,
+          // Programs & impact
+          'programs': op.programs_offered,
+          'programs_offered': op.programs_offered,
+          'target_population': op.target_population,
+          'service_area': op.geographic_service_area,
+          'geographic_service_area': op.geographic_service_area,
+          'annual_people_served': op.annual_people_served,
+          // Leadership
+          'executive_director': leaderName,
+          'primary_leader_name': leaderName,
+          'primary_leader_title': leaderTitle,
+          'secondary_leader_name': op.secondary_leader_name,
+          'secondary_leader_title': op.secondary_leader_title,
+          'board_chair': op.board_chair,
+          'staff_count': op.staff_count,
+          'volunteer_count': op.volunteer_count,
+          'board_size': op.board_size,
+          // Financial
+          'annual_budget': op.annual_budget,
+          'revenue_stage': op.revenue_stage,
+          'funding_sources': op.funding_sources,
+          'largest_grant_amount': op.largest_grant_amount,
+          'grant_experience_level': op.grant_experience_level,
+          // Goals
+          'funding_goals': op.funding_goals,
+          'capacity_building_needs': op.capacity_building_needs,
+          'technical_assistance_needed': op.technical_assistance_needed,
+          // Contact
+          'phone': op.phone,
+          'address': op.mailing_address,
+          'mailing_address': op.mailing_address,
+          'email': op.primary_contact_email,
+          'contact_info': [
+            op.phone && `Phone: ${op.phone}`,
+            op.website && `Website: ${op.website}`,
+            op.primary_contact_email && `Email: ${op.primary_contact_email}`
+          ].filter(Boolean).join('\n'),
+          // About / description (used in capability statement)
+          'about_us': [
+            op.organization_name && op.organization_type ? `${op.organization_name} is a ${op.organization_type}.` : '',
+            op.mission_statement || '',
+            op.programs_offered ? `We offer: ${op.programs_offered}` : '',
+            op.target_population ? `We serve ${op.target_population}.` : '',
+            op.geographic_service_area ? `Service area: ${op.geographic_service_area}.` : ''
+          ].filter(Boolean).join(' ')
         };
 
         template.fields?.forEach(field => {
