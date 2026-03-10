@@ -13,7 +13,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   FolderKanban, Plus, Calendar, Users, AlertCircle, 
-  CheckCircle2, Clock, Target, TrendingUp, Folders
+  CheckCircle2, Clock, Target, TrendingUp, Folders,
+  DollarSign, ArrowRight, X, Edit2, Trash2, Bell
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 
@@ -51,14 +52,18 @@ export default function ProjectsPage() {
   });
 
   const filteredProjects = projects.filter(p => 
-    filterStatus === 'all' || p.status === filterStatus
+    filterStatus === 'all' || p.proposal_stage === filterStatus
   );
 
   const stats = {
     total: projects.length,
-    in_progress: projects.filter(p => p.status === 'in_progress').length,
-    completed: projects.filter(p => p.status === 'completed').length,
-    overdue: projects.filter(p => p.deadline && new Date(p.deadline) < new Date() && p.status !== 'completed').length
+    drafting: projects.filter(p => p.proposal_stage === 'drafting').length,
+    sent: projects.filter(p => p.proposal_stage === 'sent').length,
+    pending: projects.filter(p => p.proposal_stage === 'pending').length,
+    awarded: projects.filter(p => p.proposal_stage === 'awarded').length,
+    declined: projects.filter(p => p.proposal_stage === 'declined').length,
+    total_asked: projects.reduce((sum, p) => sum + (p.amount_asked || 0), 0),
+    total_awarded: projects.reduce((sum, p) => sum + (p.amount_awarded || 0), 0)
   };
 
   return (
@@ -84,15 +89,55 @@ export default function ProjectsPage() {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid md:grid-cols-4 gap-4 mb-6">
+          <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+            <Card>
+              <CardContent className="pt-4 text-center">
+                <p className="text-2xl font-bold text-slate-900">{stats.total}</p>
+                <p className="text-xs text-slate-600 mt-1">Total Proposals</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4 text-center">
+                <p className="text-2xl font-bold text-slate-700">{stats.drafting}</p>
+                <p className="text-xs text-slate-600 mt-1">Drafting</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4 text-center">
+                <p className="text-2xl font-bold text-blue-600">{stats.sent}</p>
+                <p className="text-xs text-slate-600 mt-1">Sent</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4 text-center">
+                <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
+                <p className="text-xs text-slate-600 mt-1">Pending</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4 text-center">
+                <p className="text-2xl font-bold text-emerald-600">{stats.awarded}</p>
+                <p className="text-xs text-slate-600 mt-1">Awarded</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4 text-center">
+                <p className="text-2xl font-bold text-red-600">{stats.declined}</p>
+                <p className="text-xs text-slate-600 mt-1">Declined</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Funding Summary */}
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600">Total Projects</p>
-                    <p className="text-3xl font-bold text-slate-900">{stats.total}</p>
+                    <p className="text-sm text-slate-600">Total Asked</p>
+                    <p className="text-3xl font-bold text-slate-900">${(stats.total_asked / 1000000).toFixed(1)}M</p>
                   </div>
-                  <FolderKanban className="w-8 h-8 text-slate-400" />
+                  <DollarSign className="w-8 h-8 text-amber-400" />
                 </div>
               </CardContent>
             </Card>
@@ -100,50 +145,29 @@ export default function ProjectsPage() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-600">In Progress</p>
-                    <p className="text-3xl font-bold text-blue-600">{stats.in_progress}</p>
-                  </div>
-                  <TrendingUp className="w-8 h-8 text-blue-400" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-slate-600">Completed</p>
-                    <p className="text-3xl font-bold text-emerald-600">{stats.completed}</p>
+                    <p className="text-sm text-slate-600">Total Awarded</p>
+                    <p className="text-3xl font-bold text-emerald-600">${(stats.total_awarded / 1000000).toFixed(1)}M</p>
                   </div>
                   <CheckCircle2 className="w-8 h-8 text-emerald-400" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-slate-600">Overdue</p>
-                    <p className="text-3xl font-bold text-red-600">{stats.overdue}</p>
-                  </div>
-                  <AlertCircle className="w-8 h-8 text-red-400" />
                 </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Filters */}
-          <div className="flex gap-2 mb-6">
-            {['all', 'planning', 'in_progress', 'review', 'submitted', 'completed'].map(status => (
-              <Button
-                key={status}
-                variant={filterStatus === status ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setFilterStatus(status)}
-              >
-                {status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-              </Button>
-            ))}
-          </div>
+           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+             {['all', 'drafting', 'sent', 'pending', 'awarded', 'declined'].map(stage => (
+               <Button
+                 key={stage}
+                 variant={filterStatus === stage ? 'default' : 'outline'}
+                 size="sm"
+                 onClick={() => setFilterStatus(stage)}
+                 className="whitespace-nowrap"
+               >
+                 {stage.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+               </Button>
+             ))}
+           </div>
         </motion.div>
 
         {/* Projects Grid */}
@@ -176,15 +200,14 @@ export default function ProjectsPage() {
 
 function ProjectCard({ project, index }) {
   const daysUntilDeadline = project.deadline ? differenceInDays(new Date(project.deadline), new Date()) : null;
-  const isOverdue = daysUntilDeadline !== null && daysUntilDeadline < 0 && project.status !== 'completed';
+  const isUrgent = daysUntilDeadline !== null && daysUntilDeadline > 0 && daysUntilDeadline <= 14 && project.proposal_stage !== 'sent' && project.proposal_stage !== 'pending';
 
-  const statusColors = {
-    planning: 'bg-slate-100 text-slate-700',
-    in_progress: 'bg-blue-100 text-blue-700',
-    review: 'bg-purple-100 text-purple-700',
-    submitted: 'bg-amber-100 text-amber-700',
-    completed: 'bg-emerald-100 text-emerald-700',
-    on_hold: 'bg-red-100 text-red-700'
+  const stageColors = {
+    drafting: 'bg-slate-100 text-slate-700',
+    sent: 'bg-blue-100 text-blue-700',
+    pending: 'bg-amber-100 text-amber-700',
+    awarded: 'bg-emerald-100 text-emerald-700',
+    declined: 'bg-red-100 text-red-700'
   };
 
   const priorityColors = {
@@ -204,46 +227,50 @@ function ProjectCard({ project, index }) {
         <Card className="hover:shadow-xl transition-all duration-300 border-2 hover:border-emerald-300 cursor-pointer">
           <CardHeader>
             <div className="flex items-start justify-between mb-2">
-              <CardTitle className="text-lg">{project.project_name}</CardTitle>
-              <Badge className={statusColors[project.status]}>
-                {project.status.replace('_', ' ')}
+              <div className="flex-1">
+                <CardTitle className="text-lg">{project.project_name}</CardTitle>
+                {project.funder_name && <p className="text-xs text-slate-500 mt-1">{project.funder_name}</p>}
+              </div>
+              <Badge className={stageColors[project.proposal_stage]}>
+                {project.proposal_stage.replace('_', ' ')}
               </Badge>
             </div>
             <p className="text-sm text-slate-600 line-clamp-2">{project.description}</p>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-600">Progress</span>
-                  <span className="text-xs font-bold text-slate-900">{project.progress_percentage}%</span>
+              {project.amount_asked && (
+                <div className="flex items-center justify-between p-2 bg-amber-50 rounded-lg">
+                  <span className="text-xs text-slate-600">Amount Asked</span>
+                  <span className="font-semibold text-amber-700">${(project.amount_asked / 1000000).toFixed(1)}M</span>
                 </div>
-                <Progress value={project.progress_percentage} className="h-2" />
-              </div>
+              )}
+
+              {project.amount_awarded && (
+                <div className="flex items-center justify-between p-2 bg-emerald-50 rounded-lg">
+                  <span className="text-xs text-slate-600">Amount Awarded</span>
+                  <span className="font-semibold text-emerald-700">${(project.amount_awarded / 1000000).toFixed(1)}M</span>
+                </div>
+              )}
 
               {project.deadline && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  <span className={isOverdue ? 'text-red-600 font-semibold' : 'text-slate-600'}>
-                    {format(new Date(project.deadline), 'MMM d, yyyy')}
-                    {daysUntilDeadline !== null && (
-                      <span className="ml-1">
-                        ({daysUntilDeadline < 0 ? 'Overdue' : `${daysUntilDeadline}d left`})
-                      </span>
+                  <Calendar className={`w-4 h-4 ${isUrgent ? 'text-red-500' : 'text-slate-400'}`} />
+                  <span className={isUrgent ? 'text-red-600 font-semibold' : 'text-slate-600'}>
+                    {format(new Date(project.deadline), 'MMM d')}
+                    {daysUntilDeadline !== null && daysUntilDeadline > 0 && (
+                      <span className="ml-1">({daysUntilDeadline}d)</span>
                     )}
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <Users className="w-4 h-4" />
-                  <span>{project.team_members?.length || 0} members</span>
+              {project.next_follow_up_date && (
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <Bell className="w-4 h-4" />
+                  <span>Follow-up: {format(new Date(project.next_follow_up_date), 'MMM d')}</span>
                 </div>
-                <Badge variant="outline" className={priorityColors[project.priority]}>
-                  {project.priority}
-                </Badge>
-              </div>
+              )}
             </div>
           </CardContent>
         </Card>
