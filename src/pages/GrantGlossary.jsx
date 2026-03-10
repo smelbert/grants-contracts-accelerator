@@ -89,7 +89,50 @@ const GLOSSARY_TERMS = [
   { term: 'Due Diligence', category: 'Funders', definition: 'The process funders use to evaluate a grant applicant\'s organizational capacity, financial health, governance, and track record before making a funding decision.' },
   { term: 'Grants.gov', category: 'Funders', definition: 'The central online portal where federal grant-making agencies post funding opportunities. All federal discretionary grants are listed here. Organizations must have a UEI and SAM.gov registration to apply.' },
   { term: 'Program Officer', category: 'Funders', definition: 'A foundation or agency staff member who manages grant programs, reviews applications, and serves as the primary contact for grantees. Building a relationship with program officers is a key fundraising strategy.', tip: 'When allowed, call or email the program officer before applying. A brief conversation can clarify priorities and strengthen your proposal.' },
-];
+
+  // Additional Legal & Governance
+  { term: 'Board of Directors', category: 'Legal', definition: 'The governing body of a nonprofit organization responsible for strategic oversight, fiduciary responsibility, and legal compliance. Funders assess board strength and diversity as part of due diligence.' },
+  { term: 'Fiscal Responsibility', category: 'Legal', definition: 'The legal and ethical obligation to manage funds appropriately, maintain accurate financial records, prevent fraud, and comply with all funder requirements.' },
+  { term: 'Conflict of Interest Policy', category: 'Legal', definition: 'A written policy requiring board members and staff to disclose potential conflicts and recuse themselves from decisions involving personal benefit. Many funders require this document.' },
+  { term: 'Insurance Coverage', category: 'Legal', definition: 'Protection against organizational liability, including general liability, directors & officers (D&O) insurance, and professional liability. Some funders require proof of adequate coverage.' },
+  { term: 'Data Privacy / FERPA / HIPAA', category: 'Legal', definition: 'Federal regulations protecting sensitive information. FERPA protects student records; HIPAA protects health information. Nonprofits handling such data must comply and document safeguards.' },
+
+  // Additional Grant Types & Funding
+  { term: 'Government Grant', category: 'Grants', definition: 'Funding awarded by federal, state, or local government agencies for specific programs or projects. Typically highly competitive with stringent compliance requirements.' },
+  { term: 'Discretionary Grant', category: 'Grants', definition: 'A federal grant where agencies have discretion in selecting winners from competing applications (unlike mandatory entitlements). More competitive but more flexible.' },
+  { term: 'Entitlement Grant', category: 'Grants', definition: 'Federal funding allocated to states or localities based on a formula (population, poverty levels, etc.) rather than competitive selection. More predictable but less flexible.' },
+  { term: 'Pass-Through Funding', category: 'Grants', definition: 'Funds that flow from a federal agency to state agencies, which then sub-grant to eligible nonprofits. Common in block grants.' },
+  { term: 'Block Grant', category: 'Grants', definition: 'Federal funding consolidated from multiple categorical programs, awarded to states with flexibility in how funds are allocated, as long as they meet broad goals.' },
+  { term: 'Seed Funding', category: 'Grants', definition: 'Initial funding to launch a new project or organization, typically smaller in amount and often from foundations focused on innovation.' },
+  { term: 'Capacity Building Grant', category: 'Grants', definition: 'Funding specifically designed to strengthen organizational infrastructure — such as strategic planning, technology upgrades, staff training, or governance development.' },
+  { term: 'Endowment', category: 'Grants', definition: 'A permanent fund established to generate ongoing income for an organization through investment returns. An endowment provides stable, long-term revenue.' },
+  { term: 'Fiscal Year', category: 'Grants', definition: 'The 12-month period used for budgeting and financial reporting. Federal fiscal year runs October 1 – September 30. Organizations often use calendar or different fiscal years.' },
+
+  // Additional Proposal & Project Terms
+  { term: 'Evidence-Based Program', category: 'Proposals', definition: 'A program with documented effectiveness through rigorous research or evaluation. Funders increasingly prioritize evidence-based approaches over innovative but unproven models.', tip: 'If your approach is innovative, frame it as "evidence-informed" and show your evaluation plan for measuring results.' },
+  { term: 'Equity / Equitable Outcomes', category: 'Proposals', definition: 'Ensuring fair and just distribution of benefits, services, and outcomes across demographic groups. Funders now prioritize equity and want to see how you address disparities.' },
+  { term: 'Cultural Competency', category: 'Proposals', definition: 'The ability of an organization to serve people from different cultural backgrounds respectfully and effectively. Important for proposals serving diverse populations.' },
+  { term: 'Community Engagement', category: 'Proposals', definition: 'Active involvement of community members in designing, implementing, and evaluating programs. Funders value authentic community voice, not token participation.' },
+  { term: 'Leverage', category: 'Proposals', definition: 'Using grant funds as a catalyst to attract additional funding from other sources. A strong leverage strategy demonstrates your ability to mobilize resources.' },
+  { term: 'Sustainability', category: 'Proposals', definition: 'The ability to continue and expand program impact beyond the grant period through diversified funding, partnerships, or earned revenue.' },
+  { term: 'Return on Investment (ROI)', category: 'Proposals', definition: 'The measurable benefit or impact achieved relative to the investment. Common in outcome evaluations to demonstrate program effectiveness and value.' },
+
+  // Additional Compliance & Reporting
+  { term: 'Grant Agreement', category: 'Reporting', definition: 'The legally binding document between grantor and grantee outlining terms, conditions, deliverables, budget, and compliance requirements.' },
+  { term: 'Drawdown', category: 'Reporting', definition: 'The process of requesting reimbursement or access to grant funds based on documented expenses and progress.' },
+  { term: 'Expenditure Report', category: 'Reporting', definition: 'A detailed accounting of how grant funds were spent, typically submitted monthly or quarterly, with supporting documentation.' },
+  { term: 'Indirect Cost Rate (IDC)', category: 'Reporting', definition: 'A federally negotiated percentage applied to direct grant costs to cover organizational overhead. Can significantly increase total grant recovery.' },
+  { term: 'Audit Findings', category: 'Reporting', definition: 'Deficiencies identified during an audit related to financial management, compliance, or internal controls. Must be remedied and documented.' },
+  { term: 'Monitoring Visit', category: 'Reporting', definition: 'A visit by funder staff or an independent monitor to review grant implementation, compliance, financial records, and program quality.' },
+  { term: 'Grant Period', category: 'Reporting', definition: 'The approved timeframe during which grant activities must occur and funds must be expended. Activities outside this window are not eligible.' },
+
+  // Additional Funder Types
+  { term: 'Government Agency', category: 'Funders', definition: 'Federal, state, or local government entity that awards grants and contracts. Examples: HUD, NSF, NIH, state health departments.' },
+  { term: 'Catalyst Foundation', category: 'Funders', definition: 'A foundation focused on seeding innovation and systemic change in a specific issue area or geography.' },
+  { term: 'Place-Based Foundation', category: 'Funders', definition: 'A foundation focused on specific geographic communities, often addressing local issues and supporting community-led solutions.' },
+  { term: 'Operating Foundation', category: 'Funders', definition: 'A private foundation that primarily operates its own programs rather than making grants to other organizations. Rare but worth knowing.' },
+  { term: 'Donor-Advised Fund (DAF)', category: 'Funders', definition: 'An investment account where donors receive tax deductions upfront but recommend grants over time. Growing funding source for nonprofits.' },
+  ];
 
 const CATEGORIES = ['All', 'Legal', 'Grants', 'Proposals', 'Contracts', 'Reporting', 'Funders'];
 
