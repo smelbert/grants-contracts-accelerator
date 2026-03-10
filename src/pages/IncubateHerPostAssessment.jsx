@@ -427,72 +427,88 @@ export default function IncubateHerPostAssessment() {
   }
 
   if (existingPostAssessment && !existingPostAssessment.is_draft && !submitted) {
-    const delta = existingPostAssessment.total_score - (preAssessment?.total_score || 0);
-    
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-        <CoBrandedHeader title="Post-Assessment Results" />
-        <div className="max-w-4xl mx-auto px-6 py-12">
-          <Card className="mb-6" style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2, backgroundColor: '#fffbf0' }}>
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
-                <div>
-                  <p className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
-                    Assessment Updated
-                  </p>
-                  <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
-                    We've updated the post-assessment to better measure what you've learned during the program. Would you like to retake it to get a more accurate picture of your growth?
-                  </p>
-                  <Button 
-                    size="sm" 
-                    className="mt-3"
-                    style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
-                    onClick={() => setSubmitted(false)}
-                  >
-                    Retake Assessment
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+     const delta = existingPostAssessment.total_score - (preAssessment?.total_score || 0);
 
-          <Card>
-            <CardContent className="pt-8 text-center">
-              <Award className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
-              <h2 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.neutralDark }}>
-                Your Previous Results
-              </h2>
-              <div className="flex justify-center items-center gap-8 mb-6">
-                <div>
-                  <p className="text-sm text-slate-600 mb-1">Pre-Assessment</p>
-                  <p className="text-4xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
-                    {preAssessment.total_score}
-                  </p>
-                </div>
-                <TrendingUp className="w-12 h-12" style={{ color: BRAND_COLORS.eisGold }} />
-                <div>
-                  <p className="text-sm text-slate-600 mb-1">Post-Assessment</p>
-                  <p className="text-4xl font-bold" style={{ color: BRAND_COLORS.culRed }}>
-                    {existingPostAssessment.total_score}
-                  </p>
-                </div>
-              </div>
-              <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight, fontSize: '1.2rem', padding: '0.5rem 1rem' }}>
-                Growth: +{delta} points
-              </Badge>
-              <div className="mt-4">
-                <Button variant="outline" onClick={() => handleDownloadPDF(existingPostAssessment.responses || {}, existingPostAssessment, existingPostAssessment.next_steps)}>
-                  <Download className="w-4 h-4 mr-2" /> Download PDF
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        <CoBrandedFooter />
-      </div>
-    );
-  }
+     return (
+       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
+         <CoBrandedHeader title="Post-Assessment Results" />
+         <div className="max-w-4xl mx-auto px-6 py-12">
+           <Card className="mb-6" style={{ borderColor: BRAND_COLORS.eisGold, borderWidth: 2, backgroundColor: '#fffbf0' }}>
+             <CardContent className="pt-6">
+               <div className="flex items-start gap-3">
+                 <AlertCircle className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_COLORS.eisGold }} />
+                 <div>
+                   <p className="font-semibold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+                     Assessment Updated
+                   </p>
+                   <p className="text-sm" style={{ color: BRAND_COLORS.eisNavy }}>
+                     We've updated the post-assessment to better measure what you've learned during the program. Would you like to retake it to get a more accurate picture of your growth?
+                   </p>
+                   <Button 
+                     size="sm" 
+                     className="mt-3"
+                     style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
+                     onClick={() => {
+                       setResponses({});
+                       setSubmitted(false);
+                       setNextSteps('');
+                       localStorage.removeItem(AUTOSAVE_KEY);
+                     }}
+                   >
+                     Retake Assessment
+                   </Button>
+                 </div>
+               </div>
+             </CardContent>
+           </Card>
+
+           <Card>
+             <CardContent className="pt-8 text-center">
+               <Award className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
+               <h2 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.neutralDark }}>
+                 Your Previous Results
+               </h2>
+               <div className="flex justify-center items-center gap-8 mb-6">
+                 <div>
+                   <p className="text-sm text-slate-600 mb-1">Pre-Assessment</p>
+                   <p className="text-4xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
+                     {preAssessment.total_score}
+                   </p>
+                 </div>
+                 <TrendingUp className="w-12 h-12" style={{ color: BRAND_COLORS.eisGold }} />
+                 <div>
+                   <p className="text-sm text-slate-600 mb-1">Post-Assessment</p>
+                   <p className="text-4xl font-bold" style={{ color: BRAND_COLORS.culRed }}>
+                     {existingPostAssessment.total_score}
+                   </p>
+                 </div>
+               </div>
+               <Badge style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight, fontSize: '1.2rem', padding: '0.5rem 1rem' }}>
+                 Growth: +{delta} points
+               </Badge>
+               <div className="mt-4 flex gap-3 justify-center">
+                 <Button variant="outline" onClick={() => handleDownloadPDF(existingPostAssessment.responses || {}, existingPostAssessment, existingPostAssessment.next_steps)}>
+                   <Download className="w-4 h-4 mr-2" /> Download PDF
+                 </Button>
+                 <Button 
+                   onClick={() => {
+                     setResponses({});
+                     setSubmitted(false);
+                     setNextSteps('');
+                     localStorage.removeItem(AUTOSAVE_KEY);
+                   }}
+                   style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
+                 >
+                   Retake Assessment
+                 </Button>
+               </div>
+             </CardContent>
+           </Card>
+         </div>
+         <CoBrandedFooter />
+       </div>
+     );
+   }
 
   if (submitted && scores) {
     const delta = scores.total_score - preAssessment.total_score;
