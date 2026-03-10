@@ -222,10 +222,11 @@ export default function ProfilePage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Organization Name</Label>
+                  <Label>Organization / Business Name</Label>
                   <Input
-                    value={formData.name || ''}
-                    onChange={(e) => handleChange('name', e.target.value)}
+                    value={formData.organization_name || ''}
+                    onChange={(e) => handleChange('organization_name', e.target.value)}
+                    placeholder="e.g., Community Care Nonprofit or Jane's LLC"
                   />
                 </div>
                 <div className="space-y-2">
@@ -239,10 +240,10 @@ export default function ProfilePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>EIN Number</Label>
+                  <Label>EIN / Tax ID</Label>
                   <Input
-                    value={formData.ein_number || ''}
-                    onChange={(e) => handleChange('ein_number', e.target.value)}
+                    value={formData.ein || ''}
+                    onChange={(e) => handleChange('ein', e.target.value)}
                     placeholder="XX-XXXXXXX"
                   />
                 </div>
@@ -250,8 +251,8 @@ export default function ProfilePage() {
                   <Label>Year Founded</Label>
                   <Input
                     type="number"
-                    value={formData.year_founded || ''}
-                    onChange={(e) => handleChange('year_founded', parseInt(e.target.value))}
+                    value={formData.founding_year || ''}
+                    onChange={(e) => handleChange('founding_year', e.target.value)}
                     placeholder="2020"
                   />
                 </div>
