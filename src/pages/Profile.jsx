@@ -350,58 +350,48 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Organization Type</Label>
-                  <Select value={formData.type} onValueChange={(v) => handleChange('type', v)}>
+                  <Input
+                    value={formData.organization_type || ''}
+                    onChange={(e) => handleChange('organization_type', e.target.value)}
+                    placeholder="e.g., 501(c)(3) Nonprofit, LLC, Sole Proprietor"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Revenue / Funding Stage</Label>
+                  <Select value={formData.revenue_stage || ''} onValueChange={(v) => handleChange('revenue_stage', v)}>
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select stage..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="nonprofit">Nonprofit</SelectItem>
-                      <SelectItem value="for_profit">For-Profit</SelectItem>
-                      <SelectItem value="solopreneur">Solopreneur</SelectItem>
-                      <SelectItem value="community_based">Community-Based</SelectItem>
+                      <SelectItem value="pre_revenue">Pre-Revenue / Just Starting</SelectItem>
+                      <SelectItem value="early_stage">Early Stage (under $25K)</SelectItem>
+                      <SelectItem value="growing">Growing ($25K–$100K)</SelectItem>
+                      <SelectItem value="established_small">Established Small ($100K–$500K)</SelectItem>
+                      <SelectItem value="established_mid">Established Mid-Size ($500K–$1M)</SelectItem>
+                      <SelectItem value="scaling">Scaling (over $1M)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Stage</Label>
-                  <Select value={formData.stage} onValueChange={(v) => handleChange('stage', v)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="idea">Idea Stage</SelectItem>
-                      <SelectItem value="early">Early Stage</SelectItem>
-                      <SelectItem value="operating">Operating</SelectItem>
-                      <SelectItem value="scaling">Scaling</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label>Annual Budget (approximate)</Label>
+                  <Input
+                    value={formData.annual_budget || ''}
+                    onChange={(e) => handleChange('annual_budget', e.target.value)}
+                    placeholder="e.g., $50,000"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label>Annual Budget</Label>
-                  <Select value={formData.annual_budget} onValueChange={(v) => handleChange('annual_budget', v)}>
+                  <Label>Grant / Contract Writing Experience</Label>
+                  <Select value={formData.grant_experience_level || ''} onValueChange={(v) => handleChange('grant_experience_level', v)}>
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select level..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="under_25k">Under $25K</SelectItem>
-                      <SelectItem value="25k_100k">$25K - $100K</SelectItem>
-                      <SelectItem value="100k_500k">$100K - $500K</SelectItem>
-                      <SelectItem value="500k_1m">$500K - $1M</SelectItem>
-                      <SelectItem value="1m_5m">$1M - $5M</SelectItem>
-                      <SelectItem value="over_5m">Over $5M</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Funding Experience</Label>
-                  <Select value={formData.funding_experience} onValueChange={(v) => handleChange('funding_experience', v)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">No Experience</SelectItem>
-                      <SelectItem value="some">Some Experience</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
+                      <SelectItem value="beginner">Beginner — Never written a grant</SelectItem>
+                      <SelectItem value="some_attempts">Some Attempts — Not yet successful</SelectItem>
+                      <SelectItem value="intermediate">Intermediate — Some successes</SelectItem>
+                      <SelectItem value="advanced">Advanced — Regular grant writer</SelectItem>
+                      <SelectItem value="expert">Expert — Extensive track record</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
