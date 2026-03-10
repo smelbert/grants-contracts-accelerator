@@ -283,10 +283,13 @@ function NewProjectDialog({ onClose, onSave }) {
   const [formData, setFormData] = useState({
     project_name: '',
     description: '',
-    project_type: 'general',
+    funder_name: '',
+    project_type: 'grant_application',
+    funding_lane: 'grants',
+    proposal_stage: 'drafting',
+    amount_asked: '',
     deadline: '',
-    priority: 'medium',
-    status: 'planning'
+    priority: 'medium'
   });
 
   return (
@@ -310,9 +313,29 @@ function NewProjectDialog({ onClose, onSave }) {
             <Textarea
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
-              rows={3}
+              rows={2}
               placeholder="Briefly describe this project..."
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Funder Name</label>
+              <Input
+                value={formData.funder_name}
+                onChange={(e) => setFormData({...formData, funder_name: e.target.value})}
+                placeholder="e.g., Ford Foundation"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Amount Asked</label>
+              <Input
+                type="number"
+                value={formData.amount_asked}
+                onChange={(e) => setFormData({...formData, amount_asked: e.target.value ? parseInt(e.target.value) : ''})}
+                placeholder="e.g., 250000"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -323,13 +346,42 @@ function NewProjectDialog({ onClose, onSave }) {
                 onChange={(e) => setFormData({...formData, project_type: e.target.value})}
                 className="w-full px-3 py-2 border border-slate-300 rounded-lg"
               >
-                <option value="general">General</option>
                 <option value="grant_application">Grant Application</option>
                 <option value="contract_proposal">Contract Proposal</option>
                 <option value="donor_campaign">Donor Campaign</option>
+                <option value="general">General</option>
               </select>
             </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Funding Lane</label>
+              <select
+                value={formData.funding_lane}
+                onChange={(e) => setFormData({...formData, funding_lane: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+              >
+                <option value="grants">Grants</option>
+                <option value="contracts">Contracts</option>
+                <option value="donors">Donors</option>
+                <option value="public_funds">Public Funds</option>
+              </select>
+            </div>
+          </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Proposal Stage</label>
+              <select
+                value={formData.proposal_stage}
+                onChange={(e) => setFormData({...formData, proposal_stage: e.target.value})}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+              >
+                <option value="drafting">Drafting</option>
+                <option value="sent">Sent</option>
+                <option value="pending">Pending Review</option>
+                <option value="awarded">Awarded</option>
+                <option value="declined">Declined</option>
+              </select>
+            </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Priority</label>
               <select
@@ -346,7 +398,7 @@ function NewProjectDialog({ onClose, onSave }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Deadline</label>
+            <label className="text-sm font-medium mb-2 block">Submission Deadline</label>
             <Input
               type="date"
               value={formData.deadline}
