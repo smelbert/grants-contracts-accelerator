@@ -734,7 +734,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Footer */}
-      <footer className="lg:pl-64 bg-white border-t border-slate-200 mt-auto">
+      <footer className="lg:pl-64 bg-white border-t border-slate-100 mt-auto">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">
