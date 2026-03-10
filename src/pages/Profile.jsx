@@ -101,13 +101,12 @@ export default function ProfilePage() {
     );
   }
 
-  if (!organization || !formData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-500">Complete onboarding first.</p>
-      </div>
-    );
+  // Initialize empty form if no org exists yet (new user)
+  if (!formData && !orgsLoading && !userLoading) {
+    setFormData({});
   }
+
+  if (!formData) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
