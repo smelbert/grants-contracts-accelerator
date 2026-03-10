@@ -478,36 +478,49 @@ export default function IncubateHerPreAssessment() {
   };
 
   if (existingAssessment && !existingAssessment.is_draft && !submitted) {
-    const profile = getReadinessProfile(existingAssessment.total_score);
-    
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
-        <CoBrandedHeader title="Pre-Assessment Results" />
-        <div className="max-w-4xl mx-auto px-6 py-12">
-          <Card>
-            <CardContent className="pt-8 text-center">
-              <CheckCircle2 className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
-              <h2 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.neutralDark }}>
-                You've already completed the Pre-Assessment
-              </h2>
-              <div className="mb-6">
-                <p className="text-6xl font-bold mb-2" style={{ color: profile.color }}>
-                  {existingAssessment.total_score}
-                </p>
-                <Badge style={{ backgroundColor: profile.color, color: BRAND_COLORS.neutralLight }}>
-                  {profile.level} Readiness
-                </Badge>
-              </div>
-              <Button variant="outline" onClick={() => handleDownloadPDF(existingAssessment.responses || {}, existingAssessment)} className="mt-2">
-                <Download className="w-4 h-4 mr-2" /> Download PDF
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-        <CoBrandedFooter />
-      </div>
-    );
-  }
+     const profile = getReadinessProfile(existingAssessment.total_score);
+
+     return (
+       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
+         <CoBrandedHeader title="Pre-Assessment Results" />
+         <div className="max-w-4xl mx-auto px-6 py-12">
+           <Card>
+             <CardContent className="pt-8 text-center">
+               <CheckCircle2 className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_COLORS.eisGold }} />
+               <h2 className="text-2xl font-bold mb-4" style={{ color: BRAND_COLORS.neutralDark }}>
+                 You've already completed the Pre-Assessment
+               </h2>
+               <div className="mb-6">
+                 <p className="text-6xl font-bold mb-2" style={{ color: profile.color }}>
+                   {existingAssessment.total_score}
+                 </p>
+                 <Badge style={{ backgroundColor: profile.color, color: BRAND_COLORS.neutralLight }}>
+                   {profile.level} Readiness
+                 </Badge>
+               </div>
+               <div className="flex gap-3 justify-center">
+                 <Button variant="outline" onClick={() => handleDownloadPDF(existingAssessment.responses || {}, existingAssessment)}>
+                   <Download className="w-4 h-4 mr-2" /> Download PDF
+                 </Button>
+                 <Button 
+                   onClick={() => {
+                     setResponses({});
+                     setSubmitted(false);
+                     setPrefilled(false);
+                     localStorage.removeItem(AUTOSAVE_KEY);
+                   }}
+                   style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight }}
+                 >
+                   Retake Assessment
+                 </Button>
+               </div>
+             </CardContent>
+           </Card>
+         </div>
+         <CoBrandedFooter />
+       </div>
+     );
+   }
 
   if (submitted && scores) {
     const profile = getReadinessProfile(scores.total_score);
