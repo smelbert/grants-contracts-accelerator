@@ -132,6 +132,42 @@ const GLOSSARY_TERMS = [
   { term: 'Place-Based Foundation', category: 'Funders', definition: 'A foundation focused on specific geographic communities, often addressing local issues and supporting community-led solutions.' },
   { term: 'Operating Foundation', category: 'Funders', definition: 'A private foundation that primarily operates its own programs rather than making grants to other organizations. Rare but worth knowing.' },
   { term: 'Donor-Advised Fund (DAF)', category: 'Funders', definition: 'An investment account where donors receive tax deductions upfront but recommend grants over time. Growing funding source for nonprofits.' },
+
+  // Contracts & Procurement
+  { term: 'Procurement', category: 'Contracts', definition: 'The process by which governments and organizations purchase goods or services. Government procurement is highly regulated and competitive.' },
+  { term: 'Vendor Registration', category: 'Contracts', definition: 'The process of registering your organization with government systems (SAM.gov, state procurement databases) to be eligible for contracts.' },
+  { term: 'W-9 Form', category: 'Contracts', definition: 'A tax form providing your Taxpayer Identification Number (TIN) or Social Security Number. Required by contractors before payment.' },
+  { term: 'Contract Terms & Conditions', category: 'Contracts', definition: 'Legal obligations in a contract including payment terms, performance standards, insurance requirements, and liability limitations.' },
+  { term: 'Invoice / Invoicing', category: 'Contracts', definition: 'A request for payment detailing services rendered or goods delivered, including dates, descriptions, amounts, and payment instructions.' },
+  { term: 'Payment Schedule', category: 'Contracts', definition: 'The timing and conditions for receiving contract payments — often tied to milestone completion or monthly invoicing.' },
+
+  // Small Business / Solopreneur / Entrepreneur Language
+  { term: 'Small Business', category: 'Common', definition: 'A for-profit business with fewer than 500 employees. Small businesses are often excluded from nonprofit grants but may be eligible for SBA loans and contracts.' },
+  { term: 'Solopreneur', category: 'Common', definition: 'An individual running a business alone, without employees. May struggle to meet grant eligibility requirements designed for larger organizations.' },
+  { term: 'Minority-Owned Business Enterprise (MBE)', category: 'Common', definition: 'A for-profit business at least 51% owned and controlled by individuals from underrepresented groups. Eligible for set-asides and contracts with governments and large corporations.' },
+  { term: 'Women-Owned Business Enterprise (WBE)', category: 'Common', definition: 'A for-profit business at least 51% owned and controlled by women. Eligible for federal contracts, SBA loans, and corporate supplier diversity programs.' },
+  { term: 'Service-Disabled Veteran-Owned Small Business (SDVOSB)', category: 'Common', definition: 'A small business owned by a veteran with a service-connected disability. Eligible for federal contracting set-asides and specialized SBA programs.' },
+  { term: 'Business Plan', category: 'Common', definition: 'A formal document outlining your business model, market analysis, operations, and financial projections. Required for most SBA loans and some grants.' },
+  { term: 'Proof of Concept', category: 'Common', definition: 'Evidence that your business idea or product works and has market demand. Funders want to see proof before investing in scaling.' },
+  { term: 'Pitch / Elevator Pitch', category: 'Common', definition: 'A 30-60 second compelling summary of your business, problem you solve, and why you\'re the right person to solve it.' },
+  { term: 'Lean Business Model', category: 'Common', definition: 'A flexible, low-cost approach to testing and validating a business idea before major investment. Popular with startups and entrepreneurs.' },
+  { term: 'Social Enterprise', category: 'Common', definition: 'A for-profit or nonprofit business structured to generate revenue while addressing a social or environmental problem. May be eligible for impact investing or mission-aligned grants.' },
+
+  // SBA & Small Business Grants
+  { term: 'SBA Loan', category: 'Grants', definition: 'Loans from the Small Business Administration that help small businesses access capital for equipment, inventory, working capital, and expansion at favorable terms.' },
+  { term: 'Microgrant', category: 'Grants', definition: 'Small grants (typically under $10,000) often used to seed new initiatives, support underrepresented entrepreneurs, or provide emergency relief.' },
+  { term: 'SBIR / STTR', category: 'Grants', definition: 'Small Business Innovation Research and Small Business Technology Transfer — federal programs funding small businesses doing innovative R&D with commercial potential.' },
+  { term: 'Economic Development Grant', category: 'Grants', definition: 'Funding from government or foundations to support small business growth, job creation, and economic revitalization in specific regions.' },
+
+  // Common Concepts for Entrepreneurs
+  { term: 'Market Research', category: 'Proposals', definition: 'Systematic investigation of your target market, competitors, and customer needs. Demonstrates viability in proposals and business plans.' },
+  { term: 'Target Market', category: 'Proposals', definition: 'The specific group of customers or organizations you intend to serve. Clear definition of target market strengthens proposals and business plans.' },
+  { term: 'Unique Value Proposition (UVP)', category: 'Proposals', definition: 'What makes your product, service, or organization distinctly different and better than alternatives. Critical for standing out to funders.' },
+  { term: 'Competitive Advantage', category: 'Proposals', definition: 'Specific strengths or resources that position your organization to outperform competitors or deliver superior results.' },
+  { term: 'Scalability', category: 'Proposals', definition: 'The ability to grow your program or business without proportional increases in cost. Funders value scalable models.' },
+  { term: 'Pilot Program', category: 'Proposals', definition: 'A small-scale test of your program or product with a limited group before full launch. Shows funders you\'re testing and learning.' },
+  { term: 'Intellectual Property (IP)', category: 'Proposals', definition: 'Creations of the mind you own or control (patents, trademarks, copyrights, trade secrets). Important to clarify ownership in contracts.' },
+  { term: 'Revenue Stream', category: 'Proposals', definition: 'Sources of income for your organization or business. Multiple revenue streams reduce dependency on any single funder.' },
   ];
 
 const CATEGORIES = ['All', 'Legal', 'Grants', 'Proposals', 'Contracts', 'Reporting', 'Funders'];
