@@ -470,11 +470,11 @@ export default function Layout({ children, currentPageName }) {
           {/* Portal Switcher */}
           {canSwitchPortals && (
             <div className="mb-4">
-              <p className="text-xs text-slate-500 mb-2">Portal View</p>
+              <p className="text-xs text-[#E5C089]/70 mb-2">Portal View</p>
               <select
                 value={portalView}
                 onChange={(e) => handlePortalChange(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white"
+                className="w-full px-3 py-2 text-sm border border-[#1E4F58] rounded-lg bg-[#1E4F58] text-white"
               >
                 <option value="auto">Auto ({user?.role})</option>
                 {(user?.role === 'owner' || user?.role === 'admin') && (
