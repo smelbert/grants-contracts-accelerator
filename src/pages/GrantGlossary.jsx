@@ -199,6 +199,7 @@ const CATEGORY_BORDER = {
   Contracts: 'border-l-orange-400',
   Reporting: 'border-l-red-400',
   Funders: 'border-l-teal-400',
+  Common: 'border-l-yellow-400',
 };
 
 export default function GrantGlossary() {
