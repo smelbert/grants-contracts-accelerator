@@ -261,6 +261,19 @@ export default function IncubateHerPreAssessment() {
     enabled: !!user?.email
   });
 
+  const { data: existingAssessment } = useQuery({
+    queryKey: ['pre-assessment', enrollment?.id],
+    queryFn: async () => {
+      if (!enrollment?.id) return null;
+      const assessments = await base44.entities.ProgramAssessment.filter({
+        enrollment_id: enrollment.id,
+        assessment_type: 'pre'
+      });
+      return assessments[0];
+    },
+    enabled: !!enrollment?.id
+  });
+
   // Load saved draft responses from DB when assessment loads (overrides localStorage)
   React.useEffect(() => {
     if (existingAssessment?.is_draft && existingAssessment?.responses && Object.keys(responses).length === 0) {
