@@ -73,7 +73,16 @@ export default function ProfilePage() {
   };
 
   const handleSave = async () => {
-    await updateMutation.mutateAsync(formData);
+    if (organization?.id) {
+      await updateMutation.mutateAsync(formData);
+    } else if (user?.email) {
+      // Create new org record with canonical field names
+      const newOrg = await base44.entities.Organization.create({
+        ...formData,
+        primary_contact_email: user.email
+      });
+      queryClient.invalidateQueries({ queryKey: ['organizations'] });
+    }
     if (userFormData) {
       await updateUserMutation.mutateAsync(userFormData);
     }
