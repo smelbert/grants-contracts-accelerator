@@ -538,31 +538,31 @@ export default function Layout({ children, currentPageName }) {
 
           {/* User */}
           {user && (
-            <div className="border-t border-slate-200 pt-4">
+            <div className="border-t border-[#1E4F58] pt-4">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
-                  <span className="text-sm font-medium text-slate-600">
+                <div className="w-9 h-9 rounded-full bg-[#1E4F58] flex items-center justify-center">
+                  <span className="text-sm font-medium text-[#E5C089]">
                     {user.full_name?.[0] || user.email?.[0]?.toUpperCase()}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 truncate">{user.full_name || 'User'}</p>
-                  <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                  <p className="text-sm font-medium text-white truncate">{user.full_name || 'User'}</p>
+                  <p className="text-xs text-white/50 truncate">{user.email}</p>
                 </div>
               </div>
               <div className="space-y-1 mb-3">
                 <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-[#143A50] hover:bg-[#E5C089]/20">
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-[#E5C089] hover:bg-[#1E4F58] hover:text-[#E5C089]">
                     Visit EIS Website
                   </Button>
                 </a>
                 <Link to={createPageUrl('PublicHome')}>
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-slate-600">
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-white/70 hover:bg-[#1E4F58] hover:text-white">
                     Public Home
                   </Button>
                 </Link>
                 <Link to={createPageUrl('AboutEIS')}>
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-slate-600">
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-white/70 hover:bg-[#1E4F58] hover:text-white">
                     About EIS
                   </Button>
                 </Link>
@@ -571,7 +571,7 @@ export default function Layout({ children, currentPageName }) {
                 variant="ghost"
                 size="sm"
                 onClick={handleLogout}
-                className="w-full justify-start text-slate-600 hover:text-slate-900"
+                className="w-full justify-start text-white/50 hover:text-white hover:bg-[#1E4F58]"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
