@@ -304,7 +304,7 @@ export default function IncubateHerPreAssessment() {
         responses: responses,
         is_draft: true
       };
-      if (existingAssessment) {
+      if (existingAssessment?.data) {
         await base44.entities.ProgramAssessment.update(existingAssessment.id, draftData);
       } else {
         await base44.entities.ProgramAssessment.create(draftData);
