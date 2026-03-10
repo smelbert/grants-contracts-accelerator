@@ -61,47 +61,76 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
     onResponseChange(page.id, fieldId, value);
   };
 
-  // Auto-fill logic: Check if field can be populated from profile
-  const getPrefilledValue = (fieldId) => {
-    if (!organizationProfile) return '';
-    
-    // Map common field IDs to organization profile fields
-    const fieldMappings = {
-      'organization_name': 'organization_name',
-      'org_name': 'organization_name',
-      'mission': 'mission_statement',
-      'mission_statement': 'mission_statement',
-      'vision': 'vision_statement',
-      'vision_statement': 'vision_statement',
-      'values': 'organizational_values',
-      'programs': 'programs_offered',
-      'programs_offered': 'programs_offered',
-      'target_population': 'target_population',
-      'service_area': 'geographic_service_area',
-      'geographic_area': 'geographic_service_area',
-      'annual_budget': 'annual_budget',
-      'budget': 'annual_budget',
-      'funding_sources': 'funding_sources',
-      'staff_count': 'staff_count',
-      'board_size': 'board_size',
-      'executive_director': 'executive_director',
-      'ed_name': 'executive_director',
-      'board_chair': 'board_chair',
-      'phone': 'phone',
-      'address': 'mailing_address',
-      'mailing_address': 'mailing_address',
-      'website': 'website',
-      'ein': 'ein',
-      'tax_id': 'ein'
+  // Build a flat profile lookup map from all org profile fields
+  const profileValueMap = React.useMemo(() => {
+    if (!organizationProfile) return {};
+    const op = organizationProfile;
+    const leaderName = op.primary_leader_name || op.executive_director || '';
+    return {
+      'organization_name': op.organization_name,
+      'org_name': op.organization_name,
+      'business_name': op.organization_name,
+      'company_name': op.organization_name,
+      'org_type': op.organization_type,
+      'organization_type': op.organization_type,
+      'ein': op.ein,
+      'tax_id': op.ein,
+      'founding_year': op.founding_year,
+      'years_operating': op.founding_year ? `Since ${op.founding_year}` : '',
+      'website': op.website,
+      'mission': op.mission_statement,
+      'mission_statement': op.mission_statement,
+      'vision': op.vision_statement,
+      'vision_statement': op.vision_statement,
+      'values': op.organizational_values,
+      'organizational_values': op.organizational_values,
+      'programs': op.programs_offered,
+      'programs_offered': op.programs_offered,
+      'target_population': op.target_population,
+      'service_area': op.geographic_service_area,
+      'geographic_area': op.geographic_service_area,
+      'geographic_service_area': op.geographic_service_area,
+      'annual_people_served': op.annual_people_served,
+      'executive_director': leaderName,
+      'ed_name': leaderName,
+      'primary_leader_name': leaderName,
+      'primary_leader_title': op.primary_leader_title,
+      'secondary_leader_name': op.secondary_leader_name,
+      'secondary_leader_title': op.secondary_leader_title,
+      'board_chair': op.board_chair,
+      'staff_count': op.staff_count,
+      'volunteer_count': op.volunteer_count,
+      'board_size': op.board_size,
+      'annual_budget': op.annual_budget,
+      'budget': op.annual_budget,
+      'revenue_stage': op.revenue_stage,
+      'funding_sources': op.funding_sources,
+      'largest_grant_amount': op.largest_grant_amount,
+      'grant_experience_level': op.grant_experience_level,
+      'funding_goals': op.funding_goals,
+      'capacity_building_needs': op.capacity_building_needs,
+      'technical_assistance_needed': op.technical_assistance_needed,
+      'phone': op.phone,
+      'address': op.mailing_address,
+      'mailing_address': op.mailing_address,
+      'contact_email': op.primary_contact_email,
     };
+  }, [organizationProfile]);
 
-    const profileField = fieldMappings[fieldId];
-    if (profileField && organizationProfile[profileField]) {
-      return organizationProfile[profileField];
-    }
-    
-    return '';
-  };
+  // Auto-fill empty fields from profile on load
+  React.useEffect(() => {
+    if (!organizationProfile || !page.fields) return;
+    page.fields.forEach(field => {
+      const currentValue = responses?.[field.id];
+      if (!currentValue && profileValueMap[field.id]) {
+        onResponseChange(page.id, field.id, profileValueMap[field.id]);
+      }
+    });
+  // Only run when page changes or profile loads - not on every response change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page.id, organizationProfile]);
+
+  const getPrefilledValue = (fieldId) => profileValueMap[fieldId] || '';
 
   return (
     <>
