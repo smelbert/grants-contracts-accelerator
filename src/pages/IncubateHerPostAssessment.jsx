@@ -499,11 +499,19 @@ export default function IncubateHerPostAssessment() {
                    <Download className="w-4 h-4 mr-2" /> Download PDF
                  </Button>
                  <Button 
-                   onClick={() => {
+                   onClick={async () => {
                      setResponses({});
                      setSubmitted(false);
                      setNextSteps('');
                      localStorage.removeItem(AUTOSAVE_KEY);
+                     if (existingPostAssessment?.id) {
+                       await base44.entities.ProgramAssessment.update(existingPostAssessment.id, {
+                         is_draft: true,
+                         responses: {},
+                         next_steps: ''
+                       });
+                     }
+                     queryClient.invalidateQueries({ queryKey: ['post-assessment'] });
                    }}
                    style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
                  >
