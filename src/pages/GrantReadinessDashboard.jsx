@@ -158,6 +158,30 @@ export default function GrantReadinessDashboard() {
           </div>
         </div>
 
+        {/* Phase 3: Strategic Coaching */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#1E4F58] text-white flex items-center justify-center text-sm font-bold">3</div>
+            Strategic Coaching
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <StrategicGuidancePanel organization={organization} readinessScore={Math.round(assessments.length > 0 ? assessments[assessments.length - 1].total_score || 0 : 0)} />
+            <CuratedResourcesPanel readinessScore={Math.round(assessments.length > 0 ? assessments[assessments.length - 1].total_score || 0 : 0)} fundingLane={organization?.funding_lane || 'grants'} />
+          </div>
+        </div>
+
+        {/* Phase 4: Performance Analytics */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#E5C089] text-[#143A50] flex items-center justify-center text-sm font-bold">4</div>
+            Performance Analytics
+          </h2>
+
+          <ProgressChart assessments={assessments} />
+          <GrowthAnalytics projects={projects} readinessProfile={readinessProfile} assessments={assessments} />
+        </div>
+
         {/* Next Steps */}
         <Card className="border-slate-200">
           <CardHeader>
