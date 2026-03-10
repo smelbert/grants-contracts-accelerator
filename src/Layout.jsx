@@ -425,10 +425,10 @@ export default function Layout({ children, currentPageName }) {
   // Show loading screen while user is being fetched (prevents white flash)
   if (userIsLoading && !user) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#143A50] flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-8 h-8 border-4 border-[#143A50] border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-slate-600">Loading...</p>
+          <div className="inline-block w-8 h-8 border-4 border-[#E5C089] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-[#E5C089]/70">Loading...</p>
         </div>
       </div>
     );
