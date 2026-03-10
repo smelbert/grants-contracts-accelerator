@@ -458,7 +458,7 @@ export default function Layout({ children, currentPageName }) {
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden bg-white border-r border-slate-200 px-4 py-6">
           {/* Logo */}
-          <Link to={createPageUrl('Home')} className="flex items-center justify-center mt-4 px-2">
+          <Link to={createPageUrl('Home')} className="flex items-center justify-center mt-10 px-2">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
               alt="Elbert Innovative Solutions" 
