@@ -170,7 +170,7 @@ const GLOSSARY_TERMS = [
   { term: 'Revenue Stream', category: 'Proposals', definition: 'Sources of income for your organization or business. Multiple revenue streams reduce dependency on any single funder.' },
   ];
 
-const CATEGORIES = ['All', 'Legal', 'Grants', 'Proposals', 'Contracts', 'Reporting', 'Funders'];
+const CATEGORIES = ['All', 'Legal', 'Grants', 'Proposals', 'Contracts', 'Reporting', 'Funders', 'Common'];
 
 const CATEGORY_COUNTS = {
   All: GLOSSARY_TERMS.length,
