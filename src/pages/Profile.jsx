@@ -276,10 +276,10 @@ export default function ProfilePage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Programs Description</Label>
+                <Label>Programs &amp; Services</Label>
                 <Textarea
-                  value={formData.programs_description || ''}
-                  onChange={(e) => handleChange('programs_description', e.target.value)}
+                  value={formData.programs_offered || ''}
+                  onChange={(e) => handleChange('programs_offered', e.target.value)}
                   placeholder="Describe your key programs and services..."
                   className="min-h-[100px]"
                 />
@@ -294,11 +294,11 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Geographic Reach</Label>
+                  <Label>Geographic Service Area</Label>
                   <Input
-                    value={formData.geographic_reach || ''}
-                    onChange={(e) => handleChange('geographic_reach', e.target.value)}
-                    placeholder="Local, regional, national?"
+                    value={formData.geographic_service_area || ''}
+                    onChange={(e) => handleChange('geographic_service_area', e.target.value)}
+                    placeholder="e.g., Franklin County, OH or Nationwide"
                   />
                 </div>
               </div>
