@@ -499,12 +499,17 @@ export default function Layout({ children, currentPageName }) {
             <ul className="flex flex-1 flex-col gap-6">
               {navItems.map((group, groupIdx) => (
                 <li key={groupIdx}>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">
+                  <p className="text-xs font-semibold text-[#E5C089]/60 uppercase tracking-wider mb-2 px-3">
                     {group.groupName}
                   </p>
                   <ul className="space-y-1">
                     {group.items.map((item) => {
                       const isActive = currentPageName === item.page;
+                      const activeClass = effectiveRole === 'admin'
+                        ? 'bg-[#AC1A5B]/20 text-[#E5C089] border-l-4 border-[#AC1A5B]'
+                        : effectiveRole === 'coach'
+                        ? 'bg-[#1E4F58] text-[#E5C089] border-l-4 border-[#E5C089]'
+                        : 'bg-[#1E4F58] text-[#E5C089] border-l-4 border-[#E5C089]';
                       return (
                         <li key={item.name}>
                           <Link
@@ -512,14 +517,14 @@ export default function Layout({ children, currentPageName }) {
                             data-tour={item.dataTour}
                             className={`group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
                               isActive
-                                ? `${currentPortalColors.bg} ${currentPortalColors.text} border-l-4 ${currentPortalColors.border}`
-                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                ? activeClass
+                                : 'text-white/70 hover:bg-[#1E4F58] hover:text-white'
                             }`}
                           >
-                            <item.icon className={`w-4 h-4 ${isActive ? currentPortalColors.text : 'text-slate-400 group-hover:text-slate-600'}`} />
+                            <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#E5C089]' : 'text-white/50 group-hover:text-white'}`} />
                             <span className="truncate">{item.name}</span>
                             {isActive && (
-                              <ChevronRight className={`w-3 h-3 ml-auto flex-shrink-0 ${currentPortalColors.text}`} />
+                              <ChevronRight className="w-3 h-3 ml-auto flex-shrink-0 text-[#E5C089]" />
                             )}
                           </Link>
                         </li>
