@@ -453,7 +453,7 @@ export default function Layout({ children, currentPageName }) {
   const canSwitchPortals = user?.role === 'owner' || user?.role === 'admin' || user?.role === 'coach';
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50/80">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden bg-[#143A50] border-r border-[#1E4F58] px-4 py-6">
