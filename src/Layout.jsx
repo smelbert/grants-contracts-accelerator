@@ -49,7 +49,8 @@ import {
   TrendingUp,
   Settings,
   Flag,
-  Download
+  Download,
+  Upload
 } from 'lucide-react';
 
 // Public pages that skip the authenticated layout entirely
