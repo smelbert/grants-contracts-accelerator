@@ -294,19 +294,6 @@ export default function IncubateHerPreAssessment() {
     }
   }, [enrollment]);
 
-  const { data: existingAssessment } = useQuery({
-    queryKey: ['pre-assessment', enrollment?.id],
-    queryFn: async () => {
-      if (!enrollment?.id) return null;
-      const assessments = await base44.entities.ProgramAssessment.filter({
-        enrollment_id: enrollment.id,
-        assessment_type: 'pre'
-      });
-      return assessments[0];
-    },
-    enabled: !!enrollment?.id
-  });
-
   const saveDraftMutation = useMutation({
     mutationFn: async () => {
       if (!enrollment) return;
