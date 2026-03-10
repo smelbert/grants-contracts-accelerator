@@ -110,7 +110,9 @@ export default function IncubateHerProfileIntake() {
   useEffect(() => {
     if (existingProfile && !hasLoadedInitialData.current) {
       hasLoadedInitialData.current = true;
-      setFormData(prev => ({ ...prev, ...existingProfile }));
+      // Strip internal entity fields before merging into form state
+      const { id, created_date, updated_date, created_by, ...profileData } = existingProfile;
+      setFormData(prev => ({ ...prev, ...profileData }));
       setLastSaved(new Date(existingProfile.updated_date));
     } else if (!existingProfile && enrollment && !hasLoadedInitialData.current) {
       // Pre-fill from JotForm registration data if no org profile yet
