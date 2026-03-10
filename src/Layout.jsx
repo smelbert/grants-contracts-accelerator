@@ -50,7 +50,8 @@ import {
   Settings,
   Flag,
   Download,
-  Upload
+  Upload,
+  Wand2
 } from 'lucide-react';
 
 // Public pages that skip the authenticated layout entirely
@@ -73,6 +74,7 @@ const getUserPortalNav = () => [
       { name: 'Grant Assistant', page: 'GrantAssistant', icon: MessageCircle },
       { name: 'Projects', page: 'Projects', icon: FileText },
       { name: 'Documents', page: 'Documents', icon: FileText },
+      { name: 'Document Assembly', page: 'DocumentAssembly', icon: Wand2 },
       { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
     ]
   },
