@@ -26,7 +26,14 @@ export default function ProfilePage() {
 
   const { data: organizations, isLoading: orgsLoading } = useQuery({
     queryKey: ['organizations', user?.email],
-    queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),
+    queryFn: async () => {
+      if (!user?.email) return [];
+      // Try primary_contact_email first (canonical field used by IncubateHer profile)
+      const byEmail = await base44.entities.Organization.filter({ primary_contact_email: user.email });
+      if (byEmail.length > 0) return byEmail;
+      // Fallback to created_by
+      return base44.entities.Organization.filter({ created_by: user.email });
+    },
     enabled: !!user?.email,
   });
 
