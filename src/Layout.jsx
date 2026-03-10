@@ -458,12 +458,11 @@ export default function Layout({ children, currentPageName }) {
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border-r border-slate-200 px-4 py-6">
           {/* Logo */}
-          <Link to={createPageUrl('Home')} className="flex items-center -mx-2">
+          <Link to={createPageUrl('Home')} className="flex items-center justify-center py-2">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
               alt="Elbert Innovative Solutions" 
-              className="w-full h-auto object-contain"
-              style={{ maxHeight: '80px' }}
+              style={{ width: '180px', height: 'auto', display: 'block' }}
             />
           </Link>
 
