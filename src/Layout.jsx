@@ -462,7 +462,7 @@ export default function Layout({ children, currentPageName }) {
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
               alt="Elbert Innovative Solutions" 
-              style={{ width: '180px', height: 'auto', display: 'block' }}
+              className="w-full max-w-[160px] h-auto object-contain"
             />
           </Link>
 
