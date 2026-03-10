@@ -503,11 +503,18 @@ export default function IncubateHerPreAssessment() {
                    <Download className="w-4 h-4 mr-2" /> Download PDF
                  </Button>
                  <Button 
-                   onClick={() => {
+                   onClick={async () => {
                      setResponses({});
                      setSubmitted(false);
                      setPrefilled(false);
                      localStorage.removeItem(AUTOSAVE_KEY);
+                     if (existingAssessment?.id) {
+                       await base44.entities.ProgramAssessment.update(existingAssessment.id, {
+                         is_draft: true,
+                         responses: {}
+                       });
+                     }
+                     queryClient.invalidateQueries({ queryKey: ['pre-assessment'] });
                    }}
                    style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight }}
                  >
