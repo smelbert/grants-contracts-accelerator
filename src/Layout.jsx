@@ -746,13 +746,13 @@ export default function Layout({ children, currentPageName }) {
               </p>
             </div>
             <div className="flex flex-wrap gap-4 text-sm items-center">
-              <Link to={createPageUrl('TermsOfService')} className="text-slate-600 hover:text-[#143A50]">
+              <Link to={createPageUrl('TermsOfService')} className="text-slate-500 hover:text-[#143A50] transition-colors">
                 Terms of Service
               </Link>
-              <Link to={createPageUrl('AboutEIS')} className="text-slate-600 hover:text-[#143A50]">
+              <Link to={createPageUrl('AboutEIS')} className="text-slate-500 hover:text-[#143A50] transition-colors">
                 About EIS
               </Link>
-              <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-[#143A50]">
+              <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-[#143A50] transition-colors">
                 Visit Our Website
               </a>
               {user && (
