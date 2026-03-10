@@ -448,11 +448,19 @@ export default function IncubateHerPostAssessment() {
                      size="sm" 
                      className="mt-3"
                      style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
-                     onClick={() => {
+                     onClick={async () => {
                        setResponses({});
                        setSubmitted(false);
                        setNextSteps('');
                        localStorage.removeItem(AUTOSAVE_KEY);
+                       if (existingPostAssessment?.id) {
+                         await base44.entities.ProgramAssessment.update(existingPostAssessment.id, {
+                           is_draft: true,
+                           responses: {},
+                           next_steps: ''
+                         });
+                       }
+                       queryClient.invalidateQueries({ queryKey: ['post-assessment'] });
                      }}
                    >
                      Retake Assessment
