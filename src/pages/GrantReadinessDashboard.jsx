@@ -182,6 +182,34 @@ export default function GrantReadinessDashboard() {
           <GrowthAnalytics projects={projects} readinessProfile={readinessProfile} assessments={assessments} />
         </div>
 
+        {/* Quick Stats Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="border-slate-200">
+            <CardContent className="pt-6">
+              <p className="text-sm text-slate-600">Active Projects</p>
+              <p className="text-3xl font-bold text-[#143A50] mt-2">{projects.filter(p => ['planning', 'in_progress', 'review', 'submitted'].includes(p.status)).length}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-slate-200">
+            <CardContent className="pt-6">
+              <p className="text-sm text-slate-600">Documents Complete</p>
+              <p className="text-3xl font-bold text-[#143A50] mt-2">{checklist?.checklist_items?.filter(i => i.completed || i.status === 'approved').length || 0}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-slate-200">
+            <CardContent className="pt-6">
+              <p className="text-sm text-slate-600">Opportunities Found</p>
+              <p className="text-3xl font-bold text-[#143A50] mt-2">{fundingOpportunities.length}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-slate-200">
+            <CardContent className="pt-6">
+              <p className="text-sm text-slate-600">Assessments Completed</p>
+              <p className="text-3xl font-bold text-[#143A50] mt-2">{assessments.length}</p>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Next Steps */}
         <Card className="border-slate-200">
           <CardHeader>
