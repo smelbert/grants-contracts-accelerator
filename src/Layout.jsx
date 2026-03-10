@@ -68,6 +68,8 @@ const getUserPortalNav = () => [
     items: [
       { name: 'Funding Readiness', page: 'FundingReadinessAssessment', icon: CheckCircle2 },
       { name: 'AI Document Review', page: 'AIDocumentReview', icon: Sparkles },
+      { name: 'Analyze Opportunities', page: 'AnalyzeOpportunities', icon: Upload },
+      { name: 'Grant Assistant', page: 'GrantAssistant', icon: MessageCircle },
       { name: 'Projects', page: 'Projects', icon: FileText },
       { name: 'Documents', page: 'Documents', icon: FileText },
       { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
