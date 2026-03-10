@@ -222,21 +222,21 @@ export default function GrantGlossary() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                activeCategory === cat
-                  ? 'bg-[#143A50] text-white border-[#143A50]'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-[#143A50] hover:text-[#143A50]'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+         <div className="flex flex-wrap gap-2">
+           {CATEGORIES.map(cat => (
+             <button
+               key={cat}
+               onClick={() => setActiveCategory(cat)}
+               className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                 activeCategory === cat
+                   ? 'bg-[#143A50] text-white border-[#143A50]'
+                   : 'bg-white text-slate-600 border-slate-200 hover:border-[#143A50] hover:text-[#143A50]'
+               }`}
+             >
+               {cat} {cat !== 'All' && <span className="text-xs opacity-75">({CATEGORY_COUNTS[cat]})</span>}
+             </button>
+           ))}
+         </div>
 
         {/* A-Z Jump Nav */}
         {!search && letters.length > 1 && (
