@@ -308,29 +308,33 @@ export default function ProfilePage() {
           {/* Location */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Location</CardTitle>
+              <CardTitle className="text-lg">Contact &amp; Location</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Mailing Address</Label>
+                <Textarea
+                  value={formData.mailing_address || ''}
+                  onChange={(e) => handleChange('mailing_address', e.target.value)}
+                  placeholder="Full mailing address"
+                  rows={2}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>City</Label>
+                  <Label>Phone</Label>
                   <Input
-                    value={formData.city || ''}
-                    onChange={(e) => handleChange('city', e.target.value)}
+                    value={formData.phone || ''}
+                    onChange={(e) => handleChange('phone', e.target.value)}
+                    placeholder="(555) 123-4567"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>County</Label>
+                  <Label>Primary Leader Name</Label>
                   <Input
-                    value={formData.county || ''}
-                    onChange={(e) => handleChange('county', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>State</Label>
-                  <Input
-                    value={formData.state || ''}
-                    onChange={(e) => handleChange('state', e.target.value)}
+                    value={formData.primary_leader_name || ''}
+                    onChange={(e) => handleChange('primary_leader_name', e.target.value)}
+                    placeholder="CEO, Owner, Executive Director"
                   />
                 </div>
               </div>
