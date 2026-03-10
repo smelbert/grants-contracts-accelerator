@@ -136,6 +136,16 @@ const GLOSSARY_TERMS = [
 
 const CATEGORIES = ['All', 'Legal', 'Grants', 'Proposals', 'Contracts', 'Reporting', 'Funders'];
 
+const CATEGORY_COUNTS = {
+  All: GLOSSARY_TERMS.length,
+  Legal: GLOSSARY_TERMS.filter(t => t.category === 'Legal').length,
+  Grants: GLOSSARY_TERMS.filter(t => t.category === 'Grants').length,
+  Proposals: GLOSSARY_TERMS.filter(t => t.category === 'Proposals').length,
+  Contracts: GLOSSARY_TERMS.filter(t => t.category === 'Contracts').length,
+  Reporting: GLOSSARY_TERMS.filter(t => t.category === 'Reporting').length,
+  Funders: GLOSSARY_TERMS.filter(t => t.category === 'Funders').length,
+};
+
 const CATEGORY_COLORS = {
   Legal: 'bg-purple-100 text-purple-800 border-purple-200',
   Grants: 'bg-blue-100 text-blue-800 border-blue-200',
