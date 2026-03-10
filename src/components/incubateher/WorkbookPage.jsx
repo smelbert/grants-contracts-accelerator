@@ -118,7 +118,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
   }, [organizationProfile]);
 
   // Auto-fill empty fields from profile on load
-  React.useEffect(() => {
+  useEffect(() => {
     if (!organizationProfile || !page.fields) return;
     page.fields.forEach(field => {
       const currentValue = responses?.[field.id];
