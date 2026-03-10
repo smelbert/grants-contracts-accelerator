@@ -456,7 +456,7 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border-r border-slate-200 px-4 py-6">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden bg-white border-r border-slate-200 px-4 py-6">
           {/* Logo */}
           <Link to={createPageUrl('Home')} className="flex items-center justify-center py-2">
             <img 
