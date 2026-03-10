@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { ArrowLeft } from 'lucide-react';
 import { 
   Award, 
   BookOpen, 
@@ -91,9 +92,17 @@ export default function PublicHomePage() {
                 IncubateHer
               </Link>
               <a href="https://www.elbertinnovativesolutions.org/" className="text-slate-700 hover:text-[#143A50] font-medium" target="_blank" rel="noopener noreferrer">EIS Website</a>
-              <Link to={createPageUrl('Register')}>
-                <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
-              </Link>
+              {useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() }).data ? (
+                <Link to={createPageUrl('Home')}>
+                  <Button className="bg-[#1E4F58] hover:bg-[#143A50] flex items-center gap-2">
+                    <span>←</span> Back to Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <Link to={createPageUrl('Register')}>
+                  <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Get Started</Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

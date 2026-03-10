@@ -54,6 +54,7 @@ import AIGuardrails from './pages/AIGuardrails';
 import AboutEIS from './pages/AboutEIS';
 import AdminContentExport from './pages/AdminContentExport';
 import AdminDashboard from './pages/AdminDashboard';
+import AnalyzeOpportunities from './pages/AnalyzeOpportunities';
 import ApplicationTracker from './pages/ApplicationTracker';
 import AssessmentAnalytics from './pages/AssessmentAnalytics';
 import AssessmentManagement from './pages/AssessmentManagement';
@@ -99,6 +100,7 @@ import FunderProfile from './pages/FunderProfile';
 import FunderResearch from './pages/FunderResearch';
 import FundingLane from './pages/FundingLane';
 import FundingReadinessAssessment from './pages/FundingReadinessAssessment';
+import GrantAssistant from './pages/GrantAssistant';
 import GrantDashboard from './pages/GrantDashboard';
 import GrantGlossary from './pages/GrantGlossary';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
@@ -155,7 +157,6 @@ import LiveStreams from './pages/LiveStreams';
 import MemberManagement from './pages/MemberManagement';
 import MentorDashboard from './pages/MentorDashboard';
 import MentorManagement from './pages/MentorManagement';
-import Pricing from './pages/Pricing';
 import MyClassroom from './pages/MyClassroom';
 import MyMentorship from './pages/MyMentorship';
 import MyProfile from './pages/MyProfile';
@@ -171,6 +172,7 @@ import PaymentCancelled from './pages/PaymentCancelled';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PlatformManagement from './pages/PlatformManagement';
 import PlatformSettings from './pages/PlatformSettings';
+import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import ProgramAnalytics from './pages/ProgramAnalytics';
 import ProgramAnnouncements from './pages/ProgramAnnouncements';
@@ -219,8 +221,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import AnalyzeOpportunities from './pages/AnalyzeOpportunities';
-import GrantAssistant from './pages/GrantAssistant';
 import DocumentAssembly from './pages/DocumentAssembly';
 import __Layout from './Layout.jsx';
 
@@ -233,6 +233,7 @@ export const PAGES = {
     "AboutEIS": AboutEIS,
     "AdminContentExport": AdminContentExport,
     "AdminDashboard": AdminDashboard,
+    "AnalyzeOpportunities": AnalyzeOpportunities,
     "ApplicationTracker": ApplicationTracker,
     "AssessmentAnalytics": AssessmentAnalytics,
     "AssessmentManagement": AssessmentManagement,
@@ -278,6 +279,7 @@ export const PAGES = {
     "FunderResearch": FunderResearch,
     "FundingLane": FundingLane,
     "FundingReadinessAssessment": FundingReadinessAssessment,
+    "GrantAssistant": GrantAssistant,
     "GrantDashboard": GrantDashboard,
     "GrantGlossary": GrantGlossary,
     "GrantReadinessAssessment": GrantReadinessAssessment,
@@ -334,7 +336,6 @@ export const PAGES = {
     "MemberManagement": MemberManagement,
     "MentorDashboard": MentorDashboard,
     "MentorManagement": MentorManagement,
-    "Pricing": Pricing,
     "MyClassroom": MyClassroom,
     "MyMentorship": MyMentorship,
     "MyProfile": MyProfile,
@@ -350,6 +351,7 @@ export const PAGES = {
     "PaymentSuccess": PaymentSuccess,
     "PlatformManagement": PlatformManagement,
     "PlatformSettings": PlatformSettings,
+    "Pricing": Pricing,
     "Profile": Profile,
     "ProgramAnalytics": ProgramAnalytics,
     "ProgramAnnouncements": ProgramAnnouncements,
@@ -398,8 +400,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "AnalyzeOpportunities": AnalyzeOpportunities,
-    "GrantAssistant": GrantAssistant,
     "DocumentAssembly": DocumentAssembly,
 }
 
