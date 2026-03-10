@@ -221,6 +221,7 @@ import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
 import AnalyzeOpportunities from './pages/AnalyzeOpportunities';
 import GrantAssistant from './pages/GrantAssistant';
+import DocumentAssembly from './pages/DocumentAssembly';
 import __Layout from './Layout.jsx';
 
 
@@ -399,6 +400,7 @@ export const PAGES = {
     "WorkflowsAutomation": WorkflowsAutomation,
     "AnalyzeOpportunities": AnalyzeOpportunities,
     "GrantAssistant": GrantAssistant,
+    "DocumentAssembly": DocumentAssembly,
 }
 
 export const pagesConfig = {
