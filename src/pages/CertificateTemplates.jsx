@@ -350,7 +350,20 @@ export default function CertificateTemplatesPage() {
               <h2 className="text-2xl font-bold">Certificate Preview</h2>
               <Button variant="outline" onClick={() => setPreviewTemplate(null)}>Close</Button>
             </div>
-            {renderPreview()}
+            <div className="border rounded-lg overflow-hidden bg-slate-100" style={{ height: '600px' }}>
+              <iframe
+                srcDoc={(previewTemplate.custom_html || '')
+                  .replace(/\{participant_name\}/g, 'Jane Doe')
+                  .replace(/\{program_name\}/g, 'IncubateHer Program')
+                  .replace(/\{completion_date\}/g, new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }))
+                  .replace(/\{total_hours\}/g, '12')
+                  .replace(/\{funder_organization\}/g, 'Columbus Urban League')
+                  .replace(/\{delivery_organization\}/g, 'Elbert Innovative Solutions')
+                  .replace(/\{certificate_number\}/g, 'CERT-PREVIEW-001')}
+                className="w-full h-full border-0"
+                title="Certificate Preview"
+              />
+            </div>
           </div>
         </div>
       )}
