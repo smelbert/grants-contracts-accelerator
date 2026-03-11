@@ -301,17 +301,31 @@ export default function AssessmentSurveyAdmin() {
                       </tr>
                     </thead>
                     <tbody>
-                      {enrollments.map((e) => {
-                        const pre = incubatePre.find(a => a.participant_email === e.participant_email);
-                        const post = incubatePost.find(a => a.participant_email === e.participant_email);
-                        const ev = incubateEval.find(a => a.participant_email === e.participant_email);
-                        const growth = (pre && post) ? post.total_score - pre.total_score : null;
-                        return (
-                          <tr key={e.id} className="border-b hover:bg-slate-50">
-                            <td className="py-2 px-3">
-                              <p className="font-medium text-slate-800">{e.participant_name}</p>
-                              <p className="text-xs text-slate-500">{e.participant_email}</p>
-                            </td>
+                      {(() => {
+                        const enrolledEmails = new Set(enrollments.map(e => e.participant_email));
+                        const enrolledRows = enrollments.map(e => ({ id: e.id, name: e.participant_name, email: e.participant_email, enrolled: true }));
+                        const allEmails = new Set([
+                          ...incubatePre.map(a => a.participant_email || a.created_by),
+                          ...incubatePost.map(a => a.participant_email || a.created_by),
+                          ...incubateEval.map(a => a.participant_email || a.created_by),
+                        ]);
+                        const unmatchedRows = [...allEmails]
+                          .filter(email => email && !enrolledEmails.has(email))
+                          .map(email => ({ id: email, name: null, email, enrolled: false }));
+                        return [...enrolledRows, ...unmatchedRows];
+                      })().map((e) => {
+                         const matchEmail = (a) => a.participant_email === e.email || a.created_by === e.email;
+                         const pre = incubatePre.find(matchEmail);
+                         const post = incubatePost.find(matchEmail);
+                         const ev = incubateEval.find(matchEmail);
+                         const growth = (pre && post) ? post.total_score - pre.total_score : null;
+                         return (
+                           <tr key={e.id} className={`border-b hover:bg-slate-50 ${!e.enrolled ? 'bg-amber-50' : ''}`}>
+                             <td className="py-2 px-3">
+                               <p className="font-medium text-slate-800">{e.name || e.email}</p>
+                               <p className="text-xs text-slate-500">{e.email}</p>
+                               {!e.enrolled && <span className="text-xs text-amber-600 font-medium">⚠ Not in enrollment list</span>}
+                             </td>
                             <td className="py-2 px-3 text-center">
                               {pre ? (
                                 <button onClick={() => { setSelectedAssessment(pre); setSelectedParticipantName(e.participant_name); }}>
