@@ -147,6 +147,13 @@ const getCoachPortalNav = () => [
   { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
   { name: 'Teaching & Content', page: 'TeachingContent', icon: BookOpen },
   { name: 'Flags & Notes', page: 'FlagsNotes', icon: AlertTriangle },
+  { name: '— IncubateHer Analytics —', page: 'IncubateHerAdmin', icon: TrendingUp },
+  { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
+  { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
+  { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: Calendar },
+  { name: 'Assessments & Surveys', page: 'AssessmentSurveyAdmin', icon: FileText },
+  { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: BarChart3 },
+  { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
   { name: 'Settings', page: 'Settings', icon: SettingsIcon },
 ];
 
