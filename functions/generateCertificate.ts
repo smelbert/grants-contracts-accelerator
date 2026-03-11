@@ -255,13 +255,14 @@ Deno.serve(async (req) => {
       cohort_id: enrollment.cohort_id,
       participant_email: enrollment.participant_email,
       participant_name: enrollment.participant_name,
-      program_name: cohort.program_name,
+      program_name: cohort?.program_name || '',
       issue_date: new Date().toISOString(),
       completion_date: new Date().toISOString(),
       certificate_number: certificateNumber,
       total_hours: totalHours,
       modules_completed: completedModuleIds,
       certificate_url: uploadResponse.file_url,
+      certificate_html: htmlCertificate,
       verification_url: `${Deno.env.get('BASE44_APP_URL')}/verify-certificate/${certificateNumber}`,
       is_verified: true
     });
