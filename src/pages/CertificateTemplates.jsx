@@ -548,6 +548,45 @@ export default function CertificateTemplatesPage() {
                     <Label>Active</Label>
                   </div>
                 </div>
+                  </TabsContent>
+
+                  <TabsContent value="html" className="space-y-3">
+                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+                      <strong>Custom HTML Mode:</strong> If you enter HTML here, it will <strong>override the design layout</strong> when generating certificates. Leave blank to use the design layout above.
+                      <br/><span className="text-xs mt-1 block">Available placeholders: <code>{'{participant_name}'}</code>, <code>{'{program_name}'}</code>, <code>{'{completion_date}'}</code>, <code>{'{total_hours}'}</code>, <code>{'{funder_organization}'}</code>, <code>{'{delivery_organization}'}</code>, <code>{'{certificate_number}'}</code></span>
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <Label>Certificate HTML</Label>
+                        {formData.custom_html && (
+                          <Button type="button" size="sm" variant="ghost" className="text-red-500 text-xs" onClick={() => setFormData({ ...formData, custom_html: '' })}>
+                            Clear HTML (use design layout)
+                          </Button>
+                        )}
+                      </div>
+                      <textarea
+                        value={formData.custom_html || ''}
+                        onChange={(e) => setFormData({ ...formData, custom_html: e.target.value })}
+                        rows={20}
+                        placeholder={'<!DOCTYPE html>\n<html>\n<head>...</head>\n<body>\n  <!-- Your certificate HTML -->\n</body>\n</html>'}
+                        className="w-full font-mono text-xs border rounded-md p-3 bg-slate-950 text-green-400 resize-y focus:outline-none focus:ring-2 focus:ring-[#143A50]"
+                        spellCheck={false}
+                      />
+                    </div>
+                    {formData.custom_html && (
+                      <div>
+                        <Label className="mb-2 block">Live Preview</Label>
+                        <div className="border rounded-lg overflow-hidden bg-slate-100 h-80">
+                          <iframe
+                            srcDoc={formData.custom_html.replace(/\{participant_name\}/g, 'Jane Doe').replace(/\{program_name\}/g, 'IncubateHer Program').replace(/\{completion_date\}/g, new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})).replace(/\{total_hours\}/g, '12').replace(/\{funder_organization\}/g, 'Columbus Urban League').replace(/\{delivery_organization\}/g, 'Elbert Innovative Solutions').replace(/\{certificate_number\}/g, 'CERT-PREVIEW-001')}
+                            className="w-full h-full border-0"
+                            title="HTML Preview"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
 
                 <div className="flex gap-3 pt-4">
                   <Button type="button" variant="outline" className="flex-1" onClick={resetForm}>
