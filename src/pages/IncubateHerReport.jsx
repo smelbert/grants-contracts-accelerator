@@ -538,8 +538,8 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
       ); y += 7;
     });
 
-    // ── 10. Equity & Compliance ──
-    addSection(`${nextStepsList.length > 0 ? 10 : 9}. Equity & Compliance`);
+    // ── Equity & Compliance ──
+    addSection(`${9 + sectionOffset}. Equity & Compliance`);
     addSubSection('Equity & Capacity-Building Impact');
     addText(narratives.equity_narrative);
     y += 3;
