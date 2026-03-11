@@ -587,15 +587,16 @@ export default function CertificateTemplatesPage() {
                     )}
                   </TabsContent>
 
-                  <div className="flex gap-3 pt-4">
-                    <Button type="button" variant="outline" className="flex-1" onClick={resetForm}>
-                      Cancel
-                    </Button>
-                    <Button type="submit" className="flex-1 bg-[#143A50]">
-                      {editingTemplate ? 'Update' : 'Create'} Template
-                    </Button>
-                  </div>
                 </Tabs>
+
+                <div className="flex gap-3 pt-4">
+                  <Button type="button" variant="outline" className="flex-1" onClick={resetForm}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" className="flex-1 bg-[#143A50]">
+                    {editingTemplate ? 'Update' : 'Create'} Template
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
