@@ -278,6 +278,13 @@ export default function CertificateTemplatesPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
+                <Tabs defaultValue="design">
+                  <TabsList className="mb-4">
+                    <TabsTrigger value="design"><Palette className="w-3 h-3 mr-1" />Design</TabsTrigger>
+                    <TabsTrigger value="html"><Code className="w-3 h-3 mr-1" />Custom HTML</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="design" className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Template Name *</Label>
