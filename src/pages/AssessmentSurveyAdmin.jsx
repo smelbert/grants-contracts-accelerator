@@ -230,6 +230,69 @@ export default function AssessmentSurveyAdmin() {
               ))}
             </div>
 
+            {/* Evaluation Feedback */}
+            {incubateEval.length > 0 && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-purple-700">
+                    <span>Program Evaluation Feedback</span>
+                    <Badge className="bg-purple-100 text-purple-800">{incubateEval.length} submitted</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {incubateEval.map((ev, i) => {
+                    const hasText = ev.responses?.most_valuable || ev.responses?.improvements || ev.responses?.additional_comments || ev.responses?.next_steps;
+                    return (
+                      <div key={ev.id || i} className="border border-purple-100 rounded-xl p-4 bg-purple-50 space-y-3">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <p className="text-sm font-semibold text-slate-700">{ev.participant_email}</p>
+                          <div className="flex gap-2">
+                            {ev.responses?.overall_rating != null && (
+                              <Badge className="bg-amber-100 text-amber-800 flex items-center gap-1">
+                                <Star className="w-3 h-3 fill-amber-400" /> Overall: {ev.responses.overall_rating}/10
+                              </Badge>
+                            )}
+                            {ev.responses?.recommend_rating != null && (
+                              <Badge className="bg-green-100 text-green-800">Recommend: {ev.responses.recommend_rating}/10</Badge>
+                            )}
+                          </div>
+                        </div>
+                        {hasText && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                            {ev.responses?.most_valuable && (
+                              <div className="bg-white rounded-lg p-3 border border-purple-100">
+                                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Most Valuable</p>
+                                <p className="text-slate-700">{ev.responses.most_valuable}</p>
+                              </div>
+                            )}
+                            {ev.responses?.improvements && (
+                              <div className="bg-white rounded-lg p-3 border border-purple-100">
+                                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Suggestions</p>
+                                <p className="text-slate-700">{ev.responses.improvements}</p>
+                              </div>
+                            )}
+                            {ev.responses?.additional_comments && (
+                              <div className="bg-white rounded-lg p-3 border border-purple-100">
+                                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Additional Comments</p>
+                                <p className="text-slate-700">{ev.responses.additional_comments}</p>
+                              </div>
+                            )}
+                            {ev.responses?.next_steps && (
+                              <div className="bg-white rounded-lg p-3 border border-purple-100">
+                                <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Next Steps</p>
+                                <p className="text-slate-700">{ev.responses.next_steps}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {!hasText && <p className="text-xs text-slate-400 italic">No open-ended responses provided.</p>}
+                      </div>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Growth Indicator */}
             {incubatePre.length > 0 && incubatePost.length > 0 && (
               <Card className="mb-6 bg-slate-900 text-white">

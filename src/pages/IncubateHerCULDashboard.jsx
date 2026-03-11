@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import RegistrationInsightsBrief from '@/components/incubateher/RegistrationInsightsBrief';
-import { Users, TrendingUp, Award, FileText, Shield, CheckCircle2, BarChart2, ArrowUpRight } from 'lucide-react';
+import { Users, TrendingUp, Award, FileText, Shield, CheckCircle2, BarChart2, ArrowUpRight, Star, MessageSquare } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   RadialBarChart, RadialBar, PieChart, Pie, Cell,
