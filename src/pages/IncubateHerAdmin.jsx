@@ -21,12 +21,13 @@ export default function IncubateHerAdmin() {
 
   // Match the same query used in IncubateHerParticipants for accuracy
   const { data: enrollments = [] } = useQuery({
-    queryKey: ['all-enrollments'],
+    queryKey: ['all-enrollments', cohort?.id],
     queryFn: async () => {
-      return await base44.entities.ProgramEnrollment.filter({
-        role: 'participant'
-      });
-    }
+      const filter = { role: 'participant' };
+      if (cohort?.id) filter.cohort_id = cohort.id;
+      return await base44.entities.ProgramEnrollment.filter(filter);
+    },
+    enabled: cohort !== undefined // wait for cohort query to resolve
   });
 
   const { data: assessments = [] } = useQuery({

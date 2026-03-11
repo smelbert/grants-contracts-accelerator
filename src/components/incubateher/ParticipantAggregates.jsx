@@ -88,42 +88,22 @@ export default function ParticipantAggregates({ enrollments, onFilter, activeFil
 
   const groups = [
     {
-      key: 'in_person',
-      title: 'In-Person Attendance',
-      data: countBy(parsed, e => {
-        const v = e._notes['In-Person'] || '';
-        if (v.toLowerCase().includes('yes')) return 'Yes';
-        if (v.toLowerCase().includes('no')) return 'No';
-        return 'Unknown';
-      }),
-      extractor: e => {
-        const v = (parseNotes(e.enrollment_notes)['In-Person'] || '');
-        if (v.toLowerCase().includes('yes')) return 'Yes';
-        if (v.toLowerCase().includes('no')) return 'No';
-        return 'Unknown';
-      }
+      key: 'org_type',
+      title: 'Organization Type',
+      data: countBy(parsed, e => e.jotform_data?.org_type || e._notes['Org Type'] || 'Unknown'),
+      extractor: e => e.jotform_data?.org_type || parseNotes(e.enrollment_notes)['Org Type'] || 'Unknown'
     },
     {
-      key: 'consultation',
-      title: 'Consultation Interest',
-      data: countBy(parsed, e => {
-        const v = e._notes['Consultation Interest'] || '';
-        if (v.toLowerCase().startsWith('yes')) return 'Interested';
-        if (v.toLowerCase().startsWith('no')) return 'Not Interested';
-        return v || 'Unknown';
-      }),
-      extractor: e => {
-        const v = (parseNotes(e.enrollment_notes)['Consultation Interest'] || '');
-        if (v.toLowerCase().startsWith('yes')) return 'Interested';
-        if (v.toLowerCase().startsWith('no')) return 'Not Interested';
-        return v || 'Unknown';
-      }
+      key: 'grant_experience',
+      title: 'Grant Experience Level',
+      data: countBy(parsed, e => e.jotform_data?.grant_experience || e._notes['Grant Experience'] || 'Unknown'),
+      extractor: e => e.jotform_data?.grant_experience || parseNotes(e.enrollment_notes)['Grant Experience'] || 'Unknown'
     },
     {
-      key: 'funding_barrier',
-      title: 'Funding Barrier',
-      data: countBy(parsed, e => e._notes['Funding Barrier'] || 'Unknown'),
-      extractor: e => parseNotes(e.enrollment_notes)['Funding Barrier'] || 'Unknown'
+      key: 'years_in_business',
+      title: 'Years in Business',
+      data: countBy(parsed, e => e.jotform_data?.years_in_business || e._notes['Years in Business'] || 'Unknown'),
+      extractor: e => e.jotform_data?.years_in_business || parseNotes(e.enrollment_notes)['Years in Business'] || 'Unknown'
     },
     {
       key: 'program_status',

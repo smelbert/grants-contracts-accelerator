@@ -65,7 +65,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function IncubateHerCULDashboard() {
   const { data: enrollments } = useQuery({
     queryKey: ['cul-enrollments'],
-    queryFn: () => base44.entities.ProgramEnrollment.list()
+    queryFn: () => base44.entities.ProgramEnrollment.filter({ role: 'participant' })
   });
 
   const { data: assessments } = useQuery({
