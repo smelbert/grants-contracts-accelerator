@@ -24,20 +24,7 @@ export default function CertificateTemplatesPage() {
     custom_html: '',
     is_active: true
   });
-  const [newSignature, setNewSignature] = useState({ name: '', title: '', signature_image_url: '' });
-  const [uploadingLogo, setUploadingLogo] = useState(false);
-  const [uploadingCoLogo, setUploadingCoLogo] = useState(false);
 
-  const handleLogoUpload = async (e, field) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const setter = field === 'logo_url' ? setUploadingLogo : setUploadingCoLogo;
-    setter(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setFormData(prev => ({ ...prev, [field]: file_url }));
-    setter(false);
-    toast.success('Logo uploaded!');
-  };
 
   const { data: templates } = useQuery({
     queryKey: ['certificate-templates'],
