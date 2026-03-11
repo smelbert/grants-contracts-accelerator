@@ -214,12 +214,13 @@ export default function IssuedCertificatesPage() {
       </div>
     </div>
 
-    {selectedCertificate?.certificate_html && (
-      <CertificateViewer
-        htmlContent={selectedCertificate.certificate_html}
-        certificateNumber={selectedCertificate.certificate_number}
-        onClose={() => setSelectedCertificate(null)}
-      />
-    )}
+      {selectedCertificate?.certificate_html && (
+        <CertificateViewer
+          htmlContent={selectedCertificate.certificate_html}
+          certificateNumber={selectedCertificate.certificate_number}
+          onClose={() => setSelectedCertificate(null)}
+        />
+      )}
+    </div>
   );
 }
