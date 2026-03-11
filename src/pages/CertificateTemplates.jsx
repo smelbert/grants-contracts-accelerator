@@ -238,13 +238,6 @@ export default function CertificateTemplatesPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <Tabs defaultValue={formData.custom_html ? "html" : "design"}>
-                  <TabsList className="mb-4 sticky top-0 z-10 bg-white w-full shadow-sm">
-                    <TabsTrigger value="design" className="flex-1"><Palette className="w-3 h-3 mr-1" />Design</TabsTrigger>
-                    <TabsTrigger value="html" className="flex-1"><Code className="w-3 h-3 mr-1" />Custom HTML</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="design" className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Template Name *</Label>
@@ -273,226 +266,45 @@ export default function CertificateTemplatesPage() {
                   </div>
                 </div>
 
-                <div>
-                  <Label className="flex items-center gap-2 mb-3">
-                    <Palette className="w-4 h-4" />
-                    Certificate Layout * (Professional Designs - Structure Locked)
-                  </Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                    {Object.entries(professionalLayouts).map(([key, layout]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, template_layout: key })}
-                        className={`relative p-3 border-2 rounded-lg transition hover:border-[#143A50] ${
-                          formData.template_layout === key ? 'border-[#143A50] bg-[#143A50]/5 ring-2 ring-[#143A50]/20' : 'border-slate-200'
-                        }`}
-                      >
-                        <div className="h-32 overflow-hidden rounded">
-                          <ProfessionalLayoutPreview 
-                            layout={key}
-                            colors={{
-                              primary: formData.primary_color,
-                              secondary: formData.secondary_color,
-                              background: formData.background_color,
-                              text: formData.text_color
-                            }}
-                          />
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                  <strong>Available placeholders:</strong>{' '}
+                  <code>{'{participant_name}'}</code>, <code>{'{program_name}'}</code>, <code>{'{completion_date}'}</code>, <code>{'{total_hours}'}</code>, <code>{'{funder_organization}'}</code>, <code>{'{delivery_organization}'}</code>, <code>{'{certificate_number}'}</code>
                 </div>
 
                 <div>
-                 <Label>Header Text *</Label>
-                  <Input
-                    required={!formData.custom_html}
-                    value={formData.header_text}
-                    onChange={(e) => setFormData({ ...formData, header_text: e.target.value })}
+                  <Label className="flex items-center gap-2 mb-1"><Code className="w-4 h-4" /> Certificate HTML *</Label>
+                  <textarea
+                    required
+                    value={formData.custom_html || ''}
+                    onChange={(e) => setFormData({ ...formData, custom_html: e.target.value })}
+                    rows={20}
+                    placeholder={'<!DOCTYPE html>\n<html>\n<head>...</head>\n<body>\n  <!-- Your certificate HTML -->\n</body>\n</html>'}
+                    className="w-full font-mono text-xs border rounded-md p-3 bg-slate-950 text-green-400 resize-y focus:outline-none focus:ring-2 focus:ring-[#143A50]"
+                    spellCheck={false}
                   />
                 </div>
 
-                <div>
-                  <Label>Body Template *</Label>
-                  <Textarea
-                    required={!formData.custom_html}
-                    rows={4}
-                    value={formData.body_template}
-                    onChange={(e) => setFormData({ ...formData, body_template: e.target.value })}
-                    placeholder="Use placeholders: {participant_name}, {program_name}, {completion_date}, {total_hours}, {funder_organization}, {delivery_organization}"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">Available placeholders: {'{participant_name}, {program_name}, {completion_date}, {total_hours}, {funder_organization}, {delivery_organization}'}</p>
-                </div>
-
-                <div>
-                  <Label>Footer Text</Label>
-                  <Input
-                    value={formData.footer_text}
-                    onChange={(e) => setFormData({ ...formData, footer_text: e.target.value })}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+                {formData.custom_html && (
                   <div>
-                    <Label>Main Logo</Label>
-                    <div className="flex items-center gap-2 mt-1">
-                      {formData.logo_url && (
-                        <img src={formData.logo_url} className="h-10 object-contain border rounded p-1 bg-white" alt="Logo" />
-                      )}
-                      <label className="cursor-pointer flex-1">
-                        <div className="flex items-center gap-2 border rounded-md px-3 py-2 text-sm hover:bg-slate-50 transition">
-                          {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          {uploadingLogo ? 'Uploading...' : formData.logo_url ? 'Replace Logo' : 'Upload Logo'}
-                        </div>
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleLogoUpload(e, 'logo_url')} />
-                      </label>
-                      {formData.logo_url && (
-                        <Button type="button" size="sm" variant="ghost" onClick={() => setFormData({ ...formData, logo_url: '' })}>
-                          <Trash2 className="w-3 h-3 text-red-400" />
-                        </Button>
-                      )}
+                    <Label className="mb-2 block">Live Preview</Label>
+                    <div className="border rounded-lg overflow-hidden bg-slate-100 h-80">
+                      <iframe
+                        srcDoc={formData.custom_html
+                          .replace(/\{participant_name\}/g, 'Jane Doe')
+                          .replace(/\{program_name\}/g, 'IncubateHer Program')
+                          .replace(/\{completion_date\}/g, new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }))
+                          .replace(/\{total_hours\}/g, '12')
+                          .replace(/\{funder_organization\}/g, 'Columbus Urban League')
+                          .replace(/\{delivery_organization\}/g, 'Elbert Innovative Solutions')
+                          .replace(/\{certificate_number\}/g, 'CERT-PREVIEW-001')}
+                        className="w-full h-full border-0"
+                        title="HTML Preview"
+                      />
                     </div>
                   </div>
-                  <div>
-                    <Label>Co-Brand Logo</Label>
-                    <div className="flex items-center gap-2 mt-1">
-                      {formData.co_logo_url && (
-                        <img src={formData.co_logo_url} className="h-10 object-contain border rounded p-1 bg-white" alt="Co-Logo" />
-                      )}
-                      <label className="cursor-pointer flex-1">
-                        <div className="flex items-center gap-2 border rounded-md px-3 py-2 text-sm hover:bg-slate-50 transition">
-                          {uploadingCoLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                          {uploadingCoLogo ? 'Uploading...' : formData.co_logo_url ? 'Replace Logo' : 'Upload Logo'}
-                        </div>
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleLogoUpload(e, 'co_logo_url')} />
-                      </label>
-                      {formData.co_logo_url && (
-                        <Button type="button" size="sm" variant="ghost" onClick={() => setFormData({ ...formData, co_logo_url: '' })}>
-                          <Trash2 className="w-3 h-3 text-red-400" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Colors */}
-                <div className="space-y-2">
-                  <Label className="text-base font-semibold">Brand Colors (Customize while keeping professional design)</Label>
-                  <div className="grid grid-cols-4 gap-4">
-                    <div>
-                      <Label className="text-xs">Primary Color</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="color"
-                          value={formData.primary_color}
-                          onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
-                          className="w-16 h-10"
-                        />
-                        <Input
-                          type="text"
-                          value={formData.primary_color}
-                          onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-xs">Secondary/Accent</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="color"
-                          value={formData.secondary_color}
-                          onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
-                          className="w-16 h-10"
-                        />
-                        <Input
-                          type="text"
-                          value={formData.secondary_color}
-                          onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-xs">Background</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="color"
-                          value={formData.background_color}
-                          onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-                          className="w-16 h-10"
-                        />
-                        <Input
-                          type="text"
-                          value={formData.background_color}
-                          onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-xs">Text Color</Label>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="color"
-                          value={formData.text_color}
-                          onChange={(e) => setFormData({ ...formData, text_color: e.target.value })}
-                          className="w-16 h-10"
-                        />
-                        <Input
-                          type="text"
-                          value={formData.text_color}
-                          onChange={(e) => setFormData({ ...formData, text_color: e.target.value })}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Signatures */}
-                <div className="space-y-3 pt-4 border-t">
-                  <Label className="text-base font-semibold">Signature Fields</Label>
-                  
-                  {formData.signature_fields?.map((sig, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{sig.name}</p>
-                        <p className="text-xs text-slate-600">{sig.title}</p>
-                      </div>
-                      <Button type="button" size="sm" variant="ghost" onClick={() => removeSignature(index)}>
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </div>
-                  ))}
-
-                  <div className="grid grid-cols-3 gap-3 p-3 border rounded-lg">
-                    <Input
-                      placeholder="Name"
-                      value={newSignature.name}
-                      onChange={(e) => setNewSignature({ ...newSignature, name: e.target.value })}
-                    />
-                    <Input
-                      placeholder="Title"
-                      value={newSignature.title}
-                      onChange={(e) => setNewSignature({ ...newSignature, title: e.target.value })}
-                    />
-                    <Button type="button" size="sm" onClick={addSignature} className="w-full">
-                      <Plus className="w-4 h-4 mr-1" />
-                      Add
-                    </Button>
-                  </div>
-                </div>
+                )}
 
                 <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-                  <div className="flex items-center gap-2 flex-1">
-                    <Switch
-                      checked={formData.include_qr_code}
-                      onCheckedChange={(checked) => setFormData({ ...formData, include_qr_code: checked })}
-                    />
-                    <Label>Include QR Code</Label>
-                  </div>
                   <div className="flex items-center gap-2 flex-1">
                     <Switch
                       checked={formData.is_default}
@@ -508,46 +320,6 @@ export default function CertificateTemplatesPage() {
                     <Label>Active</Label>
                   </div>
                 </div>
-                  </TabsContent>
-
-                  <TabsContent value="html" className="space-y-3">
-                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
-                      <strong>Custom HTML Mode:</strong> If you enter HTML here, it will <strong>override the design layout</strong> when generating certificates. Leave blank to use the design layout above.
-                      <br/><span className="text-xs mt-1 block">Available placeholders: <code>{'{participant_name}'}</code>, <code>{'{program_name}'}</code>, <code>{'{completion_date}'}</code>, <code>{'{total_hours}'}</code>, <code>{'{funder_organization}'}</code>, <code>{'{delivery_organization}'}</code>, <code>{'{certificate_number}'}</code></span>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <Label>Certificate HTML</Label>
-                        {formData.custom_html && (
-                          <Button type="button" size="sm" variant="ghost" className="text-red-500 text-xs" onClick={() => setFormData({ ...formData, custom_html: '' })}>
-                            Clear HTML (use design layout)
-                          </Button>
-                        )}
-                      </div>
-                      <textarea
-                        value={formData.custom_html || ''}
-                        onChange={(e) => setFormData({ ...formData, custom_html: e.target.value })}
-                        rows={20}
-                        placeholder={'<!DOCTYPE html>\n<html>\n<head>...</head>\n<body>\n  <!-- Your certificate HTML -->\n</body>\n</html>'}
-                        className="w-full font-mono text-xs border rounded-md p-3 bg-slate-950 text-green-400 resize-y focus:outline-none focus:ring-2 focus:ring-[#143A50]"
-                        spellCheck={false}
-                      />
-                    </div>
-                    {formData.custom_html && (
-                      <div>
-                        <Label className="mb-2 block">Live Preview</Label>
-                        <div className="border rounded-lg overflow-hidden bg-slate-100 h-80">
-                          <iframe
-                            srcDoc={formData.custom_html.replace(/\{participant_name\}/g, 'Jane Doe').replace(/\{program_name\}/g, 'IncubateHer Program').replace(/\{completion_date\}/g, new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})).replace(/\{total_hours\}/g, '12').replace(/\{funder_organization\}/g, 'Columbus Urban League').replace(/\{delivery_organization\}/g, 'Elbert Innovative Solutions').replace(/\{certificate_number\}/g, 'CERT-PREVIEW-001')}
-                            className="w-full h-full border-0"
-                            title="HTML Preview"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </TabsContent>
-
-                </Tabs>
 
                 <div className="flex gap-3 pt-4">
                   <Button type="button" variant="outline" className="flex-1" onClick={resetForm}>
