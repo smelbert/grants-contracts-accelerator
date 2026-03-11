@@ -103,9 +103,10 @@ export default function AssessmentSurveyAdmin() {
   });
 
   const totalParticipants = enrollments.length;
-  const incubatePre = programAssessments.filter(a => a.assessment_type === 'pre');
-  const incubatePost = programAssessments.filter(a => a.assessment_type === 'post');
-  const incubateEval = programAssessments.filter(a => a.assessment_type === 'evaluation');
+  // Use ALL program assessments — no email filtering, since users may have different emails on file
+  const incubatePre = programAssessments.filter(a => a.assessment_type === 'pre' && !a.is_draft);
+  const incubatePost = programAssessments.filter(a => a.assessment_type === 'post' && !a.is_draft);
+  const incubateEval = programAssessments.filter(a => a.assessment_type === 'evaluation' && !a.is_draft);
 
   const sendPreAssessmentReminders = async () => {
     setSendingReminder(true);
