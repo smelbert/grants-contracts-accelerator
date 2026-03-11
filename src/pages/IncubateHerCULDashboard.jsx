@@ -82,6 +82,13 @@ export default function IncubateHerCULDashboard() {
 
   const preAssessments = assessments?.filter(a => a.assessment_type === 'pre') || [];
   const postAssessments = assessments?.filter(a => a.assessment_type === 'post') || [];
+  const evalAssessments = assessments?.filter(a => a.assessment_type === 'evaluation') || [];
+  const avgEvalRating = evalAssessments.length > 0
+    ? (evalAssessments.reduce((s, a) => s + (a.responses?.overall_rating || 0), 0) / evalAssessments.length).toFixed(1)
+    : null;
+  const avgRecommendRating = evalAssessments.length > 0
+    ? (evalAssessments.reduce((s, a) => s + (a.responses?.recommend_rating || 0), 0) / evalAssessments.length).toFixed(1)
+    : null;
 
   const avgPreScore = preAssessments.length > 0
     ? Math.round(preAssessments.reduce((sum, a) => sum + (a.total_score || 0), 0) / preAssessments.length)
