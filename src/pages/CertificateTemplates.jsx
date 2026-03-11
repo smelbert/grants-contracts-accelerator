@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Eye, Copy, Upload, Loader2, Code } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, Copy, Code } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export default function CertificateTemplatesPage() {
