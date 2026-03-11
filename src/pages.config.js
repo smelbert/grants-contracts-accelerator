@@ -105,6 +105,7 @@ import GrantAssistant from './pages/GrantAssistant';
 import GrantDashboard from './pages/GrantDashboard';
 import GrantGlossary from './pages/GrantGlossary';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
+import GrantReadinessDashboard from './pages/GrantReadinessDashboard';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
 import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
@@ -222,7 +223,6 @@ import VideoFeedback from './pages/VideoFeedback';
 import WebsiteBuilder from './pages/WebsiteBuilder';
 import WorkbookSectionEditor from './pages/WorkbookSectionEditor';
 import WorkflowsAutomation from './pages/WorkflowsAutomation';
-import GrantReadinessDashboard from './pages/GrantReadinessDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -285,6 +285,7 @@ export const PAGES = {
     "GrantDashboard": GrantDashboard,
     "GrantGlossary": GrantGlossary,
     "GrantReadinessAssessment": GrantReadinessAssessment,
+    "GrantReadinessDashboard": GrantReadinessDashboard,
     "GrantReadinessIntensive": GrantReadinessIntensive,
     "GrantSubmission": GrantSubmission,
     "GrantWritingPostAssessment": GrantWritingPostAssessment,
@@ -402,7 +403,6 @@ export const PAGES = {
     "WebsiteBuilder": WebsiteBuilder,
     "WorkbookSectionEditor": WorkbookSectionEditor,
     "WorkflowsAutomation": WorkflowsAutomation,
-    "GrantReadinessDashboard": GrantReadinessDashboard,
 }
 
 export const pagesConfig = {
