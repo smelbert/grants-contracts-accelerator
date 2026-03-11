@@ -63,6 +63,18 @@ export default function IncubateHerAdmin() {
 
   const growthDelta = avgPostScore - avgPreScore;
 
+  // Evaluation metrics
+  const avgOverallRating = evalAssessments.length > 0
+    ? (evalAssessments.reduce((sum, a) => sum + (a.responses?.overall_rating || 0), 0) / evalAssessments.length).toFixed(1)
+    : null;
+  const avgRecommendRating = evalAssessments.length > 0
+    ? (evalAssessments.reduce((sum, a) => sum + (a.responses?.recommend_rating || 0), 0) / evalAssessments.length).toFixed(1)
+    : null;
+  const evalFeedbackFields = ['most_valuable', 'improvements', 'additional_comments', 'next_steps'];
+  const evalFeedbackItems = evalAssessments.flatMap(a =>
+    evalFeedbackFields.map(f => ({ field: f, text: a.responses?.[f], email: a.participant_email })).filter(x => x.text)
+  );
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
       <CoBrandedHeader 
