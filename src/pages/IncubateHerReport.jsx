@@ -753,6 +753,97 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
                 </CardContent>
               </Card>
             )}
+
+            {/* Program Evaluations */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-amber-500" /> Program Evaluations
+                  <Badge className="ml-1 bg-purple-100 text-purple-800">{evalResponses.length} submitted</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {evalResponses.length === 0 ? (
+                  <p className="text-slate-400 text-center py-6">No evaluations submitted yet.</p>
+                ) : (
+                  <>
+                    {/* Aggregate ratings */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-center">
+                        <p className="text-xs text-slate-500 mb-1">Avg Overall Rating</p>
+                        <p className="text-3xl font-bold text-amber-700">
+                          {(evalResponses.reduce((s, e) => s + (e.responses?.overall_rating || 0), 0) / evalResponses.length).toFixed(1)}
+                          <span className="text-sm font-normal text-slate-400">/10</span>
+                        </p>
+                      </div>
+                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
+                        <p className="text-xs text-slate-500 mb-1">Avg Recommend Score</p>
+                        <p className="text-3xl font-bold text-green-700">
+                          {(evalResponses.reduce((s, e) => s + (e.responses?.recommend_rating || 0), 0) / evalResponses.length).toFixed(1)}
+                          <span className="text-sm font-normal text-slate-400">/10</span>
+                        </p>
+                      </div>
+                      <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg text-center">
+                        <p className="text-xs text-slate-500 mb-1">Evaluations Submitted</p>
+                        <p className="text-3xl font-bold text-purple-700">{evalResponses.length}</p>
+                        <p className="text-xs text-slate-400">{pct(evalResponses.length, totalEnrolled)}% of cohort</p>
+                      </div>
+                    </div>
+
+                    {/* Per-participant feedback */}
+                    <div className="space-y-4">
+                      {evalResponses.map((ev, i) => {
+                        const hasText = ev.responses?.most_valuable || ev.responses?.improvements || ev.responses?.additional_comments || ev.responses?.next_steps;
+                        return (
+                          <div key={ev.id || i} className="border rounded-xl p-4 bg-slate-50 space-y-3">
+                            <div className="flex items-center justify-between flex-wrap gap-2">
+                              <p className="text-sm font-semibold text-slate-700">{ev.participant_email}</p>
+                              <div className="flex gap-2">
+                                {ev.responses?.overall_rating != null && (
+                                  <Badge className="bg-amber-100 text-amber-800">Overall: {ev.responses.overall_rating}/10</Badge>
+                                )}
+                                {ev.responses?.recommend_rating != null && (
+                                  <Badge className="bg-green-100 text-green-800">Recommend: {ev.responses.recommend_rating}/10</Badge>
+                                )}
+                              </div>
+                            </div>
+                            {hasText && (
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                {ev.responses?.most_valuable && (
+                                  <div className="bg-white rounded-lg p-3 border">
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Most Valuable</p>
+                                    <p className="text-slate-700">{ev.responses.most_valuable}</p>
+                                  </div>
+                                )}
+                                {ev.responses?.improvements && (
+                                  <div className="bg-white rounded-lg p-3 border">
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Suggestions</p>
+                                    <p className="text-slate-700">{ev.responses.improvements}</p>
+                                  </div>
+                                )}
+                                {ev.responses?.additional_comments && (
+                                  <div className="bg-white rounded-lg p-3 border md:col-span-2">
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Additional Comments</p>
+                                    <p className="text-slate-700">{ev.responses.additional_comments}</p>
+                                  </div>
+                                )}
+                                {ev.responses?.next_steps && (
+                                  <div className="bg-white rounded-lg p-3 border md:col-span-2">
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Next Steps</p>
+                                    <p className="text-slate-700">{ev.responses.next_steps}</p>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {!hasText && <p className="text-xs text-slate-400 italic">Ratings only, no open-ended responses.</p>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
