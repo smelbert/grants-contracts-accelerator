@@ -98,50 +98,6 @@ export default function CertificateTemplatesPage() {
     setShowModal(true);
   };
 
-  const renderPreview = () => {
-    const template = previewTemplate || formData;
-    const layoutConfig = professionalLayouts[template.template_layout];
-    
-    if (!layoutConfig) return null;
-
-    const sampleData = {
-      participant_name: 'Jane Doe',
-      program_name: 'IncubateHer Funding Readiness Program',
-      completion_date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      total_hours: '12',
-      funder_organization: 'Columbus Urban League',
-      delivery_organization: 'Elbert Innovative Solutions'
-    };
-    
-    let bodyText = template.body_template || '';
-    Object.keys(sampleData).forEach(key => {
-      bodyText = bodyText.replace(new RegExp(`{${key}}`, 'g'), sampleData[key]);
-    });
-
-    const colors = {
-      primary: template.primary_color,
-      secondary: template.secondary_color,
-      background: template.background_color,
-      text: template.text_color
-    };
-
-    return (
-      <div className="max-w-5xl mx-auto">
-        {layoutConfig.render({
-          headerText: template.header_text,
-          participantName: sampleData.participant_name,
-          bodyText: bodyText,
-          signatures: template.signature_fields,
-          colors: colors,
-          logos: {
-            main: template.logo_url,
-            co: template.co_logo_url
-          }
-        })}
-      </div>
-    );
-  };
-
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
