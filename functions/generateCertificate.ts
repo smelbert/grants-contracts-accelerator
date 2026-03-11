@@ -73,139 +73,180 @@ Deno.serve(async (req) => {
       template = defaultTemplates[0];
     }
 
-    // Create PDF certificate
-    const doc = new jsPDF({
-      orientation: 'landscape',
-      unit: 'mm',
-      format: 'a4'
+    // Build HTML certificate
+    const primary = template?.primary_color || '#143A50';
+    const secondary = template?.secondary_color || '#E5C089';
+    const bgColor = template?.background_color || '#FFFFFF';
+    const textColor = template?.text_color || '#000000';
+    const headerText = template?.header_text || 'Certificate of Completion';
+    const footerText = template?.footer_text || '';
+    const layout = template?.template_layout || 'blue_wave_landscape';
+
+    const completionDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    let bodyText = template?.body_template || 'This certifies that {participant_name} has successfully completed {program_name} on {completion_date}.';
+    const replacements = {
+      participant_name: enrollment.participant_name,
+      program_name: cohort?.program_name || '',
+      completion_date: completionDate,
+      total_hours: totalHours.toString(),
+      funder_organization: cohort?.funder_organization || '',
+      delivery_organization: cohort?.delivery_organization || ''
+    };
+    Object.keys(replacements).forEach(k => {
+      bodyText = bodyText.replace(new RegExp(`{${k}}`, 'g'), replacements[k]);
+    });
+    let resolvedFooter = footerText;
+    Object.keys(replacements).forEach(k => {
+      resolvedFooter = resolvedFooter.replace(new RegExp(`{${k}}`, 'g'), replacements[k]);
     });
 
-    if (template) {
-      // Use custom template
-      const bgColor = template.background_color || '#FFFFFF';
-      const borderColor = template.border_color || '#143A50';
-      const textColor = template.text_color || '#000000';
-      const accentColor = template.accent_color || '#E5C089';
+    const sigs = template?.signature_fields || [];
 
-      // Parse hex colors to RGB
-      const hexToRgb = (hex) => {
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16)
-        } : { r: 255, g: 255, b: 255 };
-      };
+    const signatureHtml = sigs.length > 0 ? `
+      <div style="display:flex;justify-content:center;gap:80px;margin-top:24px;">
+        ${sigs.map(sig => `
+          <div style="text-align:center;">
+            <div style="width:160px;border-top:2px solid ${primary};margin-bottom:6px;"></div>
+            <p style="margin:0;font-size:13px;font-weight:600;color:${textColor};">${sig.name}</p>
+            <p style="margin:0;font-size:11px;color:${primary};">${sig.title}</p>
+          </div>`).join('')}
+      </div>` : '';
 
-      const bg = hexToRgb(bgColor);
-      const border = hexToRgb(borderColor);
-      const text = hexToRgb(textColor);
-      const accent = hexToRgb(accentColor);
+    const logoHtml = template?.logo_url || template?.co_logo_url ? `
+      <div style="display:flex;justify-content:center;gap:40px;align-items:center;margin-bottom:16px;">
+        ${template?.logo_url ? `<img src="${template.logo_url}" style="height:48px;object-fit:contain;" />` : ''}
+        ${template?.co_logo_url ? `<img src="${template.co_logo_url}" style="height:48px;object-fit:contain;" />` : ''}
+      </div>` : '';
 
-      // Background
-      doc.setFillColor(bg.r, bg.g, bg.b);
-      doc.rect(0, 0, 297, 210, 'F');
+    // Build layout-specific HTML
+    let bodyHtml = '';
 
-      // Border
-      doc.setDrawColor(border.r, border.g, border.b);
-      doc.setLineWidth(2);
-      doc.rect(10, 10, 277, 190);
-      doc.setLineWidth(0.5);
-      doc.rect(15, 15, 267, 180);
-
-      // Title
-      doc.setFontSize(36);
-      doc.setTextColor(accent.r, accent.g, accent.b);
-      doc.text(template.header_text || 'Certificate of Completion', 148.5, 50, { align: 'center' });
-
-      // Body text with placeholder replacement
-      let bodyText = template.body_template || 'This certifies that {participant_name} has successfully completed {program_name} on {completion_date}.';
-      bodyText = bodyText.replace('{participant_name}', enrollment.participant_name);
-      bodyText = bodyText.replace('{program_name}', cohort.program_name);
-      bodyText = bodyText.replace('{completion_date}', new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }));
-      bodyText = bodyText.replace('{total_hours}', totalHours.toString());
-      bodyText = bodyText.replace('{funder_organization}', cohort.funder_organization || '');
-      bodyText = bodyText.replace('{delivery_organization}', cohort.delivery_organization || '');
-
-      doc.setFontSize(14);
-      doc.setTextColor(text.r, text.g, text.b);
-      const splitBody = doc.splitTextToSize(bodyText, 240);
-      doc.text(splitBody, 148.5, 90, { align: 'center' });
-
-      // Signatures
-      if (template.signature_fields && template.signature_fields.length > 0) {
-        const sigY = 150;
-        const spacing = 240 / (template.signature_fields.length + 1);
-        template.signature_fields.forEach((sig, idx) => {
-          const x = 30 + (spacing * (idx + 1));
-          doc.setLineWidth(0.5);
-          doc.line(x - 30, sigY, x + 30, sigY);
-          doc.setFontSize(10);
-          doc.setTextColor(text.r, text.g, text.b);
-          doc.text(sig.name, x, sigY + 7, { align: 'center' });
-          doc.setFontSize(8);
-          doc.text(sig.title, x, sigY + 12, { align: 'center' });
-        });
-      }
-
-      // Footer
-      if (template.footer_text) {
-        let footerText = template.footer_text;
-        footerText = footerText.replace('{funder_organization}', cohort.funder_organization || '');
-        footerText = footerText.replace('{delivery_organization}', cohort.delivery_organization || '');
-        doc.setFontSize(10);
-        doc.setTextColor(text.r, text.g, text.b);
-        doc.text(footerText, 148.5, 185, { align: 'center' });
-      }
-
-      // Certificate number
-      doc.setFontSize(8);
-      doc.text(`Certificate No: ${certificateNumber}`, 148.5, 195, { align: 'center' });
+    if (layout === 'gold_ribbon_landscape') {
+      bodyHtml = `
+        <div style="position:relative;width:100%;padding-top:56.25%;overflow:hidden;background:${bgColor};">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
+            <div style="height:80px;background:linear-gradient(90deg,${primary} 0%,${secondary} 50%,${primary} 100%);"></div>
+            <div style="flex:1;display:flex;align-items:center;padding:0 48px;">
+              <div style="border:3px solid ${primary};border-radius:8px;padding:32px 40px;width:100%;background:rgba(255,255,255,0.85);">
+                ${logoHtml}
+                <h1 style="text-align:center;font-size:38px;font-family:Georgia,serif;color:${primary};margin:0 0 8px;">${headerText}</h1>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                  <div style="flex:1;height:1px;background:${secondary};"></div>
+                  <span style="color:${secondary};font-size:18px;">★</span>
+                  <div style="flex:1;height:1px;background:${secondary};"></div>
+                </div>
+                <p style="text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${primary};margin:0 0 8px;">This certificate is proudly presented to</p>
+                <h2 style="text-align:center;font-size:42px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0 0 12px;">${enrollment.participant_name}</h2>
+                <p style="text-align:center;font-size:13px;line-height:1.6;color:${textColor};margin:0 0 16px;">${bodyText}</p>
+                ${signatureHtml}
+              </div>
+            </div>
+            <div style="height:56px;background:linear-gradient(90deg,${primary} 0%,${secondary} 50%,${primary} 100%);"></div>
+          </div>
+        </div>`;
+    } else if (layout === 'teal_geometric_landscape') {
+      bodyHtml = `
+        <div style="position:relative;width:100%;padding-top:56.25%;overflow:hidden;background:white;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
+            <div style="height:96px;background:linear-gradient(90deg,${primary} 0%,${secondary} 100%);display:flex;align-items:center;justify-content:center;">
+              <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,${secondary},#FFD700);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.2);">
+                <span style="font-size:32px;">★</span>
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 80px;gap:16px;text-align:center;">
+              ${logoHtml}
+              <div>
+                <h1 style="font-size:44px;font-weight:700;color:${primary};margin:0;">${headerText.split(' ')[0]}</h1>
+                <h2 style="font-size:18px;letter-spacing:4px;color:${secondary};margin:4px 0 0;text-transform:uppercase;">${headerText.split(' ').slice(1).join(' ')}</h2>
+              </div>
+              <p style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${primary};margin:0;">This certificate is proudly presented to</p>
+              <h2 style="font-size:42px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0;">${enrollment.participant_name}</h2>
+              <p style="font-size:13px;line-height:1.6;color:${textColor};max-width:600px;margin:0;">${bodyText}</p>
+              ${signatureHtml}
+            </div>
+            <div style="height:72px;background:linear-gradient(90deg,${secondary} 0%,${primary} 100%);"></div>
+          </div>
+        </div>`;
+    } else if (layout === 'blue_wave_portrait' || layout === 'gold_ribbon_portrait' || layout === 'red_geometric_portrait') {
+      bodyHtml = `
+        <div style="position:relative;width:100%;padding-top:129%;overflow:hidden;background:${bgColor};">
+          <div style="position:absolute;inset:0;border:3px solid ${primary};margin:24px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 40px 32px;">
+            <div style="text-align:center;">
+              ${logoHtml}
+              <h1 style="font-size:34px;font-weight:700;color:${primary};margin:0 0 8px;">${headerText}</h1>
+              <div style="width:100%;height:2px;background:linear-gradient(90deg,transparent,${secondary},transparent);margin-bottom:16px;"></div>
+            </div>
+            <div style="text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;">
+              <p style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${primary};margin:0;">This certificate is presented to</p>
+              <h2 style="font-size:38px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0;">${enrollment.participant_name}</h2>
+              <p style="font-size:12px;line-height:1.7;color:${textColor};margin:0;">${bodyText}</p>
+            </div>
+            <div style="width:100%;text-align:center;">
+              ${signatureHtml}
+              ${resolvedFooter ? `<p style="margin-top:16px;font-size:10px;color:${primary};">${resolvedFooter}</p>` : ''}
+              <p style="margin-top:8px;font-size:9px;color:#999;">Certificate No: ${certificateNumber}</p>
+            </div>
+          </div>
+        </div>`;
     } else {
-      // Default template (existing code)
-      doc.setFillColor(245, 245, 250);
-      doc.rect(0, 0, 297, 210, 'F');
-      doc.setDrawColor(20, 58, 80);
-      doc.setLineWidth(2);
-      doc.rect(10, 10, 277, 190);
-      doc.setLineWidth(0.5);
-      doc.rect(15, 15, 267, 180);
-      doc.setFontSize(36);
-      doc.setTextColor(20, 58, 80);
-      doc.text('Certificate of Completion', 148.5, 50, { align: 'center' });
-      doc.setFontSize(14);
-      doc.setTextColor(100, 100, 100);
-      doc.text('This certifies that', 148.5, 70, { align: 'center' });
-      doc.setFontSize(28);
-      doc.setTextColor(20, 58, 80);
-      doc.text(enrollment.participant_name, 148.5, 90, { align: 'center' });
-      doc.setFontSize(14);
-      doc.setTextColor(100, 100, 100);
-      doc.text('has successfully completed', 148.5, 105, { align: 'center' });
-      doc.setFontSize(20);
-      doc.setTextColor(20, 58, 80);
-      doc.text(cohort.program_name, 148.5, 120, { align: 'center' });
-      doc.setFontSize(12);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`${totalHours} Total Hours • Completed ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, 148.5, 135, { align: 'center' });
-      doc.setFontSize(10);
-      doc.text(`Certificate No: ${certificateNumber}`, 148.5, 175, { align: 'center' });
-      doc.setLineWidth(0.5);
-      doc.line(60, 160, 120, 160);
-      doc.setFontSize(10);
-      doc.text('Program Director', 90, 167, { align: 'center' });
+      // blue_wave_landscape (default)
+      bodyHtml = `
+        <div style="position:relative;width:100%;padding-top:56.25%;overflow:hidden;background:linear-gradient(135deg,#f8f9fa,#e9ecef);">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
+            <div style="height:120px;background:${primary};clip-path:ellipse(110% 100% at 50% 0%);display:flex;align-items:flex-start;justify-content:center;padding-top:16px;">
+              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,${secondary},#FFD700);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.25);">
+                <span style="font-size:36px;">🏅</span>
+              </div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px 80px;gap:12px;">
+              ${logoHtml}
+              <div>
+                <h1 style="font-size:44px;font-weight:700;color:${primary};margin:0;">${headerText.split(' ')[0]}</h1>
+                <h2 style="font-size:20px;color:${secondary};margin:4px 0 0;">${headerText.split(' ').slice(1).join(' ')}</h2>
+              </div>
+              <p style="font-size:11px;text-transform:uppercase;letter-spacing:3px;color:${primary};margin:0;">This Certificate is Presented To</p>
+              <h2 style="font-size:40px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0;">${enrollment.participant_name}</h2>
+              <p style="font-size:13px;line-height:1.6;color:${textColor};max-width:640px;margin:0;">${bodyText}</p>
+              ${signatureHtml}
+            </div>
+            <div style="height:80px;background:${primary};clip-path:ellipse(110% 100% at 50% 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:10px;margin:0;">
+                ${resolvedFooter} &nbsp;|&nbsp; Certificate No: ${certificateNumber}
+              </p>
+            </div>
+          </div>
+        </div>`;
     }
 
-    // Convert to base64
-    const pdfBase64 = doc.output('datauristring');
+    const htmlCertificate = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificate - ${enrollment.participant_name}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Georgia&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #e8e8e8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .certificate-wrap { width: 100%; max-width: 1100px; background: white; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+    @media print {
+      body { background: white; }
+      .certificate-wrap { max-width: 100%; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="certificate-wrap">
+    ${bodyHtml}
+  </div>
+</body>
+</html>`;
 
-    // Upload to storage
-    const pdfBlob = await fetch(pdfBase64).then(r => r.blob());
-    const formData = new FormData();
-    formData.append('file', pdfBlob, `certificate-${certificateNumber}.pdf`);
-
+    // Upload HTML file to storage
+    const htmlBlob = new Blob([htmlCertificate], { type: 'text/html' });
     const uploadResponse = await base44.asServiceRole.integrations.Core.UploadFile({
-      file: pdfBlob
+      file: htmlBlob
     });
 
     // Create certificate record
