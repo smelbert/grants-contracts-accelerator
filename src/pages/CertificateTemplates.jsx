@@ -9,9 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Award, Eye, Copy, Palette, Upload, Loader2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Award, Eye, Copy, Palette, Upload, Loader2, Code } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ProfessionalLayoutPreview, { professionalLayouts } from '@/components/certificates/ProfessionalLayouts';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function CertificateTemplatesPage() {
   const queryClient = useQueryClient();
