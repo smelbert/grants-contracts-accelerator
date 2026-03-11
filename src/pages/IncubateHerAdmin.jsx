@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
-import { Users, CheckCircle2, TrendingUp, Award, FileText, Calendar } from 'lucide-react';
+import { Users, CheckCircle2, TrendingUp, Award, FileText, Calendar, Star, MessageSquare } from 'lucide-react';
 
 export default function IncubateHerAdmin() {
   const { data: cohort } = useQuery({
