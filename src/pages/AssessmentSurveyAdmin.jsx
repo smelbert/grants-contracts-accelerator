@@ -395,9 +395,9 @@ export default function AssessmentSurveyAdmin() {
                               )}
                             </td>
                           </tr>
-                        );
-                      })}
-                    </tbody>
+                          );
+                          })}
+                          </tbody>
                   </table>
                   {enrollments.length === 0 && (
                     <p className="text-center text-slate-400 py-8">No participants found.</p>
