@@ -266,6 +266,8 @@ Deno.serve(async (req) => {
         </div>`;
     }
 
+    const pageSize = isPortrait ? 'size: 8.5in 11in portrait;' : 'size: 11in 8.5in landscape;';
+
     const htmlCertificate = `<!DOCTYPE html>
 <html>
 <head>
@@ -273,13 +275,13 @@ Deno.serve(async (req) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Certificate - ${enrollment.participant_name}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Georgia&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #e8e8e8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .certificate-wrap { width: 100%; max-width: 1100px; background: white; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+    body { font-family: Arial, sans-serif; background: #d0d0d0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 32px; }
+    .certificate-wrap { background: white; box-shadow: 0 12px 48px rgba(0,0,0,0.22); overflow: hidden; display: inline-block; }
     @media print {
-      body { background: white; }
-      .certificate-wrap { max-width: 100%; box-shadow: none; }
+      @page { ${pageSize} margin: 0; }
+      body { background: white; padding: 0; display: block; }
+      .certificate-wrap { box-shadow: none; width: 100%; }
     }
   </style>
 </head>
