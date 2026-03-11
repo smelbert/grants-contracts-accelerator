@@ -522,8 +522,9 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
       });
     }
 
-    // ── 9/10. Full Participant Table ──
-    addSection(`${nextStepsList.length > 0 ? 9 : 8}. Comprehensive Participant Completion Table`);
+    // ── Full Participant Table ──
+    const sectionOffset = (nextStepsList.length > 0 ? 1 : 0) + (evalResponses.length > 0 ? 1 : 0);
+    addSection(`${8 + sectionOffset}. Comprehensive Participant Completion Table`);
     participantRows.forEach((p, i) => {
       checkPage(18);
       doc.setFontSize(9);
