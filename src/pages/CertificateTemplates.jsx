@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Edit, Trash2, Award, Eye, Copy, Palette } from 'lucide-react';
+import { Plus, Edit, Trash2, Award, Eye, Copy, Palette, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ProfessionalLayoutPreview, { professionalLayouts } from '@/components/certificates/ProfessionalLayouts';
 
@@ -37,6 +37,19 @@ export default function CertificateTemplatesPage() {
     is_active: true
   });
   const [newSignature, setNewSignature] = useState({ name: '', title: '', signature_image_url: '' });
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCoLogo, setUploadingCoLogo] = useState(false);
+
+  const handleLogoUpload = async (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const setter = field === 'logo_url' ? setUploadingLogo : setUploadingCoLogo;
+    setter(true);
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setFormData(prev => ({ ...prev, [field]: file_url }));
+    setter(false);
+    toast.success('Logo uploaded!');
+  };
 
   const { data: templates } = useQuery({
     queryKey: ['certificate-templates'],
@@ -352,20 +365,44 @@ export default function CertificateTemplatesPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Logo URL</Label>
-                    <Input
-                      value={formData.logo_url}
-                      onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
-                      placeholder="https://..."
-                    />
+                    <Label>Main Logo</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      {formData.logo_url && (
+                        <img src={formData.logo_url} className="h-10 object-contain border rounded p-1 bg-white" alt="Logo" />
+                      )}
+                      <label className="cursor-pointer flex-1">
+                        <div className="flex items-center gap-2 border rounded-md px-3 py-2 text-sm hover:bg-slate-50 transition">
+                          {uploadingLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                          {uploadingLogo ? 'Uploading...' : formData.logo_url ? 'Replace Logo' : 'Upload Logo'}
+                        </div>
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleLogoUpload(e, 'logo_url')} />
+                      </label>
+                      {formData.logo_url && (
+                        <Button type="button" size="sm" variant="ghost" onClick={() => setFormData({ ...formData, logo_url: '' })}>
+                          <Trash2 className="w-3 h-3 text-red-400" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                   <div>
-                    <Label>Co-Brand Logo URL</Label>
-                    <Input
-                      value={formData.co_logo_url}
-                      onChange={(e) => setFormData({ ...formData, co_logo_url: e.target.value })}
-                      placeholder="https://..."
-                    />
+                    <Label>Co-Brand Logo</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      {formData.co_logo_url && (
+                        <img src={formData.co_logo_url} className="h-10 object-contain border rounded p-1 bg-white" alt="Co-Logo" />
+                      )}
+                      <label className="cursor-pointer flex-1">
+                        <div className="flex items-center gap-2 border rounded-md px-3 py-2 text-sm hover:bg-slate-50 transition">
+                          {uploadingCoLogo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                          {uploadingCoLogo ? 'Uploading...' : formData.co_logo_url ? 'Replace Logo' : 'Upload Logo'}
+                        </div>
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleLogoUpload(e, 'co_logo_url')} />
+                      </label>
+                      {formData.co_logo_url && (
+                        <Button type="button" size="sm" variant="ghost" onClick={() => setFormData({ ...formData, co_logo_url: '' })}>
+                          <Trash2 className="w-3 h-3 text-red-400" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
