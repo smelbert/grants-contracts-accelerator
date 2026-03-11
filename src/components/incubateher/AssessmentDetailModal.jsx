@@ -318,33 +318,30 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
           {!notSubmitted && (isPre || isPost) && (
             editMode ? (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
-                <p className="text-sm font-semibold text-amber-800">Edit Scores</p>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { key: 'grants_vs_contracts_score', label: 'Grants/Contracts Score' },
-                    { key: 'legal_readiness_score', label: 'Legal Readiness Score' },
-                    { key: 'financial_readiness_score', label: 'Financial Score' },
-                    { key: 'confidence_score', label: 'Confidence Score' },
-                  ].map(({ key, label }) => (
+                <div>
+                  <p className="text-sm font-semibold text-amber-800">Edit Section Scores</p>
+                  <p className="text-xs text-amber-700 mt-0.5">Each section scores 0–100. Total = average of all 4 sections (auto-calculated on save).</p>
+                </div>
+                <div className="space-y-3">
+                  {scoreFields.map(({ key, label, help }) => (
                     <div key={key}>
-                      <Label className="text-xs">{label}</Label>
+                      <Label className="text-xs font-semibold">{label}</Label>
+                      <p className="text-[11px] text-slate-500 mb-1">{help}</p>
                       <Input
                         type="number"
+                        min={0}
+                        max={100}
                         defaultValue={assessment[key] ?? ''}
                         onChange={e => setEditedScores(prev => ({ ...prev, [key]: e.target.value === '' ? null : Number(e.target.value) }))}
-                        className="mt-1"
                       />
                     </div>
                   ))}
                 </div>
-                <div>
-                  <Label className="text-xs">Total Score (auto-calculated from above on save)</Label>
-                  <Input
-                    type="number"
-                    defaultValue={assessment.total_score ?? ''}
-                    onChange={e => setEditedScores(prev => ({ ...prev, total_score: e.target.value === '' ? null : Number(e.target.value) }))}
-                    className="mt-1"
-                  />
+                <div className="bg-white border border-amber-200 rounded p-2 text-xs text-slate-600">
+                  <span className="font-semibold">New total will be: </span>
+                  {Math.round(
+                    scoreFields.reduce((sum, f) => sum + Number(editedScores[f.key] ?? assessment[f.key] ?? 0), 0) / 4
+                  )} / 100
                 </div>
                 <Button onClick={handleSave} disabled={updateMutation.isPending} className="w-full bg-[#143A50] text-white">
                   <Save className="w-4 h-4 mr-2" />
