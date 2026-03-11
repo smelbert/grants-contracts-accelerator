@@ -349,15 +349,14 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { label: 'Total Score', value: assessment.total_score },
-                  { label: 'Grants/Contracts', value: assessment.grants_vs_contracts_score },
-                  { label: 'Legal Readiness', value: assessment.legal_readiness_score },
-                  { label: 'Financial', value: assessment.financial_readiness_score },
-                ].map(({ label, value }) => (
-                  <div key={label} className="text-center p-2 bg-slate-50 rounded-lg">
-                    <p className="text-lg font-bold text-[#143A50]">{value ?? '—'}</p>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div className="text-center p-2 bg-[#143A50] rounded-lg">
+                  <p className="text-lg font-bold text-white">{assessment.total_score ?? '—'}</p>
+                  <p className="text-xs text-white/70">Total Score</p>
+                </div>
+                {scoreFields.map(({ key, label }) => (
+                  <div key={key} className="text-center p-2 bg-slate-50 rounded-lg">
+                    <p className="text-lg font-bold text-[#143A50]">{assessment[key] ?? '—'}</p>
                     <p className="text-xs text-slate-500">{label}</p>
                   </div>
                 ))}
