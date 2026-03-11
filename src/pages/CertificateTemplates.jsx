@@ -356,7 +356,7 @@ export default function CertificateTemplatesPage() {
                 <div>
                   <Label>Body Template *</Label>
                   <Textarea
-                    required
+                    required={!formData.custom_html}
                     rows={4}
                     value={formData.body_template}
                     onChange={(e) => setFormData({ ...formData, body_template: e.target.value })}
