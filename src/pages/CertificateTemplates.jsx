@@ -199,15 +199,22 @@ export default function CertificateTemplatesPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <ProfessionalLayoutPreview 
-                  layout={template.template_layout || 'blue_wave_landscape'}
-                  colors={{
-                    primary: template.primary_color,
-                    secondary: template.secondary_color,
-                    background: template.background_color,
-                    text: template.text_color
-                  }}
-                />
+                {template.custom_html && (
+                  <div className="border rounded-lg overflow-hidden bg-slate-100 h-40">
+                    <iframe
+                      srcDoc={template.custom_html
+                        .replace(/\{participant_name\}/g, 'Jane Doe')
+                        .replace(/\{program_name\}/g, 'IncubateHer Program')
+                        .replace(/\{completion_date\}/g, new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }))
+                        .replace(/\{total_hours\}/g, '12')
+                        .replace(/\{funder_organization\}/g, 'Columbus Urban League')
+                        .replace(/\{delivery_organization\}/g, 'Elbert Innovative Solutions')
+                        .replace(/\{certificate_number\}/g, 'CERT-PREVIEW-001')}
+                      className="w-full h-full border-0 pointer-events-none"
+                      title="Preview"
+                    />
+                  </div>
+                )}
                 <div className="flex gap-2 pt-3 border-t">
                   <Button size="sm" variant="outline" onClick={() => setPreviewTemplate(template)} className="flex-1">
                     <Eye className="w-3 h-3 mr-1" />
