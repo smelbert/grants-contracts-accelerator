@@ -217,6 +217,19 @@ function EvalAnswer({ question, answer }) {
 }
 
 export default function AssessmentDetailModal({ assessment, participantName, onClose }) {
+  const [editMode, setEditMode] = useState(false);
+  const [editedScores, setEditedScores] = useState({});
+  const queryClient = useQueryClient();
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.ProgramAssessment.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['all-program-assessments']);
+      toast.success('Assessment updated successfully');
+      setEditMode(false);
+    }
+  });
+
   if (!assessment) return null;
 
   const type = assessment.assessment_type;
