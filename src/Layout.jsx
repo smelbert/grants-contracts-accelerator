@@ -469,7 +469,7 @@ export default function Layout({ children, currentPageName }) {
   }
 
   const effectiveRole = portalView === 'auto' ? user?.role : portalView;
-  const navItems = getNavItems(effectiveRole, userAccess, user?.role, incubateHerEnrollment);
+  const navItems = getNavItems(effectiveRole, userAccess, user?.role, incubateHerEnrollment, !!isFacilitator);
   const handleLogout = () => { base44.auth.logout(); };
 
   const portalColors = {
