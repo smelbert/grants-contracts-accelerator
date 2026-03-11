@@ -104,117 +104,164 @@ Deno.serve(async (req) => {
     const sigs = template?.signature_fields || [];
 
     const signatureHtml = sigs.length > 0 ? `
-      <div style="display:flex;justify-content:center;gap:80px;margin-top:24px;">
+      <div style="display:flex;justify-content:center;gap:64px;margin-top:28px;flex-wrap:wrap;">
         ${sigs.map(sig => `
           <div style="text-align:center;">
-            <div style="width:160px;border-top:2px solid ${primary};margin-bottom:6px;"></div>
-            <p style="margin:0;font-size:13px;font-weight:600;color:${textColor};">${sig.name}</p>
-            <p style="margin:0;font-size:11px;color:${primary};">${sig.title}</p>
+            ${sig.signature_image_url ? `<img src="${sig.signature_image_url}" style="height:40px;object-fit:contain;margin-bottom:4px;display:block;margin-left:auto;margin-right:auto;" />` : '<div style="height:40px;"></div>'}
+            <div style="width:180px;border-top:2px solid ${primary};margin-bottom:6px;"></div>
+            <p style="margin:0;font-size:13px;font-weight:700;color:${textColor};letter-spacing:0.5px;">${sig.name}</p>
+            <p style="margin:2px 0 0;font-size:10px;color:${primary};text-transform:uppercase;letter-spacing:1px;">${sig.title}</p>
           </div>`).join('')}
       </div>` : '';
 
     const logoHtml = template?.logo_url || template?.co_logo_url ? `
-      <div style="display:flex;justify-content:center;gap:40px;align-items:center;margin-bottom:16px;">
-        ${template?.logo_url ? `<img src="${template.logo_url}" style="height:48px;object-fit:contain;" />` : ''}
-        ${template?.co_logo_url ? `<img src="${template.co_logo_url}" style="height:48px;object-fit:contain;" />` : ''}
+      <div style="display:flex;justify-content:center;align-items:center;gap:48px;margin-bottom:20px;">
+        ${template?.logo_url ? `<img src="${template.logo_url}" style="height:56px;max-width:180px;object-fit:contain;" />` : ''}
+        ${template?.logo_url && template?.co_logo_url ? `<div style="width:1px;height:48px;background:${secondary};opacity:0.5;"></div>` : ''}
+        ${template?.co_logo_url ? `<img src="${template.co_logo_url}" style="height:56px;max-width:180px;object-fit:contain;" />` : ''}
       </div>` : '';
+
+    const isPortrait = ['blue_wave_portrait', 'gold_ribbon_portrait', 'red_geometric_portrait'].includes(layout);
 
     // Build layout-specific HTML
     let bodyHtml = '';
 
     if (layout === 'gold_ribbon_landscape') {
       bodyHtml = `
-        <div style="position:relative;width:100%;padding-top:56.25%;overflow:hidden;background:${bgColor};">
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
-            <div style="height:80px;background:linear-gradient(90deg,${primary} 0%,${secondary} 50%,${primary} 100%);"></div>
-            <div style="flex:1;display:flex;align-items:center;padding:0 48px;">
-              <div style="border:3px solid ${primary};border-radius:8px;padding:32px 40px;width:100%;background:rgba(255,255,255,0.85);">
-                ${logoHtml}
-                <h1 style="text-align:center;font-size:38px;font-family:Georgia,serif;color:${primary};margin:0 0 8px;">${headerText}</h1>
-                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                  <div style="flex:1;height:1px;background:${secondary};"></div>
-                  <span style="color:${secondary};font-size:18px;">★</span>
-                  <div style="flex:1;height:1px;background:${secondary};"></div>
-                </div>
-                <p style="text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${primary};margin:0 0 8px;">This certificate is proudly presented to</p>
-                <h2 style="text-align:center;font-size:42px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0 0 12px;">${enrollment.participant_name}</h2>
-                <p style="text-align:center;font-size:13px;line-height:1.6;color:${textColor};margin:0 0 16px;">${bodyText}</p>
-                ${signatureHtml}
-              </div>
+        <div style="width:1100px;height:778px;position:relative;overflow:hidden;background:${bgColor};font-family:'Georgia',serif;">
+          <!-- Top bar -->
+          <div style="position:absolute;top:0;left:0;right:0;height:72px;background:linear-gradient(90deg,${primary} 0%,${secondary} 40%,${primary} 100%);"></div>
+          <!-- Bottom bar -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:52px;background:linear-gradient(90deg,${primary} 0%,${secondary} 40%,${primary} 100%);display:flex;align-items:center;justify-content:center;">
+            <p style="color:rgba(255,255,255,0.85);font-size:10px;margin:0;font-family:Arial,sans-serif;letter-spacing:1px;">${resolvedFooter} &nbsp;·&nbsp; Certificate No: ${certificateNumber}</p>
+          </div>
+          <!-- Ribbon decoration left -->
+          <div style="position:absolute;top:72px;left:40px;width:28px;height:180px;background:linear-gradient(180deg,${secondary},#B8860B);box-shadow:4px 0 12px rgba(0,0,0,0.15);"></div>
+          <div style="position:absolute;top:252px;left:26px;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid ${secondary};"></div>
+          <!-- Inner frame -->
+          <div style="position:absolute;top:92px;left:88px;right:40px;bottom:72px;border:2px solid ${secondary};border-radius:4px;"></div>
+          <div style="position:absolute;top:100px;left:96px;right:48px;bottom:80px;border:1px solid rgba(0,0,0,0.08);border-radius:2px;"></div>
+          <!-- Content -->
+          <div style="position:absolute;top:92px;left:88px;right:40px;bottom:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 56px;text-align:center;">
+            ${logoHtml}
+            <h1 style="font-size:42px;font-weight:700;color:${primary};margin:0 0 6px;letter-spacing:-0.5px;">${headerText}</h1>
+            <div style="display:flex;align-items:center;gap:16px;margin:10px 0 18px;width:80%;">
+              <div style="flex:1;height:1px;background:${secondary};"></div>
+              <span style="color:${secondary};font-size:20px;">✦</span>
+              <div style="flex:1;height:1px;background:${secondary};"></div>
             </div>
-            <div style="height:56px;background:linear-gradient(90deg,${primary} 0%,${secondary} 50%,${primary} 100%);"></div>
+            <p style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${primary};margin:0 0 10px;font-family:Arial,sans-serif;">This Certificate is Proudly Presented to</p>
+            <h2 style="font-size:48px;font-style:italic;font-weight:400;color:${primary};margin:0 0 14px;">${enrollment.participant_name}</h2>
+            <p style="font-size:13px;line-height:1.7;color:${textColor};max-width:560px;font-family:Arial,sans-serif;">${bodyText}</p>
+            ${signatureHtml}
           </div>
         </div>`;
     } else if (layout === 'teal_geometric_landscape') {
       bodyHtml = `
-        <div style="position:relative;width:100%;padding-top:56.25%;overflow:hidden;background:white;">
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
-            <div style="height:96px;background:linear-gradient(90deg,${primary} 0%,${secondary} 100%);display:flex;align-items:center;justify-content:center;">
-              <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,${secondary},#FFD700);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.2);">
-                <span style="font-size:32px;">★</span>
+        <div style="width:1100px;height:778px;position:relative;overflow:hidden;background:white;font-family:'Georgia',serif;">
+          <!-- SVG geometric background -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 1100 778" preserveAspectRatio="none">
+            <polygon points="1100,0 1100,340 550,0" fill="${primary}" opacity="0.06"/>
+            <polygon points="0,778 0,440 550,778" fill="${secondary}" opacity="0.08"/>
+          </svg>
+          <!-- Top gradient bar -->
+          <div style="position:absolute;top:0;left:0;right:0;height:88px;background:linear-gradient(90deg,${primary} 0%,${secondary} 100%);display:flex;align-items:center;justify-content:center;">
+            <div style="width:64px;height:64px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+              <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,${secondary},#B8860B);display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:22px;color:white;">★</span>
               </div>
             </div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 80px;gap:16px;text-align:center;">
-              ${logoHtml}
-              <div>
-                <h1 style="font-size:44px;font-weight:700;color:${primary};margin:0;">${headerText.split(' ')[0]}</h1>
-                <h2 style="font-size:18px;letter-spacing:4px;color:${secondary};margin:4px 0 0;text-transform:uppercase;">${headerText.split(' ').slice(1).join(' ')}</h2>
-              </div>
-              <p style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${primary};margin:0;">This certificate is proudly presented to</p>
-              <h2 style="font-size:42px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0;">${enrollment.participant_name}</h2>
-              <p style="font-size:13px;line-height:1.6;color:${textColor};max-width:600px;margin:0;">${bodyText}</p>
-              ${signatureHtml}
-            </div>
-            <div style="height:72px;background:linear-gradient(90deg,${secondary} 0%,${primary} 100%);"></div>
+          </div>
+          <!-- Bottom gradient bar -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:64px;background:linear-gradient(90deg,${secondary} 0%,${primary} 100%);display:flex;align-items:center;justify-content:center;">
+            <p style="color:rgba(255,255,255,0.85);font-size:10px;margin:0;font-family:Arial,sans-serif;letter-spacing:1px;">${resolvedFooter} &nbsp;·&nbsp; Certificate No: ${certificateNumber}</p>
+          </div>
+          <!-- Content -->
+          <div style="position:absolute;top:88px;left:0;right:0;bottom:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 88px;text-align:center;">
+            ${logoHtml}
+            <h1 style="font-size:46px;font-weight:700;color:${primary};margin:0 4px 0 0;letter-spacing:-1px;display:inline;">${headerText.split(' ')[0]} </h1><span style="font-size:18px;letter-spacing:5px;color:${secondary};text-transform:uppercase;font-family:Arial,sans-serif;">${headerText.split(' ').slice(1).join(' ')}</span>
+            <p style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${primary};margin:14px 0 8px;font-family:Arial,sans-serif;">This Certificate is Proudly Presented to</p>
+            <h2 style="font-size:48px;font-style:italic;font-weight:400;color:${primary};margin:0 0 14px;">${enrollment.participant_name}</h2>
+            <p style="font-size:13px;line-height:1.7;color:${textColor};max-width:580px;font-family:Arial,sans-serif;">${bodyText}</p>
+            ${signatureHtml}
           </div>
         </div>`;
-    } else if (layout === 'blue_wave_portrait' || layout === 'gold_ribbon_portrait' || layout === 'red_geometric_portrait') {
+    } else if (isPortrait) {
+      const bgGrad = layout === 'red_geometric_portrait' ? `linear-gradient(160deg, #fff5f5 0%, #fff 60%)` : bgColor;
+      const topBarColor = layout === 'red_geometric_portrait'
+        ? `linear-gradient(90deg,${primary} 0%,${secondary} 50%,${primary} 100%)`
+        : `linear-gradient(135deg,${primary} 0%,${secondary} 100%)`;
       bodyHtml = `
-        <div style="position:relative;width:100%;padding-top:129%;overflow:hidden;background:${bgColor};">
-          <div style="position:absolute;inset:0;border:3px solid ${primary};margin:24px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:48px 40px 32px;">
-            <div style="text-align:center;">
-              ${logoHtml}
-              <h1 style="font-size:34px;font-weight:700;color:${primary};margin:0 0 8px;">${headerText}</h1>
-              <div style="width:100%;height:2px;background:linear-gradient(90deg,transparent,${secondary},transparent);margin-bottom:16px;"></div>
+        <div style="width:850px;height:1100px;position:relative;overflow:hidden;background:${bgGrad};font-family:'Georgia',serif;">
+          <!-- Top bar -->
+          <div style="position:absolute;top:0;left:0;right:0;height:88px;background:${topBarColor};"></div>
+          <!-- Bottom bar -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:64px;background:${topBarColor};display:flex;align-items:center;justify-content:center;">
+            <p style="color:rgba(255,255,255,0.85);font-size:9px;margin:0;font-family:Arial,sans-serif;letter-spacing:1px;">${resolvedFooter} &nbsp;·&nbsp; Cert No: ${certificateNumber}</p>
+          </div>
+          <!-- Outer border frame -->
+          <div style="position:absolute;top:104px;left:28px;right:28px;bottom:80px;border:2px solid ${secondary};border-radius:4px;"></div>
+          <div style="position:absolute;top:112px;left:36px;right:36px;bottom:88px;border:1px solid rgba(0,0,0,0.07);border-radius:2px;"></div>
+          <!-- Corner ornaments -->
+          <div style="position:absolute;top:104px;left:28px;width:32px;height:32px;border-top:4px solid ${secondary};border-left:4px solid ${secondary};border-radius:4px 0 0 0;"></div>
+          <div style="position:absolute;top:104px;right:28px;width:32px;height:32px;border-top:4px solid ${secondary};border-right:4px solid ${secondary};border-radius:0 4px 0 0;"></div>
+          <div style="position:absolute;bottom:80px;left:28px;width:32px;height:32px;border-bottom:4px solid ${secondary};border-left:4px solid ${secondary};border-radius:0 0 0 4px;"></div>
+          <div style="position:absolute;bottom:80px;right:28px;width:32px;height:32px;border-bottom:4px solid ${secondary};border-right:4px solid ${secondary};border-radius:0 0 4px 0;"></div>
+          <!-- Seal badge -->
+          <div style="position:absolute;top:72px;left:50%;transform:translateX(-50%);width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,${secondary},#B8860B);border:4px solid white;box-shadow:0 4px 20px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;z-index:10;">
+            <span style="font-size:28px;color:white;">★</span>
+          </div>
+          <!-- Content -->
+          <div style="position:absolute;top:152px;left:0;right:0;bottom:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 56px;text-align:center;gap:14px;">
+            ${logoHtml}
+            <h1 style="font-size:36px;font-weight:700;color:${primary};margin:0;letter-spacing:-0.5px;">${headerText}</h1>
+            <div style="display:flex;align-items:center;gap:12px;width:70%;">
+              <div style="flex:1;height:1px;background:${secondary};"></div>
+              <span style="color:${secondary};font-size:14px;">✦</span>
+              <div style="flex:1;height:1px;background:${secondary};"></div>
             </div>
-            <div style="text-align:center;flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;">
-              <p style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:${primary};margin:0;">This certificate is presented to</p>
-              <h2 style="font-size:38px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0;">${enrollment.participant_name}</h2>
-              <p style="font-size:12px;line-height:1.7;color:${textColor};margin:0;">${bodyText}</p>
-            </div>
-            <div style="width:100%;text-align:center;">
-              ${signatureHtml}
-              ${resolvedFooter ? `<p style="margin-top:16px;font-size:10px;color:${primary};">${resolvedFooter}</p>` : ''}
-              <p style="margin-top:8px;font-size:9px;color:#999;">Certificate No: ${certificateNumber}</p>
-            </div>
+            <p style="font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:${primary};margin:0;font-family:Arial,sans-serif;">This Certificate is Presented to</p>
+            <h2 style="font-size:44px;font-style:italic;font-weight:400;color:${primary};margin:0;">${enrollment.participant_name}</h2>
+            <p style="font-size:12px;line-height:1.8;color:${textColor};max-width:480px;font-family:Arial,sans-serif;">${bodyText}</p>
+            ${signatureHtml}
           </div>
         </div>`;
     } else {
       // blue_wave_landscape (default)
       bodyHtml = `
-        <div style="position:relative;width:100%;padding-top:56.25%;overflow:hidden;background:linear-gradient(135deg,#f8f9fa,#e9ecef);">
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;">
-            <div style="height:120px;background:${primary};clip-path:ellipse(110% 100% at 50% 0%);display:flex;align-items:flex-start;justify-content:center;padding-top:16px;">
-              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,${secondary},#FFD700);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.25);">
-                <span style="font-size:36px;">🏅</span>
+        <div style="width:1100px;height:778px;position:relative;overflow:hidden;background:linear-gradient(150deg,#f7f9fc 0%,#edf1f7 100%);font-family:'Georgia',serif;">
+          <!-- Top wave -->
+          <div style="position:absolute;top:0;left:0;right:0;height:130px;overflow:hidden;">
+            <svg viewBox="0 0 1100 130" style="width:100%;height:100%;" preserveAspectRatio="none">
+              <path d="M0,0 L1100,0 L1100,90 Q880,130 550,90 Q220,50 0,100 Z" fill="${primary}"/>
+              <path d="M0,0 L1100,0 L1100,60 Q880,100 550,60 Q220,20 0,70 Z" fill="${secondary}" opacity="0.35"/>
+            </svg>
+            <!-- Medal in top bar -->
+            <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,${secondary},#B8860B);border:4px solid rgba(255,255,255,0.8);box-shadow:0 6px 24px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
+              <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFE566,${secondary});border:3px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:24px;">🏅</span>
               </div>
             </div>
-            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px 80px;gap:12px;">
-              ${logoHtml}
-              <div>
-                <h1 style="font-size:44px;font-weight:700;color:${primary};margin:0;">${headerText.split(' ')[0]}</h1>
-                <h2 style="font-size:20px;color:${secondary};margin:4px 0 0;">${headerText.split(' ').slice(1).join(' ')}</h2>
-              </div>
-              <p style="font-size:11px;text-transform:uppercase;letter-spacing:3px;color:${primary};margin:0;">This Certificate is Presented To</p>
-              <h2 style="font-size:40px;font-family:Georgia,serif;font-style:italic;color:${primary};margin:0;">${enrollment.participant_name}</h2>
-              <p style="font-size:13px;line-height:1.6;color:${textColor};max-width:640px;margin:0;">${bodyText}</p>
-              ${signatureHtml}
+          </div>
+          <!-- Bottom wave -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:80px;overflow:hidden;">
+            <svg viewBox="0 0 1100 80" style="width:100%;height:100%;" preserveAspectRatio="none">
+              <path d="M0,80 L1100,80 L1100,30 Q880,0 550,30 Q220,60 0,10 Z" fill="${primary}"/>
+            </svg>
+            <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;">
+              <p style="color:rgba(255,255,255,0.8);font-size:10px;margin:0;font-family:Arial,sans-serif;letter-spacing:1px;">${resolvedFooter} &nbsp;·&nbsp; Certificate No: ${certificateNumber}</p>
             </div>
-            <div style="height:80px;background:${primary};clip-path:ellipse(110% 100% at 50% 100%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;">
-              <p style="color:rgba(255,255,255,0.7);font-size:10px;margin:0;">
-                ${resolvedFooter} &nbsp;|&nbsp; Certificate No: ${certificateNumber}
-              </p>
+          </div>
+          <!-- Content -->
+          <div style="position:absolute;top:130px;left:0;right:0;bottom:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 88px;text-align:center;gap:10px;">
+            ${logoHtml}
+            <div>
+              <h1 style="font-size:46px;font-weight:700;color:${primary};margin:0;letter-spacing:-1px;display:inline;">${headerText.split(' ')[0]} </h1><span style="font-size:22px;color:${secondary};font-family:Arial,sans-serif;">${headerText.split(' ').slice(1).join(' ')}</span>
             </div>
+            <p style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:${primary};margin:0;font-family:Arial,sans-serif;">This Certificate is Presented To</p>
+            <h2 style="font-size:48px;font-style:italic;font-weight:400;color:${primary};margin:0;">${enrollment.participant_name}</h2>
+            <p style="font-size:13px;line-height:1.7;color:${textColor};max-width:620px;font-family:Arial,sans-serif;">${bodyText}</p>
+            ${signatureHtml}
           </div>
         </div>`;
     }
