@@ -1129,6 +1129,7 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
               'Outcomes narrative (AI-assisted)',
               'Equity-centered narrative',
               'Scope & compliance statement',
+              'Program evaluation scores & feedback',
             ].map(item => (
               <div key={item} className="flex items-center gap-2">
                 <Badge className="bg-green-600 shrink-0">✓</Badge>
