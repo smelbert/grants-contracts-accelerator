@@ -224,9 +224,10 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.ProgramAssessment.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['all-program-assessments']);
+      queryClient.invalidateQueries({ queryKey: ['all-program-assessments'] });
       toast.success('Assessment updated successfully');
       setEditMode(false);
+      onClose();
     }
   });
 
