@@ -251,6 +251,18 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
   const typeColor = isPre ? 'bg-blue-100 text-blue-800' : isPost ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800';
   const notSubmitted = isPreFilled && !assessment.id;
 
+  const handleSave = () => {
+    const data = { ...editedScores };
+    // Recalculate total_score from sub-scores if editing a pre/post
+    if ((isPre || isPost) && (data.grants_vs_contracts_score !== undefined || data.legal_readiness_score !== undefined || data.financial_readiness_score !== undefined)) {
+      const g = Number(data.grants_vs_contracts_score ?? assessment.grants_vs_contracts_score ?? 0);
+      const l = Number(data.legal_readiness_score ?? assessment.legal_readiness_score ?? 0);
+      const f = Number(data.financial_readiness_score ?? assessment.financial_readiness_score ?? 0);
+      data.total_score = g + l + f;
+    }
+    updateMutation.mutate({ id: assessment.id, data });
+  };
+
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
@@ -259,6 +271,14 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
             <span>{participantName || assessment.participant_email}</span>
             <Badge className={typeColor}>{typeLabel}</Badge>
             {notSubmitted && <Badge className="bg-red-100 text-red-700">Not Yet Submitted</Badge>}
+            {!notSubmitted && assessment.id && (isPre || isPost) && (
+              <Button size="sm" variant="outline" className="ml-auto" onClick={() => {
+                setEditMode(!editMode);
+                setEditedScores({});
+              }}>
+                {editMode ? <><X className="w-3 h-3 mr-1" /> Cancel</> : <><Edit className="w-3 h-3 mr-1" /> Edit Scores</>}
+              </Button>
+            )}
           </DialogTitle>
         </DialogHeader>
 
