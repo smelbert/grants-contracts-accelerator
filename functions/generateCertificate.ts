@@ -101,6 +101,36 @@ Deno.serve(async (req) => {
       resolvedFooter = resolvedFooter.replace(new RegExp(`{${k}}`, 'g'), replacements[k]);
     });
 
+    // If template has custom HTML, use it directly
+    if (template?.custom_html) {
+      let customHtml = template.custom_html;
+      const allReplacements = { ...replacements, certificate_number: certificateNumber };
+      Object.keys(allReplacements).forEach(k => {
+        customHtml = customHtml.replace(new RegExp(`{${k}}`, 'g'), allReplacements[k]);
+      });
+
+      const htmlBlob = new Blob([customHtml], { type: 'text/html' });
+      const uploadResponse = await base44.asServiceRole.integrations.Core.UploadFile({ file: htmlBlob });
+
+      const certificate = await base44.asServiceRole.entities.ProgramCertificate.create({
+        enrollment_id, cohort_id: enrollment.cohort_id,
+        participant_email: enrollment.participant_email,
+        participant_name: enrollment.participant_name,
+        program_name: cohort?.program_name || '',
+        issue_date: new Date().toISOString(),
+        completion_date: new Date().toISOString(),
+        certificate_number: certificateNumber,
+        total_hours: totalHours,
+        modules_completed: completedModuleIds,
+        certificate_url: uploadResponse.file_url,
+        certificate_html: customHtml,
+        verification_url: `${Deno.env.get('BASE44_APP_URL')}/verify-certificate/${certificateNumber}`,
+        is_verified: true
+      });
+      await base44.asServiceRole.entities.ProgramEnrollment.update(enrollment_id, { program_completed: true, completion_date: new Date().toISOString() });
+      return Response.json({ success: true, certificate, certificate_url: uploadResponse.file_url });
+    }
+
     const sigs = template?.signature_fields || [];
 
     const signatureHtml = sigs.length > 0 ? `
