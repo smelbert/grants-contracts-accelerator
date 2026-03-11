@@ -345,9 +345,9 @@ export default function CertificateTemplatesPage() {
                 </div>
 
                 <div>
-                  <Label>Header Text *</Label>
+                 <Label>Header Text *</Label>
                   <Input
-                    required
+                    required={!formData.custom_html}
                     value={formData.header_text}
                     onChange={(e) => setFormData({ ...formData, header_text: e.target.value })}
                   />
