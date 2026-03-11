@@ -283,7 +283,7 @@ Deno.serve(async (req) => {
     }
 
     // Send email via Core integration
-    await base44.integrations.Core.SendEmail({
+    await base44.asServiceRole.integrations.Core.SendEmail({
       from_name: 'IncubateHer Program',
       to: recipient_email,
       subject: subject,
