@@ -89,25 +89,6 @@ export default function CertificateTemplatesPage() {
     }
   };
 
-  const addSignature = () => {
-    if (!newSignature.name || !newSignature.title) {
-      toast.error('Please enter name and title');
-      return;
-    }
-    setFormData({
-      ...formData,
-      signature_fields: [...(formData.signature_fields || []), { ...newSignature }]
-    });
-    setNewSignature({ name: '', title: '', signature_image_url: '' });
-  };
-
-  const removeSignature = (index) => {
-    setFormData({
-      ...formData,
-      signature_fields: formData.signature_fields.filter((_, i) => i !== index)
-    });
-  };
-
   const duplicateTemplate = (template) => {
     setFormData({
       ...template,
