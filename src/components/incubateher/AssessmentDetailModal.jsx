@@ -251,15 +251,27 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
   const typeColor = isPre ? 'bg-blue-100 text-blue-800' : isPost ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800';
   const notSubmitted = isPreFilled && !assessment.id;
 
+  // Field definitions differ between pre and post assessments
+  const scoreFields = isPre ? [
+    { key: 'legal_structure_score', label: 'Legal Structure & Documents', help: '2 questions × (0/25/100 pts) ÷ 200 × 100' },
+    { key: 'financial_systems_score', label: 'Financial Systems & Tracking', help: '2 questions × (0/25/100 pts) ÷ 200 × 100' },
+    { key: 'data_measurement_score', label: 'Data & Outcome Measurement', help: '2 questions × (0/25/100 pts) ÷ 200 × 100' },
+    { key: 'confidence_score', label: 'Confidence Level', help: 'Average of 2 scale answers (1–10) × 10' },
+  ] : [
+    { key: 'grants_vs_contracts_score', label: 'Grants vs Contracts Knowledge', help: '2 questions × (0/25/100 pts) ÷ 200 × 100' },
+    { key: 'legal_readiness_score', label: 'Legal Readiness', help: '2 questions × (0/25/100 pts) ÷ 200 × 100' },
+    { key: 'financial_readiness_score', label: 'Financial Readiness', help: '2 questions × (0/25/100 pts) ÷ 200 × 100' },
+    { key: 'confidence_score', label: 'Confidence Level', help: 'Average of 2 scale answers (1–10) × 10' },
+  ];
+
   const handleSave = () => {
     const data = { ...editedScores };
-    // Recalculate total_score from sub-scores if editing a pre/post
-    if ((isPre || isPost) && (data.grants_vs_contracts_score !== undefined || data.legal_readiness_score !== undefined || data.financial_readiness_score !== undefined)) {
-      const g = Number(data.grants_vs_contracts_score ?? assessment.grants_vs_contracts_score ?? 0);
-      const l = Number(data.legal_readiness_score ?? assessment.legal_readiness_score ?? 0);
-      const f = Number(data.financial_readiness_score ?? assessment.financial_readiness_score ?? 0);
-      data.total_score = g + l + f;
-    }
+    // Recalculate total_score = average of all 4 section scores
+    const s1 = Number(data[scoreFields[0].key] ?? assessment[scoreFields[0].key] ?? 0);
+    const s2 = Number(data[scoreFields[1].key] ?? assessment[scoreFields[1].key] ?? 0);
+    const s3 = Number(data[scoreFields[2].key] ?? assessment[scoreFields[2].key] ?? 0);
+    const s4 = Number(data[scoreFields[3].key] ?? assessment[scoreFields[3].key] ?? 0);
+    data.total_score = Math.round((s1 + s2 + s3 + s4) / 4);
     updateMutation.mutate({ id: assessment.id, data });
   };
 
