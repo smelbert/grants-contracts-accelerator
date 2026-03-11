@@ -212,7 +212,6 @@ export default function IssuedCertificatesPage() {
           })
         )}
       </div>
-    </div>
 
       {selectedCertificate?.certificate_html && (
         <CertificateViewer
