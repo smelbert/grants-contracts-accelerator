@@ -279,9 +279,9 @@ export default function CertificateTemplatesPage() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <Tabs defaultValue="design">
-                  <TabsList className="mb-4">
-                    <TabsTrigger value="design"><Palette className="w-3 h-3 mr-1" />Design</TabsTrigger>
-                    <TabsTrigger value="html"><Code className="w-3 h-3 mr-1" />Custom HTML</TabsTrigger>
+                  <TabsList className="mb-4 sticky top-0 z-10 bg-white w-full shadow-sm">
+                    <TabsTrigger value="design" className="flex-1"><Palette className="w-3 h-3 mr-1" />Design</TabsTrigger>
+                    <TabsTrigger value="html" className="flex-1"><Code className="w-3 h-3 mr-1" />Custom HTML</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="design" className="space-y-4">
