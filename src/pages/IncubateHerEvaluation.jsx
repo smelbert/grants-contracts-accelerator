@@ -29,6 +29,7 @@ const DEFAULT_RESPONSES = {
 export default function IncubateHerEvaluation() {
   const queryClient = useQueryClient();
   const [submitted, setSubmitted] = useState(false);
+  const [giveawayResponse, setGiveawayResponse] = useState(null); // 'yes' | 'no' | null
   const [responses, setResponses] = useState(() => {
     try { return { ...DEFAULT_RESPONSES, ...JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || '{}') }; } catch { return DEFAULT_RESPONSES; }
   });
