@@ -472,6 +472,82 @@ export default function IncubateHerCULDashboard() {
                 </CardContent>
               </Card>
 
+              {/* Program Evaluation Summary */}
+              {evalAssessments.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Program Evaluation Responses</CardTitle>
+                    <CardDescription>{evalAssessments.length} participant evaluation{evalAssessments.length !== 1 ? 's' : ''} submitted</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-5">
+                    {/* Aggregate ratings */}
+                    <div className="flex flex-wrap gap-4">
+                      {avgEvalRating && (
+                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                          <Star className="w-5 h-5 text-amber-500 fill-amber-400" />
+                          <div>
+                            <p className="text-xs text-slate-500">Avg Overall Rating</p>
+                            <p className="text-2xl font-bold text-amber-700">{avgEvalRating}<span className="text-sm font-normal text-slate-400">/10</span></p>
+                          </div>
+                        </div>
+                      )}
+                      {avgRecommendRating && (
+                        <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+                          <CheckCircle2 className="w-5 h-5 text-green-500" />
+                          <div>
+                            <p className="text-xs text-slate-500">Avg Recommend Score</p>
+                            <p className="text-2xl font-bold text-green-700">{avgRecommendRating}<span className="text-sm font-normal text-slate-400">/10</span></p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Open-ended feedback (anonymized) */}
+                    {evalAssessments.some(ev => ev.responses?.most_valuable || ev.responses?.improvements || ev.responses?.additional_comments) && (
+                      <div>
+                        <p className="text-sm font-semibold text-slate-600 mb-3 flex items-center gap-2">
+                          <MessageSquare className="w-4 h-4" /> Participant Feedback (Anonymized)
+                        </p>
+                        <div className="space-y-4">
+                          {evalAssessments.map((ev, i) => {
+                            const hasText = ev.responses?.most_valuable || ev.responses?.improvements || ev.responses?.additional_comments;
+                            if (!hasText) return null;
+                            return (
+                              <div key={i} className="border rounded-xl p-4 bg-slate-50 space-y-3">
+                                <div className="flex gap-2">
+                                  {ev.responses?.overall_rating != null && <Badge variant="outline" className="text-xs">Overall: {ev.responses.overall_rating}/10</Badge>}
+                                  {ev.responses?.recommend_rating != null && <Badge variant="outline" className="text-xs">Recommend: {ev.responses.recommend_rating}/10</Badge>}
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                  {ev.responses?.most_valuable && (
+                                    <div className="bg-white rounded-lg p-3 border">
+                                      <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Most Valuable</p>
+                                      <p className="text-slate-700">{ev.responses.most_valuable}</p>
+                                    </div>
+                                  )}
+                                  {ev.responses?.improvements && (
+                                    <div className="bg-white rounded-lg p-3 border">
+                                      <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Suggestions</p>
+                                      <p className="text-slate-700">{ev.responses.improvements}</p>
+                                    </div>
+                                  )}
+                                  {ev.responses?.additional_comments && (
+                                    <div className="bg-white rounded-lg p-3 border md:col-span-2">
+                                      <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">Additional Comments</p>
+                                      <p className="text-slate-700">{ev.responses.additional_comments}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Program Outcomes Narrative */}
               <Card className="bg-[#143A50] text-white">
                 <CardHeader>
