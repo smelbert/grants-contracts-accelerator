@@ -149,7 +149,38 @@ export default function IncubateHerEvaluation() {
     });
   };
 
+  const { data: existingGiveawayApp } = useQuery({
+    queryKey: ['giveaway-application', user?.email],
+    queryFn: async () => {
+      const apps = await base44.entities.GiveawayEligiblePool.filter({ participant_email: user.email });
+      return apps[0] || null;
+    },
+    enabled: !!user?.email && (!!existingEvaluation || submitted)
+  });
+
+  const submitGiveawayMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.GiveawayEligiblePool.create({
+        participant_email: user.email,
+        participant_name: user.full_name,
+        enrollment_id: enrollment?.id,
+        pre_assessment_completed: enrollment?.pre_assessment_completed || false,
+        post_assessment_completed: enrollment?.post_assessment_completed || false,
+        program_evaluation_completed: true,
+        applied_date: new Date().toISOString(),
+        status: 'pending_review'
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['giveaway-application']);
+      setGiveawayResponse('yes');
+      toast.success('You\'re entered in the giveaway pool!');
+    }
+  });
+
   if (existingEvaluation || submitted) {
+    const alreadyEnteredGiveaway = existingGiveawayApp || giveawayResponse === 'yes';
+
     return (
       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
         <CoBrandedHeader title="Program Evaluation" />
@@ -173,6 +204,45 @@ export default function IncubateHerEvaluation() {
                   <Download className="w-4 h-4 mr-2" /> Download PDF
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Giveaway Prompt */}
+          <Card className="mt-6 border-2" style={{ borderColor: BRAND_COLORS.eisGold }}>
+            <CardContent className="pt-6 text-center">
+              <Gift className="w-10 h-10 mx-auto mb-3" style={{ color: BRAND_COLORS.eisGold }} />
+              <h3 className="text-lg font-bold mb-2" style={{ color: BRAND_COLORS.neutralDark }}>
+                🎁 Program Giveaway
+              </h3>
+              <p className="text-sm mb-5" style={{ color: BRAND_COLORS.eisNavy }}>
+                You've completed all requirements! Would you like to be entered into the IncubateHer giveaway pool for a chance to win comprehensive grant writing support?
+              </p>
+              {alreadyEnteredGiveaway ? (
+                <div className="flex items-center justify-center gap-2 text-green-700 font-semibold">
+                  <CheckCircle2 className="w-5 h-5" />
+                  You're in the giveaway pool! We'll be in touch.
+                </div>
+              ) : giveawayResponse === 'no' ? (
+                <p className="text-slate-500 text-sm">No problem — good luck in your future endeavors!</p>
+              ) : (
+                <div className="flex gap-4 justify-center">
+                  <Button
+                    className="px-8"
+                    style={{ backgroundColor: BRAND_COLORS.eisGold, color: '#fff' }}
+                    disabled={submitGiveawayMutation.isPending}
+                    onClick={() => submitGiveawayMutation.mutate()}
+                  >
+                    {submitGiveawayMutation.isPending ? 'Entering...' : '✅ Yes, Enter Me!'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="px-8"
+                    onClick={() => setGiveawayResponse('no')}
+                  >
+                    No Thanks
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
