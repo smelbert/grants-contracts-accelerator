@@ -51,7 +51,8 @@ import {
   Flag,
   Download,
   Upload,
-  Wand2
+  Wand2,
+  BarChart3
 } from 'lucide-react';
 
 // Public pages that skip the authenticated layout entirely
