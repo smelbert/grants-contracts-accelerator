@@ -10,16 +10,22 @@ Deno.serve(async (req) => {
     if (notification_type === 'pre_assessment_reminder') {
       const participants = body_json.participants || [];
       let sent = 0;
+      const errors = [];
       for (const p of participants) {
-        await base44.asServiceRole.integrations.Core.SendEmail({
-          from_name: 'IncubateHer Program',
-          to: p.email,
-          subject: 'Action Required: Complete Your IncubateHer Pre-Assessment',
-          body: `<p>Hi ${p.name || 'Participant'},</p><p>This is a friendly reminder to complete your IncubateHer Pre-Assessment as soon as possible. The pre-assessment helps us understand your starting point and is required to unlock consultations and the giveaway.</p><p>Log in to your portal and navigate to <strong>Assessments & Evaluations → Pre-Assessment</strong> to complete it.</p><p>It only takes 10–15 minutes.</p><p>Thank you!<br>Elbert Innovative Solutions</p>`
-        });
-        sent++;
+        try {
+          await base44.asServiceRole.integrations.Core.SendEmail({
+            from_name: 'IncubateHer Program',
+            to: p.email,
+            subject: 'Action Required: Complete Your IncubateHer Pre-Assessment',
+            body: `<p>Hi ${p.name || 'Participant'},</p><p>This is a friendly reminder to complete your IncubateHer Pre-Assessment as soon as possible. The pre-assessment helps us understand your starting point and is required to unlock consultations and the giveaway.</p><p>Log in to your portal and navigate to <strong>Assessments & Evaluations → Pre-Assessment</strong> to complete it.</p><p>It only takes 10–15 minutes.</p><p>Thank you!<br>Elbert Innovative Solutions</p>`
+          });
+          sent++;
+        } catch (emailErr) {
+          console.warn(`Failed to send reminder to ${p.email}:`, emailErr.message);
+          errors.push({ email: p.email, error: emailErr.message });
+        }
       }
-      return Response.json({ success: true, sent });
+      return Response.json({ success: true, sent, errors });
     }
 
     // Get participant and cohort details
