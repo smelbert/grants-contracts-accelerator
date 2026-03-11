@@ -302,21 +302,58 @@ export default function AssessmentDetailModal({ assessment, participantName, onC
         )}
 
         <div className="space-y-4">
-          {/* Score summary */}
+          {/* Score summary / edit */}
           {!notSubmitted && (isPre || isPost) && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                { label: 'Total Score', value: assessment.total_score },
-                { label: 'Grants/Contracts', value: assessment.grants_vs_contracts_score },
-                { label: 'Legal Readiness', value: assessment.legal_readiness_score },
-                { label: 'Financial', value: assessment.financial_readiness_score },
-              ].map(({ label, value }) => (
-                <div key={label} className="text-center p-2 bg-slate-50 rounded-lg">
-                  <p className="text-lg font-bold text-[#143A50]">{value ?? '—'}</p>
-                  <p className="text-xs text-slate-500">{label}</p>
+            editMode ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
+                <p className="text-sm font-semibold text-amber-800">Edit Scores</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { key: 'grants_vs_contracts_score', label: 'Grants/Contracts Score' },
+                    { key: 'legal_readiness_score', label: 'Legal Readiness Score' },
+                    { key: 'financial_readiness_score', label: 'Financial Score' },
+                    { key: 'confidence_score', label: 'Confidence Score' },
+                  ].map(({ key, label }) => (
+                    <div key={key}>
+                      <Label className="text-xs">{label}</Label>
+                      <Input
+                        type="number"
+                        defaultValue={assessment[key] ?? ''}
+                        onChange={e => setEditedScores(prev => ({ ...prev, [key]: e.target.value === '' ? null : Number(e.target.value) }))}
+                        className="mt-1"
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+                <div>
+                  <Label className="text-xs">Total Score (auto-calculated from above on save)</Label>
+                  <Input
+                    type="number"
+                    defaultValue={assessment.total_score ?? ''}
+                    onChange={e => setEditedScores(prev => ({ ...prev, total_score: e.target.value === '' ? null : Number(e.target.value) }))}
+                    className="mt-1"
+                  />
+                </div>
+                <Button onClick={handleSave} disabled={updateMutation.isPending} className="w-full bg-[#143A50] text-white">
+                  <Save className="w-4 h-4 mr-2" />
+                  {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  { label: 'Total Score', value: assessment.total_score },
+                  { label: 'Grants/Contracts', value: assessment.grants_vs_contracts_score },
+                  { label: 'Legal Readiness', value: assessment.legal_readiness_score },
+                  { label: 'Financial', value: assessment.financial_readiness_score },
+                ].map(({ label, value }) => (
+                  <div key={label} className="text-center p-2 bg-slate-50 rounded-lg">
+                    <p className="text-lg font-bold text-[#143A50]">{value ?? '—'}</p>
+                    <p className="text-xs text-slate-500">{label}</p>
+                  </div>
+                ))}
+              </div>
+            )
           )}
 
           {/* Submitted date */}
