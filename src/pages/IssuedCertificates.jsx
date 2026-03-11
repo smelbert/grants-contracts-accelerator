@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Award, Download, Eye, Search, CheckCircle, ExternalLink } from 'lucide-react';
+import CertificateViewer from '@/components/certificates/CertificateViewer';
 import { format } from 'date-fns';
 
 export default function IssuedCertificatesPage() {
@@ -45,6 +46,10 @@ export default function IssuedCertificatesPage() {
 
   const handleDownload = (certificateUrl) => {
     window.open(certificateUrl, '_blank');
+  };
+
+  const handleViewHTML = (cert) => {
+    setSelectedCertificate(cert);
   };
 
   const handleVerify = (cert) => {
@@ -168,7 +173,17 @@ export default function IssuedCertificatesPage() {
                     )}
 
                     <div className="flex gap-2 pt-3 border-t">
-                      {cert.certificate_url && (
+                      {cert.certificate_html && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleViewHTML(cert)}
+                          className="flex-1 bg-[#143A50] text-white"
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Certificate
+                        </Button>
+                      )}
+                      {cert.certificate_url && !cert.certificate_html && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -184,7 +199,6 @@ export default function IssuedCertificatesPage() {
                           size="sm"
                           variant="outline"
                           onClick={() => handleVerify(cert)}
-                          className="flex-1"
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Verify
@@ -199,5 +213,13 @@ export default function IssuedCertificatesPage() {
         )}
       </div>
     </div>
+
+    {selectedCertificate?.certificate_html && (
+      <CertificateViewer
+        htmlContent={selectedCertificate.certificate_html}
+        certificateNumber={selectedCertificate.certificate_number}
+        onClose={() => setSelectedCertificate(null)}
+      />
+    )}
   );
 }
