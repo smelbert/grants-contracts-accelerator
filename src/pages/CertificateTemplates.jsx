@@ -35,6 +35,7 @@ export default function CertificateTemplatesPage() {
     background_color: '#FFFFFF',
     text_color: '#000000',
     include_qr_code: true,
+    custom_html: '',
     is_active: true
   });
   const [newSignature, setNewSignature] = useState({ name: '', title: '', signature_image_url: '' });
