@@ -289,9 +289,9 @@ const getAdminPortalNav = () => [
   },
 ];
 
-const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment) => {
+const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment, isFacilitator = false) => {
   if (portalView === 'coach') {
-    const items = getCoachPortalNav();
+    const items = getCoachPortalNav(isFacilitator);
     return [{ groupName: 'Menu', items }];
   }
   if (portalView === 'admin') {
