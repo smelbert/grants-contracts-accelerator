@@ -390,6 +390,26 @@ export default function Layout({ children, currentPageName }) {
     retry: 1
   });
 
+  const { data: isFacilitator } = useQuery({
+    queryKey: ['incubateher-facilitator', user?.email],
+    queryFn: async () => {
+      if (!user?.email) return false;
+      try {
+        const enrollments = await base44.entities.ProgramEnrollment.filter({
+          participant_email: user.email,
+          role: 'facilitator'
+        });
+        // Also check case-insensitive match since some emails have mixed case
+        const emailLower = user.email.toLowerCase();
+        return enrollments.some(e => e.participant_email?.toLowerCase() === emailLower && e.cohort_id);
+      } catch {
+        return false;
+      }
+    },
+    enabled: !isPublic && !!user?.email && user?.role === 'coach',
+    retry: 1
+  });
+
   React.useEffect(() => {
     if (isPublic || !user) return;
     // Skip legal acknowledgement for IncubateHer participants—they go through IncubateHerProgramGate instead
