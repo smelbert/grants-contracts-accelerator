@@ -192,6 +192,104 @@ export default function IncubateHerAdmin() {
           </CardContent>
         </Card>
 
+        {/* Program Evaluations */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle style={{ color: BRAND_COLORS.culRed }}>Program Evaluations</CardTitle>
+            <CardDescription>{evalAssessments.length} evaluation{evalAssessments.length !== 1 ? 's' : ''} submitted</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {evalAssessments.length === 0 ? (
+              <p className="text-slate-400 text-center py-6">No evaluations submitted yet.</p>
+            ) : (
+              <div className="space-y-6">
+                {/* Rating Summary */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center p-4 bg-slate-50 rounded-lg">
+                    <p className="text-3xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>{evalAssessments.length}</p>
+                    <p className="text-xs text-slate-600 mt-1">Submitted</p>
+                    <Badge className="mt-2 text-xs" style={{ backgroundColor: BRAND_COLORS.eisGold }}>
+                      {totalParticipants > 0 ? Math.round((evalAssessments.length / totalParticipants) * 100) : 0}%
+                    </Badge>
+                  </div>
+                  {avgOverallRating && (
+                    <div className="text-center p-4 bg-amber-50 rounded-lg">
+                      <div className="flex items-center justify-center gap-1 mb-1">
+                        <p className="text-3xl font-bold text-amber-600">{avgOverallRating}</p>
+                        <Star className="w-5 h-5 text-amber-500 fill-amber-400" />
+                      </div>
+                      <p className="text-xs text-slate-600">Avg Overall Rating</p>
+                    </div>
+                  )}
+                  {avgRecommendRating && (
+                    <div className="text-center p-4 bg-green-50 rounded-lg">
+                      <p className="text-3xl font-bold text-green-600">{avgRecommendRating}</p>
+                      <p className="text-xs text-slate-600 mt-1">Avg Recommend Score</p>
+                    </div>
+                  )}
+                  <div className="text-center p-4 bg-purple-50 rounded-lg">
+                    <p className="text-3xl font-bold text-purple-600">{evalFeedbackItems.length}</p>
+                    <p className="text-xs text-slate-600 mt-1">Feedback Responses</p>
+                  </div>
+                </div>
+
+                {/* Per-submission ratings */}
+                <div>
+                  <p className="text-sm font-semibold text-slate-700 mb-3">Individual Ratings</p>
+                  <div className="space-y-2">
+                    {evalAssessments.map((ev, i) => (
+                      <div key={ev.id || i} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg text-sm">
+                        <div className="flex-1 text-slate-600 truncate">{ev.participant_email}</div>
+                        {ev.responses?.overall_rating != null && (
+                          <div className="flex items-center gap-1">
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-400" />
+                            <span className="font-semibold">{ev.responses.overall_rating}/10</span>
+                          </div>
+                        )}
+                        {ev.responses?.recommend_rating != null && (
+                          <Badge variant="outline" className="text-xs">Recommend: {ev.responses.recommend_rating}/10</Badge>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Open-ended feedback */}
+                {evalFeedbackItems.length > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" /> Participant Feedback
+                    </p>
+                    <div className="space-y-3">
+                      {evalAssessments.map((ev, i) => {
+                        const hasAny = evalFeedbackFields.some(f => ev.responses?.[f]);
+                        if (!hasAny) return null;
+                        return (
+                          <div key={ev.id || i} className="border rounded-lg p-4 space-y-2">
+                            <p className="text-xs font-semibold text-slate-500">{ev.participant_email}</p>
+                            {ev.responses?.most_valuable && (
+                              <div><p className="text-xs text-slate-400 uppercase tracking-wider">Most Valuable</p><p className="text-sm text-slate-700">{ev.responses.most_valuable}</p></div>
+                            )}
+                            {ev.responses?.improvements && (
+                              <div><p className="text-xs text-slate-400 uppercase tracking-wider">Suggestions for Improvement</p><p className="text-sm text-slate-700">{ev.responses.improvements}</p></div>
+                            )}
+                            {ev.responses?.additional_comments && (
+                              <div><p className="text-xs text-slate-400 uppercase tracking-wider">Additional Comments</p><p className="text-sm text-slate-700">{ev.responses.additional_comments}</p></div>
+                            )}
+                            {ev.responses?.next_steps && (
+                              <div><p className="text-xs text-slate-400 uppercase tracking-wider">Next Steps</p><p className="text-sm text-slate-700">{ev.responses.next_steps}</p></div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
