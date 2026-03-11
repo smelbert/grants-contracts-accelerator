@@ -19,20 +19,8 @@ export default function CertificateTemplatesPage() {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [formData, setFormData] = useState({
     template_name: '',
-    template_layout: 'blue_wave_landscape',
     cohort_id: '',
     is_default: false,
-    header_text: 'Certificate of Completion',
-    body_template: 'In appreciation of your outstanding dedication and consistent contribution during the {program_name}. Your efforts have greatly impacted the success and vision of the program.',
-    footer_text: 'Funded by {funder_organization} | Delivered by {delivery_organization}',
-    logo_url: '',
-    co_logo_url: '',
-    signature_fields: [],
-    primary_color: '#143A50',
-    secondary_color: '#E5C089',
-    background_color: '#FFFFFF',
-    text_color: '#000000',
-    include_qr_code: true,
     custom_html: '',
     is_active: true
   });
