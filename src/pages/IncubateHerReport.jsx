@@ -491,7 +491,38 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
       });
     }
 
-    // ── 9. Full Participant Table ──
+    // ── 9. Program Evaluations ──
+    if (evalResponses.length > 0) {
+      addSection(`${nextStepsList.length > 0 ? 9 : 8}. Program Evaluations`);
+      const avgOverall = (evalResponses.reduce((s, e) => s + (e.responses?.overall_rating || 0), 0) / evalResponses.length).toFixed(1);
+      const avgRecommend = (evalResponses.reduce((s, e) => s + (e.responses?.recommend_rating || 0), 0) / evalResponses.length).toFixed(1);
+      addBullet('Evaluations Submitted', `${evalResponses.length} (${pct(evalResponses.length, totalEnrolled)}%)`);
+      addBullet('Average Overall Rating', `${avgOverall}/10`);
+      addBullet('Average Recommend Score', `${avgRecommend}/10`);
+      y += 3;
+      addSubSection('Participant Feedback');
+      evalResponses.forEach((ev, i) => {
+        checkPage(20);
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(0, 0, 0);
+        doc.text(`${i + 1}. ${ev.participant_email}  |  Overall: ${ev.responses?.overall_rating ?? '—'}/10  |  Recommend: ${ev.responses?.recommend_rating ?? '—'}/10`, margin + 2, y);
+        y += 5;
+        doc.setFont(undefined, 'normal');
+        ['most_valuable', 'improvements', 'additional_comments', 'next_steps'].forEach(field => {
+          if (ev.responses?.[field]) {
+            const label = { most_valuable: 'Most Valuable', improvements: 'Suggestions', additional_comments: 'Comments', next_steps: 'Next Steps' }[field];
+            const lines = doc.splitTextToSize(`   ${label}: ${ev.responses[field]}`, 165);
+            checkPage(lines.length * 5);
+            doc.text(lines, margin + 2, y);
+            y += lines.length * 5 + 2;
+          }
+        });
+        y += 3;
+      });
+    }
+
+    // ── 9/10. Full Participant Table ──
     addSection(`${nextStepsList.length > 0 ? 9 : 8}. Comprehensive Participant Completion Table`);
     participantRows.forEach((p, i) => {
       checkPage(18);
