@@ -192,7 +192,8 @@ export default function IncubateHerPostAssessment() {
         enrollment_id: enrollment.id,
         assessment_type: 'pre'
       });
-      return assessments[0] || null;
+      // Prefer the submitted (non-draft) record; fall back to any record
+      return assessments.find(a => !a.is_draft) || assessments[0] || null;
     },
     enabled: !!enrollment?.id
   });
