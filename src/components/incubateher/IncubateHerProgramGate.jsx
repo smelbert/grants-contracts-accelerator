@@ -16,6 +16,18 @@ const STEPS = ['terms', 'checklist'];
 export default function IncubateHerProgramGate({ user, userAccess, enrollment, onComplete }) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState('terms');
+
+  // Auto-link this user's login account to their enrollment (handles different email scenario)
+  React.useEffect(() => {
+    if (!user?.email || !enrollment?.cohort_id) return;
+    base44.functions.invoke('linkParticipantAccount', { cohort_id: enrollment.cohort_id })
+      .then(res => {
+        if (res.data?.was_email_mismatch) {
+          console.log('[ProgramGate] Email mismatch auto-resolved:', res.data);
+        }
+      })
+      .catch(err => console.warn('[ProgramGate] Account link failed:', err.message));
+  }, [user?.email, enrollment?.cohort_id]);
   const [termsChecked, setTermsChecked] = useState(false);
   const [loginChecked, setLoginChecked] = useState(false);
   const [ipAcknowledged, setIpAcknowledged] = useState(false);
