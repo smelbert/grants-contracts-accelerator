@@ -15,6 +15,7 @@ import moment from 'moment';
 import AssessmentDetailModal from '@/components/incubateher/AssessmentDetailModal';
 import SurveyBuilder from '@/components/incubateher/SurveyBuilder';
 import EvaluationEditorModal from '@/components/admin/EvaluationEditorModal';
+import AssessmentQRCodes from '@/components/incubateher/AssessmentQRCodes';
 
 export default function AssessmentSurveyAdmin() {
   const [selectedAssessment, setSelectedAssessment] = useState(null);

@@ -12,6 +12,7 @@ import JotFormProfile from '@/components/incubateher/JotFormProfile';
 import BulkEnrolleAccessManager from '@/components/admin/BulkEnrolleAccessManager';
 import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle, ChevronDown, ChevronUp, Activity } from 'lucide-react';
 import ParticipantActivityDetail from '@/components/incubateher/ParticipantActivityDetail';
+import EmailRelinkTool from '@/components/incubateher/EmailRelinkTool';
 
 export default function IncubateHerParticipants() {
   const [searchTerm, setSearchTerm] = useState('');
