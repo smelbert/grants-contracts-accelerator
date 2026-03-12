@@ -199,6 +199,7 @@ export default function AssessmentSurveyAdmin() {
             <TabsTrigger value="readiness">Readiness</TabsTrigger>
             <TabsTrigger value="coach">Coach Intakes</TabsTrigger>
             <TabsTrigger value="builder">Survey Builder</TabsTrigger>
+            <TabsTrigger value="qrcodes">QR Codes</TabsTrigger>
           </TabsList>
 
           {/* IncubateHer Program Tab */}
@@ -703,6 +704,10 @@ export default function AssessmentSurveyAdmin() {
 
           <TabsContent value="builder" className="mt-6">
             <SurveyBuilder />
+          </TabsContent>
+
+          <TabsContent value="qrcodes" className="mt-6">
+            <AssessmentQRCodes />
           </TabsContent>
 
           <TabsContent value="coach" className="mt-6">

@@ -320,7 +320,7 @@ export default function IncubateHerParticipants() {
                   </div>
 
                   {/* Profile & Activity Toggles */}
-                  <div className="mt-3 flex gap-3">
+                  <div className="mt-3 flex gap-3 flex-wrap">
                     <button
                       onClick={() => setExpandedProfiles(prev => ({ ...prev, [enrollment.id]: !prev[enrollment.id] }))}
                       className="flex items-center gap-1 text-xs font-medium hover:underline"
@@ -337,6 +337,7 @@ export default function IncubateHerParticipants() {
                       <Activity className="w-3 h-3" />
                       {expandedProfiles[`activity_${enrollment.id}`] ? 'Hide' : 'View'} Activity Detail
                     </button>
+                    <EmailRelinkTool enrollment={enrollment} />
                   </div>
                   {expandedProfiles[enrollment.id] && (
                     <div className="mt-3">
