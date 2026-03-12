@@ -226,9 +226,7 @@ const AUTOSAVE_KEY = 'eis_pre_assessment_draft';
 
 export default function IncubateHerPreAssessment() {
   const queryClient = useQueryClient();
-  const [responses, setResponses] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(AUTOSAVE_KEY) || '{}'); } catch { return {}; }
-  });
+  const [responses, setResponses] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [scores, setScores] = useState(null);
   const [prefilled, setPrefilled] = useState(false);
