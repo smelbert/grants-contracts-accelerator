@@ -18,7 +18,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
   const [step, setStep] = useState('terms');
 
   // Auto-link this user's login account to their enrollment (handles different email scenario)
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user?.email || !enrollment?.cohort_id) return;
     base44.functions.invoke('linkParticipantAccount', { cohort_id: enrollment.cohort_id })
       .then(res => {
