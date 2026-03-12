@@ -281,7 +281,7 @@ export default function IncubateHerPreAssessment() {
   }, [existingAssessment]);
 
   // Auto-save to DB whenever responses change (debounced 2 seconds)
-  const autoSaveTimerRef = React.useRef(null);
+  const autoSaveTimerRef = useRef(null);
   React.useEffect(() => {
     if (!enrollment || Object.keys(responses).length === 0) return;
     clearTimeout(autoSaveTimerRef.current);
@@ -372,11 +372,7 @@ export default function IncubateHerPreAssessment() {
   });
 
   const handleResponseChange = (questionId, value) => {
-    setResponses(prev => {
-      const next = { ...prev, [questionId]: value };
-      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(next));
-      return next;
-    });
+    setResponses(prev => ({ ...prev, [questionId]: value }));
   };
 
   const calculateScores = () => {
