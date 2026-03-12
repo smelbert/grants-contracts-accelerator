@@ -272,13 +272,37 @@ export default function IncubateHerPreAssessment() {
     enabled: !!enrollment?.id
   });
 
-  // Load saved draft responses from DB when assessment loads (overrides localStorage)
+  // Load saved draft responses from DB when assessment loads
   React.useEffect(() => {
     if (existingAssessment?.is_draft && existingAssessment?.responses && Object.keys(responses).length === 0) {
       setResponses(existingAssessment.responses);
       toast('Draft loaded — pick up where you left off.', { icon: '💾', duration: 4000 });
     }
   }, [existingAssessment]);
+
+  // Auto-save to DB whenever responses change (debounced 2 seconds)
+  const autoSaveTimerRef = React.useRef(null);
+  React.useEffect(() => {
+    if (!enrollment || Object.keys(responses).length === 0) return;
+    clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(() => {
+      const draftData = {
+        enrollment_id: enrollment.id,
+        participant_email: user?.email,
+        assessment_type: 'pre',
+        responses: responses,
+        is_draft: true
+      };
+      if (existingAssessment?.id) {
+        base44.entities.ProgramAssessment.update(existingAssessment.id, draftData);
+      } else {
+        base44.entities.ProgramAssessment.create(draftData).then(() => {
+          queryClient.invalidateQueries({ queryKey: ['pre-assessment'] });
+        });
+      }
+    }, 2000);
+    return () => clearTimeout(autoSaveTimerRef.current);
+  }, [responses]);
 
   // Pre-fill responses from JotForm data when enrollment loads
   React.useEffect(() => {
