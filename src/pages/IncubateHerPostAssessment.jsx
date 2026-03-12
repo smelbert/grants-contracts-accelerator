@@ -384,8 +384,9 @@ export default function IncubateHerPostAssessment() {
   // Still loading — don't gate yet
   const isStillLoading = !user || enrollmentLoading || (!!enrollment?.id && preAssessmentLoading);
 
-  // Pre-assessment is missing only once we've confirmed loading is done AND enrollment marks it incomplete
-  const preAssessmentMissing = !isStillLoading && !preAssessment && !enrollment?.pre_assessment_completed;
+  // Pre-assessment is missing only if enrollment explicitly marks it not completed
+  // (Do NOT gate on whether a DB record exists — multiple submissions can create duplicate records)
+  const preAssessmentMissing = !isStillLoading && !enrollment?.pre_assessment_completed;
 
   if (isStillLoading) {
     return (
