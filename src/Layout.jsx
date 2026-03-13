@@ -67,6 +67,21 @@ const getUserPortalNav = () => [
     ]
   },
   {
+    groupName: 'IncubateHer Program',
+    incubateherOnly: true,
+    items: [
+      { name: 'Program Overview', page: 'IncubateHerOverview', icon: Target },
+      { name: 'My Profile', page: 'IncubateHerProfileIntake', icon: User },
+      { name: 'Learning Hub', page: 'IncubateHerLearning', icon: BookOpen },
+      { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
+      { name: 'Workbook', page: 'IncubateHerWorkbook', icon: BookOpen },
+      { name: 'Assessments & Evaluations', page: 'IncubateHerAssessments', icon: CheckCircle2 },
+      { name: 'Consultations', page: 'IncubateHerConsultations', icon: MessageSquare },
+      { name: 'Completion Tracker', page: 'IncubateHerCompletion', icon: TrendingUp },
+      { name: 'Giveaway', page: 'IncubateHerGiveaway', icon: Sparkles },
+    ]
+  },
+  {
     groupName: 'Workspace',
     items: [
       { name: 'Grant Readiness Dashboard', page: 'GrantReadinessDashboard', icon: TrendingUp },
