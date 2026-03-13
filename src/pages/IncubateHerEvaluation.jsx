@@ -276,7 +276,7 @@ export default function IncubateHerEvaluation() {
   const isComplete = responses.overall_rating && responses.content_quality && 
                      responses.facilitation_effectiveness && responses.materials_usefulness &&
                      responses.workbook_quality && responses.schedule_format && 
-                     responses.consultation_experience && responses.would_recommend &&
+                     responses.would_recommend &&
                      responses.participation_frequency && responses.community_interest;
 
   return (
