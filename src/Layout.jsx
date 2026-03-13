@@ -331,7 +331,11 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment, is
       if (userAccess?.disabled_tabs?.[item.page]) return false;
       return true;
     })
-  })).filter(group => group.items.length > 0);
+  })).filter(group => {
+    // Show early IncubateHer group only for participants; hide the later duplicate
+    if (group.incubateherOnly && !isIncubateHerParticipant) return false;
+    return group.items.length > 0;
+  });
   
   return filteredNav;
 };
