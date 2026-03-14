@@ -518,11 +518,17 @@ export default function IncubateHerPreAssessment() {
                    {profile.level} Readiness
                  </Badge>
                </div>
-               <div className="flex gap-3 justify-center">
+               <div className="flex flex-wrap gap-3 justify-center">
                  <Button variant="outline" onClick={() => handleDownloadPDF(existingAssessment.responses || {}, existingAssessment)}>
                    <Download className="w-4 h-4 mr-2" /> Download PDF
                  </Button>
+                 <Link to={createPageUrl('IncubateHerPostAssessment')}>
+                   <Button style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight }}>
+                     Go to Post-Assessment <ArrowRight className="w-4 h-4 ml-2" />
+                   </Button>
+                 </Link>
                  <Button 
+                   variant="outline"
                    onClick={async () => {
                      setResponses({});
                      setSubmitted(false);
@@ -536,7 +542,6 @@ export default function IncubateHerPreAssessment() {
                      }
                      queryClient.invalidateQueries({ queryKey: ['pre-assessment'] });
                    }}
-                   style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight }}
                  >
                    Retake Assessment
                  </Button>
@@ -574,9 +579,16 @@ export default function IncubateHerPreAssessment() {
                   {profile.level} Readiness
                 </Badge>
               </div>
-              <Button variant="outline" className="mt-4" onClick={() => handleDownloadPDF(responses, scores)}>
-                <Download className="w-4 h-4 mr-2" /> Download PDF
-              </Button>
+              <div className="flex flex-wrap gap-3 justify-center mt-4">
+                <Button variant="outline" onClick={() => handleDownloadPDF(responses, scores)}>
+                  <Download className="w-4 h-4 mr-2" /> Download PDF
+                </Button>
+                <Link to={createPageUrl('IncubateHerPostAssessment')}>
+                  <Button style={{ backgroundColor: BRAND_COLORS.eisGold, color: BRAND_COLORS.neutralLight }}>
+                    Go to Post-Assessment <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
 
