@@ -12,7 +12,9 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
-import { CheckCircle2, AlertCircle, TrendingUp, Award, Download } from 'lucide-react';
+import { CheckCircle2, AlertCircle, TrendingUp, Award, Download, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { toast } from 'react-hot-toast';
 
 const QUESTIONS = {
