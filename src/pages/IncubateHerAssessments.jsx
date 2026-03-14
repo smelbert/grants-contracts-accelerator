@@ -61,19 +61,6 @@ export default function IncubateHerAssessments() {
       availableNow: true
     },
     {
-      id: 'readiness-assessment',
-      title: 'Funding Readiness Assessment',
-      description: 'Comprehensive assessment of your readiness for grants and contracts. Available after Session 2 (March 5).',
-      icon: TrendingUp,
-      page: 'FundingReadinessAssessment',
-      color: 'bg-[#143A50]',
-      isCompleted: false,
-      isInProgress: false,
-      isLocked: !isReadinessUnlocked,
-      availableNow: isReadinessUnlocked,
-      unlockDate: 'March 5, 2026 at 7:30 PM'
-    },
-    {
       id: 'post-assessment',
       title: 'Post-Program Assessment',
       description: 'Complete this after finishing all sessions to measure your progress and learning.',
@@ -96,6 +83,19 @@ export default function IncubateHerAssessments() {
       isInProgress: false,
       isLocked: false,
       availableNow: true
+    },
+    {
+      id: 'readiness-assessment',
+      title: 'Funding Readiness Assessment',
+      description: 'Comprehensive assessment of your readiness for grants and contracts. Available after Session 2 (March 5).',
+      icon: TrendingUp,
+      page: 'FundingReadinessAssessment',
+      color: 'bg-[#143A50]',
+      isCompleted: false,
+      isInProgress: false,
+      isLocked: !isReadinessUnlocked,
+      availableNow: isReadinessUnlocked,
+      unlockDate: 'March 5, 2026 at 7:30 PM'
     }
   ];
 
