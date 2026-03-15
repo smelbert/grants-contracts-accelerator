@@ -111,14 +111,29 @@ export default function AssessmentSurveyAdmin() {
 
   const sendPreAssessmentReminders = async () => {
     setSendingReminder(true);
-    const nonCompleters = enrollments.filter(e => !incubatePre.find(a => a.participant_email === e.participant_email));
-    await base44.functions.invoke('incubateHerEmailNotifications', {
-      notification_type: 'pre_assessment_reminder',
-      participants: nonCompleters.map(e => ({ email: e.participant_email, name: e.participant_name }))
-    });
+    try {
+      const res = await base44.functions.invoke('nudgeIncompleteAssessments', {});
+      const data = res?.data;
+      toast.success(data?.summary || `Stage-aware reminders sent!`);
+    } catch (err) {
+      toast.error('Failed to send reminders: ' + err.message);
+    }
     setSendingReminder(false);
-    toast.success(`Reminders sent to ${nonCompleters.length} participant(s) who haven't completed the pre-assessment.`);
   };
+
+  // Stage breakdown for display
+  const stage1 = enrollments.filter(e => !incubatePre.find(a => a.enrollment_id === e.id || a.participant_email === e.participant_email));
+  const stage2 = enrollments.filter(e => {
+    const hasPre = !!e.pre_assessment_completed || !!incubatePre.find(a => a.enrollment_id === e.id || a.participant_email === e.participant_email);
+    const hasPost = !!e.post_assessment_completed || !!incubatePost.find(a => a.enrollment_id === e.id || a.participant_email === e.participant_email);
+    return hasPre && !hasPost;
+  });
+  const stage3 = enrollments.filter(e => {
+    const hasPre = !!e.pre_assessment_completed || !!incubatePre.find(a => a.enrollment_id === e.id || a.participant_email === e.participant_email);
+    const hasPost = !!e.post_assessment_completed || !!incubatePost.find(a => a.enrollment_id === e.id || a.participant_email === e.participant_email);
+    const hasEval = !!incubateEval.find(a => a.enrollment_id === e.id || a.participant_email === e.participant_email);
+    return hasPre && hasPost && !hasEval;
+  });
 
   const preRate = totalParticipants > 0 ? Math.round((incubatePre.length / totalParticipants) * 100) : 0;
   const postRate = totalParticipants > 0 ? Math.round((incubatePost.length / totalParticipants) * 100) : 0;
@@ -231,6 +246,73 @@ export default function AssessmentSurveyAdmin() {
                 </Card>
               ))}
             </div>
+
+            {/* Stage-Aware Reminder Panel */}
+            <Card className="mb-6 border-amber-200 bg-amber-50">
+              <CardHeader>
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <CardTitle className="flex items-center gap-2 text-amber-800">
+                    <Bell className="w-5 h-5" />
+                    Participant Stage Breakdown & Reminders
+                  </CardTitle>
+                  <Button
+                    onClick={sendPreAssessmentReminders}
+                    disabled={sendingReminder}
+                    className="bg-amber-600 hover:bg-amber-700 text-white"
+                    size="sm"
+                  >
+                    <Bell className="w-4 h-4 mr-2" />
+                    {sendingReminder ? 'Sending...' : 'Send Stage-Aware Reminders to All Incomplete'}
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-amber-700 mb-4">
+                  Each participant will receive a <strong>personalized email</strong> targeted to exactly where they are — no pre-assessment, missing post, or missing evaluation. Only participants with outstanding steps will be emailed.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-white rounded-xl border border-red-200 p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-sm">1</div>
+                      <p className="font-semibold text-slate-800">No Pre-Assessment</p>
+                    </div>
+                    <p className="text-2xl font-bold text-red-600 mb-1">{stage1.length}</p>
+                    <p className="text-xs text-slate-500">participants haven't started yet</p>
+                    {stage1.length > 0 && (
+                      <div className="mt-3 space-y-1 max-h-32 overflow-y-auto">
+                        {stage1.map(e => <p key={e.id} className="text-xs text-slate-600 truncate">• {e.participant_name || e.participant_email}</p>)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-white rounded-xl border border-amber-200 p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-sm">2</div>
+                      <p className="font-semibold text-slate-800">Need Post-Assessment</p>
+                    </div>
+                    <p className="text-2xl font-bold text-amber-600 mb-1">{stage2.length}</p>
+                    <p className="text-xs text-slate-500">done pre, missing post</p>
+                    {stage2.length > 0 && (
+                      <div className="mt-3 space-y-1 max-h-32 overflow-y-auto">
+                        {stage2.map(e => <p key={e.id} className="text-xs text-slate-600 truncate">• {e.participant_name || e.participant_email}</p>)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-white rounded-xl border border-purple-200 p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-7 h-7 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-sm">3</div>
+                      <p className="font-semibold text-slate-800">Need Evaluation</p>
+                    </div>
+                    <p className="text-2xl font-bold text-purple-600 mb-1">{stage3.length}</p>
+                    <p className="text-xs text-slate-500">done pre+post, missing evaluation</p>
+                    {stage3.length > 0 && (
+                      <div className="mt-3 space-y-1 max-h-32 overflow-y-auto">
+                        {stage3.map(e => <p key={e.id} className="text-xs text-slate-600 truncate">• {e.participant_name || e.participant_email}</p>)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Evaluation Feedback */}
             {incubateEval.length > 0 && (
