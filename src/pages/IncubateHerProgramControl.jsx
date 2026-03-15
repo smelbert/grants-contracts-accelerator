@@ -996,15 +996,37 @@ export default function IncubateHerProgramControl() {
 
                 <div>
                   <h4 className="font-semibold mb-3">Eligible Pool ({eligibleCount} participants)</h4>
+                  {eligibleCount === 0 && (
+                    <p className="text-sm text-slate-500 italic">No participants have entered the giveaway pool yet.</p>
+                  )}
                   <div className="space-y-2">
-                    {enrollments.filter(e => e.giveaway_eligible).map((enrollment) => (
+                    {/* Show from GiveawayEligiblePool records (participants who applied) */}
+                    {giveawayPool.map((entry) => {
+                      const enrollmentMatch = enrollments.find(e => e.participant_email === entry.participant_email);
+                      return (
+                        <div key={entry.id} className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <div>
+                            <p className="font-medium">{entry.participant_name || entry.participant_email}</p>
+                            <p className="text-sm text-slate-600">{entry.participant_email}</p>
+                            {entry.applied_date && (
+                              <p className="text-xs text-slate-400">Applied: {new Date(entry.applied_date).toLocaleDateString()}</p>
+                            )}
+                          </div>
+                          {enrollmentMatch?.giveaway_winner && (
+                            <Badge className="bg-yellow-500 text-white">🏆 Winner</Badge>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {/* Also show any flagged via enrollment directly */}
+                    {enrollments.filter(e => e.giveaway_eligible && !giveawayPool.find(g => g.participant_email === e.participant_email)).map((enrollment) => (
                       <div key={enrollment.id} className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                         <div>
                           <p className="font-medium">{enrollment.participant_name}</p>
                           <p className="text-sm text-slate-600">{enrollment.participant_email}</p>
                         </div>
                         {enrollment.giveaway_winner && (
-                          <Badge className="bg-yellow-500">Winner</Badge>
+                          <Badge className="bg-yellow-500 text-white">🏆 Winner</Badge>
                         )}
                       </div>
                     ))}
