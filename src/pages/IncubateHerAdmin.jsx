@@ -327,26 +327,35 @@ export default function IncubateHerAdmin() {
           <Card style={{ backgroundColor: BRAND_COLORS.eisNavy, color: BRAND_COLORS.neutralLight }}>
             <CardContent className="pt-6">
               <h3 className="text-lg font-bold mb-4">Program Status</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span>Cohort Active</span>
-                  <Badge style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                    {cohort?.is_active ? 'Yes' : 'No'}
-                  </Badge>
+              {!cohort ? (
+                <p className="text-sm opacity-70">No cohort found. Check Program Control to set up a cohort.</p>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span>Cohort Active</span>
+                    <Badge style={{ backgroundColor: cohort?.is_active ? '#22c55e' : '#94a3b8', color: '#fff' }}>
+                      {cohort?.is_active ? '✓ Yes' : '✗ No'}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Giveaway Enabled</span>
+                    <Badge style={{ backgroundColor: cohort?.giveaway_enabled ? '#22c55e' : '#94a3b8', color: '#fff' }}>
+                      {cohort?.giveaway_enabled ? '✓ Yes' : '✗ No'}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Giveaway Revealed</span>
+                    <Badge style={{ backgroundColor: cohort?.giveaway_revealed ? '#22c55e' : '#94a3b8', color: '#fff' }}>
+                      {cohort?.giveaway_revealed ? '✓ Yes' : '✗ No'}
+                    </Badge>
+                  </div>
+                  <div className="pt-2 border-t border-white/20">
+                    <a href="/IncubateHerProgramControl" className="text-xs underline opacity-70 hover:opacity-100">
+                      → Go to Program Control to change these settings
+                    </a>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span>Giveaway Enabled</span>
-                  <Badge style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                    {cohort?.giveaway_enabled ? 'Yes' : 'No'}
-                  </Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Giveaway Revealed</span>
-                  <Badge style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                    {cohort?.giveaway_revealed ? 'Yes' : 'No'}
-                  </Badge>
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>
