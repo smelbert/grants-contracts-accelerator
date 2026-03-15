@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Lock, Clock, Target, TrendingUp, MessageSquare, AlertTriangle, PenLine, ArrowRight, Circle } from 'lucide-react';
+import { CheckCircle2, Lock, Clock, Target, TrendingUp, MessageSquare, AlertTriangle, PenLine, ArrowRight, Circle, Calendar, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import CoBrandedHeader, { BRAND_COLORS } from '@/components/incubateher/CoBrandedHeader';
