@@ -198,18 +198,58 @@ export default function IncubateHerGiveaway() {
           </CardContent>
         </Card>
 
-        {/* Application */}
-        {alreadyApplied ? (
+        {/* Application Status */}
+        {optedOut ? (
+          <Card className="border-2 border-slate-300 bg-slate-50">
+            <CardContent className="pt-6 pb-6 text-center">
+              <LogOut className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+              <h3 className="text-lg font-bold text-slate-700 mb-1">You've Opted Out</h3>
+              <p className="text-slate-500 text-sm mb-4">You are not currently in the giveaway pool. You can re-enter below.</p>
+              <Button
+                className="bg-[#AC1A5B] hover:bg-[#8e1549] text-white"
+                onClick={() => { setOptedOut(false); submitApplicationMutation.mutate(); }}
+                disabled={submitApplicationMutation.isPending}
+              >
+                <Gift className="w-4 h-4 mr-2" />
+                Re-enter the Giveaway
+              </Button>
+            </CardContent>
+          </Card>
+        ) : alreadyApplied ? (
           <Card className="border-2 border-green-400 bg-green-50">
-            <CardContent className="pt-8 text-center">
-              <CheckCircle2 className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-green-900 mb-2">Interest Submitted!</h3>
-              <p className="text-green-700">
-                Your giveaway interest has been received. You'll be notified of the next steps.
-              </p>
-              {existingApplication?.applied_date && (
-                <p className="text-sm text-green-600 mt-2">Submitted: {new Date(existingApplication.applied_date).toLocaleDateString()}</p>
-              )}
+            <CardContent className="pt-6 pb-6">
+              <div className="flex items-start gap-4">
+                <CheckCircle2 className="w-10 h-10 text-green-600 flex-shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-green-900 mb-1">✅ You're In the Giveaway Pool!</h3>
+                  <p className="text-green-700 text-sm">
+                    Because you've completed all required assessments, you've been automatically entered. You'll be notified of the winner announcement.
+                  </p>
+                  {existingApplication?.applied_date && (
+                    <p className="text-xs text-green-600 mt-1">Enrolled: {new Date(existingApplication.applied_date).toLocaleDateString()}</p>
+                  )}
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-green-200">
+                <p className="text-xs text-slate-500 mb-2">Don't wish to participate?</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-slate-500 border-slate-300 hover:text-red-600 hover:border-red-300"
+                  onClick={() => optOutMutation.mutate()}
+                  disabled={optOutMutation.isPending}
+                >
+                  <LogOut className="w-3.5 h-3.5 mr-1.5" />
+                  {optOutMutation.isPending ? 'Removing...' : 'Opt Out of Giveaway'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : submitApplicationMutation.isPending ? (
+          <Card className="border-2 border-green-200 bg-green-50">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="inline-block w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+              <p className="text-green-700 font-medium">Adding you to the giveaway pool...</p>
             </CardContent>
           </Card>
         ) : (
@@ -217,10 +257,10 @@ export default function IncubateHerGiveaway() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Gift className="w-5 h-5 text-[#AC1A5B]" />
-                Submit Your Interest
+                Enter the Giveaway
               </CardTitle>
               <p className="text-sm text-slate-600">
-                Complete all three required items above, then click the button below to enter the giveaway pool.
+                Complete all three required items above to be automatically entered.
               </p>
             </CardHeader>
             <CardContent>
@@ -231,11 +271,11 @@ export default function IncubateHerGiveaway() {
                 onClick={() => submitApplicationMutation.mutate()}
               >
                 <Send className="w-5 h-5 mr-2" />
-                {submitApplicationMutation.isPending ? 'Submitting...' : 'Submit My Interest'}
+                {submitApplicationMutation.isPending ? 'Entering...' : 'Enter the Giveaway'}
               </Button>
               {!allRequiredMet && (
                 <p className="text-xs text-slate-500 text-center mt-3">
-                  Complete your Pre-Assessment, Post-Assessment, and Program Evaluation to unlock this button.
+                  Complete your Pre-Assessment, Post-Assessment, and Program Evaluation to be entered.
                 </p>
               )}
             </CardContent>
