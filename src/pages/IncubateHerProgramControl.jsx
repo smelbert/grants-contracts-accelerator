@@ -936,12 +936,37 @@ export default function IncubateHerProgramControl() {
 
                 <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                   <div>
-                    <p className="font-medium">Giveaway Revealed to Participants</p>
-                    <p className="text-sm text-slate-600">Toggle visibility of giveaway page</p>
+                    <p className="font-medium">Giveaway Enabled</p>
+                    <p className="text-sm text-slate-600">Allow participants to see and enter the giveaway</p>
+                  </div>
+                  <Switch
+                    checked={cohort?.giveaway_enabled || false}
+                    onCheckedChange={(checked) => updateCohortMutation.mutate({ giveaway_enabled: checked })}
+                    disabled={updateCohortMutation.isPending}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                  <div>
+                    <p className="font-medium">Giveaway Revealed (Winner Visible)</p>
+                    <p className="text-sm text-slate-600">Show winner announcement to participants</p>
                   </div>
                   <Switch
                     checked={cohort?.giveaway_revealed || false}
-                    onCheckedChange={(checked) => toggleGiveawayMutation.mutate(checked)}
+                    onCheckedChange={(checked) => updateCohortMutation.mutate({ giveaway_revealed: checked })}
+                    disabled={updateCohortMutation.isPending}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                  <div>
+                    <p className="font-medium">Cohort Active</p>
+                    <p className="text-sm text-slate-600">Mark this cohort as currently running</p>
+                  </div>
+                  <Switch
+                    checked={cohort?.is_active || false}
+                    onCheckedChange={(checked) => updateCohortMutation.mutate({ is_active: checked })}
+                    disabled={updateCohortMutation.isPending}
                   />
                 </div>
 
