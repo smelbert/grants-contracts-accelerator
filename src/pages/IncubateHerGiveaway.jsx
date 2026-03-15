@@ -57,26 +57,6 @@ export default function IncubateHerGiveaway() {
     enabled: !!enrollment?.id
   });
 
-  const submitApplicationMutation = useMutation({
-    mutationFn: async () => {
-      await base44.entities.GiveawayEligiblePool.create({
-        participant_email: user.email,
-        participant_name: user.full_name,
-        enrollment_id: enrollment?.id,
-        pre_assessment_completed: preCompleted,
-        post_assessment_completed: postCompleted,
-        program_evaluation_completed: evalCompleted,
-        applied_date: new Date().toISOString(),
-        status: 'pending_review'
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['giveaway-application']);
-      setApplicationSubmitted(true);
-      toast.success('Interest submitted! You will be notified of next steps.');
-    }
-  });
-
   // Derive completion from both enrollment flags and actual assessment records
   const preCompleted = enrollment?.pre_assessment_completed ||
     assessments?.some(a => a.assessment_type === 'pre' && !a.is_draft);
@@ -92,7 +72,66 @@ export default function IncubateHerGiveaway() {
   ];
   const allRequiredMet = requiredItems.every(r => r.met);
   const isWinner = enrollment?.giveaway_winner || false;
-  const alreadyApplied = existingApplication || applicationSubmitted;
+  const alreadyApplied = !!existingApplication || applicationSubmitted;
+  const [optedOut, setOptedOut] = useState(false);
+
+  const submitApplicationMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.GiveawayEligiblePool.create({
+        participant_email: user.email,
+        participant_name: user.full_name || enrollment?.participant_name,
+        enrollment_id: enrollment?.id,
+        pre_assessment_completed: !!preCompleted,
+        post_assessment_completed: !!postCompleted,
+        program_evaluation_completed: !!evalCompleted,
+        applied_date: new Date().toISOString(),
+        status: 'pending_review'
+      });
+      // Also flag on enrollment
+      if (enrollment?.id) {
+        await base44.entities.ProgramEnrollment.update(enrollment.id, { giveaway_eligible: true });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['giveaway-application']);
+      queryClient.invalidateQueries(['enrollment']);
+      setApplicationSubmitted(true);
+      toast.success('You\'ve been added to the giveaway pool!');
+    }
+  });
+
+  // Auto-enroll when all 3 assessments complete and not already applied and not opted out
+  useEffect(() => {
+    if (
+      allRequiredMet &&
+      !alreadyApplied &&
+      !optedOut &&
+      !submitApplicationMutation.isPending &&
+      enrollment?.id &&
+      user?.email &&
+      assessments !== undefined // data has loaded
+    ) {
+      submitApplicationMutation.mutate();
+    }
+  }, [allRequiredMet, alreadyApplied, optedOut, enrollment?.id, user?.email, assessments]);
+
+  const optOutMutation = useMutation({
+    mutationFn: async () => {
+      if (existingApplication?.id) {
+        await base44.entities.GiveawayEligiblePool.delete(existingApplication.id);
+      }
+      if (enrollment?.id) {
+        await base44.entities.ProgramEnrollment.update(enrollment.id, { giveaway_eligible: false });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['giveaway-application']);
+      queryClient.invalidateQueries(['enrollment']);
+      setOptedOut(true);
+      setApplicationSubmitted(false);
+      toast.success('You have been removed from the giveaway pool.');
+    }
+  });
 
   return (
     <div className="min-h-screen bg-slate-50">
