@@ -208,15 +208,13 @@ export default function IncubateHerProgramControl() {
   });
 
   // Admin Settings Mutations
-  const toggleGiveawayMutation = useMutation({
-    mutationFn: async (revealed) => {
-      return await base44.entities.ProgramCohort.update(cohort.id, {
-        giveaway_revealed: revealed
-      });
+  const updateCohortMutation = useMutation({
+    mutationFn: async (updates) => {
+      return await base44.entities.ProgramCohort.update(cohort.id, updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['admin-cohort']);
-      toast.success('Giveaway visibility updated');
+      toast.success('Cohort settings updated');
     }
   });
 
