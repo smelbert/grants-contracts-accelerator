@@ -90,9 +90,10 @@ export default function IncubateHerProgramControl() {
   const { data: cohort, isLoading: cohortLoading } = useQuery({
     queryKey: ['admin-cohort'],
     queryFn: async () => {
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
-      });
+      // Try both known program codes
+      let cohorts = await base44.entities.ProgramCohort.filter({ program_code: 'incubateher-2026' });
+      if (!cohorts.length) cohorts = await base44.entities.ProgramCohort.filter({ program_code: 'incubateher_funding_readiness' });
+      if (!cohorts.length) cohorts = await base44.entities.ProgramCohort.list();
       return cohorts[0];
     }
   });

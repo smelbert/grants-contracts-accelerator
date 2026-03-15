@@ -12,9 +12,10 @@ export default function IncubateHerAdmin() {
   const { data: cohort } = useQuery({
     queryKey: ['incubateher-cohort'],
     queryFn: async () => {
-      const cohorts = await base44.entities.ProgramCohort.filter({
-        program_code: 'incubateher_funding_readiness'
-      });
+      // Try both known program codes to handle legacy vs current records
+      let cohorts = await base44.entities.ProgramCohort.filter({ program_code: 'incubateher-2026' });
+      if (!cohorts.length) cohorts = await base44.entities.ProgramCohort.filter({ program_code: 'incubateher_funding_readiness' });
+      if (!cohorts.length) cohorts = await base44.entities.ProgramCohort.list();
       return cohorts[0] || null;
     }
   });
