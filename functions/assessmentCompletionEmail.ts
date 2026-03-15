@@ -27,6 +27,27 @@ Deno.serve(async (req) => {
       return Response.json({ message: 'Not all assessments complete yet — email not sent.' });
     }
 
+    // Auto-add to giveaway pool if not already entered
+    const existingPool = await base44.asServiceRole.entities.GiveawayEligiblePool.filter({ enrollment_id });
+    if (existingPool.length === 0) {
+      await base44.asServiceRole.entities.GiveawayEligiblePool.create({
+        participant_email: enrollment.participant_email,
+        participant_name: enrollment.participant_name,
+        enrollment_id,
+        pre_assessment_completed: preCompleted,
+        post_assessment_completed: postCompleted,
+        program_evaluation_completed: evalCompleted,
+        applied_date: new Date().toISOString(),
+        status: 'pending_review'
+      });
+      console.log(`Added ${enrollment.participant_email} to giveaway pool`);
+    }
+
+    // Mark enrollment as giveaway eligible
+    await base44.asServiceRole.entities.ProgramEnrollment.update(enrollment_id, {
+      giveaway_eligible: true
+    });
+
     const toEmail = enrollment.login_email || enrollment.participant_email;
     const name = enrollment.participant_name || 'Participant';
     const firstName = name.split(' ')[0];
