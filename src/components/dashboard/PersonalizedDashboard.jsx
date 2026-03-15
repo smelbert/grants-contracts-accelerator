@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { 
   Target, FileText, BookOpen, TrendingUp, Award, 
-  CheckCircle2, Clock, ArrowRight, Sparkles
+  CheckCircle2, Clock, ArrowRight, Sparkles, Calendar, Gift, MessageSquare
 } from 'lucide-react';
 
 export default function PersonalizedDashboard({ user, userAccess }) {

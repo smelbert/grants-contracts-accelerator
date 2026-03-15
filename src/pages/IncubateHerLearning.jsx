@@ -579,18 +579,34 @@ export default function IncubateHerLearning() {
                   const count = grouped[key]?.length || 0;
                   const doneInModule = (grouped[key] || []).filter(c => progressMap[c.id]?.is_completed).length;
                   const isActive = activeModule === key;
+
+                  // Map session modules to their document template day tab
+                  const docTemplateMap = { monday: 'day1', thursday: 'day2', saturday: 'day3' };
+                  const docDay = docTemplateMap[key];
+
                   return (
-                    <button
-                      key={key}
-                      onClick={() => setActiveModule(key)}
-                      className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all mb-1"
-                      style={isActive ? { backgroundColor: BRAND_COLORS.culRed, color: 'white' } : { color: '#475569' }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="truncate pr-2 font-medium leading-snug">{MODULE_LABELS[key] || key}</span>
-                        <span className="text-xs flex-shrink-0" style={{ color: isActive ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{doneInModule}/{count}</span>
-                      </div>
-                    </button>
+                    <div key={key} className="mb-1">
+                      <button
+                        onClick={() => setActiveModule(key)}
+                        className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all"
+                        style={isActive ? { backgroundColor: BRAND_COLORS.culRed, color: 'white' } : { color: '#475569' }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="truncate pr-2 font-medium leading-snug">{MODULE_LABELS[key] || key}</span>
+                          <span className="text-xs flex-shrink-0" style={{ color: isActive ? 'rgba(255,255,255,0.7)' : '#94a3b8' }}>{doneInModule}/{count}</span>
+                        </div>
+                      </button>
+                      {docDay && (
+                        <Link
+                          to={`${createPageUrl('IncubateHerDocuments')}?tab=${docDay}`}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all ml-2"
+                          style={{ color: BRAND_COLORS.eisGold }}
+                        >
+                          <FileText className="w-3 h-3" />
+                          <span>Document Templates →</span>
+                        </Link>
+                      )}
+                    </div>
                   );
                 })}
               </CardContent>
