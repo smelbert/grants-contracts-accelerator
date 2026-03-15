@@ -301,9 +301,18 @@ export default function IncubateHerProgramControl() {
     ? sessions
     : sessions.filter(s => s.id === selectedSession);
 
+  const { data: giveawayPool = [] } = useQuery({
+    queryKey: ['giveaway-pool'],
+    queryFn: () => base44.entities.GiveawayEligiblePool.list()
+  });
+
   const completedCount = enrollments.filter(e => e.program_completed).length;
   const totalEnrolled = enrollments.length;
-  const eligibleCount = enrollments.filter(e => e.giveaway_eligible).length;
+  // Count both enrollment flag AND GiveawayEligiblePool applications
+  const eligibleCount = Math.max(
+    enrollments.filter(e => e.giveaway_eligible).length,
+    giveawayPool.length
+  );
 
   const handleExportAttendance = async () => {
     try {
