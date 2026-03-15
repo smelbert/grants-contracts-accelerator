@@ -220,10 +220,14 @@ export default function IncubateHerProgramControl() {
 
   const drawWinnerMutation = useMutation({
     mutationFn: async () => {
-      const eligible = enrollments.filter(e => e.giveaway_eligible);
+      // Use GiveawayEligiblePool applicants first, fall back to enrollment flag
+      const poolEmails = giveawayPool.map(g => g.participant_email);
+      const eligible = poolEmails.length > 0
+        ? enrollments.filter(e => poolEmails.includes(e.participant_email))
+        : enrollments.filter(e => e.giveaway_eligible);
       
       if (eligible.length === 0) {
-        throw new Error('No eligible participants');
+        throw new Error('No eligible participants in the giveaway pool');
       }
 
       const winner = eligible[Math.floor(Math.random() * eligible.length)];
