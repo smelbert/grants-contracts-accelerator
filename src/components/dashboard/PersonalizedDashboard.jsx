@@ -109,58 +109,115 @@ export default function PersonalizedDashboard({ user, userAccess }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  {enrollment?.pre_assessment_completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  ) : (
-                    <Clock className="w-5 h-5 text-slate-400" />
-                  )}
-                  <span className="font-medium">Pre-Assessment</span>
+            {(() => {
+              const evalRecord = assessments?.find(a => a._form_type === 'evaluation' || a.assessment_type === 'evaluation');
+              const evalCompleted = !!evalRecord && !evalRecord?.is_draft;
+              const preCompleted = !!enrollment?.pre_assessment_completed;
+              const postCompleted = !!enrollment?.post_assessment_completed;
+              const consultCompleted = !!enrollment?.consultation_completed;
+              const sessionsComplete = !!enrollment?.attendance_complete;
+
+              const steps = [
+                {
+                  label: 'Pre-Assessment',
+                  done: preCompleted,
+                  icon: Target,
+                  action: !preCompleted ? { label: 'Start', page: 'IncubateHerPreAssessment' } : null,
+                },
+                {
+                  label: 'Program Sessions (3)',
+                  done: sessionsComplete,
+                  icon: BookOpen,
+                  action: !sessionsComplete ? { label: 'View Schedule', page: 'IncubateHerLearning' } : null,
+                },
+                {
+                  label: 'Post-Assessment',
+                  done: postCompleted,
+                  icon: TrendingUp,
+                  action: preCompleted && !postCompleted ? { label: 'Start', page: 'IncubateHerPostAssessment' } : null,
+                },
+                {
+                  label: 'Program Evaluation',
+                  done: evalCompleted,
+                  icon: MessageSquare,
+                  action: postCompleted && !evalCompleted ? { label: 'Complete', page: 'IncubateHerEvaluation' } : null,
+                },
+                {
+                  label: '1-on-1 Consultation',
+                  done: consultCompleted,
+                  icon: Calendar,
+                  externalLink: !consultCompleted && preCompleted && postCompleted && evalCompleted
+                    ? 'https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation?back=1&month=2026-03'
+                    : null,
+                  actionLabel: 'Book Now',
+                },
+                {
+                  label: 'Giveaway Entry',
+                  done: !!enrollment?.giveaway_eligible,
+                  icon: Gift,
+                  note: preCompleted && postCompleted && evalCompleted ? 'Auto-enrolled ✓' : 'Complete all assessments first',
+                },
+              ];
+
+              const completedCount = steps.filter(s => s.done).length;
+
+              return (
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm text-slate-500">{completedCount} of {steps.length} complete</span>
+                    <span className="text-sm font-bold text-[#AC1A5B]">{Math.round((completedCount / steps.length) * 100)}%</span>
+                  </div>
+                  <div className="w-full bg-slate-200 rounded-full h-2 mb-4">
+                    <div
+                      className="h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${(completedCount / steps.length) * 100}%`, backgroundColor: completedCount === steps.length ? '#16A34A' : '#AC1A5B' }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    {steps.map((step, i) => {
+                      const Icon = step.icon;
+                      return (
+                        <div
+                          key={i}
+                          className={`flex items-center justify-between p-3 rounded-lg border ${
+                            step.done
+                              ? 'bg-green-50 border-green-200'
+                              : step.action || step.externalLink
+                              ? 'bg-[#AC1A5B]/5 border-[#AC1A5B]/30'
+                              : 'bg-slate-50 border-slate-200'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            {step.done
+                              ? <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                              : <Clock className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                            }
+                            <div>
+                              <span className={`font-medium text-sm ${step.done ? 'text-green-800' : 'text-slate-800'}`}>{step.label}</span>
+                              {step.note && <p className="text-xs text-slate-500 mt-0.5">{step.note}</p>}
+                            </div>
+                          </div>
+                          {step.action && (
+                            <Link to={createPageUrl(step.action.page)}>
+                              <Button size="sm" className="bg-[#AC1A5B] hover:bg-[#8e1549] text-white text-xs">
+                                {step.action.label} <ArrowRight className="w-3 h-3 ml-1" />
+                              </Button>
+                            </Link>
+                          )}
+                          {step.externalLink && (
+                            <a href={step.externalLink} target="_blank" rel="noopener noreferrer">
+                              <Button size="sm" className="bg-[#143A50] hover:bg-[#1E4F58] text-white text-xs">
+                                {step.actionLabel} <ArrowRight className="w-3 h-3 ml-1" />
+                              </Button>
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                {!enrollment?.pre_assessment_completed && (
-                  <Link to={createPageUrl('IncubateHerPreAssessment')}>
-                    <Button size="sm">Start</Button>
-                  </Link>
-                )}
-              </div>
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  {enrollment?.attendance_complete ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  ) : (
-                    <Clock className="w-5 h-5 text-slate-400" />
-                  )}
-                  <span className="font-medium">Program Sessions</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  {enrollment?.consultation_completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  ) : (
-                    <Clock className="w-5 h-5 text-slate-400" />
-                  )}
-                  <span className="font-medium">1-on-1 Consultation</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  {enrollment?.post_assessment_completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  ) : (
-                    <Clock className="w-5 h-5 text-slate-400" />
-                  )}
-                  <span className="font-medium">Post-Assessment</span>
-                </div>
-                {enrollment?.pre_assessment_completed && !enrollment?.post_assessment_completed && (
-                  <Link to={createPageUrl('IncubateHerPostAssessment')}>
-                    <Button size="sm">Start</Button>
-                  </Link>
-                )}
-              </div>
-            </div>
+              );
+            })()}
           </CardContent>
         </Card>
 
