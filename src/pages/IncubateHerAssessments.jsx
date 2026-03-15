@@ -264,18 +264,70 @@ export default function IncubateHerAssessments() {
           })}
         </div>
 
-        {/* All done celebration */}
+        {/* All done — next steps panel */}
         {requiredCompleted === 3 && (
-          <Card className="border-2 border-green-400 bg-green-50">
-            <CardContent className="pt-6 pb-6 text-center">
-              <div className="text-4xl mb-3">🎉</div>
-              <h3 className="text-xl font-bold text-green-800 mb-2">You've Completed All Required Steps!</h3>
-              <p className="text-green-700 text-sm">Thank you for your commitment to the IncubateHer program. Your completion makes you eligible for the giveaway and certificate of completion.</p>
-              <Link to={createPageUrl('IncubateHerCompletion')} className="inline-block mt-4">
-                <Button className="bg-green-600 hover:bg-green-700 text-white">View My Completion Status →</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <Card className="border-2 border-green-400 bg-green-50">
+              <CardContent className="pt-6 pb-6 text-center">
+                <div className="text-4xl mb-3">🎉</div>
+                <h3 className="text-xl font-bold text-green-800 mb-2">You've Completed All Required Steps!</h3>
+                <p className="text-green-700 text-sm">You've been automatically entered into the giveaway pool. See below for your next steps.</p>
+                <Link to={createPageUrl('IncubateHerCompletion')} className="inline-block mt-4">
+                  <Button className="bg-green-600 hover:bg-green-700 text-white">View My Completion Status →</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Giveaway auto-entry notice */}
+            <Card className="border-2 border-[#E5C089] bg-gradient-to-r from-yellow-50 to-white">
+              <CardContent className="pt-5 pb-5">
+                <div className="flex items-start gap-4">
+                  <Gift className="w-9 h-9 text-[#AC1A5B] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-slate-900 mb-1">🎁 You're In the Giveaway Pool!</h4>
+                    <p className="text-sm text-slate-600">
+                      Because you've completed all 3 assessments, you've been automatically entered into the giveaway. If you don't wish to participate, you can opt out on the Giveaway page.
+                    </p>
+                    <Link to={createPageUrl('IncubateHerGiveaway')} className="inline-block mt-3">
+                      <Button size="sm" className="bg-[#AC1A5B] hover:bg-[#8e1549] text-white">View Giveaway Details →</Button>
+                    </Link>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Book consultation CTA */}
+            <Card className="border-2 border-[#143A50] bg-gradient-to-r from-[#143A50]/5 to-white">
+              <CardContent className="pt-5 pb-5">
+                <div className="flex items-start gap-4">
+                  <Calendar className="w-9 h-9 text-[#143A50] flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-slate-900 mb-1">📅 Don't Miss Your One-on-One Consultation!</h4>
+                    <p className="text-sm text-slate-600">
+                      Now that you've finished all required assessments, your next step is to book your individual funding readiness consultation with Dr. Shawnte. <strong>Spots are limited — book yours now.</strong>
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      <a
+                        href="https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation?back=1&month=2026-03"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button size="sm" className="bg-[#143A50] hover:bg-[#1E4F58] text-white">
+                          <Calendar className="w-4 h-4 mr-1.5" />
+                          Book on Calendly
+                        </Button>
+                      </a>
+                      <Link to={createPageUrl('IncubateHerConsultations')}>
+                        <Button size="sm" variant="outline" className="border-[#143A50] text-[#143A50]">
+                          Learn More
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
       </div>
