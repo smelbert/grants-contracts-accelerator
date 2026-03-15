@@ -78,11 +78,19 @@ export default function IncubateHerEvaluation() {
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['enrollment'] });
       queryClient.invalidateQueries({ queryKey: ['evaluation'] });
       toast.success('Thank you for your feedback!');
       setSubmitted(true);
+      // Trigger congratulations + consultation booking email
+      if (enrollment?.id) {
+        try {
+          await base44.functions.invoke('assessmentCompletionEmail', { enrollment_id: enrollment.id });
+        } catch (e) {
+          console.warn('Email trigger failed silently:', e);
+        }
+      }
     }
   });
 
