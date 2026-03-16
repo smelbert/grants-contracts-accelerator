@@ -14,6 +14,7 @@ export default function CommunityAdmin() {
   const queryClient = useQueryClient();
   const [editingSpace, setEditingSpace] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [formData, setFormData] = useState({
     space_name: '',
     slug: '',
