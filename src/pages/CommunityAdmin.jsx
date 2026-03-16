@@ -38,6 +38,7 @@ export default function CommunityAdmin() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allCommunitySpaces'] });
       resetForm();
+      setShowCreateDialog(false);
     }
   });
 
