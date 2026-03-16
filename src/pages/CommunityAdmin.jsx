@@ -104,7 +104,7 @@ export default function CommunityAdmin() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-[#143A50]">Community Spaces Manager</h1>
-          <Dialog open={editingSpace === null && !deleteConfirm}>
+          <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
               <Button className="bg-[#143A50] hover:bg-[#1E4F58] flex items-center gap-2">
                 <Plus className="w-4 h-4" />
