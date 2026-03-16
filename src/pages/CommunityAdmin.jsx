@@ -174,7 +174,7 @@ export default function CommunityAdmin() {
 
                 <div className="flex gap-3 mt-6">
                   <Button type="submit" className="bg-[#143A50] hover:bg-[#1E4F58]">Create Space</Button>
-                  <Button type="button" variant="outline" onClick={resetForm}>Cancel</Button>
+                  <Button type="button" variant="outline" onClick={() => { resetForm(); setShowCreateDialog(false); }}>Cancel</Button>
                 </div>
               </form>
             </DialogContent>
