@@ -94,30 +94,48 @@ export default function IncubateHerConsultations() {
       />
 
       <div className="max-w-4xl mx-auto p-6 space-y-6">
-        {/* Calendly Booking Card */}
-        <Card className="border-2 border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/5 to-white">
-          <CardContent className="pt-6 pb-6">
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-[#143A50] mb-1">📅 Book Your Consultation</h3>
-                <p className="text-sm text-slate-600">
-                  Use the link below to schedule your individual funding readiness consultation with Dr. Shawnte directly through Calendly.
-                </p>
+        {/* Booking Status Banner */}
+        {enrollment?.consultation_booked ? (
+          <Card className="border-2 border-green-400 bg-green-50">
+            <CardContent className="pt-5 pb-5">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-base font-bold text-green-900">✅ Calendly Booking Confirmed</h3>
+                  <p className="text-sm text-green-800">
+                    Your 1:1 consultation has been booked via Calendly.
+                    {enrollment.consultation_booked_notes && <span className="block mt-1 font-medium">{enrollment.consultation_booked_notes}</span>}
+                  </p>
+                </div>
               </div>
-              <a
-                href="https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation?back=1&month=2026-03"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-shrink-0"
-              >
-                <Button size="lg" className="bg-[#AC1A5B] hover:bg-[#8e1549] text-white whitespace-nowrap">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Book on Calendly
-                </Button>
-              </a>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          /* Calendly Booking Card */
+          <Card className="border-2 border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/5 to-white">
+            <CardContent className="pt-6 pb-6">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-[#143A50] mb-1">📅 Book Your Consultation</h3>
+                  <p className="text-sm text-slate-600">
+                    Use the link below to schedule your individual funding readiness consultation with Dr. Shawnte directly through Calendly.
+                  </p>
+                </div>
+                <a
+                  href="https://calendly.com/drshawnte/incubateher-individual-funding-readiness-consultation?back=1&month=2026-03"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0"
+                >
+                  <Button size="lg" className="bg-[#AC1A5B] hover:bg-[#8e1549] text-white whitespace-nowrap">
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Book on Calendly
+                  </Button>
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="border-l-4 border-l-[#143A50]">
           <CardHeader>
