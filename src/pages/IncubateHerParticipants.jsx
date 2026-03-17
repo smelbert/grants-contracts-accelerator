@@ -348,6 +348,12 @@ export default function IncubateHerParticipants() {
                           Never Logged In
                         </Badge>
                       )}
+                      {enrollment.consultation_booked && (
+                        <Badge className="bg-green-100 text-green-800 border border-green-300 text-xs">
+                          <CalendarCheck className="w-3 h-3 mr-1" />
+                          1:1 Booked
+                        </Badge>
+                      )}
                       {enrollment.giveaway_eligible && (
                         <Badge style={{ backgroundColor: BRAND_COLORS.eisGold }}>
                           <Award className="w-3 h-3 mr-1" />
