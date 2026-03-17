@@ -442,6 +442,24 @@ export default function IncubateHerParticipants() {
                       {expandedProfiles[`activity_${enrollment.id}`] ? 'Hide' : 'View'} Activity Detail
                     </button>
                     <EmailRelinkTool enrollment={enrollment} />
+                    <button
+                      onClick={() => {
+                        if (enrollment.consultation_booked) {
+                          toggleBookingMutation.mutate({ enrollment, booked: false });
+                        } else {
+                          const notes = window.prompt(`Mark "${enrollment.participant_name}" as having booked their 1:1 via Calendly.\n\nOptional: enter the scheduled date/time or notes (leave blank if none):`);
+                          if (notes !== null) {
+                            toggleBookingMutation.mutate({ enrollment, booked: true, notes });
+                          }
+                        }
+                      }}
+                      className={`flex items-center gap-1 text-xs font-medium hover:underline ${enrollment.consultation_booked ? 'text-green-700' : 'text-slate-500'}`}
+                    >
+                      {enrollment.consultation_booked
+                        ? <><CalendarCheck className="w-3 h-3" /> 1:1 Booked ✓</>
+                        : <><CalendarX className="w-3 h-3" /> Mark 1:1 Booked</>
+                      }
+                    </button>
                   </div>
                   {expandedProfiles[enrollment.id] && (
                     <div className="mt-3">
