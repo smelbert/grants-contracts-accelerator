@@ -11,7 +11,6 @@ import StrategicGuidancePanel from '@/components/dashboard/StrategicGuidancePane
 import CuratedResourcesPanel from '@/components/dashboard/CuratedResourcesPanel';
 import ProgressChart from '@/components/dashboard/ProgressChart';
 import GrowthAnalytics from '@/components/dashboard/GrowthAnalytics';
-import GrantMemoOpportunitiesPanel from '@/components/dashboard/GrantMemoOpportunitiesPanel';
 import { ChevronRight, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
