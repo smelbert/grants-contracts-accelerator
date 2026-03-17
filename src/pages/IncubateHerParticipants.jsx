@@ -27,6 +27,20 @@ export default function IncubateHerParticipants() {
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
 
+  const toggleBookingMutation = useMutation({
+    mutationFn: async ({ enrollment, booked, notes }) => {
+      await base44.entities.ProgramEnrollment.update(enrollment.id, {
+        consultation_booked: booked,
+        consultation_booked_date: booked ? new Date().toISOString() : null,
+        consultation_booked_notes: notes || null,
+      });
+    },
+    onSuccess: (_, { booked, enrollment }) => {
+      queryClient.invalidateQueries({ queryKey: ['all-enrollments'] });
+      toast.success(`${enrollment.participant_name}: 1:1 booking ${booked ? 'marked as booked' : 'cleared'}`);
+    }
+  });
+
   const handleFilter = (key, val, extractor) => {
     setActiveFilters(prev => ({ ...prev, [key]: val }));
     setFilterExtractors(prev => ({ ...prev, [key]: extractor }));
