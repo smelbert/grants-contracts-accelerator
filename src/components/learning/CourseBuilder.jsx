@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AIContentAssistant from './AIContentAssistant';
 import EnhancedAICourseAssistant from './EnhancedAICourseAssistant';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
