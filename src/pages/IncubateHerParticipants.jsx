@@ -269,12 +269,19 @@ export default function IncubateHerParticipants() {
                       </Badge>
                     </div>
                     
-                    {enrollment.giveaway_eligible && (
-                      <Badge style={{ backgroundColor: BRAND_COLORS.eisGold }}>
-                        <Award className="w-3 h-3 mr-1" />
-                        Giveaway Eligible
-                      </Badge>
-                    )}
+                    <div className="flex flex-col gap-1 items-end">
+                      {!enrollment.user_id && (
+                        <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 text-xs">
+                          Never Logged In
+                        </Badge>
+                      )}
+                      {enrollment.giveaway_eligible && (
+                        <Badge style={{ backgroundColor: BRAND_COLORS.eisGold }}>
+                          <Award className="w-3 h-3 mr-1" />
+                          Giveaway Eligible
+                        </Badge>
+                      )}
+                    </div>
                   </div>
 
                   {/* JotForm details */}
