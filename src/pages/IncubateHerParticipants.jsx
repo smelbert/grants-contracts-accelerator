@@ -207,9 +207,9 @@ export default function IncubateHerParticipants() {
           />
         )}
 
-        {/* Search */}
+        {/* Search & Quick Filters */}
         <Card className="mb-6">
-          <CardContent className="pt-6">
+          <CardContent className="pt-6 space-y-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
               <Input
@@ -218,6 +218,24 @@ export default function IncubateHerParticipants() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                size="sm"
+                variant={activeFilters.never_logged_in ? 'default' : 'outline'}
+                onClick={() => {
+                  if (activeFilters.never_logged_in) {
+                    setActiveFilters(prev => { const n = {...prev}; delete n.never_logged_in; return n; });
+                    setFilterExtractors(prev => { const n = {...prev}; delete n.never_logged_in; return n; });
+                  } else {
+                    handleFilter('never_logged_in', 'yes', (e) => !e.user_id ? 'yes' : 'no');
+                  }
+                }}
+                style={activeFilters.never_logged_in ? { backgroundColor: BRAND_COLORS.culRed, color: 'white' } : {}}
+              >
+                {activeFilters.never_logged_in ? <XCircle className="w-3 h-3 mr-1" /> : null}
+                Never Logged In ({enrollments.filter(e => !e.user_id).length})
+              </Button>
             </div>
           </CardContent>
         </Card>
