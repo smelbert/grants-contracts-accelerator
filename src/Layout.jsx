@@ -185,6 +185,7 @@ const getAdminPortalNav = () => [
       { name: 'Organizations', page: 'OrganizationsOverview', icon: Building2 },
       { name: 'Template Library', page: 'TemplateLibrary', icon: BookOpen },
       { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
+      { name: 'Grant Memo Import', page: 'GrantMemoImport', icon: Upload },
       { name: 'Readiness Logic', page: 'ReadinessLogic', icon: SettingsIcon },
     ]
   },
