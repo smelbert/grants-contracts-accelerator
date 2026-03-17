@@ -86,12 +86,68 @@ export default function IncubateHerParticipants() {
   const { data: enrollments = [] } = useQuery({
     queryKey: ['all-enrollments'],
     queryFn: async () => {
-      // Load all IncubateHer participants (synced with program control)
-      return await base44.entities.ProgramEnrollment.filter({
-        role: 'participant'
-      });
+      return await base44.entities.ProgramEnrollment.filter({ role: 'participant' });
     }
   });
+
+  const { data: cohorts = [] } = useQuery({
+    queryKey: ['program-cohorts'],
+    queryFn: () => base44.entities.ProgramCohort.list()
+  });
+
+  const { data: assessments = [] } = useQuery({
+    queryKey: ['all-assessments'],
+    queryFn: () => base44.entities.ProgramAssessment.list()
+  });
+
+  // Map enrollmentId -> completed assessment types
+  const assessmentMap = React.useMemo(() => {
+    const map = {};
+    assessments.forEach(a => {
+      if (!a.is_draft) {
+        if (!map[a.enrollment_id]) map[a.enrollment_id] = new Set();
+        map[a.enrollment_id].add(a.assessment_type);
+      }
+    });
+    return map;
+  }, [assessments]);
+
+  // Helper: get cohort for an enrollment
+  const getCohort = (enrollment) => cohorts.find(c => c.id === enrollment.cohort_id);
+
+  // Helper: get reminder banner info for a participant
+  const getParticipantReminder = (enrollment) => {
+    const cohort = getCohort(enrollment);
+    const completed = assessmentMap[enrollment.id] || new Set();
+    const hasEvaluation = completed.has('evaluation');
+    const hasPost = completed.has('post') || enrollment.post_assessment_completed;
+    const hasPre = completed.has('pre') || enrollment.pre_assessment_completed;
+    const allThreeDone = hasPre && hasPost && hasEvaluation;
+
+    // Never logged in
+    if (!enrollment.user_id) {
+      const msg = cohort?.no_login_message ||
+        `Thank you for your interest in the Grants and Contracts Accelerator! Upon reviewing the app, we noticed you haven't logged in yet. If you haven't logged in by ${cohort?.access_removal_date ? format(new Date(cohort.access_removal_date), 'MMMM d, yyyy') : '3/20/2026'}, your access to the platform will be removed.`;
+      return { type: 'danger', message: msg };
+    }
+
+    // All done — no reminder needed
+    if (allThreeDone) return null;
+
+    // Has pre but missing post or evaluation (drawing reminder)
+    if (hasPre && (!hasPost || !hasEvaluation)) {
+      const drawingDate = cohort?.drawing_date ? format(new Date(cohort.drawing_date), 'MMMM d, yyyy') : 'this Friday';
+      const missing = [];
+      if (!hasPost) missing.push('Post-Assessment');
+      if (!hasEvaluation) missing.push('Evaluation');
+      const msg = cohort?.drawing_reminder_message ||
+        `📋 You're almost there! Please complete your ${missing.join(' and ')} to be automatically entered into EIS's free grant writing drawing on ${drawingDate}. All three stages (Pre-Assessment, Post-Assessment, and Evaluation) must be completed to book your 1-on-1 coaching session.`;
+      return { type: 'warning', message: msg };
+    }
+
+    // No pre at all — basic reminder
+    return null;
+  };
 
   const filteredEnrollments = enrollments.filter(e => {
     const matchesSearch = !searchTerm ||
