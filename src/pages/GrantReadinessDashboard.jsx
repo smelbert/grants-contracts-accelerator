@@ -145,9 +145,6 @@ export default function GrantReadinessDashboard() {
           </div>
         </div>
 
-        {/* Curated Grant Opportunities from Memos */}
-        <GrantMemoOpportunitiesPanel opportunities={fundingOpportunities} />
-
         {/* Phase 2: Discovery & Strategy */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
