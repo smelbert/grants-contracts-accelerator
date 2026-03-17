@@ -430,6 +430,28 @@ export default function IncubateHerParticipants() {
                     <ParticipantActivityDetail enrollment={enrollment} />
                   )}
 
+                  {/* Stage Reminder Banner */}
+                  {(() => {
+                    const reminder = getParticipantReminder(enrollment);
+                    if (!reminder) return null;
+                    const isDanger = reminder.type === 'danger';
+                    return (
+                      <div
+                        className={`mt-3 p-3 rounded-lg text-sm flex gap-2 items-start ${
+                          isDanger
+                            ? 'bg-red-50 border border-red-200 text-red-800'
+                            : 'bg-amber-50 border border-amber-200 text-amber-800'
+                        }`}
+                      >
+                        {isDanger
+                          ? <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500" />
+                          : <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500" />
+                        }
+                        <span>{reminder.message}</span>
+                      </div>
+                    );
+                  })()}
+
                   {/* Overall Status */}
                   <div className="mt-3 pt-3 border-t">
                     {enrollment.program_completed ? (
