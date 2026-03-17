@@ -59,6 +59,11 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route path="/GrantMemoImport" element={
+        <LayoutWrapper currentPageName="GrantMemoImport">
+          <GrantMemoImport />
+        </LayoutWrapper>
+      } />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
