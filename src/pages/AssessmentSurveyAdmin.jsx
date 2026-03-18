@@ -22,6 +22,7 @@ export default function AssessmentSurveyAdmin() {
   const [selectedParticipantName, setSelectedParticipantName] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [sendingReminder, setSendingReminder] = useState(false);
+  const [reminderResults, setReminderResults] = useState(null);
   const queryClient = useQueryClient();
 
   // Fetch all assessment types
@@ -114,6 +115,7 @@ export default function AssessmentSurveyAdmin() {
     try {
       const res = await base44.functions.invoke('nudgeIncompleteAssessments', {});
       const data = res?.data;
+      setReminderResults({ ...data, sentAt: new Date().toISOString() });
       toast.success(data?.summary || `Stage-aware reminders sent!`);
     } catch (err) {
       toast.error('Failed to send reminders: ' + err.message);
@@ -142,7 +144,7 @@ export default function AssessmentSurveyAdmin() {
   const avgPre = incubatePre.length > 0 ? Math.round(incubatePre.reduce((s, a) => s + (a.total_score || 0), 0) / incubatePre.length) : 0;
   const avgPost = incubatePost.length > 0 ? Math.round(incubatePost.reduce((s, a) => s + (a.total_score || 0), 0) / incubatePost.length) : 0;
   const avgEvalRating = incubateEval.length > 0
-    ? (incubateEval.reduce((s, a) => s + (a.responses?.overall_rating || 0), 0) / incubateEval.length).toFixed(1)
+    ? (incubateEval.reduce((s, a) => s + (parseFloat(a.responses?.overall_rating) || 0), 0) / incubateEval.length).toFixed(1)
     : 0;
 
   return (
