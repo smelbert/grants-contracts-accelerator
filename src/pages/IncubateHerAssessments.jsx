@@ -125,6 +125,9 @@ export default function IncubateHerAssessments() {
   const currentDate = new Date();
   const isReadinessUnlocked = currentDate >= new Date('2026-03-05T19:30:00');
 
+  const latestReadiness = readinessHistory.sort((a, b) => new Date(b.assessment_date) - new Date(a.assessment_date))[0];
+  const hasReadiness = readinessHistory.length > 0;
+
   const stepStatus = {
     pre: { completed: preCompleted, inProgress: preRecord?.is_draft && !preCompleted, locked: false },
     post: { completed: postCompleted, inProgress: postRecord?.is_draft && !postCompleted, locked: false },
