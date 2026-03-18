@@ -62,7 +62,7 @@ export default function FundingReadinessAssessmentPage() {
             </TabsTrigger>
             <TabsTrigger value="current" className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
-              Current Score
+              Score &amp; Gap Plan
             </TabsTrigger>
             <TabsTrigger value="history" className="flex items-center gap-2">
               <History className="w-4 h-4" />
