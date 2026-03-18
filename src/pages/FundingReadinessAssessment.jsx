@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FundingReadinessAssessmentForm from '@/components/assessment/FundingReadinessAssessmentForm';
 import AssessmentProgressChart from '@/components/assessment/AssessmentProgressChart';
 import { FileText, History, TrendingUp } from 'lucide-react';
+import FundingReadinessGapDashboard from '@/components/assessment/FundingReadinessGapDashboard';
 
 export default function FundingReadinessAssessmentPage() {
   const [activeTab, setActiveTab] = useState('assessment');
