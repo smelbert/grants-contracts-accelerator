@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import GrantMemoImport from './pages/GrantMemoImport';
+import LocalBusinessNews from './pages/LocalBusinessNews';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -59,6 +60,11 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route path="/LocalBusinessNews" element={
+        <LayoutWrapper currentPageName="LocalBusinessNews">
+          <LocalBusinessNews />
+        </LayoutWrapper>
+      } />
       <Route path="/GrantMemoImport" element={
         <LayoutWrapper currentPageName="GrantMemoImport">
           <GrantMemoImport />
