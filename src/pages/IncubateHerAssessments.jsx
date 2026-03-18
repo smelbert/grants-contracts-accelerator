@@ -108,6 +108,12 @@ export default function IncubateHerAssessments() {
     enabled: !!enrollment?.id
   });
 
+  const { data: readinessHistory = [] } = useQuery({
+    queryKey: ['readiness-history', user?.email],
+    queryFn: () => base44.entities.FundingReadinessAssessment.filter({ user_email: user.email }),
+    enabled: !!user?.email
+  });
+
   const preRecord = assessmentRecords.find(a => a.assessment_type === 'pre');
   const postRecord = assessmentRecords.find(a => a.assessment_type === 'post');
   const evaluationRecord = assessmentRecords.find(a => a._form_type === 'evaluation' || a.assessment_type === 'evaluation');
