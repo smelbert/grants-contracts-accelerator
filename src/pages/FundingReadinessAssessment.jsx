@@ -166,6 +166,8 @@ export default function FundingReadinessAssessmentPage() {
                   </CardContent>
                 </Card>
 
+                <FundingReadinessGapDashboard assessment={latestAssessment} />
+
                 {assessments.length > 0 && (
                   <AssessmentProgressChart assessments={assessments} />
                 )}
