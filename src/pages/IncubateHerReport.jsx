@@ -834,20 +834,30 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
                 ) : (
                   <>
                     {/* Aggregate ratings */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-center">
                         <p className="text-xs text-slate-500 mb-1">Avg Overall Rating</p>
                         <p className="text-3xl font-bold text-amber-700">
-                          {(evalResponses.reduce((s, e) => s + (e.responses?.overall_rating || 0), 0) / evalResponses.length).toFixed(1)}
+                          {evalAvgOverall}
                           <span className="text-sm font-normal text-slate-400">/10</span>
                         </p>
+                        <p className="text-xs text-slate-400 mt-1">n={evalResponses.filter(e => e.responses?.overall_rating).length}</p>
                       </div>
                       <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-                        <p className="text-xs text-slate-500 mb-1">Avg Recommend Score</p>
-                        <p className="text-3xl font-bold text-green-700">
-                          {(evalResponses.reduce((s, e) => s + (e.responses?.recommend_rating || 0), 0) / evalResponses.length).toFixed(1)}
+                        <p className="text-xs text-slate-500 mb-1">Would Recommend</p>
+                        <p className="text-2xl font-bold text-green-700">
+                          {evalResponses.filter(e => ['definitely','probably'].includes(e.responses?.would_recommend)).length}
+                          <span className="text-sm font-normal text-slate-500"> / {evalResponses.length}</span>
+                        </p>
+                        <p className="text-xs text-slate-400 mt-1">Definitely or Probably</p>
+                      </div>
+                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                        <p className="text-xs text-slate-500 mb-1">Recommend Score (est.)</p>
+                        <p className="text-3xl font-bold text-blue-700">
+                          {evalAvgRecommend}
                           <span className="text-sm font-normal text-slate-400">/10</span>
                         </p>
+                        <p className="text-xs text-slate-400 mt-1">Definitely=10, Probably=7, Maybe=5, No=2</p>
                       </div>
                       <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg text-center">
                         <p className="text-xs text-slate-500 mb-1">Evaluations Submitted</p>
@@ -855,6 +865,23 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
                         <p className="text-xs text-slate-400">{pct(evalResponses.length, totalEnrolled)}% of cohort</p>
                       </div>
                     </div>
+                    {/* Recommend distribution */}
+                    {recommendDist.length > 0 && (
+                      <div className="mt-4 p-4 border rounded-lg bg-slate-50">
+                        <p className="text-sm font-semibold text-slate-700 mb-3">Recommendation Breakdown</p>
+                        <div className="space-y-2">
+                          {recommendDist.map(([label, count]) => (
+                            <div key={label} className="flex items-center gap-3 text-sm">
+                              <span className="w-28 text-slate-600 capitalize">{label.replace(/_/g,' ')}</span>
+                              <div className="flex-1 bg-slate-200 rounded-full h-4 overflow-hidden">
+                                <div className="h-4 rounded-full bg-[#143A50]" style={{ width: `${pct(count, evalResponses.length)}%` }} />
+                              </div>
+                              <span className="w-10 text-right font-bold text-xs">{count} ({pct(count, evalResponses.length)}%)</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Per-participant feedback */}
                     <div className="space-y-4">
