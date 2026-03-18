@@ -122,6 +122,7 @@ const getUserPortalNav = () => [
     groupName: 'Resources',
     items: [
       { name: 'Blog', page: 'Blog', icon: BookOpen },
+      { name: 'Ohio Business News', page: 'LocalBusinessNews', icon: Newspaper },
     ]
   },
   {
