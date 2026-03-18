@@ -731,6 +731,78 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
                 })}
               </CardContent>
             </Card>
+
+            {/* Attendance Consistency — who showed up across all sessions */}
+            <Card className="border-blue-200 bg-blue-50/40">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Users className="w-5 h-5 text-blue-600" />
+                  Attendance Consistency Analysis
+                </CardTitle>
+                <p className="text-sm text-slate-500">Interest (registration) vs. Readiness (showing up) — {sessions.length} total sessions</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div className="p-4 bg-white rounded-lg border">
+                    <p className="text-2xl font-bold text-slate-700">{totalEnrolled}</p>
+                    <p className="text-xs text-slate-500 mt-1">Registered</p>
+                    <p className="text-xs text-slate-400">100%</p>
+                  </div>
+                  <div className="p-4 bg-white rounded-lg border">
+                    <p className="text-2xl font-bold text-blue-700">{attendedAtLeastOne}</p>
+                    <p className="text-xs text-slate-500 mt-1">Attended ≥1 Session</p>
+                    <p className="text-xs text-slate-400">{pct(attendedAtLeastOne, totalEnrolled)}% of registered</p>
+                  </div>
+                  <div className="p-4 bg-white rounded-lg border">
+                    <p className="text-2xl font-bold text-green-700">{consistentAttendees}</p>
+                    <p className="text-xs text-slate-500 mt-1">All {sessions.length} Sessions</p>
+                    <p className="text-xs text-slate-400">{pct(consistentAttendees, totalEnrolled)}% of registered · {pct(consistentAttendees, attendedAtLeastOne || 1)}% of engaged</p>
+                  </div>
+                  <div className="p-4 bg-white rounded-lg border">
+                    <p className="text-2xl font-bold text-amber-700">{attendedAtLeastOne - consistentAttendees}</p>
+                    <p className="text-xs text-slate-500 mt-1">Partial Attendance</p>
+                    <p className="text-xs text-slate-400">Started but not consistent</p>
+                  </div>
+                </div>
+
+                {/* Per-session consistency breakdown */}
+                {sessions.length > 0 && (
+                  <div className="pt-2">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Session-by-Session Consistency</p>
+                    <div className="space-y-2">
+                      {sessions.map((s, i) => {
+                        const n = attendedExactly(i + 1);
+                        const liveCount = allAttendance.filter(a => a.session_id === s.id && a.attended).length;
+                        const recCount = allAttendance.filter(a => a.session_id === s.id && a.watched_recording && !a.attended).length;
+                        const total = liveCount + recCount;
+                        return (
+                          <div key={s.id} className="flex items-center gap-3 text-sm p-2 bg-white rounded border">
+                            <span className="w-20 shrink-0 text-slate-600 font-medium">Day {i + 1}</span>
+                            <div className="flex-1">
+                              <div className="flex gap-4 text-xs text-slate-500">
+                                <span className="text-green-700 font-semibold">{liveCount} live</span>
+                                <span className="text-blue-600">{recCount} recording</span>
+                                <span className="font-bold text-slate-700">{total} total ({pct(total, totalEnrolled)}%)</span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">
+                      <p className="font-semibold text-amber-800 mb-1">What this tells us:</p>
+                      <p className="text-amber-700">
+                        Of {totalEnrolled} registered, <strong>{attendedAtLeastOne}</strong> engaged at all ({pct(attendedAtLeastOne, totalEnrolled)}%).
+                        Only <strong>{consistentAttendees}</strong> ({pct(consistentAttendees, totalEnrolled)}%) attended every session — the "core cohort."
+                        {totalEnrolled > 0 && consistentAttendees > 0 && (
+                          <> Registration interest does not equal program commitment: roughly <strong>{Math.round(consistentAttendees / totalEnrolled * 100)}%</strong> of those who signed up were truly consistent.</>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
