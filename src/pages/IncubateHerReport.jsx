@@ -220,6 +220,40 @@ export default function IncubateHerReportPage() {
   const evalResponses = evaluations.filter(e => participantEmails.has(e.participant_email));
   const nextStepsList = postAssessments.map(a => a.next_steps).filter(Boolean);
 
+  // Evaluation aggregates — overall_rating stored as string "1"–"10"
+  const evalAvgOverall = evalResponses.length > 0
+    ? (evalResponses.reduce((s, e) => s + (parseInt(e.responses?.overall_rating) || 0), 0) / evalResponses.length).toFixed(1)
+    : '—';
+
+  // would_recommend is categorical; map to numeric for a composite score
+  const recommendMap = { definitely: 10, probably: 7, maybe: 5, no: 2 };
+  const evalAvgRecommend = evalResponses.length > 0
+    ? (evalResponses.reduce((s, e) => s + (recommendMap[e.responses?.would_recommend] ?? 0), 0) / evalResponses.length).toFixed(1)
+    : '—';
+
+  const recommendDist = Object.entries(
+    evalResponses.reduce((acc, e) => {
+      const val = e.responses?.would_recommend || 'no_response';
+      acc[val] = (acc[val] || 0) + 1;
+      return acc;
+    }, {})
+  ).sort((a, b) => b[1] - a[1]);
+
+  // Attendance consistency — per-session presence
+  const consistentAttendees = enrollments.filter(e => {
+    const attendedSessions = sessions.filter(s =>
+      allAttendance.some(a => a.enrollment_id === e.id && a.session_id === s.id && (a.attended || a.watched_recording))
+    ).length;
+    return attendedSessions === sessions.length && sessions.length > 0;
+  }).length;
+
+  const attendedExactly = (n) => enrollments.filter(e => {
+    const count = sessions.filter(s =>
+      allAttendance.some(a => a.enrollment_id === e.id && a.session_id === s.id && (a.attended || a.watched_recording))
+    ).length;
+    return count === n;
+  }).length;
+
   // Demographics from jotform_data
   const orgTypes = countBy(enrollments, e => e.jotform_data?.org_type);
   const yearsInBusiness = countBy(enrollments, e => e.jotform_data?.years_in_business);
