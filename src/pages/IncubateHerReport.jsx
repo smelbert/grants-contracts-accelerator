@@ -528,11 +528,12 @@ Write 3 paragraphs: (1) participation & engagement, (2) learning gains & assessm
     // ── 9. Program Evaluations ──
     if (evalResponses.length > 0) {
       addSection(`${nextStepsList.length > 0 ? 9 : 8}. Program Evaluations`);
-      const avgOverall = (evalResponses.reduce((s, e) => s + (e.responses?.overall_rating || 0), 0) / evalResponses.length).toFixed(1);
-      const avgRecommend = (evalResponses.reduce((s, e) => s + (e.responses?.recommend_rating || 0), 0) / evalResponses.length).toFixed(1);
       addBullet('Evaluations Submitted', `${evalResponses.length} (${pct(evalResponses.length, totalEnrolled)}%)`);
-      addBullet('Average Overall Rating', `${avgOverall}/10`);
-      addBullet('Average Recommend Score', `${avgRecommend}/10`);
+      addBullet('Average Overall Rating', `${evalAvgOverall}/10`);
+      addBullet('Would Recommend (Definitely/Probably)', `${evalResponses.filter(e => ['definitely','probably'].includes(e.responses?.would_recommend)).length} of ${evalResponses.length}`);
+      addBullet('Estimated Recommend Score', `${evalAvgRecommend}/10 (Definitely=10, Probably=7, Maybe=5, No=2)`);
+      addBullet('Consistent Attendees (All Sessions)', `${consistentAttendees} (${pct(consistentAttendees, totalEnrolled)}% of registered)`);
+      addBullet('Engaged ≥1 Session', `${attendedAtLeastOne} (${pct(attendedAtLeastOne, totalEnrolled)}% of registered)`);
       y += 3;
       addSubSection('Participant Feedback');
       evalResponses.forEach((ev, i) => {
