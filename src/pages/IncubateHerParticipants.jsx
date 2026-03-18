@@ -140,8 +140,9 @@ export default function IncubateHerParticipants() {
     const hasPre = completed.has('pre') || enrollment.pre_assessment_completed;
     const allThreeDone = hasPre && hasPost && hasEvaluation;
 
-    // Never logged in
-    if (!enrollment.user_id) {
+    // Never logged in — only show if they have NO assessment activity at all
+    const hasAnyActivity = hasPre || hasPost || hasEvaluation;
+    if (!enrollment.user_id && !hasAnyActivity) {
       const msg = cohort?.no_login_message ||
         `Thank you for your interest in the Grants and Contracts Accelerator! Upon reviewing the app, we noticed you haven't logged in yet. If you haven't logged in by ${cohort?.access_removal_date ? format(new Date(cohort.access_removal_date), 'MMMM d, yyyy') : '3/20/2026'}, your access to the platform will be removed.`;
       return { type: 'danger', message: msg };
@@ -343,7 +344,7 @@ export default function IncubateHerParticipants() {
                     </div>
                     
                     <div className="flex flex-col gap-1 items-end">
-                      {!enrollment.user_id && (
+                      {!enrollment.user_id && !enrollment.pre_assessment_completed && !enrollment.post_assessment_completed && !(assessmentMap[enrollment.id]?.size > 0) && (
                         <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 text-xs">
                           Never Logged In
                         </Badge>
