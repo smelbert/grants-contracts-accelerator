@@ -390,6 +390,41 @@ export default function IncubateHerAssessments() {
         )}
 
       </div>
+
+      {/* Retake Warning Modal */}
+      {showRetakeWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <Info className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">You've Already Completed This Assessment</h3>
+                <p className="text-sm text-slate-600 mt-1">
+                  You have {readinessHistory.length} previous attempt{readinessHistory.length !== 1 ? 's' : ''} on record.
+                  {latestReadiness?.overall_score !== undefined && (
+                    <> Your most recent score was <strong>{latestReadiness.overall_score}</strong>.</>
+                  )}
+                </p>
+                <p className="text-sm text-slate-600 mt-2">
+                  You can review your past scores in the history above. Only retake this assessment if something significant has changed in your business and you want an updated readiness score.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end mt-4">
+              <Button variant="outline" onClick={() => setShowRetakeWarning(false)}>
+                Cancel — View My Scores
+              </Button>
+              <Button
+                style={{ backgroundColor: BRAND_COLORS.eisNavy, color: '#fff' }}
+                onClick={() => { setShowRetakeWarning(false); navigate(createPageUrl('FundingReadinessAssessment')); }}
+              >
+                Yes, Retake Assessment
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <CoBrandedFooter />
     </div>
   );
