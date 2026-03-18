@@ -316,6 +316,47 @@ export default function AssessmentSurveyAdmin() {
               </CardContent>
             </Card>
 
+            {/* Reminder Audit Log */}
+            {reminderResults && (
+              <Card className="mb-6 border-slate-200">
+                <CardHeader>
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <CardTitle className="text-sm font-semibold text-slate-700">
+                      Last Reminder Batch — {moment(reminderResults.sentAt).format('MMM D, YYYY [at] h:mm A')}
+                    </CardTitle>
+                    <div className="flex gap-2 text-xs">
+                      <Badge className="bg-green-100 text-green-800">{reminderResults.sent?.length || 0} sent</Badge>
+                      <Badge className="bg-slate-100 text-slate-600">{reminderResults.skipped?.length || 0} skipped (all complete)</Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {reminderResults.sent?.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Contacted ({reminderResults.sent.length})</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                        {reminderResults.sent.map((r, i) => (
+                          <div key={i} className="flex items-center gap-2 text-xs bg-green-50 border border-green-100 rounded-lg px-3 py-1.5">
+                            <span className={`w-5 h-5 rounded-full text-white flex items-center justify-center font-bold flex-shrink-0 ${r.stage === 1 ? 'bg-red-500' : r.stage === 2 ? 'bg-amber-500' : 'bg-purple-500'}`}>{r.stage}</span>
+                            <span className="font-medium text-slate-700 truncate">{r.name || r.email}</span>
+                            <span className="text-slate-400 truncate">{r.email}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {reminderResults.skipped?.length > 0 && (
+                    <details className="text-xs text-slate-500">
+                      <summary className="cursor-pointer font-medium">Show {reminderResults.skipped.length} skipped (all complete)</summary>
+                      <div className="mt-2 space-y-1">
+                        {reminderResults.skipped.map((r, i) => <p key={i} className="pl-2">• {r.email}</p>)}
+                      </div>
+                    </details>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Evaluation Feedback */}
             {incubateEval.length > 0 && (
               <Card className="mb-6">
