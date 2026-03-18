@@ -248,10 +248,42 @@ export default function IncubateHerAssessments() {
                             Available after Session 2 (March 5, 2026 at 7:30 PM)
                           </div>
                         )}
+                        {/* Readiness history dropdown */}
+                        {step.id === 'readiness' && hasReadiness && (
+                          <div className="mt-3">
+                            <button
+                              onClick={() => setReadinessHistoryOpen(o => !o)}
+                              className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-800"
+                            >
+                              {readinessHistoryOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                              {readinessHistory.length} previous attempt{readinessHistory.length !== 1 ? 's' : ''}
+                            </button>
+                            {readinessHistoryOpen && (
+                              <div className="mt-2 space-y-2">
+                                {readinessHistory
+                                  .sort((a, b) => new Date(b.assessment_date) - new Date(a.assessment_date))
+                                  .map((r, i) => (
+                                    <div key={r.id} className="p-2 rounded bg-white border text-xs flex items-center gap-3">
+                                      <span className="text-slate-500 font-medium">#{readinessHistory.length - i}</span>
+                                      <div className="flex-1">
+                                        <span className="font-medium text-slate-700">
+                                          Score: {r.overall_score ?? '—'}
+                                          {r.readiness_level && (
+                                            <span className="ml-2 capitalize text-slate-500">({r.readiness_level.replace(/_/g, ' ')})</span>
+                                          )}
+                                        </span>
+                                        <p className="text-slate-400">{new Date(r.assessment_date).toLocaleDateString()}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <StepStatus {...status} isNext={isNext} />
-                        {!status.locked && (
+                        {!status.locked && step.id !== 'readiness' && (
                           <Link to={createPageUrl(step.page)}>
                             <Button
                               size="sm"
@@ -261,6 +293,21 @@ export default function IncubateHerAssessments() {
                               {isNext && <ArrowRight className="w-4 h-4 ml-1" />}
                             </Button>
                           </Link>
+                        )}
+                        {!status.locked && step.id === 'readiness' && (
+                          <Button
+                            size="sm"
+                            style={{ backgroundColor: step.color, color: '#fff' }}
+                            onClick={() => {
+                              if (hasReadiness) {
+                                setShowRetakeWarning(true);
+                              } else {
+                                navigate(createPageUrl(step.page));
+                              }
+                            }}
+                          >
+                            {hasReadiness ? 'Retake' : 'Start'}
+                          </Button>
                         )}
                       </div>
                     </div>
