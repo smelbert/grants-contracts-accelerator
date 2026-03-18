@@ -88,6 +88,9 @@ function StepStatus({ completed, inProgress, locked, isNext }) {
 }
 
 export default function IncubateHerAssessments() {
+  const navigate = useNavigate();
+  const [readinessHistoryOpen, setReadinessHistoryOpen] = useState(false);
+  const [showRetakeWarning, setShowRetakeWarning] = useState(false);
   const { data: user } = useQuery({ queryKey: ['currentUser'], queryFn: () => base44.auth.me() });
 
   const { data: enrollment } = useQuery({
