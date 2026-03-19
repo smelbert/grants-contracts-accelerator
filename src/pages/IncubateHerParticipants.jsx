@@ -27,6 +27,25 @@ export default function IncubateHerParticipants() {
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
 
+  const [bulkWithdrawing, setBulkWithdrawing] = useState(false);
+
+  const handleBulkWithdrawNeverLoggedIn = async () => {
+    const targets = enrollments.filter(e => !e.user_id && !e.pre_assessment_completed && !e.post_assessment_completed && !(assessmentMap[e.id]?.size > 0));
+    if (targets.length === 0) { toast.info('No participants to withdraw.'); return; }
+    const confirmed = window.confirm(`This will mark ${targets.length} participant(s) who have never logged in as "Withdrawn". Continue?`);
+    if (!confirmed) return;
+    setBulkWithdrawing(true);
+    try {
+      await Promise.all(targets.map(e => base44.entities.ProgramEnrollment.update(e.id, { enrollment_status: 'withdrawn' })));
+      queryClient.invalidateQueries({ queryKey: ['all-enrollments'] });
+      toast.success(`${targets.length} participant(s) marked as withdrawn.`);
+    } catch (err) {
+      toast.error('Failed to update some participants.');
+    } finally {
+      setBulkWithdrawing(false);
+    }
+  };
+
   const toggleBookingMutation = useMutation({
     mutationFn: async ({ enrollment, booked, notes }) => {
       await base44.entities.ProgramEnrollment.update(enrollment.id, {
