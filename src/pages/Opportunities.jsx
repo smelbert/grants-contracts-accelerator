@@ -475,7 +475,7 @@ export default function OpportunitiesPage() {
   }).filter(matchesFilters);
 
   // Archived = past deadline OR explicitly archived
-  const archivedOpps = opportunities.filter(opp => {
+  const archivedOpps = deduped.filter(opp => {
     if (opp.status === 'archived') return true;
     if (opp.rolling_deadline) return false;
     const d = opp.deadline || opp.deadline_full;
