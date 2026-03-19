@@ -460,8 +460,14 @@ export default function OpportunitiesPage() {
     return matchSearch && matchLane && matchType;
   };
 
+  // Deduplicate by title (keep earliest created)
+  const deduped = opportunities.filter((opp, idx, arr) => {
+    const key = opp.title?.toLowerCase().trim();
+    return arr.findIndex(o => o.title?.toLowerCase().trim() === key) === idx;
+  });
+
   // Only show active (non-archived, non-expired)
-  const activeOpps = opportunities.filter(opp => {
+  const activeOpps = deduped.filter(opp => {
     if (opp.status === 'archived') return false;
     if (opp.rolling_deadline) return true;
     const d = opp.deadline || opp.deadline_full;
