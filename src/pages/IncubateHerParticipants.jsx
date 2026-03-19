@@ -10,7 +10,7 @@ import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
 import ParticipantAggregates from '@/components/incubateher/ParticipantAggregates';
 import JotFormProfile from '@/components/incubateher/JotFormProfile';
 import BulkEnrolleAccessManager from '@/components/admin/BulkEnrolleAccessManager';
-import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle, ChevronDown, ChevronUp, Activity, AlertTriangle, Info, CalendarCheck, CalendarX } from 'lucide-react';
+import { CheckCircle2, XCircle, Search, Award, Upload, FileText, Loader2, X, CheckCircle, ChevronDown, ChevronUp, Activity, AlertTriangle, Info, CalendarCheck, CalendarX, UserX } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import ParticipantActivityDetail from '@/components/incubateher/ParticipantActivityDetail';
