@@ -387,12 +387,11 @@ export default function IncubateHerPostAssessment() {
   // Still loading — don't gate yet
   const isStillLoading = !user || enrollmentLoading || (!!enrollment?.id && preAssessmentLoading);
 
-  // Require BOTH: enrollment flag AND a real submitted ProgramAssessment record with a score
+  // Require enrollment flag AND a real submitted (non-draft) ProgramAssessment record
   const preAssessmentMissing = !isStillLoading && (
     !enrollment?.pre_assessment_completed ||
     !preAssessment ||
-    preAssessment.is_draft ||
-    !preAssessment.total_score
+    preAssessment.is_draft
   );
 
   if (isStillLoading) {
