@@ -21,6 +21,7 @@ import {
   BookOpen, 
   Users, 
   Building2,
+  Newspaper,
   FileText,
   Settings as SettingsIcon,
   Menu,
