@@ -483,8 +483,8 @@ export default function IncubateHerPostAssessment() {
                  <div>
                    <p className="text-sm text-slate-600 mb-1">Pre-Assessment</p>
                    <p className="text-4xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
-                     {preAssessment.total_score}
-                   </p>
+                       {preAssessment?.total_score ?? enrollment?.pre_assessment_score ?? 0}
+                     </p>
                  </div>
                  <TrendingUp className="w-12 h-12" style={{ color: BRAND_COLORS.eisGold }} />
                  <div>
