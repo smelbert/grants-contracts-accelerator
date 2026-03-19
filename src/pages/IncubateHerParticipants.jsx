@@ -329,6 +329,18 @@ export default function IncubateHerParticipants() {
                 {activeFilters.never_logged_in ? <XCircle className="w-3 h-3 mr-1" /> : null}
                 Never Logged In ({enrollments.filter(e => !e.user_id).length})
               </Button>
+              {enrollments.filter(e => !e.user_id && !e.pre_assessment_completed && !e.post_assessment_completed && !(assessmentMap[e.id]?.size > 0)).length > 0 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleBulkWithdrawNeverLoggedIn}
+                  disabled={bulkWithdrawing}
+                  className="border-red-300 text-red-700 hover:bg-red-50"
+                >
+                  {bulkWithdrawing ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <UserX className="w-3 h-3 mr-1" />}
+                  Withdraw All Never-Logged-In ({enrollments.filter(e => !e.user_id && !e.pre_assessment_completed && !e.post_assessment_completed && !(assessmentMap[e.id]?.size > 0)).length})
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
