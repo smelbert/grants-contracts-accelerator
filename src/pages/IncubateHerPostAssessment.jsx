@@ -535,7 +535,7 @@ export default function IncubateHerPostAssessment() {
    }
 
   if (submitted && scores) {
-    const delta = scores.total_score - (preAssessment?.total_score || 0);
+    const delta = scores.total_score - (preAssessment?.total_score || enrollment?.pre_assessment_score || 0);
 
     return (
       <div className="min-h-screen" style={{ backgroundColor: BRAND_COLORS.neutralGray }}>
