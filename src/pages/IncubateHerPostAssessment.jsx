@@ -552,7 +552,7 @@ export default function IncubateHerPostAssessment() {
                 <div>
                   <p className="text-sm text-slate-600 mb-2">Before</p>
                   <p className="text-6xl font-bold" style={{ color: BRAND_COLORS.eisNavy }}>
-                    {preAssessment.total_score}
+                    {preAssessment?.total_score ?? enrollment?.pre_assessment_score ?? 0}
                   </p>
                 </div>
                 
