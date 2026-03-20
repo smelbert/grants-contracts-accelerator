@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, CheckCircle, Users, Search, Download, Video, Monitor, FileDown } from 'lucide-react';
+import { Calendar, CheckCircle, Users, Search, Download, Video, Monitor, FileDown, Printer } from 'lucide-react';
 import { toast } from 'sonner';
 import CoBrandedHeader from '@/components/incubateher/CoBrandedHeader';
 import CoBrandedFooter from '@/components/incubateher/CoBrandedFooter';
