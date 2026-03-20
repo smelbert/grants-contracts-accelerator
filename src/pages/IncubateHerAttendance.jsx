@@ -395,10 +395,16 @@ function AdminAttendanceView() {
               <CardTitle>All Participants — Attendance Overview</CardTitle>
               <p className="text-sm text-slate-500">Live + recording counted toward attendance rate</p>
             </div>
-            <Button onClick={exportCSV} variant="outline" size="sm" className="flex items-center gap-2">
-              <FileDown className="w-4 h-4" />
-              Export CSV
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={exportCSV} variant="outline" size="sm" className="flex items-center gap-2">
+                <FileDown className="w-4 h-4" />
+                Export CSV
+              </Button>
+              <Button onClick={() => window.print()} variant="outline" size="sm" className="flex items-center gap-2 print:hidden">
+                <Printer className="w-4 h-4" />
+                Print
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
