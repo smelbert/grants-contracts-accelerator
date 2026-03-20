@@ -41,7 +41,11 @@ export default function IncubateHerAdmin() {
   // Calculate metrics — filtered to active participants only
   const activeEnrollments = enrollments.filter(e => e.enrollment_status !== 'withdrawn' && e.enrollment_status !== 'inactive');
   const totalParticipants = activeEnrollments.length;
-  const completedPreAssessment = activeEnrollments.filter(e => e.pre_assessment_completed).length;
+  const activeEnrollmentIds = new Set(activeEnrollments.map(e => e.id));
+  // Count pre-assessments using actual submitted (non-draft) records linked to active enrollments
+  const completedPreAssessment = assessments.filter(
+    a => a.assessment_type === 'pre' && !a.is_draft && activeEnrollmentIds.has(a.enrollment_id)
+  ).reduce((set, a) => set.add(a.enrollment_id), new Set()).size;
   const completedPostAssessment = activeEnrollments.filter(e => e.post_assessment_completed).length;
   const completedConsultations = activeEnrollments.filter(e => e.consultation_completed).length;
   const completedAttendance = activeEnrollments.filter(e => e.attendance_complete).length;
