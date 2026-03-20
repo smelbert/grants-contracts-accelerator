@@ -388,7 +388,7 @@ function AdminAttendanceView() {
       )}
 
       {/* All-participant overview */}
-      <Card>
+      <Card className="print-area">
         <CardHeader>
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
