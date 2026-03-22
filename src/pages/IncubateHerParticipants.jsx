@@ -28,6 +28,66 @@ export default function IncubateHerParticipants() {
   const queryClient = useQueryClient();
 
   const [bulkWithdrawing, setBulkWithdrawing] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [bulkActionPending, setBulkActionPending] = useState(false);
+
+  const toggleSelect = (id) => setSelectedIds(prev => {
+    const n = new Set(prev);
+    n.has(id) ? n.delete(id) : n.add(id);
+    return n;
+  });
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredEnrollments.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredEnrollments.map(e => e.id)));
+    }
+  };
+
+  const handleDeleteEnrollment = async (enrollment, archive = false) => {
+    const action = archive ? 'archive and delete' : 'permanently delete';
+    const confirmed = window.confirm(`Are you sure you want to ${action} ${enrollment.participant_name}?\n\n${archive ? 'Their enrollment will be marked withdrawn with notes preserved, then deleted.' : 'This cannot be undone.'}`);
+    if (!confirmed) return;
+    if (archive) {
+      await base44.entities.ProgramEnrollment.update(enrollment.id, {
+        enrollment_status: 'withdrawn',
+        cohort_id: '',
+        enrollment_notes: `[Archived ${new Date().toLocaleDateString()}] ${enrollment.enrollment_notes || ''}`
+      });
+    }
+    await base44.entities.ProgramEnrollment.delete(enrollment.id);
+    queryClient.invalidateQueries({ queryKey: ['all-enrollments'] });
+    toast.success(`${enrollment.participant_name} ${archive ? 'archived and deleted' : 'deleted'}.`);
+  };
+
+  const handleBulkDelete = async (archive = false) => {
+    const targets = filteredEnrollments.filter(e => selectedIds.has(e.id));
+    if (targets.length === 0) return;
+    const action = archive ? 'archive and delete' : 'permanently delete';
+    const confirmed = window.confirm(`Are you sure you want to ${action} ${targets.length} participant(s)?\n\n${archive ? 'Their data will be preserved in notes before deletion.' : 'This cannot be undone.'}`);
+    if (!confirmed) return;
+    setBulkActionPending(true);
+    try {
+      await Promise.all(targets.map(async e => {
+        if (archive) {
+          await base44.entities.ProgramEnrollment.update(e.id, {
+            enrollment_status: 'withdrawn',
+            cohort_id: '',
+            enrollment_notes: `[Archived ${new Date().toLocaleDateString()}] ${e.enrollment_notes || ''}`
+          });
+        }
+        await base44.entities.ProgramEnrollment.delete(e.id);
+      }));
+      setSelectedIds(new Set());
+      queryClient.invalidateQueries({ queryKey: ['all-enrollments'] });
+      toast.success(`${targets.length} participant(s) ${archive ? 'archived and deleted' : 'deleted'}.`);
+    } catch {
+      toast.error('Failed to complete bulk action.');
+    } finally {
+      setBulkActionPending(false);
+    }
+  };
 
   const handleBulkWithdrawNeverLoggedIn = async () => {
     const targets = enrollments.filter(e => !e.user_id && !e.pre_assessment_completed && !e.post_assessment_completed && !(assessmentMap[e.id]?.size > 0));
