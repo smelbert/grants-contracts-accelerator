@@ -335,6 +335,44 @@ export default function IncubateHerParticipants() {
           />
         )}
 
+        {/* Non-Participant Management */}
+        {nonParticipants.filter(e => e.enrollment_status !== 'withdrawn').length > 0 && (
+          <Card className="mb-6 border-2 border-orange-200 bg-orange-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-orange-800">
+                <UserX className="w-5 h-5" />
+                Non-Participant Cohort Members ({nonParticipants.filter(e => e.enrollment_status !== 'withdrawn').length})
+              </CardTitle>
+              <p className="text-sm text-orange-700">
+                These people (facilitators, observers, etc.) are currently linked to the cohort and can access the app. Archive them to remove access while preserving all their data.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {nonParticipants.filter(e => e.enrollment_status !== 'withdrawn').map(e => (
+                  <div key={e.id} className="flex items-center justify-between p-3 bg-white rounded-lg border border-orange-200 text-sm">
+                    <div>
+                      <p className="font-semibold text-slate-900">{e.participant_name || e.participant_email}</p>
+                      <p className="text-slate-500">{e.participant_email}</p>
+                    </div>
+                    <Badge variant="outline" className="text-orange-700 border-orange-300 capitalize">{e.role}</Badge>
+                  </div>
+                ))}
+              </div>
+              <Button
+                onClick={handleArchiveNonParticipants}
+                disabled={archivingNonParticipants}
+                className="bg-orange-600 hover:bg-orange-700 text-white w-full"
+              >
+                {archivingNonParticipants
+                  ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Archiving...</>
+                  : <><UserX className="w-4 h-4 mr-2" /> Archive All Non-Participants & Remove Cohort Access</>
+                }
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Search & Quick Filters */}
         <Card className="mb-6">
           <CardContent className="pt-6 space-y-3">
