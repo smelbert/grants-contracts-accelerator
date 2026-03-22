@@ -68,6 +68,11 @@ export default function IncubateHerCULDashboard() {
     queryFn: () => base44.entities.ProgramEnrollment.filter({ role: 'participant' })
   });
 
+  const { data: allEnrollments } = useQuery({
+    queryKey: ['cul-all-enrollments'],
+    queryFn: () => base44.entities.ProgramEnrollment.list()
+  });
+
   const { data: assessments } = useQuery({
     queryKey: ['cul-assessments'],
     queryFn: () => base44.entities.ProgramAssessment.list()
