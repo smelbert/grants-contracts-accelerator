@@ -92,10 +92,10 @@ export default function IncubateHerCULDashboard() {
   const postAssessments = assessments?.filter(a => a.assessment_type === 'post') || [];
   const evalAssessments = assessments?.filter(a => a.assessment_type === 'evaluation') || [];
   const avgEvalRating = evalAssessments.length > 0
-    ? (evalAssessments.reduce((s, a) => s + (a.responses?.overall_rating || 0), 0) / evalAssessments.length).toFixed(1)
+    ? (evalAssessments.reduce((s, a) => s + (parseFloat(a.responses?.overall_rating) || 0), 0) / evalAssessments.length).toFixed(1)
     : null;
   const avgRecommendRating = evalAssessments.length > 0
-    ? (evalAssessments.reduce((s, a) => s + (a.responses?.recommend_rating || 0), 0) / evalAssessments.length).toFixed(1)
+    ? (evalAssessments.reduce((s, a) => s + (parseFloat(a.responses?.recommend_rating) || 0), 0) / evalAssessments.length).toFixed(1)
     : null;
 
   const avgPreScore = preAssessments.length > 0
