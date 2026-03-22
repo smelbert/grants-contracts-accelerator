@@ -26,6 +26,12 @@ export default function PersonalizedDashboard({ user, userAccess }) {
     enabled: !!user?.email
   });
 
+  const { data: giveawayWinners = [] } = useQuery({
+    queryKey: ['giveaway-winners-dashboard'],
+    queryFn: () => base44.entities.GiveawayWinner.list(),
+    enabled: entryPoint === 'incubateher_program'
+  });
+
   const { data: assessments } = useQuery({
     queryKey: ['user-assessments', enrollment?.id],
     queryFn: async () => {
