@@ -125,6 +125,41 @@ export default function IncubateHerParticipants() {
     }
   });
 
+  const { data: nonParticipants = [], refetch: refetchNonParticipants } = useQuery({
+    queryKey: ['non-participant-enrollments'],
+    queryFn: async () => {
+      const all = await base44.entities.ProgramEnrollment.list();
+      return all.filter(e => e.role !== 'participant' && e.cohort_id);
+    }
+  });
+
+  const [archivingNonParticipants, setArchivingNonParticipants] = useState(false);
+
+  const handleArchiveNonParticipants = async () => {
+    const active = nonParticipants.filter(e => e.enrollment_status !== 'withdrawn');
+    if (active.length === 0) { toast.info('No active non-participants to archive.'); return; }
+    const confirmed = window.confirm(
+      `This will archive ${active.length} non-participant(s) (facilitators, observers, etc.).\n\nTheir data will be preserved but their cohort access will be removed so they can no longer log in as program members.\n\nContinue?`
+    );
+    if (!confirmed) return;
+    setArchivingNonParticipants(true);
+    try {
+      await Promise.all(active.map(e =>
+        base44.entities.ProgramEnrollment.update(e.id, {
+          enrollment_status: 'withdrawn',
+          cohort_id: '',
+          enrollment_notes: `[Archived ${new Date().toLocaleDateString()}] Role: ${e.role}. ${e.enrollment_notes || ''}`
+        })
+      ));
+      refetchNonParticipants();
+      toast.success(`${active.length} non-participant(s) archived. Their data is preserved.`);
+    } catch {
+      toast.error('Failed to archive some records.');
+    } finally {
+      setArchivingNonParticipants(false);
+    }
+  };
+
   const { data: cohorts = [] } = useQuery({
     queryKey: ['program-cohorts'],
     queryFn: () => base44.entities.ProgramCohort.list()
