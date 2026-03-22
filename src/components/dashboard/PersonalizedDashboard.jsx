@@ -88,8 +88,26 @@ export default function PersonalizedDashboard({ user, userAccess }) {
 
   // IncubateHer Specific Dashboard
   if (entryPoint === 'incubateher_program') {
+    const winner = giveawayWinners[0];
     return (
       <div className="space-y-6">
+        {/* Giveaway Winner Banner */}
+        {winner && (
+          <div className="rounded-xl bg-gradient-to-r from-[#E5C089] via-yellow-300 to-[#E5C089] p-1 shadow-lg">
+            <div className="rounded-lg bg-white px-6 py-5 flex items-center gap-4">
+              <div className="text-4xl">🏆</div>
+              <div className="flex-1">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#AC1A5B] mb-1">IncubateHer Giveaway Winner</p>
+                <p className="text-xl font-bold text-[#143A50]">Congratulations, {winner.participant_name}!</p>
+                <p className="text-sm text-slate-600 mt-0.5">
+                  {winner.prize_description || 'Comprehensive grant writing support package'} — an EIS team member will be in touch.
+                </p>
+              </div>
+              <Gift className="w-10 h-10 text-[#E5C089] flex-shrink-0" />
+            </div>
+          </div>
+        )}
+
         {/* Welcome Hero */}
         <Card className="bg-gradient-to-br from-[#AC1A5B] to-[#8A1548] text-white">
           <CardContent className="pt-6">
