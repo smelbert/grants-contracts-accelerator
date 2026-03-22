@@ -69,11 +69,14 @@ export default function IncubateHerAdmin() {
   const growthDelta = avgPostScore - avgPreScore;
 
   // Evaluation metrics
-  const avgOverallRating = evalAssessments.length > 0
-    ? (evalAssessments.reduce((sum, a) => sum + (a.responses?.overall_rating || 0), 0) / evalAssessments.length).toFixed(1)
+  // Only include ratings that are valid numbers within expected range (1–10)
+  const validOverallRatings = evalAssessments.map(a => a.responses?.overall_rating).filter(r => typeof r === 'number' && r >= 1 && r <= 10);
+  const validRecommendRatings = evalAssessments.map(a => a.responses?.recommend_rating).filter(r => typeof r === 'number' && r >= 1 && r <= 10);
+  const avgOverallRating = validOverallRatings.length > 0
+    ? (validOverallRatings.reduce((sum, r) => sum + r, 0) / validOverallRatings.length).toFixed(1)
     : null;
-  const avgRecommendRating = evalAssessments.length > 0
-    ? (evalAssessments.reduce((sum, a) => sum + (a.responses?.recommend_rating || 0), 0) / evalAssessments.length).toFixed(1)
+  const avgRecommendRating = validRecommendRatings.length > 0
+    ? (validRecommendRatings.reduce((sum, r) => sum + r, 0) / validRecommendRatings.length).toFixed(1)
     : null;
   const evalFeedbackFields = ['most_valuable', 'improvements', 'additional_comments', 'next_steps'];
   const evalFeedbackItems = evalAssessments.flatMap(a =>
