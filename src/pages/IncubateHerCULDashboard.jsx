@@ -79,6 +79,9 @@ export default function IncubateHerCULDashboard() {
   });
 
   // --- Aggregate calculations (no PII) ---
+  const totalAdmins = allEnrollments?.filter(e => e.role === 'admin').length || 0;
+  const totalFacilitators = allEnrollments?.filter(e => e.role === 'facilitator').length || 0;
+
   const totalEnrolled = enrollments?.length || 0;
   const completedProgram = enrollments?.filter(e => e.program_completed).length || 0;
   const attendanceComplete = enrollments?.filter(e => e.attendance_complete).length || 0;
