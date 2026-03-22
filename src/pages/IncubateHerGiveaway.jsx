@@ -316,6 +316,7 @@ export default function IncubateHerGiveaway() {
         )}
 
         {/* Rules */}
+
         <Card>
           <CardHeader className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-t-xl">
             <CardTitle>📋 Eligibility Requirements</CardTitle>
