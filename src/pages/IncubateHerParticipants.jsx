@@ -568,6 +568,22 @@ export default function IncubateHerParticipants() {
                           Giveaway Eligible
                         </Badge>
                       )}
+                      <div className="flex gap-1 mt-1">
+                        <button
+                          onClick={() => handleDeleteEnrollment(enrollment, true)}
+                          className="flex items-center gap-1 text-xs px-2 py-1 rounded border border-orange-300 text-orange-700 hover:bg-orange-50"
+                          title="Archive & Delete"
+                        >
+                          <Archive className="w-3 h-3" /> Archive
+                        </button>
+                        <button
+                          onClick={() => handleDeleteEnrollment(enrollment, false)}
+                          className="flex items-center gap-1 text-xs px-2 py-1 rounded border border-red-300 text-red-700 hover:bg-red-50"
+                          title="Delete permanently"
+                        >
+                          <Trash2 className="w-3 h-3" /> Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
 
