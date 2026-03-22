@@ -481,9 +481,44 @@ export default function IncubateHerParticipants() {
         {/* Participants List */}
         <Card>
           <CardHeader>
-            <CardTitle style={{ color: BRAND_COLORS.culRed }}>
-              All Participants ({filteredEnrollments.length})
-            </CardTitle>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <CardTitle style={{ color: BRAND_COLORS.culRed }}>
+                All Participants ({filteredEnrollments.length})
+              </CardTitle>
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={toggleSelectAll}
+                  className="text-xs text-slate-500 underline hover:text-slate-800"
+                >
+                  {selectedIds.size === filteredEnrollments.length && filteredEnrollments.length > 0 ? 'Deselect All' : 'Select All'}
+                </button>
+                {selectedIds.size > 0 && (
+                  <>
+                    <span className="text-xs text-slate-600 font-medium">{selectedIds.size} selected</span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-red-300 text-red-700 hover:bg-red-50"
+                      disabled={bulkActionPending}
+                      onClick={() => handleBulkDelete(false)}
+                    >
+                      <Trash2 className="w-3 h-3 mr-1" />
+                      Delete Selected
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                      disabled={bulkActionPending}
+                      onClick={() => handleBulkDelete(true)}
+                    >
+                      <Archive className="w-3 h-3 mr-1" />
+                      Archive & Delete Selected
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
