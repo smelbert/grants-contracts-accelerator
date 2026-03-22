@@ -243,10 +243,18 @@ export default function IncubateHerCULDashboard() {
 
               {/* KPI Row */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <StatCard label="Total Enrolled" value={totalEnrolled} icon={Users} color={BRAND.navy} />
+                <StatCard label="Total Enrolled (Participants)" value={totalEnrolled} icon={Users} color={BRAND.navy} />
+                <StatCard label="Admins / Facilitators" value={`${totalAdmins} / ${totalFacilitators}`} sub="program staff" icon={Shield} color={BRAND.teal} />
                 <StatCard label="Completed Program" value={completedProgram} sub={`${completionRate}% rate`} icon={Award} color="#22c55e" />
                 <StatCard label="Avg Pre → Post Gain" value={`+${avgDelta}`} sub={`${avgPreScore} → ${avgPostScore} pts`} icon={TrendingUp} color={BRAND.magenta} />
-                <StatCard label="Consultations Done" value={consultationsComplete} sub={`${totalEnrolled > 0 ? Math.round((consultationsComplete / totalEnrolled) * 100) : 0}% of cohort`} icon={CheckCircle2} color={BRAND.teal} />
+              </div>
+
+              {/* Assessment Completion Row */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <StatCard label="Completed Pre-Assessment" value={preAssessmentCount} sub={`${totalEnrolled > 0 ? Math.round((preAssessmentCount / totalEnrolled) * 100) : 0}% of enrolled`} icon={FileText} color={BRAND.teal} />
+                <StatCard label="Completed Post-Assessment" value={postAssessmentCount} sub={`${totalEnrolled > 0 ? Math.round((postAssessmentCount / totalEnrolled) * 100) : 0}% of enrolled`} icon={FileText} color={BRAND.navy} />
+                <StatCard label="Completed Both Assessments" value={bothPrePost} sub={`${totalEnrolled > 0 ? Math.round((bothPrePost / totalEnrolled) * 100) : 0}% of enrolled`} icon={CheckCircle2} color="#22c55e" />
+                <StatCard label="Submitted Evaluations" value={evalCount} sub={`${totalEnrolled > 0 ? Math.round((evalCount / totalEnrolled) * 100) : 0}% of enrolled`} icon={Star} color={BRAND.magenta} />
               </div>
 
               {/* Enrollment Over Time + Completion Funnel */}
