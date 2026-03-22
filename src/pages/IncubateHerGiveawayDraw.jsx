@@ -112,6 +112,24 @@ export default function IncubateHerGiveawayDraw() {
         subject: '🎉 Congratulations! You Won the IncubateHer Giveaway!',
         body: `Dear ${winner.participant_name},\n\nCongratulations! You have been selected as the winner of the IncubateHer Program Giveaway!\n\nPrize: ${cohort?.giveaway_prize_description || 'Comprehensive grant writing support'}\n\nAn EIS team member will contact you within 48 hours to get started. Please check your portal for more details.\n\nThank you for your dedication and participation in the IncubateHer program.\n\nWarm regards,\nElbert Innovative Solutions Team`
       });
+
+      // Notify all active cohort participants
+      const allEnrollments = await base44.entities.ProgramEnrollment.filter({
+        cohort_id: cohort?.id || '',
+        role: 'participant'
+      });
+      const activeParticipants = allEnrollments.filter(e => e.enrollment_status !== 'withdrawn' && e.enrollment_status !== 'inactive');
+      await Promise.all(
+        activeParticipants
+          .filter(e => e.participant_email !== winner.participant_email)
+          .map(e =>
+            base44.integrations.Core.SendEmail({
+              to: e.participant_email,
+              subject: '🏆 IncubateHer Giveaway Winner Announced!',
+              body: `Dear ${e.participant_name || 'Participant'},\n\nWe are excited to announce that ${winner.participant_name} has been selected as the winner of the IncubateHer Program Giveaway!\n\nThank you to everyone who participated. Your dedication to building your funding readiness is truly inspiring.\n\nLog in to your portal to see the winner announcement on your dashboard.\n\nWarm regards,\nElbert Innovative Solutions Team`
+            })
+          )
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['giveaway-winners']);
