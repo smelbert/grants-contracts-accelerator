@@ -548,6 +548,7 @@ export default function IncubateHerParticipants() {
                         {enrollment.role}
                       </Badge>
                     </div>
+                    </div>
                     
                     <div className="flex flex-col gap-1 items-end">
                       {!enrollment.user_id && !enrollment.pre_assessment_completed && !enrollment.post_assessment_completed && !(assessmentMap[enrollment.id]?.size > 0) && (
