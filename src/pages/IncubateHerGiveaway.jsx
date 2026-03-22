@@ -224,7 +224,15 @@ export default function IncubateHerGiveaway() {
         </Card>
 
         {/* Application Status */}
-        {optedOut ? (
+        {cohort?.giveaway_revealed ? (
+          <Card className="border-2 border-slate-300 bg-slate-50">
+            <CardContent className="pt-6 pb-6 text-center">
+              <Trophy className="w-10 h-10 text-[#E5C089] mx-auto mb-3" />
+              <h3 className="text-lg font-bold text-slate-700 mb-1">Giveaway Closed</h3>
+              <p className="text-slate-500 text-sm">The winner has been selected. The giveaway is now closed.</p>
+            </CardContent>
+          </Card>
+        ) : optedOut ? (
           <Card className="border-2 border-slate-300 bg-slate-50">
             <CardContent className="pt-6 pb-6 text-center">
               <LogOut className="w-10 h-10 text-slate-400 mx-auto mb-3" />
