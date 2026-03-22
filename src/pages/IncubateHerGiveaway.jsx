@@ -39,6 +39,15 @@ export default function IncubateHerGiveaway() {
     enabled: !!enrollment?.cohort_id
   });
 
+  const { data: winnerEnrollment } = useQuery({
+    queryKey: ['giveaway-winner', enrollment?.cohort_id],
+    queryFn: async () => {
+      const all = await base44.entities.ProgramEnrollment.filter({ cohort_id: enrollment.cohort_id, giveaway_winner: true });
+      return all[0] || null;
+    },
+    enabled: !!cohort?.giveaway_revealed && !!enrollment?.cohort_id
+  });
+
   const { data: existingApplication } = useQuery({
     queryKey: ['giveaway-application', user?.email],
     queryFn: async () => {

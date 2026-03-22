@@ -129,7 +129,7 @@ export default function IncubateHerParticipants() {
     queryKey: ['non-participant-enrollments'],
     queryFn: async () => {
       const all = await base44.entities.ProgramEnrollment.list();
-      return all.filter(e => e.role !== 'participant' && e.cohort_id);
+      return all.filter(e => e.role !== 'participant' && e.role !== 'facilitator' && e.role !== 'admin' && e.cohort_id);
     }
   });
 
