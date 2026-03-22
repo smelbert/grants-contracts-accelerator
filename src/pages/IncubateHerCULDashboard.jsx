@@ -106,14 +106,24 @@ export default function IncubateHerCULDashboard() {
     : 0;
   const avgDelta = avgPostScore - avgPreScore;
 
+  const preAssessmentCount = preAssessments.length;
+  const postAssessmentCount = postAssessments.length;
+  const evalCount = evalAssessments.length;
+  // Participants who completed both pre AND post assessments
+  const preParticipantIds = new Set(preAssessments.map(a => a.enrollment_id));
+  const postParticipantIds = new Set(postAssessments.map(a => a.enrollment_id));
+  const evalParticipantIds = new Set(evalAssessments.map(a => a.enrollment_id));
+  const bothPrePost = [...preParticipantIds].filter(id => postParticipantIds.has(id)).length;
+
   // --- Chart Data ---
 
   // Completion funnel
   const funnelData = [
     { name: 'Enrolled', count: totalEnrolled, fill: BRAND.navy },
-    { name: 'Attended', count: attendanceComplete, fill: BRAND.teal },
-    { name: 'Consulted', count: consultationsComplete, fill: BRAND.gold },
-    { name: 'Docs Done', count: documentsSubmitted, fill: BRAND.rust },
+    { name: 'Pre-Assessment', count: preAssessmentCount, fill: BRAND.teal },
+    { name: 'Attended', count: attendanceComplete, fill: '#8b5cf6' },
+    { name: 'Post-Assessment', count: postAssessmentCount, fill: BRAND.gold },
+    { name: 'Evaluation', count: evalCount, fill: BRAND.rust },
     { name: 'Completed', count: completedProgram, fill: BRAND.magenta },
   ];
 
