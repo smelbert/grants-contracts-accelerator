@@ -537,17 +537,17 @@ export default function IncubateHerParticipants() {
                         className="mt-1.5 w-4 h-4 accent-[#AC1A5B] cursor-pointer flex-shrink-0"
                       />
                       <div>
-                      <h3 className="font-bold text-lg" style={{ color: BRAND_COLORS.neutralDark }}>
-                        {enrollment.participant_name}
-                      </h3>
-                      <p className="text-sm text-slate-600">{enrollment.participant_email}</p>
-                      {enrollment.phone_number && (
-                        <p className="text-sm text-slate-500">{enrollment.phone_number}</p>
-                      )}
-                      <Badge className="mt-1" style={{ backgroundColor: BRAND_COLORS.eisNavy, color: BRAND_COLORS.neutralLight }}>
-                        {enrollment.role}
-                      </Badge>
-                    </div>
+                        <h3 className="font-bold text-lg" style={{ color: BRAND_COLORS.neutralDark }}>
+                          {enrollment.participant_name}
+                        </h3>
+                        <p className="text-sm text-slate-600">{enrollment.participant_email}</p>
+                        {enrollment.phone_number && (
+                          <p className="text-sm text-slate-500">{enrollment.phone_number}</p>
+                        )}
+                        <Badge className="mt-1" style={{ backgroundColor: BRAND_COLORS.eisNavy, color: BRAND_COLORS.neutralLight }}>
+                          {enrollment.role}
+                        </Badge>
+                      </div>
                     </div>
                     
                     <div className="flex flex-col gap-1 items-end">
