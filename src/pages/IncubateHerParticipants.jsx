@@ -525,11 +525,18 @@ export default function IncubateHerParticipants() {
               {filteredEnrollments.map((enrollment) => (
                 <div 
                   key={enrollment.id}
-                  className="p-4 rounded-lg border"
+                  className={`p-4 rounded-lg border transition-all ${selectedIds.has(enrollment.id) ? 'ring-2 ring-[#AC1A5B]' : ''}`}
                   style={{ backgroundColor: BRAND_COLORS.neutralLight }}
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div>
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(enrollment.id)}
+                        onChange={() => toggleSelect(enrollment.id)}
+                        className="mt-1.5 w-4 h-4 accent-[#AC1A5B] cursor-pointer flex-shrink-0"
+                      />
+                      <div>
                       <h3 className="font-bold text-lg" style={{ color: BRAND_COLORS.neutralDark }}>
                         {enrollment.participant_name}
                       </h3>
