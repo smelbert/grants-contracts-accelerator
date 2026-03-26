@@ -94,6 +94,7 @@ const getUserPortalNav = () => [
       { name: 'Documents', page: 'Documents', icon: FileText },
       { name: 'Document Assembly', page: 'DocumentAssembly', icon: Wand2 },
       { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
+      { name: 'Grant Discovery (AI)', page: 'GrantDiscovery', icon: Sparkles },
     ]
   },
   {
