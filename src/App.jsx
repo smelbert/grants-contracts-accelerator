@@ -8,7 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import GrantMemoImport from './pages/GrantMemoImport';
-import LocalBusinessNews from './pages/LocalBusinessNews.jsx';
+import LocalBusinessNews from './pages/LocalBusinessNews';
 import GrantDiscovery from './pages/GrantDiscovery';
 
 const { Pages, Layout, mainPage } = pagesConfig;

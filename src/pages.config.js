@@ -103,7 +103,7 @@ import FundingLane from './pages/FundingLane';
 import FundingReadinessAssessment from './pages/FundingReadinessAssessment';
 import GrantAssistant from './pages/GrantAssistant';
 import GrantDashboard from './pages/GrantDashboard';
-import GrantGlossary from './pages/GrantGlossary';
+import GrantGlossary from './pages/GrantGlossary.jsx';
 import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import GrantReadinessDashboard from './pages/GrantReadinessDashboard';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
