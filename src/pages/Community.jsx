@@ -88,6 +88,18 @@ export default function CommunityPage() {
     );
   }
 
+  const EmptySpacesState = () => (
+    <Card className="p-12 text-center border-2 border-dashed border-slate-200">
+      <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+        <Users className="w-8 h-8 text-slate-300" />
+      </div>
+      <h3 className="text-lg font-semibold text-slate-700 mb-2">No Community Spaces Yet</h3>
+      <p className="text-slate-500 text-sm max-w-md mx-auto">
+        Community spaces haven't been set up yet. Admins can create spaces from <strong>Admin → Community Spaces Manager</strong>.
+      </p>
+    </Card>
+  );
+
   const organizationSpaces = spaces.filter(s => 
     ['Building2', 'Briefcase', 'Rocket'].includes(s.icon)
   );
@@ -253,6 +265,7 @@ export default function CommunityPage() {
 
           {/* Organization Types Tab */}
           <TabsContent value="organization">
+            {organizationSpaces.length === 0 && <EmptySpacesState />}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
               {organizationSpaces.map((space, idx) => {
                 const Icon = iconMap[space.icon] || Users;
@@ -316,6 +329,7 @@ export default function CommunityPage() {
 
           {/* Learning & Coaching Tab */}
           <TabsContent value="engagement">
+            {engagementSpaces.length === 0 && <EmptySpacesState />}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {engagementSpaces.map((space, idx) => {
                 const Icon = iconMap[space.icon] || Users;
@@ -371,6 +385,7 @@ export default function CommunityPage() {
 
           {/* All Spaces Tab */}
           <TabsContent value="all">
+            {spaces.length === 0 && <EmptySpacesState />}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {spaces.map((space, idx) => {
                 const Icon = iconMap[space.icon] || Users;

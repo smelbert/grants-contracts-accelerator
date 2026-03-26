@@ -14,7 +14,7 @@ const SUGGESTED_SEARCHES = [
   "Health equity grants for underserved communities",
 ];
 
-export default function GrantDiscovery() {
+export default function GrantDiscovery({ embedded = false }) {
   const [results, setResults] = useState(null);
   const [meta, setMeta] = useState(null);
   const [rateLimitInfo, setRateLimitInfo] = useState(null);
@@ -43,9 +43,10 @@ export default function GrantDiscovery() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+    <div className={embedded ? '' : 'min-h-screen bg-gradient-to-b from-slate-50 to-white'}>
+      <div className={embedded ? '' : 'max-w-5xl mx-auto px-4 sm:px-6 py-8'}>
         {/* Header */}
+        {!embedded && (
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-[#143A50]/5 rounded-full px-4 py-1.5 mb-4">
             <Sparkles className="w-4 h-4 text-[#E5C089]" />
@@ -59,6 +60,16 @@ export default function GrantDiscovery() {
             and 133,000+ foundations to find the best matches.
           </p>
         </div>
+        )}
+        {embedded && (
+          <div className="mb-6 bg-gradient-to-r from-[#AC1A5B]/10 to-[#143A50]/10 rounded-2xl p-4 flex items-center gap-3">
+            <Sparkles className="w-6 h-6 text-[#AC1A5B] shrink-0" />
+            <div>
+              <p className="font-semibold text-[#143A50]">AI Grant Discovery</p>
+              <p className="text-sm text-slate-600">Describe your organization and goals — our AI searches 85,000+ grants and 133,000+ foundations to find matches.</p>
+            </div>
+          </div>
+        )}
 
         {/* Search Form */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 mb-6">

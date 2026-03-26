@@ -302,7 +302,9 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment, is
     return getAdminPortalNav();
   }
   
+  // Show IncubateHer user nav if they are a participant OR if they are a facilitator/admin viewing user portal
   const isIncubateHerParticipant = !!incubateHerEnrollment;
+  const hasIncubateHerAccess = isIncubateHerParticipant || !!isFacilitator || userRole === 'admin' || userRole === 'owner';
   
   const userNav = getUserPortalNav();
   const filteredNav = userNav.map(group => ({
@@ -321,8 +323,8 @@ const getNavItems = (portalView, userAccess, userRole, incubateHerEnrollment, is
       return true;
     })
   })).filter(group => {
-    // Show early IncubateHer group only for participants; hide the later duplicate
-    if (group.incubateherOnly && !isIncubateHerParticipant) return false;
+    // Show IncubateHer group for participants, facilitators, and admins viewing user portal
+    if (group.incubateherOnly && !hasIncubateHerAccess) return false;
     return group.items.length > 0;
   });
   

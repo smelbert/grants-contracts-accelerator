@@ -10,8 +10,9 @@ import {
   Search, DollarSign, Calendar, Bookmark, BookmarkCheck,
   ExternalLink, MapPin, TrendingUp, X, ShieldCheck,
   AlertTriangle, Flag, Clock, Archive, ChevronRight,
-  Link2, CheckCircle2, RefreshCw, Building2, FlaskConical
+  Link2, CheckCircle2, RefreshCw, Building2, FlaskConical, Sparkles
 } from 'lucide-react';
+import GrantDiscovery from './GrantDiscovery';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { toast } from 'sonner';
@@ -621,7 +622,7 @@ export default function OpportunitiesPage() {
 
         {/* Tabs */}
         <Tabs defaultValue="active">
-          <TabsList className="mb-6 bg-white border border-slate-200 p-1 rounded-xl h-auto gap-1">
+          <TabsList className="mb-6 bg-white border border-slate-200 p-1 rounded-xl h-auto gap-1 flex-wrap">
             <TabsTrigger value="active" className="rounded-lg data-[state=active]:bg-[#143A50] data-[state=active]:text-white text-sm px-4 py-2">
               <CheckCircle2 className="w-4 h-4 mr-1.5" /> Active ({sortedActive.length})
             </TabsTrigger>
@@ -630,6 +631,9 @@ export default function OpportunitiesPage() {
             </TabsTrigger>
             <TabsTrigger value="archived" className="rounded-lg data-[state=active]:bg-[#143A50] data-[state=active]:text-white text-sm px-4 py-2">
               <Archive className="w-4 h-4 mr-1.5" /> Past / Archived ({archivedOpps.length})
+            </TabsTrigger>
+            <TabsTrigger value="discover" className="rounded-lg data-[state=active]:bg-[#AC1A5B] data-[state=active]:text-white text-sm px-4 py-2">
+              <Sparkles className="w-4 h-4 mr-1.5" /> AI Grant Discovery
             </TabsTrigger>
           </TabsList>
 
@@ -662,6 +666,10 @@ export default function OpportunitiesPage() {
               ? <EmptyState icon={Archive} title="No archived opportunities" subtitle="Expired opportunities will appear here automatically" />
               : renderGrid(archivedOpps, true)
             }
+          </TabsContent>
+
+          <TabsContent value="discover">
+            <GrantDiscovery embedded={true} />
           </TabsContent>
         </Tabs>
       </div>
