@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, BookOpen } from 'lucide-react';
+import { Search, BookOpen, Sparkles, Hash } from 'lucide-react';
 
 const TERMS = [
   // Grant Writing & Fundraising
@@ -86,18 +86,18 @@ const TERMS = [
 
 const CATEGORIES = ['All', ...Array.from(new Set(TERMS.map(t => t.category))).sort()];
 
-const CATEGORY_COLORS = {
-  'Grant Writing': 'bg-blue-100 text-blue-700',
-  'Fundraising': 'bg-pink-100 text-pink-700',
-  'Advancement': 'bg-purple-100 text-purple-700',
-  'Grants': 'bg-green-100 text-green-700',
-  'Funders': 'bg-amber-100 text-amber-700',
-  'Finance': 'bg-teal-100 text-teal-700',
-  'Compliance': 'bg-red-100 text-red-700',
-  'Process': 'bg-slate-100 text-slate-700',
-  'Contracts': 'bg-orange-100 text-orange-700',
-  'Strategy': 'bg-indigo-100 text-indigo-700',
-  'Equity': 'bg-rose-100 text-rose-700',
+const CATEGORY_CONFIG = {
+  'Grant Writing': { bg: 'bg-blue-50', border: 'border-blue-200', badge: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500', pill: 'bg-blue-600' },
+  'Fundraising':   { bg: 'bg-pink-50',  border: 'border-pink-200',  badge: 'bg-pink-100 text-pink-700',  dot: 'bg-pink-500',  pill: 'bg-pink-600' },
+  'Advancement':   { bg: 'bg-purple-50',border: 'border-purple-200',badge: 'bg-purple-100 text-purple-700',dot: 'bg-purple-500',pill: 'bg-purple-600' },
+  'Grants':        { bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-100 text-green-700', dot: 'bg-green-500', pill: 'bg-green-600' },
+  'Funders':       { bg: 'bg-amber-50', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500', pill: 'bg-amber-600' },
+  'Finance':       { bg: 'bg-teal-50',  border: 'border-teal-200',  badge: 'bg-teal-100 text-teal-700',   dot: 'bg-teal-500',  pill: 'bg-teal-600' },
+  'Compliance':    { bg: 'bg-red-50',   border: 'border-red-200',   badge: 'bg-red-100 text-red-700',     dot: 'bg-red-500',   pill: 'bg-red-600' },
+  'Process':       { bg: 'bg-slate-50', border: 'border-slate-200', badge: 'bg-slate-100 text-slate-700', dot: 'bg-slate-500', pill: 'bg-slate-600' },
+  'Contracts':     { bg: 'bg-orange-50',border: 'border-orange-200',badge: 'bg-orange-100 text-orange-700',dot: 'bg-orange-500',pill: 'bg-orange-600' },
+  'Strategy':      { bg: 'bg-indigo-50',border: 'border-indigo-200',badge: 'bg-indigo-100 text-indigo-700',dot: 'bg-indigo-500',pill: 'bg-indigo-600' },
+  'Equity':        { bg: 'bg-rose-50',  border: 'border-rose-200',  badge: 'bg-rose-100 text-rose-700',   dot: 'bg-rose-500',  pill: 'bg-rose-600' },
 };
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -107,106 +107,194 @@ export default function GrantGlossary() {
   const [category, setCategory] = useState('All');
   const [activeLetter, setActiveLetter] = useState(null);
 
-  const filtered = TERMS.filter(t => {
+  const availableLetters = useMemo(() => new Set(TERMS.map(t => t.term[0].toUpperCase())), []);
+
+  const filtered = useMemo(() => TERMS.filter(t => {
     const matchSearch = !search || t.term.toLowerCase().includes(search.toLowerCase()) || t.definition.toLowerCase().includes(search.toLowerCase());
     const matchCat = category === 'All' || t.category === category;
     const matchLetter = !activeLetter || t.term.toUpperCase().startsWith(activeLetter);
     return matchSearch && matchCat && matchLetter;
-  }).sort((a, b) => a.term.localeCompare(b.term));
+  }).sort((a, b) => a.term.localeCompare(b.term)), [search, category, activeLetter]);
 
-  const availableLetters = new Set(TERMS.map(t => t.term[0].toUpperCase()));
+  // Group filtered terms by first letter
+  const grouped = useMemo(() => {
+    const groups = {};
+    filtered.forEach(t => {
+      const letter = t.term[0].toUpperCase();
+      if (!groups[letter]) groups[letter] = [];
+      groups[letter].push(t);
+    });
+    return groups;
+  }, [filtered]);
+
+  const categoryCounts = useMemo(() => {
+    const counts = {};
+    TERMS.forEach(t => { counts[t.category] = (counts[t.category] || 0) + 1; });
+    return counts;
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero */}
-      <div className="bg-[#143A50] text-white px-6 py-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <BookOpen className="w-7 h-7 text-[#E5C089]" />
+      <div className="bg-[#143A50] text-white px-6 py-12 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-4 right-12 text-9xl font-black text-white select-none">A–Z</div>
+        </div>
+        <div className="max-w-5xl mx-auto relative">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-[#E5C089]/20 flex items-center justify-center">
+              <BookOpen className="w-5 h-5 text-[#E5C089]" />
+            </div>
             <h1 className="text-3xl font-bold">Grant & Fundraising Glossary</h1>
           </div>
-          <p className="text-white/70 text-sm max-w-xl">
-            A comprehensive reference of grant writing, fundraising, and advancement terminology.
+          <p className="text-white/60 text-sm max-w-xl mb-6">
+            Your complete reference for grant writing, fundraising, and advancement terminology.
           </p>
-          <p className="text-[#E5C089] text-sm mt-2 font-medium">{TERMS.length} terms across {CATEGORIES.length - 1} categories</p>
+          {/* Stats row */}
+          <div className="flex flex-wrap gap-6">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-[#E5C089]">{TERMS.length}</p>
+              <p className="text-xs text-white/50 mt-0.5">Terms</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-[#E5C089]">{CATEGORIES.length - 1}</p>
+              <p className="text-xs text-white/50 mt-0.5">Categories</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-[#E5C089]">{availableLetters.size}</p>
+              <p className="text-xs text-white/50 mt-0.5">Letters</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-        {/* Search & Filter */}
-        <div className="flex flex-wrap gap-3">
-          <div className="relative flex-1 min-w-[200px]">
+      {/* Sticky search bar */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+        <div className="max-w-5xl mx-auto px-6 py-3">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
-              placeholder="Search terms..."
+              placeholder="Search terms or definitions..."
               value={search}
               onChange={e => { setSearch(e.target.value); setActiveLetter(null); }}
-              className="pl-9"
+              className="pl-9 bg-slate-50 border-slate-200 focus:bg-white"
             />
           </div>
         </div>
+      </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                category === cat
-                  ? 'bg-[#143A50] text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+      <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
+
+        {/* Category cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          <button
+            onClick={() => setCategory('All')}
+            className={`rounded-xl px-3 py-2.5 text-center text-xs font-semibold border transition-all ${
+              category === 'All'
+                ? 'bg-[#143A50] text-white border-[#143A50] shadow-md'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:shadow-sm'
+            }`}
+          >
+            <Hash className="w-4 h-4 mx-auto mb-1 opacity-70" />
+            All Terms
+            <span className="block text-[10px] opacity-60 mt-0.5">{TERMS.length}</span>
+          </button>
+          {CATEGORIES.slice(1).map(cat => {
+            const cfg = CATEGORY_CONFIG[cat] || {};
+            const isActive = category === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setCategory(cat)}
+                className={`rounded-xl px-3 py-2.5 text-center text-xs font-semibold border transition-all ${
+                  isActive
+                    ? `${cfg.pill || 'bg-slate-600'} text-white border-transparent shadow-md`
+                    : `${cfg.bg || 'bg-slate-50'} ${cfg.border || 'border-slate-200'} text-slate-700 hover:shadow-sm`
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full mx-auto mb-1 ${cfg.dot || 'bg-slate-400'}`} />
+                {cat}
+                <span className="block text-[10px] opacity-60 mt-0.5">{categoryCounts[cat] || 0}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* A-Z Nav */}
-        <div className="flex flex-wrap gap-1">
-          {ALPHABET.map(letter => (
-            <button
-              key={letter}
-              disabled={!availableLetters.has(letter)}
-              onClick={() => setActiveLetter(activeLetter === letter ? null : letter)}
-              className={`w-7 h-7 rounded text-xs font-bold transition-colors ${
-                activeLetter === letter
-                  ? 'bg-[#E5C089] text-[#143A50]'
-                  : availableLetters.has(letter)
-                  ? 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-                  : 'bg-slate-50 text-slate-300 cursor-not-allowed'
-              }`}
-            >
-              {letter}
-            </button>
-          ))}
+        {/* A–Z Nav */}
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Browse A–Z</p>
+          <div className="flex flex-wrap gap-1.5">
+            {ALPHABET.map(letter => {
+              const available = availableLetters.has(letter);
+              const active = activeLetter === letter;
+              return (
+                <button
+                  key={letter}
+                  disabled={!available}
+                  onClick={() => { setActiveLetter(active ? null : letter); setSearch(''); }}
+                  className={`w-8 h-8 rounded-lg text-sm font-bold transition-all ${
+                    active
+                      ? 'bg-[#E5C089] text-[#143A50] shadow-md scale-110'
+                      : available
+                      ? 'bg-slate-100 text-slate-700 hover:bg-[#143A50] hover:text-white'
+                      : 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                  }`}
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Results count */}
-        <p className="text-sm text-slate-500">{filtered.length} term{filtered.length !== 1 ? 's' : ''} found</p>
-
-        {/* Terms */}
-        <div className="space-y-3">
-          {filtered.length === 0 ? (
-            <div className="text-center py-12 text-slate-400">
-              <BookOpen className="w-8 h-8 mx-auto mb-2 opacity-30" />
-              <p>No terms found. Try adjusting your search.</p>
-            </div>
-          ) : (
-            filtered.map(term => (
-              <div key={term.term} className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm transition-shadow">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="font-semibold text-[#143A50] text-base">{term.term}</h3>
-                  <Badge className={`${CATEGORY_COLORS[term.category] || 'bg-slate-100 text-slate-600'} border-0 text-xs flex-shrink-0`}>
-                    {term.category}
-                  </Badge>
+        {/* Results */}
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 text-slate-400">
+            <Sparkles className="w-10 h-10 mx-auto mb-3 opacity-20" />
+            <p className="font-medium">No terms found</p>
+            <p className="text-sm mt-1">Try a different search or category</p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            <p className="text-sm text-slate-500 font-medium">
+              {filtered.length} term{filtered.length !== 1 ? 's' : ''} {category !== 'All' ? `in ${category}` : ''}{activeLetter ? ` starting with "${activeLetter}"` : ''}
+            </p>
+            {Object.entries(grouped).sort().map(([letter, terms]) => (
+              <div key={letter}>
+                {/* Letter divider */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[#143A50] flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#E5C089] font-black text-lg">{letter}</span>
+                  </div>
+                  <div className="flex-1 h-px bg-slate-200" />
+                  <span className="text-xs text-slate-400">{terms.length} term{terms.length !== 1 ? 's' : ''}</span>
                 </div>
-                <p className="text-slate-600 text-sm mt-1 leading-relaxed">{term.definition}</p>
+                {/* Term cards */}
+                <div className="grid gap-3 md:grid-cols-2">
+                  {terms.map(term => {
+                    const cfg = CATEGORY_CONFIG[term.category] || {};
+                    return (
+                      <div
+                        key={term.term}
+                        className={`rounded-xl border ${cfg.border || 'border-slate-200'} ${cfg.bg || 'bg-white'} p-4 hover:shadow-md transition-all group`}
+                      >
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <h3 className="font-bold text-[#143A50] text-sm leading-tight group-hover:text-[#1E4F58]">
+                            {term.term}
+                          </h3>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${cfg.badge || 'bg-slate-100 text-slate-600'} flex-shrink-0`}>
+                            {term.category}
+                          </span>
+                        </div>
+                        <p className="text-slate-600 text-xs leading-relaxed">{term.definition}</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
