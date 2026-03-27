@@ -35,10 +35,15 @@ export default function IncubateHerDocuments() {
   const { data: enrollment } = useQuery({
     queryKey: ['incubateher-enrollment', user?.email],
     queryFn: async () => {
-      const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email
-      });
-      return enrollments[0];
+      // Try participant_email first
+      let enrollments = await base44.entities.ProgramEnrollment.filter({ participant_email: user.email });
+      if (enrollments[0]) return enrollments[0];
+      // Fallback: login_email
+      enrollments = await base44.entities.ProgramEnrollment.filter({ login_email: user.email });
+      if (enrollments[0]) return enrollments[0];
+      // Fallback: user_id
+      enrollments = await base44.entities.ProgramEnrollment.filter({ user_id: user.id });
+      return enrollments[0] || null;
     },
     enabled: !!user?.email
   });
@@ -193,7 +198,9 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
     'Other'
   ];
 
-  if (!enrollment) {
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+
+  if (!enrollment && !isAdmin) {
     return (
       <div className="min-h-screen bg-slate-50 p-6">
         <div className="max-w-4xl mx-auto">

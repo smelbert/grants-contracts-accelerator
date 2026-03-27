@@ -462,7 +462,9 @@ export default function IncubateHerLearning() {
     enabled: !!user?.email
   });
 
-  if (!enrollmentLoading && !enrollment) {
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+
+  if (!enrollmentLoading && !enrollment && !isAdmin) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: '#f8f9fa' }}>
         <CoBrandedHeader title="IncubateHer Learning Hub" />

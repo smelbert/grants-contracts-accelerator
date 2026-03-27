@@ -170,10 +170,12 @@ export default function DocumentTemplates({ day }) {
   const { data: enrollment } = useQuery({
     queryKey: ['incubateher-enrollment', user?.email],
     queryFn: async () => {
-      const enrollments = await base44.entities.ProgramEnrollment.filter({
-        participant_email: user.email
-      });
-      return enrollments[0];
+      let enrollments = await base44.entities.ProgramEnrollment.filter({ participant_email: user.email });
+      if (enrollments[0]) return enrollments[0];
+      enrollments = await base44.entities.ProgramEnrollment.filter({ login_email: user.email });
+      if (enrollments[0]) return enrollments[0];
+      enrollments = await base44.entities.ProgramEnrollment.filter({ user_id: user.id });
+      return enrollments[0] || null;
     },
     enabled: !!user?.email
   });
