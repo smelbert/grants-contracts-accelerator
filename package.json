@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.25.0",
-    "@base44/sdk": "^0.8.23",
-    "@base44/vite-plugin": "^1.0.6",
+    "@base44/sdk": "^0.8.26",
+    "@base44/vite-plugin": "^1.0.10",
     "@floating-ui/dom": "^1.6.3",
     "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^4.1.2",
