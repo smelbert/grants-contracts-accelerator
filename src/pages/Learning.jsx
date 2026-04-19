@@ -443,7 +443,7 @@ export default function LearningPage() {
                     <SelectItem value="all">All Durations</SelectItem>
                     <SelectItem value="short">Short (≤30 min)</SelectItem>
                     <SelectItem value="medium">Medium (30-60 min)</SelectItem>
-                    <SelectItem value="long">Long (>60 min)</SelectItem>
+                    <SelectItem value="long">{"Long (>60 min)"}</SelectItem>
                   </SelectContent>
                 </Select>
 

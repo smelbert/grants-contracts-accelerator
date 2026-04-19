@@ -47,7 +47,7 @@ export default function ChatPage() {
         if (!convMap[msg.conversation_id]) {
           convMap[msg.conversation_id] = {
             id: msg.conversation_id,
-            other_user_email: other_email,
+            other_user_email: otheremail,
             last_message: msg.message_text,
             last_message_time: msg.created_date,
             unread: !msg.is_read && msg.recipient_email === user.email

@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Sparkles, Lightbulb, BookOpen, Video, CheckSquare, 
-  TrendingUp, Award, Loader2, Copy, Download
+  TrendingUp, Award, Loader2, Copy, Download, Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';

@@ -59,34 +59,6 @@ export default function IncubateHerProgramControl() {
     queryFn: () => base44.auth.me()
   });
 
-  // Role check
-  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
-
-  if (userLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-[#143A50] mx-auto mb-4" />
-          <p className="text-slate-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-slate-50 p-6">
-        <Card className="max-w-2xl mx-auto">
-          <CardContent className="py-12 text-center">
-            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">Admin Access Required</h3>
-            <p className="text-slate-600">This page is only accessible to program administrators.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const { data: cohort, isLoading: cohortLoading } = useQuery({
     queryKey: ['admin-cohort'],
     queryFn: async () => {
@@ -118,6 +90,7 @@ export default function IncubateHerProgramControl() {
     queryFn: () => base44.entities.SessionAttendance.list()
   });
 
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner';
   const isLoading = cohortLoading || enrollmentsLoading || accessLoading || sessionsLoading || attendanceLoading;
 
   // Access Control Mutations
@@ -410,6 +383,31 @@ export default function IncubateHerProgramControl() {
       toast.error('Failed to export metrics');
     }
   };
+
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-[#143A50] mx-auto mb-4" />
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6">
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="py-12 text-center">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Admin Access Required</h3>
+            <p className="text-slate-600">This page is only accessible to program administrators.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

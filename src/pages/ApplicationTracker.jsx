@@ -58,6 +58,11 @@ export default function ApplicationTrackerPage() {
     queryFn: () => base44.entities.Document.list(),
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
   const { data: organizations = [] } = useQuery({
     queryKey: ['organizations', user?.email],
     queryFn: () => base44.entities.Organization.filter({ created_by: user?.email }),

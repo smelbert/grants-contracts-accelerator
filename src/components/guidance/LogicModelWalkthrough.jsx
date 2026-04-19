@@ -26,7 +26,7 @@ export default function LogicModelWalkthrough({ onComplete }) {
       title: 'Theory of Change',
       description: 'Start with your core theory: If we do X, then Y will happen because Z',
       field: 'theory_of_change',
-      tip: 'This is your program's fundamental logic. Be specific about the causal relationship.',
+      tip: "This is your program's fundamental logic. Be specific about the causal relationship.",
       example: 'If we provide job training and mentorship, then participants will gain employment because they will develop in-demand skills and professional networks.'
     },
     {
