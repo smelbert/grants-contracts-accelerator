@@ -3,7 +3,10 @@ import { motion } from 'framer-motion';
 import { createPageUrl } from '@/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Play, Lock, BookOpen, Video, FileText, Users } from 'lucide-react';
+import { Clock, Play, Lock, BookOpen, Video, FileText, Users, Download, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
 
 const TYPE_CONFIG = {
   course: { icon: BookOpen, label: 'Course' },
@@ -25,6 +28,29 @@ const LANE_COLORS = {
 export default function LearningCard({ content, isPremium = false, hasAccess = true, onStart, hideDuration = false }) {
   const TypeIcon = TYPE_CONFIG[content.content_type]?.icon || BookOpen;
   const laneColor = LANE_COLORS[content.funding_lane] || LANE_COLORS.general;
+  const [exportingPDF, setExportingPDF] = useState(false);
+
+  const handleDownloadPDF = async (e) => {
+    e.stopPropagation();
+    setExportingPDF(true);
+    try {
+      const response = await base44.functions.invoke('exportCoursePDF', { courseId: content.id });
+      const blob = response.data instanceof Blob
+        ? response.data
+        : new Blob([response.data], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${content.title?.replace(/[^a-z0-9]/gi, '_') || 'course'}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('PDF downloaded');
+    } catch {
+      toast.error('PDF export failed');
+    } finally {
+      setExportingPDF(false);
+    }
+  };
 
   return (
     <motion.div
@@ -84,6 +110,19 @@ export default function LearningCard({ content, isPremium = false, hasAccess = t
             </div>
           )}
           
+          <div className="flex items-center gap-1.5">
+          {hasAccess && content.id && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleDownloadPDF}
+              disabled={exportingPDF}
+              className="h-8 w-8 p-0 text-slate-400 hover:text-slate-700"
+              title="Download PDF"
+            >
+              {exportingPDF ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            </Button>
+          )}
           <Button
             size="sm"
             variant={hasAccess ? "default" : "outline"}
@@ -106,6 +145,7 @@ export default function LearningCard({ content, isPremium = false, hasAccess = t
               'Upgrade'
             )}
           </Button>
+          </div>
         </div>
       </div>
     </motion.div>

@@ -10,6 +10,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import GrantMemoImport from './pages/GrantMemoImport';
 import LocalBusinessNews from './pages/LocalBusinessNews';
 import GrantDiscovery from './pages/GrantDiscovery';
+import CourseViewer from './pages/CourseViewer';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -76,6 +77,7 @@ const AuthenticatedApp = () => {
           <GrantDiscovery />
         </LayoutWrapper>
       } />
+      <Route path="/CourseViewer" element={<CourseViewer />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

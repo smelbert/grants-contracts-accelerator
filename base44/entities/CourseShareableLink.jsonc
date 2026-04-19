@@ -1,0 +1,50 @@
+{
+  "name": "CourseShareableLink",
+  "type": "object",
+  "properties": {
+    "course_id": {
+      "type": "string",
+      "description": "ID of the LearningContent"
+    },
+    "course_title": {
+      "type": "string"
+    },
+    "learner_email": {
+      "type": "string",
+      "description": "Email of the intended learner"
+    },
+    "learner_name": {
+      "type": "string"
+    },
+    "token": {
+      "type": "string",
+      "description": "Unique token for this shareable link"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional expiry date"
+    },
+    "opened_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "First time the link was opened"
+    },
+    "open_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times the link was opened"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "created_by_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "course_id",
+    "token"
+  ]
+}

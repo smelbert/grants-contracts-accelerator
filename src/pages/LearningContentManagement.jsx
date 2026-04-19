@@ -17,6 +17,7 @@ import CourseBuilder from '@/components/learning/CourseBuilder';
 import AIContentAssistant from '@/components/learning/AIContentAssistant';
 import BulkContentEditor from '@/components/admin/BulkContentEditor';
 import ContentReviewWorkflow from '@/components/admin/ContentReviewWorkflow';
+import CourseAdminTools from '@/components/learning/CourseAdminTools';
 
 const TYPE_CONFIG = {
   course:    { label: 'Course',    icon: GraduationCap, color: 'bg-blue-100 text-blue-700' },
@@ -72,7 +73,8 @@ function ContentCard({ content, isSelected, onSelect, onEdit, onDelete, onReview
             {content.agenda_section && <span className="text-xs text-slate-400">{MODULE_LABELS[content.agenda_section] || content.agenda_section}</span>}
           </div>
         </div>
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0 flex-wrap">
+          <CourseAdminTools course={content} />
           <Button size="sm" variant="ghost" onClick={onReview} title="Review workflow"><GitBranch className="w-4 h-4 text-slate-400" /></Button>
           <Button size="sm" variant="ghost" onClick={onEdit}><Edit className="w-4 h-4 text-slate-500" /></Button>
           <Button size="sm" variant="ghost" onClick={onDelete}><Trash2 className="w-4 h-4 text-red-400 hover:text-red-600" /></Button>
@@ -93,7 +95,7 @@ function ContentCard({ content, isSelected, onSelect, onEdit, onDelete, onReview
               <TypeIcon className="w-4 h-4" />
             </div>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-1 flex-wrap">
             <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={onReview}><GitBranch className="w-3.5 h-3.5 text-slate-400" /></Button>
             <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={onEdit}><Edit className="w-3.5 h-3.5 text-slate-500" /></Button>
             <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={onDelete}><Trash2 className="w-3.5 h-3.5 text-red-400" /></Button>
@@ -112,6 +114,9 @@ function ContentCard({ content, isSelected, onSelect, onEdit, onDelete, onReview
           {content.is_premium && <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium">Premium</span>}
           {content.duration_minutes && <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 flex items-center gap-1"><Clock className="w-2.5 h-2.5" />{content.duration_minutes}m</span>}
           {content.agenda_section && <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">{MODULE_LABELS[content.agenda_section] || content.agenda_section}</span>}
+        </div>
+        <div className="mt-3 pt-3 border-t border-slate-50">
+          <CourseAdminTools course={content} />
         </div>
       </div>
     </div>
