@@ -323,6 +323,23 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             </Card>
 
             <DocumentTemplates day="day2" />
+
+            {/* In-Kind Tracker Callout */}
+            <Card className="mt-6 border-l-4 border-l-[#E5C089] bg-amber-50">
+              <CardContent className="py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex-1">
+                  <p className="font-bold text-[#143A50]">📋 In-Kind Contribution Tracker</p>
+                  <p className="text-sm text-slate-700 mt-1">
+                    Day 2 is about financial & data systems — and in-kind gifts are part of that picture. 
+                    Track every non-cash donation, volunteer hour, and recurring gift with IRS/GAAP-ready records.
+                  </p>
+                </div>
+                <Link to="/InKindTracker">
+                  <Button className="bg-[#143A50] hover:bg-[#1E4F58] flex-shrink-0">Open Tracker →</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
             <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="day2_documents" />
           </TabsContent>
 

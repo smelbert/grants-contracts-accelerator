@@ -262,6 +262,21 @@ export default function ResourceLibrary() {
           </div>
         )}
 
+        {/* In-Kind Tracker Promo */}
+        <Card className="mb-6 border-2 border-[#E5C089] bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
+          <CardContent className="py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-1">
+              <p className="font-bold text-[#E5C089] text-lg">🎁 In-Kind Contribution Tracker</p>
+              <p className="text-sm text-white/80 mt-1">
+                Track non-cash gifts, volunteer hours, and recurring partnerships — with IRS acknowledgment tracking, GAAP compliance flags, and an FMV reference library built in.
+              </p>
+            </div>
+            <a href="/InKindTracker">
+              <Button className="bg-[#E5C089] hover:bg-[#d4b070] text-[#143A50] font-bold flex-shrink-0">Open Tracker →</Button>
+            </a>
+          </CardContent>
+        </Card>
+
         <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="resource_library" />
         <ComingSoonPipeline mode="resources" />
 
