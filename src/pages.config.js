@@ -111,6 +111,7 @@ import GrantSubmission from './pages/GrantSubmission';
 import GrantWritingPostAssessment from './pages/GrantWritingPostAssessment';
 import GrantWritingPreAssessment from './pages/GrantWritingPreAssessment';
 import Home from './pages/Home';
+import InKindTracker from './pages/InKindTracker';
 import IncubateHerAccessControl from './pages/IncubateHerAccessControl';
 import IncubateHerAdmin from './pages/IncubateHerAdmin';
 import IncubateHerAdminConsole from './pages/IncubateHerAdminConsole';
@@ -291,6 +292,7 @@ export const PAGES = {
     "GrantWritingPostAssessment": GrantWritingPostAssessment,
     "GrantWritingPreAssessment": GrantWritingPreAssessment,
     "Home": Home,
+    "InKindTracker": InKindTracker,
     "IncubateHerAccessControl": IncubateHerAccessControl,
     "IncubateHerAdmin": IncubateHerAdmin,
     "IncubateHerAdminConsole": IncubateHerAdminConsole,

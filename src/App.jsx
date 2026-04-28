@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import GrantMemoImport from './pages/GrantMemoImport';
+import InKindTracker from './pages/InKindTracker';
 import LocalBusinessNews from './pages/LocalBusinessNews';
 import GrantDiscovery from './pages/GrantDiscovery';
 import CourseViewer from './pages/CourseViewer';
@@ -78,6 +79,7 @@ const AuthenticatedApp = () => {
         </LayoutWrapper>
       } />
       <Route path="/CourseViewer" element={<CourseViewer />} />
+      <Route path="/InKindTracker" element={<LayoutWrapper currentPageName="InKindTracker"><InKindTracker /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

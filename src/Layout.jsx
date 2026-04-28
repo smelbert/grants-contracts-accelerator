@@ -95,6 +95,7 @@ const getUserPortalNav = () => [
       { name: 'Document Assembly', page: 'DocumentAssembly', icon: Wand2 },
       { name: 'Funding Opportunities', page: 'Opportunities', icon: TrendingUp },
       { name: 'Grant Discovery (AI)', page: 'GrantDiscovery', icon: Sparkles },
+      { name: 'In-Kind Tracker', page: 'InKindTracker', icon: Gift },
     ]
   },
   {
