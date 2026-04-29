@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, FileText, CheckCircle2, Edit } from 'lucide-react';
+import { Download, FileText, CheckCircle2, Edit, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import EditableDocumentTemplate from './EditableDocumentTemplate';
 
@@ -369,13 +370,22 @@ export default function DocumentTemplates({ day }) {
                     ))}
                   </ul>
                 </div>
-                <Button 
-                  onClick={() => handleEdit(template)}
-                  className="w-full bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit & Download
-                </Button>
+                {template.id === 'inkind-tracker' ? (
+                  <Link to="/InKindTracker" className="block w-full">
+                    <Button className="w-full bg-[#143A50] text-white hover:bg-[#1E4F58]">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open In-Kind Tracker
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button 
+                    onClick={() => handleEdit(template)}
+                    className="w-full bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit & Download
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
