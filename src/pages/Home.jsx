@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import PersonalizedDashboard from '@/components/dashboard/PersonalizedDashboard';
 import DeadlineCalendar from '@/components/dashboard/DeadlineCalendar';
+import OpportunityMatcherWidget from '@/components/dashboard/OpportunityMatcherWidget';
 import { 
-  TrendingUp, 
   Calendar, 
   FileText, 
   Sparkles,
@@ -20,9 +20,8 @@ import {
   Bookmark,
   Bell,
   User,
-  Target,
   Zap,
-  DollarSign
+  TrendingUp
 } from 'lucide-react';
 import { format, isAfter, isBefore, addDays } from 'date-fns';
 
@@ -85,11 +84,6 @@ export default function HomePage() {
     enabled: !!user?.email,
   });
 
-  const { data: allOpportunities = [] } = useQuery({
-    queryKey: ['opportunities'],
-    queryFn: () => base44.entities.FundingOpportunity.list('-posted_date', 50),
-  });
-
   // Calculate upcoming deadlines
   const upcomingDeadlines = savedOpportunities
     .filter(opp => {
@@ -111,17 +105,6 @@ export default function HomePage() {
   const activeBookings = bookings.filter(b => 
     ['intake_pending', 'scheduled', 'in_progress'].includes(b.booking_status)
   );
-
-  // Simple recommendations based on saved opportunities
-  const recommendations = allOpportunities
-    .filter(opp => !savedOpportunities.some(saved => saved.id === opp.id))
-    .filter(opp => {
-      if (savedOpportunities.length === 0) return true;
-      // Match funding lane
-      const savedLanes = [...new Set(savedOpportunities.map(s => s.funding_lane))];
-      return savedLanes.includes(opp.funding_lane);
-    })
-    .slice(0, 4);
 
   if (!user) {
     return (
@@ -222,6 +205,9 @@ export default function HomePage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* AI Opportunity Matcher — full width featured section */}
+        <OpportunityMatcherWidget userEmail={user.email} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Upcoming Deadlines */}
@@ -403,59 +389,6 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          {/* Recommendations */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                  <Target className="w-4 h-4 text-emerald-600" />
-                </div>
-                <div>
-                  <CardTitle>Recommended for You</CardTitle>
-                  <CardDescription>Based on your saved opportunities</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {recommendations.length === 0 ? (
-                <div className="text-center py-8">
-                  <Target className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                  <p className="text-sm text-slate-500 mb-3">Save opportunities to get recommendations</p>
-                  <Link to={createPageUrl('Opportunities')}>
-                    <Button size="sm" variant="outline">Browse Opportunities</Button>
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {recommendations.map((opp) => (
-                    <Link key={opp.id} to={createPageUrl('Opportunities')}>
-                      <div className="p-3 rounded-lg hover:bg-emerald-50 transition-colors border border-emerald-100">
-                        <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                            <TrendingUp className="w-5 h-5 text-emerald-600" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-900 line-clamp-1">{opp.title}</p>
-                            <p className="text-sm text-slate-600 line-clamp-1">{opp.funder_name}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge className="bg-emerald-50 text-emerald-700 text-xs">
-                                {opp.funding_lane}
-                              </Badge>
-                              {opp.amount_min && (
-                                <span className="text-xs font-medium text-emerald-700">
-                                  ${opp.amount_min.toLocaleString()}+
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </div>
 
         {/* Deadline Calendar */}
