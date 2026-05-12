@@ -10,13 +10,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { 
   Search, Download, FileText, BookOpen, Heart, Star, Eye,
   Building2, DollarSign, RefreshCw, Briefcase, TrendingUp,
-  Sparkles, CheckSquare, AlertCircle, Filter, X
+  Sparkles, CheckSquare, AlertCircle, Filter, X, Target
 } from 'lucide-react';
 import { toast } from 'sonner';
 import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
 import TemplateEditor from '@/components/templates/TemplateEditor';
 import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
 import ComingSoonPipeline from '@/components/library/ComingSoonPipeline';
+import ResourceReadinessAssessment from '@/components/assessment/ResourceReadinessAssessment';
 import { createPageUrl } from '@/utils';
 
 const CATEGORY_CONFIG = {
@@ -59,6 +60,7 @@ export default function ResourceLibrary() {
   const [editorResource, setEditorResource] = useState(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewingResource, setReviewingResource] = useState(null);
+  const [assessmentOpen, setAssessmentOpen] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -173,9 +175,18 @@ export default function ResourceLibrary() {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-4xl font-bold text-[#143A50] mb-2">Resource Library</h1>
-          <p className="text-slate-600">Templates, guidebooks, and workbooks to support your funding journey</p>
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-[#143A50] mb-2">Resource Library</h1>
+            <p className="text-slate-600">Templates, guidebooks, and workbooks to support your funding journey</p>
+          </div>
+          <Button
+            onClick={() => setAssessmentOpen(true)}
+            className="bg-[#AC1A5B] hover:bg-[#8e1049] text-white gap-2 shadow-lg flex-shrink-0"
+          >
+            <Target className="w-4 h-4" />
+            Find My Best Templates
+          </Button>
         </div>
 
         {/* Filters */}
@@ -474,6 +485,13 @@ export default function ResourceLibrary() {
             onSubmit={(data) => submitReviewMutation.mutate(data)}
           />
         )}
+
+        {/* Readiness Assessment */}
+        <ResourceReadinessAssessment
+          open={assessmentOpen}
+          onClose={() => setAssessmentOpen(false)}
+          onUseTemplate={(template) => { setEditorResource(template); setAssessmentOpen(false); }}
+        />
 
         {/* Template Fill-In Editor */}
         <TemplateEditor
