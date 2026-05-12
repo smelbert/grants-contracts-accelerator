@@ -55,25 +55,41 @@ export default function TemplateEditor({ resource, open, onClose }) {
   const handleExportPDF = async () => {
     if (!printRef.current) return;
     setExporting(true);
+
+    // Build an off-screen clone that is fully visible (not clipped)
+    const offscreen = document.createElement('div');
+    offscreen.style.cssText = [
+      'position:fixed',
+      'top:0',
+      'left:0',
+      'z-index:-9999',
+      'opacity:0',
+      'pointer-events:none',
+      'width:816px',
+      'background:#ffffff',
+    ].join(';');
+    offscreen.innerHTML = printRef.current.outerHTML;
+    document.body.appendChild(offscreen);
+
     try {
-      setActiveTab('preview');
-      await new Promise(r => setTimeout(r, 400));
-
       const DPI = 96;
-      const PAGE_W_IN = 8.5;
-      const PAGE_H_IN = 11;
-      const MARGIN_IN = 0.5;
-      const PAGE_W_PX = PAGE_W_IN * DPI;       // 816
-      const PAGE_H_PX = PAGE_H_IN * DPI;       // 1056
-      const MARGIN_PX = MARGIN_IN * DPI;        // 48
-      const CONTENT_H_PX = PAGE_H_PX - MARGIN_PX * 2; // usable height per page
+      const PAGE_W_PX = 816;   // 8.5in * 96dpi
+      const PAGE_H_PX = 1056;  // 11in * 96dpi
+      const MARGIN_PX = 48;    // 0.5in margin
 
-      const canvas = await html2canvas(printRef.current, {
+      // Wait a tick so the clone fully renders
+      await new Promise(r => setTimeout(r, 200));
+
+      const canvas = await html2canvas(offscreen, {
         scale: 2,
         useCORS: true,
+        allowTaint: true,
         backgroundColor: '#ffffff',
-        windowWidth: PAGE_W_PX,
         width: PAGE_W_PX,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: PAGE_W_PX,
+        logging: false,
       });
 
       const pdf = new jsPDF({
@@ -83,58 +99,48 @@ export default function TemplateEditor({ resource, open, onClose }) {
         hotfixes: ['px_scaling'],
       });
 
-      // Scale factor: canvas is rendered at scale:2, so canvas.width = 816*2
-      const scale = canvas.width / PAGE_W_PX;
+      const scale = canvas.width / PAGE_W_PX; // = 2 (because scale:2 above)
       const totalCanvasH = canvas.height;
-      const sliceH = CONTENT_H_PX * scale; // how many canvas px go on each page
+      const contentH = PAGE_H_PX - MARGIN_PX * 2;
+      const sliceH = contentH * scale;
 
       let yOffset = 0;
       let pageNum = 0;
+      const totalPages = Math.ceil(totalCanvasH / sliceH);
 
       while (yOffset < totalCanvasH) {
         if (pageNum > 0) pdf.addPage();
 
-        // Slice a portion of the canvas
         const sliceCanvas = document.createElement('canvas');
         sliceCanvas.width = canvas.width;
         sliceCanvas.height = Math.min(sliceH, totalCanvasH - yOffset);
         const ctx = sliceCanvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
         ctx.drawImage(canvas, 0, -yOffset);
 
         const sliceData = sliceCanvas.toDataURL('image/png');
-        const sliceRenderedH = sliceCanvas.height / scale; // px in PDF coords
+        const sliceRenderedH = sliceCanvas.height / scale;
 
-        pdf.addImage(
-          sliceData,
-          'PNG',
-          MARGIN_PX,           // left margin
-          MARGIN_PX,           // top margin
-          PAGE_W_PX - MARGIN_PX * 2,  // content width
-          sliceRenderedH,
-        );
+        pdf.addImage(sliceData, 'PNG', MARGIN_PX, MARGIN_PX, PAGE_W_PX - MARGIN_PX * 2, sliceRenderedH);
 
-        // Page number footer
+        // Page number
         pdf.setFontSize(8);
         pdf.setTextColor(150, 150, 150);
-        const totalPages = Math.ceil(totalCanvasH / sliceH);
-        pdf.text(
-          `Page ${pageNum + 1} of ${totalPages}`,
-          PAGE_W_PX / 2,
-          PAGE_H_PX - 14,
-          { align: 'center' }
-        );
+        pdf.text(`Page ${pageNum + 1} of ${totalPages}`, PAGE_W_PX / 2, PAGE_H_PX - 14, { align: 'center' });
 
         yOffset += sliceH;
         pageNum++;
       }
 
-      const fileName = (resource?.template_name || 'template').replace(/\s+/g, '_') + '_filled.pdf';
+      const fileName = (resource?.template_name || 'template').replace(/[^a-z0-9]/gi, '_') + '_filled.pdf';
       pdf.save(fileName);
       toast.success('PDF exported — ' + pageNum + ' page' + (pageNum !== 1 ? 's' : ''));
     } catch (err) {
       toast.error('Export failed. Please try again.');
       console.error(err);
     } finally {
+      document.body.removeChild(offscreen);
       setExporting(false);
     }
   };
