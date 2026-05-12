@@ -22,6 +22,7 @@ import { createPageUrl } from '@/utils';
 
 const CATEGORY_CONFIG = {
   foundational:         { label: 'Foundational / Readiness',   icon: Building2,   color: 'emerald' },
+  business_planning:    { label: 'Business Planning',           icon: Briefcase,   color: 'orange' },
   financial_compliance: { label: 'Financial & Compliance',      icon: DollarSign,  color: 'blue' },
   grant_writing:        { label: 'Grant Writing Core',          icon: FileText,    color: 'purple' },
   renewals:             { label: 'Renewals & Continuation',     icon: RefreshCw,   color: 'amber' },
@@ -36,10 +37,11 @@ const CATEGORY_CONFIG = {
 
 const ORG_TYPE_OPTIONS = [
   { value: 'all',            label: 'All Org Types' },
-  { value: 'nonprofit',      label: 'Nonprofit' },
-  { value: 'for_profit',     label: 'For-Profit' },
-  { value: 'solopreneur',    label: 'Solopreneur' },
-  { value: 'community_based',label: 'Community-Based' },
+  { value: 'nonprofit',      label: '🏛 Nonprofit' },
+  { value: 'for_profit',     label: '💼 For-Profit' },
+  { value: 'solopreneur',    label: '🚀 Entrepreneur / Solopreneur' },
+  { value: 'community_based',label: '🤝 Community-Based' },
+  { value: 'faith_based',    label: '✝ Faith-Based' },
 ];
 
 const MATURITY_OPTIONS = [
@@ -535,9 +537,31 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
               {resource.maturity_level && resource.maturity_level !== 'all' && (
                 <Badge variant="outline" className="text-xs">{resource.maturity_level}</Badge>
               )}
-              {resource.org_type?.map(ot => (
-                <Badge key={ot} className="text-xs bg-slate-100 text-slate-600 capitalize border-0">{ot.replace('_', ' ')}</Badge>
-              ))}
+              {(!resource.org_type || resource.org_type.length === 0) ? (
+                <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200 border font-medium">🌐 General — All Org Types</Badge>
+              ) : (
+                resource.org_type.map(ot => {
+                  const ORG_COLORS = {
+                    nonprofit: 'bg-green-100 text-green-700 border-green-200',
+                    for_profit: 'bg-orange-100 text-orange-700 border-orange-200',
+                    solopreneur: 'bg-purple-100 text-purple-700 border-purple-200',
+                    community_based: 'bg-teal-100 text-teal-700 border-teal-200',
+                    faith_based: 'bg-amber-100 text-amber-700 border-amber-200',
+                  };
+                  const ORG_LABELS = {
+                    nonprofit: '🏛 Nonprofit',
+                    for_profit: '💼 For-Profit',
+                    solopreneur: '🚀 Entrepreneur/Solopreneur',
+                    community_based: '🤝 Community-Based',
+                    faith_based: '✝ Faith-Based',
+                  };
+                  return (
+                    <Badge key={ot} className={`text-xs border font-medium ${ORG_COLORS[ot] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                      {ORG_LABELS[ot] || ot.replace(/_/g, ' ')}
+                    </Badge>
+                  );
+                })
+              )}
               {resource.avgRating > 0 && (
                 <span className="flex items-center gap-1 text-xs text-slate-500 ml-auto">
                   <Star className="w-3 h-3 fill-[#E5C089] text-[#E5C089]" />

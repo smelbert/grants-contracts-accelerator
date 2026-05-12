@@ -56,46 +56,81 @@ export default function TemplateEditor({ resource, open, onClose }) {
     if (!printRef.current) return;
     setExporting(true);
     try {
-      // Switch to preview to ensure content is rendered
       setActiveTab('preview');
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 400));
+
+      const DPI = 96;
+      const PAGE_W_IN = 8.5;
+      const PAGE_H_IN = 11;
+      const MARGIN_IN = 0.5;
+      const PAGE_W_PX = PAGE_W_IN * DPI;       // 816
+      const PAGE_H_PX = PAGE_H_IN * DPI;       // 1056
+      const MARGIN_PX = MARGIN_IN * DPI;        // 48
+      const CONTENT_H_PX = PAGE_H_PX - MARGIN_PX * 2; // usable height per page
 
       const canvas = await html2canvas(printRef.current, {
         scale: 2,
         useCORS: true,
         backgroundColor: '#ffffff',
-        windowWidth: 816, // 8.5in at 96dpi
+        windowWidth: PAGE_W_PX,
+        width: PAGE_W_PX,
       });
 
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'portrait',
-        unit: 'in',
-        format: 'letter', // 8.5 x 11
+        unit: 'px',
+        format: [PAGE_W_PX, PAGE_H_PX],
+        hotfixes: ['px_scaling'],
       });
 
-      const pageWidth = 8.5;
-      const pageHeight = 11;
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * pageWidth) / canvas.width;
+      // Scale factor: canvas is rendered at scale:2, so canvas.width = 816*2
+      const scale = canvas.width / PAGE_W_PX;
+      const totalCanvasH = canvas.height;
+      const sliceH = CONTENT_H_PX * scale; // how many canvas px go on each page
 
-      let heightLeft = imgHeight;
-      let position = 0;
+      let yOffset = 0;
+      let pageNum = 0;
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      while (yOffset < totalCanvasH) {
+        if (pageNum > 0) pdf.addPage();
 
-      // Add additional pages if content is longer than one page
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        // Slice a portion of the canvas
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = canvas.width;
+        sliceCanvas.height = Math.min(sliceH, totalCanvasH - yOffset);
+        const ctx = sliceCanvas.getContext('2d');
+        ctx.drawImage(canvas, 0, -yOffset);
+
+        const sliceData = sliceCanvas.toDataURL('image/png');
+        const sliceRenderedH = sliceCanvas.height / scale; // px in PDF coords
+
+        pdf.addImage(
+          sliceData,
+          'PNG',
+          MARGIN_PX,           // left margin
+          MARGIN_PX,           // top margin
+          PAGE_W_PX - MARGIN_PX * 2,  // content width
+          sliceRenderedH,
+        );
+
+        // Page number footer
+        pdf.setFontSize(8);
+        pdf.setTextColor(150, 150, 150);
+        const totalPages = Math.ceil(totalCanvasH / sliceH);
+        pdf.text(
+          `Page ${pageNum + 1} of ${totalPages}`,
+          PAGE_W_PX / 2,
+          PAGE_H_PX - 14,
+          { align: 'center' }
+        );
+
+        yOffset += sliceH;
+        pageNum++;
       }
 
       const fileName = (resource?.template_name || 'template').replace(/\s+/g, '_') + '_filled.pdf';
       pdf.save(fileName);
-      toast.success('PDF exported successfully!');
+      toast.success('PDF exported — ' + pageNum + ' page' + (pageNum !== 1 ? 's' : ''));
     } catch (err) {
       toast.error('Export failed. Please try again.');
       console.error(err);
