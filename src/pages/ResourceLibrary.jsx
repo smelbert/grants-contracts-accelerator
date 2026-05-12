@@ -73,6 +73,8 @@ export default function ResourceLibrary() {
       const allTemplates = await base44.entities.Template.list('-created_date');
       return allTemplates.filter(t => t.is_active !== false && t.is_published === true);
     },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const { data: favorites = [] } = useQuery({
