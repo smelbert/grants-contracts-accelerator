@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import BrandedTemplateWrapper from '@/components/templates/BrandedTemplateWrapper';
+import TemplateEditor from '@/components/templates/TemplateEditor';
 import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
 import ComingSoonPipeline from '@/components/library/ComingSoonPipeline';
 import { createPageUrl } from '@/utils';
@@ -55,6 +56,7 @@ export default function ResourceLibrary() {
   const [selectedMaturity, setSelectedMaturity] = useState('all');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [previewResource, setPreviewResource] = useState(null);
+  const [editorResource, setEditorResource] = useState(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewingResource, setReviewingResource] = useState(null);
 
@@ -150,7 +152,7 @@ export default function ResourceLibrary() {
   };
 
   const handleDownload = (resource) => {
-    window.open(createPageUrl('Projects') + '?template=' + resource.id, '_blank');
+    setEditorResource(resource);
   };
 
   const handlePreview = (resource) => setPreviewResource(resource);
@@ -472,6 +474,13 @@ export default function ResourceLibrary() {
             onSubmit={(data) => submitReviewMutation.mutate(data)}
           />
         )}
+
+        {/* Template Fill-In Editor */}
+        <TemplateEditor
+          resource={editorResource}
+          open={!!editorResource}
+          onClose={() => setEditorResource(null)}
+        />
       </div>
     </div>
   );
