@@ -6,15 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   ThumbsUp, MessageCircle, Search, Pin, Lock, AlertCircle,
   ArrowLeft, Plus, ChevronDown, ChevronUp, Send, Hash, Users
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { format, formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 
 const CATEGORY_COLORS = {
   general: 'bg-slate-100 text-slate-700',
@@ -285,8 +285,8 @@ function DiscussionThread({ discussion, user, spaceId, onBack }) {
 
 export default function Discussions() {
   const queryClient = useQueryClient();
-  const params = new URLSearchParams(window.location.search);
-  const spaceSlug = params.get('space');
+  const [searchParams] = useSearchParams();
+  const spaceSlug = searchParams.get('space');
 
   const [selectedDiscussion, setSelectedDiscussion] = useState(null);
   const [showNewPost, setShowNewPost] = useState(false);
@@ -361,7 +361,7 @@ export default function Discussions() {
           <Users className="w-14 h-14 mx-auto text-slate-300 mb-4" />
           <h2 className="text-xl font-bold text-slate-700 mb-2">No Space Selected</h2>
           <p className="text-slate-500 mb-6">Please choose a community space to view its discussions.</p>
-          <Link to={createPageUrl('Community')}>
+          <Link to="/Community">
             <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Browse Community Spaces</Button>
           </Link>
         </Card>
@@ -384,7 +384,7 @@ export default function Discussions() {
           <AlertCircle className="w-14 h-14 mx-auto text-slate-300 mb-4" />
           <h2 className="text-xl font-bold text-slate-700 mb-2">Space Not Found</h2>
           <p className="text-slate-500 mb-6">This community space doesn't exist or hasn't been set up yet.</p>
-          <Link to={createPageUrl('Community')}>
+          <Link to="/Community">
             <Button className="bg-[#143A50] hover:bg-[#1E4F58]">Back to Community</Button>
           </Link>
         </Card>
@@ -418,7 +418,7 @@ export default function Discussions() {
       {/* Header */}
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
         <div className="max-w-4xl mx-auto px-6 py-8">
-          <Link to={createPageUrl('Community')} className="inline-flex items-center gap-1 text-[#E5C089]/70 hover:text-[#E5C089] text-sm mb-4 transition-colors">
+          <Link to="/Community" className="inline-flex items-center gap-1 text-[#E5C089]/70 hover:text-[#E5C089] text-sm mb-4 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" /> All Spaces
           </Link>
           <div className="flex items-start justify-between gap-4">

@@ -221,7 +221,7 @@ export default function CommunityPage() {
                           </CardHeader>
                           <CardContent>
                             <div className="flex gap-3">
-                              <Link to={createPageUrl('Discussions', `?space=${space.slug}`)} className="flex-1">
+                              <Link to={`/Discussions?space=${space.slug}`} className="flex-1">
                                 <Button className="w-full bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90 text-lg py-6">
                                   <MessageSquare className="w-5 h-5 mr-2" />
                                   Enter Community Space
@@ -296,7 +296,7 @@ export default function CommunityPage() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                        <Link to={`/Discussions?space=${space.slug}`}>
                           <Button className="w-full bg-[#143A50] hover:bg-[#1E4F58]">
                             Enter Space
                             <ArrowRight className="w-4 h-4 ml-2" />
@@ -357,7 +357,7 @@ export default function CommunityPage() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                        <Link to={`/Discussions?space=${space.slug}`}>
                           <Button className="w-full bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90">
                             Join Conversation
                             <ArrowRight className="w-4 h-4 ml-2" />
@@ -438,7 +438,7 @@ export default function CommunityPage() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <Link to={createPageUrl('Discussions', `?space=${space.slug}`)}>
+                        <Link to={`/Discussions?space=${space.slug}`}>
                           <Button className={`w-full ${colorScheme.button}`}>
                             Enter Space
                             <ArrowRight className="w-4 h-4 ml-2" />
