@@ -13,6 +13,7 @@ import LocalBusinessNews from './pages/LocalBusinessNews';
 import GrantDiscovery from './pages/GrantDiscovery';
 import CourseViewer from './pages/CourseViewer';
 import ProposalReview from './pages/ProposalReview';
+import UserOnboarding from './pages/UserOnboarding';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
       <Route path="/CourseViewer" element={<CourseViewer />} />
       <Route path="/InKindTracker" element={<LayoutWrapper currentPageName="InKindTracker"><InKindTracker /></LayoutWrapper>} />
       <Route path="/ProposalReview" element={<LayoutWrapper currentPageName="ProposalReview"><ProposalReview /></LayoutWrapper>} />
+      <Route path="/UserOnboarding" element={<LayoutWrapper currentPageName="UserOnboarding"><UserOnboarding /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

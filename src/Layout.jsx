@@ -53,7 +53,8 @@ import {
   Download,
   Upload,
   Wand2,
-  BarChart3
+  BarChart3,
+  UserPlus
 } from 'lucide-react';
 
 // Public pages that skip the authenticated layout entirely
@@ -179,6 +180,7 @@ const getAdminPortalNav = () => [
       { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
       { name: 'Event Management', page: 'EventManagement', icon: Calendar },
       { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
+      { name: 'User Onboarding & Access', page: 'UserOnboarding', icon: UserPlus },
       { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
       { name: 'Community Spaces Manager', page: 'CommunityAdmin', icon: MessageCircle },
       { name: 'Community Moderation', page: 'CommunityModerationDashboard', icon: AlertTriangle },
