@@ -22,6 +22,38 @@ import { format, parseISO, isBefore, startOfDay, addDays } from 'date-fns';
 import CalendarSyncButton from '@/components/events/CalendarSyncButton';
 import { toast } from 'sonner';
 import EventDetailView from '@/components/events/EventDetailView';
+import PersonalizedMilestones from '@/components/calendar/PersonalizedMilestones';
+
+// Determine business stage from JotForm intake data
+function deriveStage(enrollment) {
+  if (!enrollment) return null;
+  const data = enrollment.jotform_data || {};
+  const years = parseInt(data.years_in_business) || 0;
+  const revenue = data.annual_revenue || '';
+  const employees = parseInt(data.employees) || 0;
+
+  // Parse revenue ranges
+  const revenueNum = (() => {
+    if (revenue.includes('500K') || revenue.includes('500,000') || revenue.includes('1M') || revenue.includes('million')) return 500000;
+    if (revenue.includes('100K') || revenue.includes('100,000')) return 100000;
+    if (revenue.includes('50K') || revenue.includes('50,000')) return 50000;
+    return 0;
+  })();
+
+  if (years >= 5 || revenueNum >= 500000 || employees >= 10) return 'scaling';
+  if (years >= 2 || revenueNum >= 50000 || employees >= 2) return 'growth';
+  return 'startup';
+}
+
+// Map org_type from intake to entity enum values
+function deriveOrgType(enrollment) {
+  const orgType = (enrollment?.jotform_data?.org_type || '').toLowerCase();
+  if (orgType.includes('nonprofit') || orgType.includes('501')) return 'nonprofit';
+  if (orgType.includes('faith') || orgType.includes('church')) return 'faith_based';
+  if (orgType.includes('solo') || orgType.includes('individual') || orgType.includes('freelance')) return 'solopreneur';
+  if (orgType.includes('llc') || orgType.includes('for-profit') || orgType.includes('for profit') || orgType.includes('business')) return 'for_profit';
+  return 'all';
+}
 
 export default function ProgramCalendar() {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -91,6 +123,62 @@ export default function ProgramCalendar() {
     queryFn: () => base44.entities.ProgramAssessment.filter({ participant_email: user.email }),
     enabled: !!user?.email
   });
+
+  // Organization profile for personalization
+  const { data: orgProfile } = useQuery({
+    queryKey: ['org-profile', user?.email],
+    queryFn: () => base44.entities.Organization.filter({ primary_contact_email: user.email }),
+    enabled: !!user?.email
+  });
+
+  // All active business milestones
+  const { data: allMilestones = [] } = useQuery({
+    queryKey: ['business-milestones'],
+    queryFn: () => base44.entities.BusinessMilestone.filter({ is_active: true }),
+    enabled: !!user
+  });
+
+  // Compute user's stage + org type from intake or org profile
+  const userStage = useMemo(() => {
+    const enrollment = enrollments.find(e => e.cohort_id);
+    if (enrollment) return deriveStage(enrollment);
+    // Fallback: use org revenue_stage if available
+    const org = orgProfile?.[0];
+    if (org?.revenue_stage) {
+      if (org.revenue_stage.includes('scale') || org.revenue_stage.includes('mature')) return 'scaling';
+      if (org.revenue_stage.includes('growth')) return 'growth';
+      return 'startup';
+    }
+    return 'startup'; // default
+  }, [enrollments, orgProfile]);
+
+  const userOrgType = useMemo(() => {
+    const enrollment = enrollments.find(e => e.cohort_id);
+    if (enrollment) return deriveOrgType(enrollment);
+    const org = orgProfile?.[0];
+    if (org?.organization_type) {
+      const t = org.organization_type.toLowerCase();
+      if (t.includes('nonprofit') || t.includes('501')) return 'nonprofit';
+      if (t.includes('faith') || t.includes('church')) return 'faith_based';
+      if (t.includes('solo')) return 'solopreneur';
+      return 'for_profit';
+    }
+    return 'all';
+  }, [enrollments, orgProfile]);
+
+  // Filter milestones for this user's stage + org type + current month
+  const personalizedMilestones = useMemo(() => {
+    const currentMonth = new Date().getMonth() + 1; // 1-12
+    return allMilestones.filter(m => {
+      const stageMatch = m.applicable_stages?.includes(userStage) || m.applicable_stages?.includes('all');
+      const orgMatch = !m.applicable_org_types?.length || m.applicable_org_types.includes(userOrgType) || m.applicable_org_types.includes('all');
+      const monthMatch = !m.month_of_year || m.month_of_year === currentMonth;
+      return stageMatch && orgMatch && monthMatch;
+    }).sort((a, b) => {
+      const p = { high: 0, medium: 1, low: 2 };
+      return (p[a.priority] ?? 1) - (p[b.priority] ?? 1);
+    }).slice(0, 9); // Show up to 9 prompts (3x3 grid)
+  }, [allMilestones, userStage, userOrgType]);
 
   const isRegistered = (eventId) =>
     myRegistrations.some(r => r.event_id === eventId && r.registration_status === 'registered');
@@ -208,8 +296,15 @@ export default function ProgramCalendar() {
       <div className="max-w-5xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-[#143A50] mb-1">Calendar</h1>
-          <p className="text-slate-600">All your upcoming events, sessions, consultations, and deadlines in one place</p>
+          <p className="text-slate-600">Personalized action prompts, events, sessions, and deadlines tailored to your business stage</p>
         </div>
+
+        {/* Personalized Milestones */}
+        <PersonalizedMilestones
+          milestones={personalizedMilestones}
+          userStage={userStage}
+          orgType={userOrgType}
+        />
 
         {/* Filters */}
         <Card className="mb-6">
@@ -238,6 +333,7 @@ export default function ProgramCalendar() {
                   <SelectItem value="session">Program Sessions</SelectItem>
                   <SelectItem value="consultation">Consultations</SelectItem>
                   <SelectItem value="assessment">Assessments</SelectItem>
+                  <SelectItem value="milestone">Action Prompts</SelectItem>
                 </SelectContent>
               </Select>
 

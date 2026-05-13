@@ -1,0 +1,89 @@
+{
+  "name": "BusinessMilestone",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short action title shown on the calendar"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed explanation of why this matters and what to do"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "strategy",
+        "funding",
+        "legal_compliance",
+        "financial",
+        "evaluation",
+        "marketing",
+        "operations",
+        "community"
+      ],
+      "description": "Type of business activity"
+    },
+    "applicable_stages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "startup",
+          "growth",
+          "scaling",
+          "all"
+        ]
+      },
+      "description": "Which business stages this milestone applies to"
+    },
+    "applicable_org_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "nonprofit",
+          "for_profit",
+          "solopreneur",
+          "faith_based",
+          "all"
+        ]
+      },
+      "description": "Which org types this applies to"
+    },
+    "month_of_year": {
+      "type": "number",
+      "description": "1-12: which month this prompt appears (null = all year)"
+    },
+    "week_of_month": {
+      "type": "number",
+      "description": "1-4: which week of the month (null = all month)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "action_link_label": {
+      "type": "string",
+      "description": "Label for the CTA button, e.g. 'Open Template'"
+    },
+    "action_link_page": {
+      "type": "string",
+      "description": "App page to navigate to, e.g. 'ResourceLibrary', 'GrantReadinessDashboard'"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "category",
+    "applicable_stages"
+  ]
+}
