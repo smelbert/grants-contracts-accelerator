@@ -21,6 +21,7 @@ import ReviewPaymentFlow from '@/components/payments/ReviewPaymentFlow';
 import CreateDocumentFlow from '@/components/documents/CreateDocumentFlow';
 import PDFExporter from '@/components/export/PDFExporter';
 import CollaborativeDocumentReview from '@/components/documents/CollaborativeDocumentReview';
+import DocumentSearchBar from '@/components/documents/DocumentSearchBar';
 
 const STATUS_CONFIG = {
   draft: { label: 'Draft', icon: Edit, color: 'slate' },
@@ -36,6 +37,7 @@ export default function DocumentsPage() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [reviewingRequest, setReviewingRequest] = useState(null); // { doc, request }
+  const [filters, setFilters] = useState({ keyword: '', type: '', status: '', reviewer: '' });
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -176,21 +178,40 @@ export default function DocumentsPage() {
           </motion.div>
         )}
 
+        {/* Search & Filter Bar */}
+        <DocumentSearchBar filters={filters} onChange={setFilters} />
+
         {/* Documents Grid */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
           </div>
-        ) : documents?.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500">No documents yet. Create your first document to get started.</p>
-            </CardContent>
-          </Card>
-        ) : (
+        ) : (() => {
+          const kw = filters.keyword?.toLowerCase();
+          const filtered = (documents || []).filter(doc => {
+            if (filters.type && doc.doc_type !== filters.type) return false;
+            if (filters.status && doc.status !== filters.status) return false;
+            if (filters.reviewer && doc.reviewer_id && !doc.reviewer_id.toLowerCase().includes(filters.reviewer.toLowerCase())) return false;
+            if (kw && !doc.doc_name?.toLowerCase().includes(kw) && !doc.content?.toLowerCase().includes(kw)) return false;
+            return true;
+          });
+
+          if (filtered.length === 0) return (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                <p className="text-slate-500">
+                  {(documents || []).length === 0
+                    ? 'No documents yet. Create your first document to get started.'
+                    : 'No documents match your current filters.'}
+                </p>
+              </CardContent>
+            </Card>
+          );
+
+          return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {documents.map((doc, index) => {
+            {filtered.map((doc, index) => {
               const statusConfig = STATUS_CONFIG[doc.status] || STATUS_CONFIG.draft;
               const StatusIcon = statusConfig.icon;
               
@@ -272,7 +293,8 @@ export default function DocumentsPage() {
               );
             })}
           </div>
-        )}
+          );
+        })()}
 
         {/* Document Viewer Modal */}
         {selectedDoc && !showPaymentFlow && (
