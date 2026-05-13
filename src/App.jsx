@@ -12,6 +12,7 @@ import InKindTracker from './pages/InKindTracker';
 import LocalBusinessNews from './pages/LocalBusinessNews';
 import GrantDiscovery from './pages/GrantDiscovery';
 import CourseViewer from './pages/CourseViewer';
+import ProposalReview from './pages/ProposalReview';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -80,6 +81,7 @@ const AuthenticatedApp = () => {
       } />
       <Route path="/CourseViewer" element={<CourseViewer />} />
       <Route path="/InKindTracker" element={<LayoutWrapper currentPageName="InKindTracker"><InKindTracker /></LayoutWrapper>} />
+      <Route path="/ProposalReview" element={<LayoutWrapper currentPageName="ProposalReview"><ProposalReview /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
