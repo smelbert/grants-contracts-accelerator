@@ -1,0 +1,75 @@
+{
+  "name": "DocumentReviewRequest",
+  "type": "object",
+  "properties": {
+    "document_id": {
+      "type": "string"
+    },
+    "document_name": {
+      "type": "string"
+    },
+    "requester_email": {
+      "type": "string",
+      "description": "User who requested the review"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "reviewer_email": {
+      "type": "string",
+      "description": "Mentor or coach assigned to review"
+    },
+    "reviewer_name": {
+      "type": "string"
+    },
+    "reviewer_role": {
+      "type": "string",
+      "enum": [
+        "mentor",
+        "coach",
+        "admin"
+      ],
+      "default": "mentor"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_review",
+        "feedback_given",
+        "completed",
+        "declined"
+      ],
+      "default": "pending"
+    },
+    "request_message": {
+      "type": "string",
+      "description": "Optional message from the requester explaining what they need feedback on"
+    },
+    "feedback_summary": {
+      "type": "string",
+      "description": "Reviewer's overall summary feedback"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "comment_count": {
+      "type": "number",
+      "default": 0
+    },
+    "suggestion_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "document_id",
+    "requester_email",
+    "reviewer_email"
+  ]
+}

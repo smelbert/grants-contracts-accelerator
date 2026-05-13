@@ -1,0 +1,45 @@
+{
+  "name": "DocumentVersion",
+  "type": "object",
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "description": "Reference to the parent document"
+    },
+    "version_number": {
+      "type": "number"
+    },
+    "content": {
+      "type": "string"
+    },
+    "change_summary": {
+      "type": "string",
+      "description": "Short description of what changed"
+    },
+    "saved_by_email": {
+      "type": "string"
+    },
+    "saved_by_name": {
+      "type": "string"
+    },
+    "version_type": {
+      "type": "string",
+      "enum": [
+        "auto_save",
+        "manual_save",
+        "suggestion_accepted",
+        "review_submitted"
+      ],
+      "default": "manual_save"
+    },
+    "review_request_id": {
+      "type": "string",
+      "description": "Link to the review request that triggered this version (if any)"
+    }
+  },
+  "required": [
+    "document_id",
+    "version_number",
+    "content"
+  ]
+}

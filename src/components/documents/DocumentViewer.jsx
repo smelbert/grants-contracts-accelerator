@@ -20,6 +20,8 @@ import DocumentComparison from '@/components/documents/DocumentComparison';
 import AIDocumentAssistant from '@/components/documents/AIDocumentAssistant';
 import AIDocumentAnalyzer from '@/components/documents/AIDocumentAnalyzer';
 import CollaborativeComments from '@/components/collaboration/CollaborativeComments';
+import RequestMentorReview from '@/components/documents/RequestMentorReview';
+import CollaborativeDocumentReview from '@/components/documents/CollaborativeDocumentReview';
 
 export default function DocumentViewer({ 
   document, 
@@ -33,6 +35,8 @@ export default function DocumentViewer({
   const [showComparison, setShowComparison] = useState(false);
   const [comparisonVersions, setComparisonVersions] = useState([null, null]);
   const [videoFeedbackUrl, setVideoFeedbackUrl] = useState(document?.review_video_url || null);
+  const [showRequestReview, setShowRequestReview] = useState(false);
+  const [showCollabReview, setShowCollabReview] = useState(false);
 
   const isCoach = userRole === 'coach' || userRole === 'owner' || userRole === 'admin';
   const canEdit = document?.status === 'draft' || document?.status === 'needs_revision';
@@ -64,6 +68,14 @@ export default function DocumentViewer({
     queryFn: () => base44.entities.DocumentVersion.filter({ document_id: document?.id }, '-version_number'),
     enabled: !!document?.id,
   });
+
+  // Fetch active review request
+  const { data: reviewRequests = [] } = useQuery({
+    queryKey: ['review-requests', document?.id],
+    queryFn: () => base44.entities.DocumentReviewRequest.filter({ document_id: document.id }),
+    enabled: !!document?.id,
+  });
+  const activeReviewRequest = reviewRequests.find(r => ['pending','in_review','feedback_given'].includes(r.status));
 
   // Add comment mutation
   const addCommentMutation = useMutation({
@@ -295,10 +307,20 @@ export default function DocumentViewer({
                       <Save className="w-4 h-4 mr-2" />
                       Save
                     </Button>
-                    {document?.status === 'draft' && (
-                      <Button variant="outline" onClick={onRequestReview}>
-                        <Send className="w-4 h-4 mr-2" />
-                        Request Review
+                    {document?.status === 'draft' && !activeReviewRequest && (
+                      <Button variant="outline" onClick={() => setShowRequestReview(true)} className="gap-1.5">
+                        <Send className="w-4 h-4" />
+                        Request Mentor Review
+                      </Button>
+                    )}
+                    {activeReviewRequest && (
+                      <Button
+                        variant="outline"
+                        className="gap-1.5 border-[#143A50] text-[#143A50]"
+                        onClick={() => setShowCollabReview(true)}
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        View Review ({activeReviewRequest.status.replace(/_/g, ' ')})
                       </Button>
                     )}
                   </div>
@@ -407,6 +429,26 @@ export default function DocumentViewer({
           version1={comparisonVersions[0]}
           version2={comparisonVersions[1]}
           onClose={() => setShowComparison(false)}
+        />
+      )}
+
+      {/* Request Mentor Review */}
+      {showRequestReview && (
+        <RequestMentorReview
+          document={document}
+          onClose={() => setShowRequestReview(false)}
+          onSubmitted={() => queryClient.invalidateQueries(['review-requests', document?.id])}
+        />
+      )}
+
+      {/* Collaborative Review Panel */}
+      {showCollabReview && activeReviewRequest && (
+        <CollaborativeDocumentReview
+          document={{ ...document, content: editedContent }}
+          reviewRequest={activeReviewRequest}
+          onClose={() => setShowCollabReview(false)}
+          userRole={userRole}
+          currentUserEmail={user?.email}
         />
       )}
     </div>
