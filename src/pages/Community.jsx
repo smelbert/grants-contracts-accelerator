@@ -33,7 +33,8 @@ const iconMap = {
   GraduationCap,
   MessageCircle,
   Users,
-  Target: Sparkles
+  Target: Sparkles,
+  Sparkles,
 };
 
 export default function CommunityPage() {
