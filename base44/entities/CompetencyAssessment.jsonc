@@ -1,0 +1,118 @@
+{
+  "name": "CompetencyAssessment",
+  "type": "object",
+  "properties": {
+    "consultant_email": {
+      "type": "string"
+    },
+    "assessment_title": {
+      "type": "string"
+    },
+    "assessment_type": {
+      "type": "string",
+      "enum": [
+        "compliance_quiz",
+        "reviewer_simulation",
+        "strategy_brief",
+        "budget_alignment_simulation",
+        "ethics_scenario",
+        "clean_draft_submission",
+        "qa_calibration_test",
+        "mentorship_evaluation",
+        "final_authority_simulation",
+        "trainer_certification"
+      ]
+    },
+    "level_requirement": {
+      "type": "string",
+      "enum": [
+        "level-1",
+        "level-2",
+        "level-3"
+      ]
+    },
+    "related_module": {
+      "type": "string",
+      "description": "Module ID this assessment validates"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "submitted",
+        "scored",
+        "passed",
+        "failed"
+      ],
+      "default": "not_started"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "passing_score": {
+      "type": "number",
+      "default": 80
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "attempt_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "score": {
+            "type": "number"
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "evaluator_email": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "submission_url": {
+      "type": "string",
+      "description": "Link to submitted work"
+    },
+    "evaluator_email": {
+      "type": "string"
+    },
+    "evaluator_feedback": {
+      "type": "string"
+    },
+    "rubric_scores": {
+      "type": "object",
+      "description": "Detailed scoring by rubric criteria"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "required_for_promotion": {
+      "type": "boolean",
+      "default": false,
+      "description": "Must pass to advance levels"
+    },
+    "retake_allowed": {
+      "type": "boolean",
+      "default": true
+    },
+    "max_attempts": {
+      "type": "number",
+      "default": 3
+    }
+  },
+  "required": [
+    "consultant_email",
+    "assessment_title",
+    "assessment_type",
+    "level_requirement"
+  ]
+}

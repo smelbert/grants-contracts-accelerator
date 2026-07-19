@@ -1,0 +1,43 @@
+{
+  "name": "DocumentRequirement",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort"
+    },
+    "document_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "required_for_completion": {
+      "type": "boolean",
+      "default": true
+    },
+    "required_for_consultation": {
+      "type": "boolean",
+      "default": false
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "mission_statement",
+        "budget",
+        "board_list",
+        "irs_determination_letter",
+        "financial_statements",
+        "other"
+      ]
+    },
+    "order": {
+      "type": "number",
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "cohort_id",
+    "document_name"
+  ]
+}

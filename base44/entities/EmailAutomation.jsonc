@@ -1,0 +1,54 @@
+{
+  "name": "EmailAutomation",
+  "type": "object",
+  "properties": {
+    "automation_name": {
+      "type": "string"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "contact_added",
+        "segment_joined",
+        "email_opened",
+        "link_clicked",
+        "custom_action"
+      ],
+      "description": "What triggers this automation"
+    },
+    "trigger_conditions": {
+      "type": "object",
+      "description": "Specific conditions for trigger"
+    },
+    "email_sequence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "delay_hours": {
+            "type": "number"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Sequence of emails to send"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "total_triggered": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "automation_name",
+    "trigger_type"
+  ]
+}

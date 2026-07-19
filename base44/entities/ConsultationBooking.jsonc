@@ -1,0 +1,77 @@
+{
+  "name": "ConsultationBooking",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "Reference to ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "meeting_duration": {
+      "type": "number",
+      "description": "Duration in minutes (45 or 60)"
+    },
+    "meeting_preference": {
+      "type": "string",
+      "enum": [
+        "online",
+        "in-person"
+      ],
+      "description": "Online video call or face-to-face"
+    },
+    "availability_option_1": {
+      "type": "string",
+      "description": "First availability date and time"
+    },
+    "availability_option_2": {
+      "type": "string",
+      "description": "Second availability date and time"
+    },
+    "availability_option_3": {
+      "type": "string",
+      "description": "Third availability date and time"
+    },
+    "document_link": {
+      "type": "string",
+      "description": "Link to documents for review"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or questions"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_confirmation",
+        "confirmed",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending_confirmation"
+    },
+    "confirmed_date_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Final confirmed appointment time"
+    },
+    "meeting_link": {
+      "type": "string",
+      "description": "Zoom/Google Meet link for online meetings"
+    },
+    "facilitator_notes": {
+      "type": "string",
+      "description": "Internal notes from Charles Watterson"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "participant_email",
+    "meeting_duration",
+    "meeting_preference"
+  ]
+}

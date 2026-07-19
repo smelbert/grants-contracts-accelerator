@@ -1,0 +1,68 @@
+{
+  "name": "EventNotification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string",
+      "description": "ID of the related Event, LiveRoom, or LiveStream"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "event",
+        "live_room",
+        "live_stream"
+      ]
+    },
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "24h_reminder",
+        "1h_reminder",
+        "starting_now",
+        "event_cancelled",
+        "event_updated"
+      ],
+      "description": "Type of notification"
+    },
+    "space_id": {
+      "type": "string",
+      "description": "Community space where event is happening"
+    },
+    "is_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "delivery_method": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "email",
+          "in_app",
+          "push"
+        ]
+      },
+      "default": [
+        "in_app"
+      ]
+    },
+    "scheduled_send_time": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email",
+    "event_id",
+    "event_type",
+    "notification_type"
+  ]
+}

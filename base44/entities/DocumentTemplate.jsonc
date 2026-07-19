@@ -1,0 +1,108 @@
+{
+  "name": "DocumentTemplate",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "Unique identifier (e.g., org-overview, capability-statement)"
+    },
+    "template_name": {
+      "type": "string"
+    },
+    "day": {
+      "type": "string",
+      "enum": [
+        "day1",
+        "day2",
+        "day3"
+      ],
+      "description": "Which day this template belongs to"
+    },
+    "description": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL to the downloadable template file"
+    },
+    "content_html": {
+      "type": "string",
+      "description": "HTML content for web-based templates"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Instructions for completing this template"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "input",
+              "textarea",
+              "select",
+              "signature"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "rows": {
+            "type": "number"
+          },
+          "aiPrompt": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Form fields for fillable templates"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section_title": {
+            "type": "string"
+          },
+          "section_content": {
+            "type": "string"
+          },
+          "field_type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "textarea",
+              "select",
+              "list"
+            ]
+          }
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_edited_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "template_id",
+    "template_name",
+    "day"
+  ]
+}

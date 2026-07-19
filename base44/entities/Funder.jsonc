@@ -1,0 +1,113 @@
+{
+  "name": "Funder",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Funder organization name"
+    },
+    "mission_statement": {
+      "type": "string",
+      "description": "AI-extracted mission statement"
+    },
+    "priority_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Focus areas and priorities"
+    },
+    "typical_award_min": {
+      "type": "number",
+      "description": "Typical minimum award amount"
+    },
+    "typical_award_max": {
+      "type": "number",
+      "description": "Typical maximum award amount"
+    },
+    "geographic_focus": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Geographic regions served"
+    },
+    "past_grants_summary": {
+      "type": "string",
+      "description": "AI-generated summary of past grants"
+    },
+    "irs_990_summary": {
+      "type": "string",
+      "description": "Summary of 990 data if available"
+    },
+    "total_assets": {
+      "type": "number",
+      "description": "From 990 data"
+    },
+    "annual_giving": {
+      "type": "number",
+      "description": "Annual grant distribution"
+    },
+    "website": {
+      "type": "string"
+    },
+    "ein": {
+      "type": "string",
+      "description": "Employer Identification Number"
+    },
+    "ai_research_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_research_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "data_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Sources used for AI research"
+    },
+    "application_requirements": {
+      "type": "string",
+      "description": "Key application requirements and eligibility criteria"
+    },
+    "common_pitfalls": {
+      "type": "string",
+      "description": "Common mistakes applicants make"
+    },
+    "preferred_contacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Key contacts and communication channels"
+    },
+    "related_organization_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Organizations in system that have received funding"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

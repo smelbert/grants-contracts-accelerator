@@ -1,0 +1,58 @@
+{
+  "name": "NotificationPreference",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "new_resources": {
+      "type": "boolean",
+      "default": true
+    },
+    "resource_updates": {
+      "type": "boolean",
+      "default": true
+    },
+    "community_replies": {
+      "type": "boolean",
+      "default": true
+    },
+    "community_new_posts": {
+      "type": "boolean",
+      "default": false,
+      "description": "All new posts in subscribed spaces"
+    },
+    "program_announcements": {
+      "type": "boolean",
+      "default": true
+    },
+    "session_reminders": {
+      "type": "boolean",
+      "default": true
+    },
+    "project_updates": {
+      "type": "boolean",
+      "default": true
+    },
+    "email_digest_frequency": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "daily",
+        "weekly",
+        "never"
+      ],
+      "default": "daily"
+    },
+    "favorite_categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Notify when resources in these categories are added"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

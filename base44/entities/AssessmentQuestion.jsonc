@@ -1,0 +1,64 @@
+{
+  "name": "AssessmentQuestion",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort (allows customization per cohort)"
+    },
+    "assessment_type": {
+      "type": "string",
+      "enum": [
+        "pre",
+        "post"
+      ],
+      "description": "Whether this is for pre or post assessment"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "grants_vs_contracts",
+        "legal_readiness",
+        "financial_readiness",
+        "organizational_capacity",
+        "confidence_level"
+      ]
+    },
+    "question_text": {
+      "type": "string"
+    },
+    "question_type": {
+      "type": "string",
+      "enum": [
+        "multiple_choice",
+        "scale",
+        "yes_no",
+        "text"
+      ],
+      "default": "multiple_choice"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Answer options for multiple choice questions"
+    },
+    "scoring_key": {
+      "type": "object",
+      "description": "Maps answers to point values"
+    },
+    "question_order": {
+      "type": "number"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "assessment_type",
+    "category",
+    "question_text"
+  ]
+}

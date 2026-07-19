@@ -1,0 +1,66 @@
+{
+  "name": "BlogPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "excerpt": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "featured_image": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published"
+      ],
+      "default": "draft"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "seo_title": {
+      "type": "string",
+      "description": "Custom meta title for search engines (50-60 chars recommended)"
+    },
+    "seo_description": {
+      "type": "string",
+      "description": "Meta description for search engines (155-160 chars recommended)"
+    },
+    "og_image_url": {
+      "type": "string",
+      "description": "Open Graph image URL for social media sharing"
+    }
+  },
+  "required": [
+    "title",
+    "slug",
+    "content",
+    "author_email"
+  ]
+}

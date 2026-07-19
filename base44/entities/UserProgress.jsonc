@@ -1,0 +1,90 @@
+{
+  "name": "UserProgress",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "content_id": {
+      "type": "string",
+      "description": "ID of the LearningContent"
+    },
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of ProgramEnrollment if applicable"
+    },
+    "is_started": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Overall progress percentage for the course"
+    },
+    "completed_lessons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "lesson_id": {
+            "type": "string"
+          },
+          "completed_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "time_spent_minutes": {
+            "type": "number"
+          },
+          "quiz_score": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Track completion of individual lessons/modules"
+    },
+    "last_accessed_lesson": {
+      "type": "string",
+      "description": "ID of the last lesson accessed"
+    },
+    "time_spent_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "quiz_attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "attempt_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "score": {
+            "type": "number"
+          },
+          "lesson_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "User's personal notes for this course"
+    }
+  },
+  "required": [
+    "user_email",
+    "content_id"
+  ]
+}

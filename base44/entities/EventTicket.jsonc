@@ -1,0 +1,55 @@
+{
+  "name": "EventTicket",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "registration_id": {
+      "type": "string",
+      "description": "Link to EventRegistration"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "tier_name": {
+      "type": "string"
+    },
+    "price_paid": {
+      "type": "number"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "stripe_payment_intent_id": {
+      "type": "string"
+    },
+    "ticket_code": {
+      "type": "string",
+      "description": "Unique ticket code for check-in"
+    },
+    "checked_in": {
+      "type": "boolean",
+      "default": false
+    },
+    "checked_in_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "event_id",
+    "user_email",
+    "tier_name"
+  ]
+}

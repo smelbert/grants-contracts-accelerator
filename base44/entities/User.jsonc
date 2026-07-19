@@ -1,0 +1,100 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "admin",
+          "user",
+          "coach",
+          "facilitator",
+          "content_creator",
+          "community_moderator",
+          "mentor",
+          "contractor"
+        ]
+      },
+      "default": [
+        "user"
+      ],
+      "description": "User can have multiple roles for flexible permissions"
+    },
+    "access_levels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "learning_hub",
+          "resource_library",
+          "community",
+          "boutique_services",
+          "ai_tools",
+          "workbook",
+          "incubateher_program",
+          "coaching_portal",
+          "admin_portal",
+          "full_platform"
+        ]
+      },
+      "default": [],
+      "description": "Multiple access levels for upsell and flexible access"
+    },
+    "entry_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payment_status": {
+            "type": "string",
+            "enum": [
+              "free",
+              "paid",
+              "comp"
+            ]
+          }
+        }
+      },
+      "description": "Track all ways user gained access (workshop, coaching, incubateher, etc.)"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "profile_image_url": {
+      "type": "string"
+    },
+    "expertise_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "entry_points",
+    "bio",
+    "organization",
+    "title",
+    "phone",
+    "profile_image_url",
+    "expertise_areas"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "LearningFeedback",
+  "type": "object",
+  "properties": {
+    "learning_content_id": {
+      "type": "string",
+      "description": "Reference to LearningContent"
+    },
+    "feedback_type": {
+      "type": "string",
+      "enum": [
+        "question",
+        "feedback",
+        "comment"
+      ],
+      "default": "comment"
+    },
+    "message": {
+      "type": "string",
+      "description": "The question or feedback content"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "is_resolved": {
+      "type": "boolean",
+      "default": false
+    },
+    "response": {
+      "type": "string",
+      "description": "Coach or staff response"
+    },
+    "response_by": {
+      "type": "string",
+      "description": "Email of responder"
+    },
+    "responded_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "learning_content_id",
+    "message",
+    "author_email"
+  ]
+}

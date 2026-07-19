@@ -1,0 +1,85 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User's email (primary key)"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "expertise": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Areas of expertise"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "social_links": {
+      "type": "object",
+      "properties": {
+        "linkedin": {
+          "type": "string"
+        },
+        "twitter": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "members_only",
+        "private"
+      ],
+      "default": "members_only"
+    },
+    "allow_dms": {
+      "type": "boolean",
+      "default": true,
+      "description": "Allow direct messages from other users"
+    },
+    "notification_preferences": {
+      "type": "object",
+      "properties": {
+        "email_notifications": {
+          "type": "boolean",
+          "default": true
+        },
+        "event_reminders": {
+          "type": "boolean",
+          "default": true
+        },
+        "discussion_replies": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "platform_guidelines_accepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "guidelines_accepted_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

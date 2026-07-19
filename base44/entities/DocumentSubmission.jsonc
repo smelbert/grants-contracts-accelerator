@@ -1,0 +1,49 @@
+{
+  "name": "DocumentSubmission",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "document_requirement_id": {
+      "type": "string",
+      "description": "ID of the DocumentRequirement"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "Link to Google Drive, Dropbox, or uploaded file"
+    },
+    "submission_status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "reviewed",
+        "needs_revision",
+        "approved"
+      ],
+      "default": "submitted"
+    },
+    "reviewer_notes": {
+      "type": "string",
+      "description": "Notes from facilitator/coach"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Email of reviewer"
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "document_requirement_id",
+    "participant_email",
+    "document_url"
+  ]
+}

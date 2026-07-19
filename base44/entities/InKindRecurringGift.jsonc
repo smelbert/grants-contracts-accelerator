@@ -1,0 +1,84 @@
+{
+  "name": "InKindRecurringGift",
+  "type": "object",
+  "properties": {
+    "recurring_id": {
+      "type": "string"
+    },
+    "donor_name": {
+      "type": "string"
+    },
+    "donor_type": {
+      "type": "string",
+      "enum": [
+        "Individual",
+        "Corporate",
+        "Faith Community",
+        "Foundation",
+        "Government",
+        "Other"
+      ]
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "Weekly",
+        "Monthly",
+        "Quarterly",
+        "Annually",
+        "One-time recurring"
+      ]
+    },
+    "estimated_annual_fmv": {
+      "type": "number"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "written_agreement": {
+      "type": "string"
+    },
+    "renewal_stewardship_plan": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Pending Renewal",
+        "Expired",
+        "Inactive"
+      ],
+      "default": "Active"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "org_context": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "donor_name",
+    "description",
+    "frequency",
+    "estimated_annual_fmv"
+  ]
+}

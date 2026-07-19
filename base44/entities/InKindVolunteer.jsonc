@@ -1,0 +1,62 @@
+{
+  "name": "InKindVolunteer",
+  "type": "object",
+  "properties": {
+    "vol_id": {
+      "type": "string"
+    },
+    "volunteer_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "activity": {
+      "type": "string"
+    },
+    "program_event": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "number"
+    },
+    "is_specialized": {
+      "type": "boolean",
+      "default": false,
+      "description": "Only specialized professional services count as GAAP revenue per FASB ASU 2020-07"
+    },
+    "profession_if_specialized": {
+      "type": "string"
+    },
+    "fmv_hourly_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "gaap_value": {
+      "type": "number",
+      "default": 0
+    },
+    "mileage": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "org_context": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "volunteer_name",
+    "date",
+    "activity",
+    "hours"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "name": "LearningActivity",
+  "type": "object",
+  "properties": {
+    "learning_content_id": {
+      "type": "string",
+      "description": "Reference to LearningContent"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "flashcards",
+        "matching",
+        "quiz",
+        "exercise"
+      ],
+      "description": "Type of interactive activity"
+    },
+    "title": {
+      "type": "string"
+    },
+    "instructions": {
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "term": {
+            "type": "string"
+          },
+          "definition": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Activity items (flashcard pairs, matching pairs, quiz questions)"
+    },
+    "passing_score": {
+      "type": "number",
+      "description": "Percentage needed to pass (for quizzes)"
+    }
+  },
+  "required": [
+    "learning_content_id",
+    "activity_type",
+    "title"
+  ]
+}

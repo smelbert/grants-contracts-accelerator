@@ -1,0 +1,162 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Reference to Organization"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "funding_opportunity_id": {
+      "type": "string",
+      "description": "Optional link to FundingOpportunity"
+    },
+    "opportunity_title": {
+      "type": "string",
+      "description": "Cached opportunity title"
+    },
+    "funder_name": {
+      "type": "string",
+      "description": "Name of funder (from opportunity or manual entry)"
+    },
+    "project_type": {
+      "type": "string",
+      "enum": [
+        "grant_application",
+        "contract_proposal",
+        "donor_campaign",
+        "general"
+      ],
+      "default": "general"
+    },
+    "funding_lane": {
+      "type": "string",
+      "enum": [
+        "grants",
+        "contracts",
+        "donors",
+        "public_funds"
+      ],
+      "description": "Funding type/lane"
+    },
+    "proposal_stage": {
+      "type": "string",
+      "enum": [
+        "drafting",
+        "sent",
+        "pending",
+        "awarded",
+        "declined"
+      ],
+      "default": "drafting",
+      "description": "Lifecycle stage of proposal/submission"
+    },
+    "amount_asked": {
+      "type": "number",
+      "description": "Amount requested in this proposal"
+    },
+    "amount_awarded": {
+      "type": "number",
+      "description": "Amount awarded (if successful)"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date",
+      "description": "Submission deadline"
+    },
+    "submission_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When proposal was submitted"
+    },
+    "expected_notification_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When funder is expected to notify"
+    },
+    "final_decision_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date decision was received"
+    },
+    "rolling_deadline": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "in_progress",
+        "review",
+        "submitted",
+        "completed",
+        "on_hold"
+      ],
+      "default": "planning",
+      "description": "Overall project status"
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "team_members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of user emails"
+    },
+    "template_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Associated templates"
+    },
+    "document_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Associated documents"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "next_follow_up_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Scheduled follow-up with funder"
+    },
+    "follow_up_frequency_days": {
+      "type": "number",
+      "description": "Days between follow-up reminders (if set)"
+    },
+    "last_follow_up_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last follow-up action"
+    },
+    "notes": {
+      "type": "string",
+      "description": "General project notes"
+    }
+  },
+  "required": [
+    "organization_id",
+    "project_name"
+  ]
+}

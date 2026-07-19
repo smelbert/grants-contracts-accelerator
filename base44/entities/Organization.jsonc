@@ -1,0 +1,148 @@
+{
+  "name": "Organization",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "Link to ProgramEnrollment if applicable"
+    },
+    "primary_contact_email": {
+      "type": "string"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "organization_type": {
+      "type": "string",
+      "description": "e.g., 501(c)(3), nonprofit, etc."
+    },
+    "ein": {
+      "type": "string",
+      "description": "Tax ID / EIN"
+    },
+    "founding_year": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "mission_statement": {
+      "type": "string"
+    },
+    "vision_statement": {
+      "type": "string"
+    },
+    "organizational_values": {
+      "type": "string"
+    },
+    "programs_offered": {
+      "type": "string",
+      "description": "Description of programs and services"
+    },
+    "target_population": {
+      "type": "string"
+    },
+    "geographic_service_area": {
+      "type": "string"
+    },
+    "annual_people_served": {
+      "type": "string"
+    },
+    "primary_leader_name": {
+      "type": "string"
+    },
+    "primary_leader_title": {
+      "type": "string"
+    },
+    "secondary_leader_name": {
+      "type": "string"
+    },
+    "secondary_leader_title": {
+      "type": "string"
+    },
+    "executive_director": {
+      "type": "string"
+    },
+    "board_chair": {
+      "type": "string"
+    },
+    "staff_count": {
+      "type": "string"
+    },
+    "volunteer_count": {
+      "type": "string"
+    },
+    "board_size": {
+      "type": "string"
+    },
+    "revenue_stage": {
+      "type": "string"
+    },
+    "annual_budget": {
+      "type": "string"
+    },
+    "funding_sources": {
+      "type": "string"
+    },
+    "largest_grant_amount": {
+      "type": "string"
+    },
+    "grant_experience_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "some_attempts",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "has_strategic_plan": {
+      "type": "boolean",
+      "default": false
+    },
+    "has_financial_systems": {
+      "type": "boolean",
+      "default": false
+    },
+    "has_evaluation_system": {
+      "type": "boolean",
+      "default": false
+    },
+    "has_data_tracking": {
+      "type": "boolean",
+      "default": false
+    },
+    "mailing_address": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "social_media": {
+      "type": "string"
+    },
+    "social_media_handles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "funding_goals": {
+      "type": "string"
+    },
+    "capacity_building_needs": {
+      "type": "string"
+    },
+    "technical_assistance_needed": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "object",
+      "description": "Signature field data"
+    }
+  },
+  "required": [
+    "primary_contact_email"
+  ]
+}

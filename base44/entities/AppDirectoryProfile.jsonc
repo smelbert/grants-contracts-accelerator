@@ -1,0 +1,58 @@
+{
+  "name": "AppDirectoryProfile",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "User's full name"
+    },
+    "organization_name": {
+      "type": "string",
+      "description": "Organization/business name"
+    },
+    "location": {
+      "type": "string",
+      "description": "Geographic location(s) served"
+    },
+    "website": {
+      "type": "string",
+      "description": "Website URL"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "service_overview": {
+      "type": "string",
+      "description": "Brief overview of services/expertise"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Professional bio"
+    },
+    "shared_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of field names user has chosen to share (e.g., 'name', 'organization_name', 'location', 'website', 'phone', 'service_overview', 'bio')"
+    },
+    "is_visible": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the profile is visible in the directory"
+    },
+    "visibility_added_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user opted into the directory"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

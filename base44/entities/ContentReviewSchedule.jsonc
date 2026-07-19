@@ -1,0 +1,42 @@
+{
+  "name": "ContentReviewSchedule",
+  "type": "object",
+  "properties": {
+    "learning_content_id": {
+      "type": "string"
+    },
+    "content_owner_email": {
+      "type": "string",
+      "description": "Admin responsible for this content"
+    },
+    "review_frequency_days": {
+      "type": "number",
+      "default": 180,
+      "description": "How often content should be reviewed"
+    },
+    "last_review_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_review_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notification_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "notification_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "auto_schedule_enabled": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "learning_content_id",
+    "content_owner_email"
+  ]
+}

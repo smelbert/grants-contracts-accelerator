@@ -1,0 +1,145 @@
+{
+  "name": "RegistrationPage",
+  "type": "object",
+  "properties": {
+    "page_name": {
+      "type": "string",
+      "description": "Name of the registration page"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL slug for the registration page"
+    },
+    "registration_type": {
+      "type": "string",
+      "enum": [
+        "workshop",
+        "training",
+        "coaching",
+        "community_only",
+        "course"
+      ],
+      "description": "Type of registration"
+    },
+    "title": {
+      "type": "string",
+      "description": "Page title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Page description"
+    },
+    "hero_image_url": {
+      "type": "string"
+    },
+    "offering_details": {
+      "type": "object",
+      "properties": {
+        "duration": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "dates": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "free",
+            "one_time",
+            "package",
+            "per_session"
+          ]
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "stripe_price_id": {
+          "type": "string"
+        }
+      }
+    },
+    "access_grants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Multiple access components granted after registration (learning_hub, resource_library, community, boutique_services, ai_tools, workbook, etc.)"
+    },
+    "community_space_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific community spaces to grant access to"
+    },
+    "requires_intake_form": {
+      "type": "boolean",
+      "default": false
+    },
+    "custom_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "textarea",
+              "select",
+              "multiple_choice"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "post_registration_survey_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "max_registrations": {
+      "type": "number"
+    },
+    "current_registrations": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "page_name",
+    "slug",
+    "registration_type",
+    "title"
+  ]
+}

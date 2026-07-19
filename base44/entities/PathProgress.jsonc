@@ -1,0 +1,53 @@
+{
+  "name": "PathProgress",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "path_id": {
+      "type": "string",
+      "description": "ID of the CuratedPath"
+    },
+    "is_started": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "current_module_index": {
+      "type": "number",
+      "default": 0,
+      "description": "Index of the current module in the sequence"
+    },
+    "completed_modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of completed learning content IDs"
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "badge_earned": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_email",
+    "path_id"
+  ]
+}

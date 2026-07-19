@@ -1,0 +1,66 @@
+{
+  "name": "ClientInteraction",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Reference to Organization"
+    },
+    "interaction_type": {
+      "type": "string",
+      "enum": [
+        "email",
+        "call",
+        "meeting",
+        "note",
+        "support_ticket",
+        "review_session",
+        "onboarding",
+        "check_in"
+      ],
+      "description": "Type of interaction"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "neutral",
+        "needs_followup",
+        "issue_resolved",
+        "escalated"
+      ]
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "next_action_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "staff_member": {
+      "type": "string"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_internal_note": {
+      "type": "boolean",
+      "default": false,
+      "description": "Only visible to staff"
+    }
+  },
+  "required": [
+    "organization_id",
+    "interaction_type",
+    "subject"
+  ]
+}

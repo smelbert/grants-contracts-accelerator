@@ -1,0 +1,157 @@
+{
+  "name": "UserProject",
+  "type": "object",
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "Name of the project (e.g., 'ABC Foundation Grant Application')"
+    },
+    "description": {
+      "type": "string"
+    },
+    "project_type": {
+      "type": "string",
+      "enum": [
+        "grant_application",
+        "rfp_response",
+        "donor_proposal",
+        "strategic_plan",
+        "budget_development",
+        "other"
+      ]
+    },
+    "owner_email": {
+      "type": "string",
+      "description": "Primary owner of the project"
+    },
+    "organization_id": {
+      "type": "string",
+      "description": "Associated organization"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "ID of the template this project was created from"
+    },
+    "template_snapshot": {
+      "type": "object",
+      "description": "Snapshot of template content at project creation"
+    },
+    "working_content": {
+      "type": "string",
+      "description": "Current working version of the document content"
+    },
+    "collaborators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "editor",
+              "reviewer",
+              "viewer"
+            ]
+          },
+          "added_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Users who can collaborate on this project"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "ready_for_review",
+        "under_review",
+        "submitted",
+        "awarded",
+        "declined",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "funding_amount": {
+      "type": "number"
+    },
+    "funder_name": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "file_url": {
+            "type": "string"
+          },
+          "uploaded_by": {
+            "type": "string"
+          },
+          "uploaded_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "change_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user_email": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Track all changes made to the project"
+    },
+    "last_edited_by": {
+      "type": "string"
+    },
+    "last_edited_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "project_name",
+    "project_type",
+    "owner_email"
+  ]
+}

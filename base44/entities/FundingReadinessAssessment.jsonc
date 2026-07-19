@@ -1,0 +1,69 @@
+{
+  "name": "FundingReadinessAssessment",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "legal_status": {
+      "type": "string",
+      "enum": [
+        "full",
+        "partial",
+        "none"
+      ]
+    },
+    "financial_records": {
+      "type": "string",
+      "enum": [
+        "professional",
+        "basic",
+        "none"
+      ]
+    },
+    "program_clarity": {
+      "type": "string",
+      "enum": [
+        "documented",
+        "developing",
+        "exploring"
+      ]
+    },
+    "capacity": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "tight",
+        "overextended"
+      ]
+    },
+    "overall_score": {
+      "type": "number",
+      "description": "Calculated readiness score out of 100"
+    },
+    "readiness_level": {
+      "type": "string",
+      "enum": [
+        "not_ready",
+        "building_readiness",
+        "ready",
+        "highly_ready"
+      ],
+      "description": "Overall readiness category"
+    },
+    "assessment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "score_breakdown": {
+      "type": "object",
+      "description": "Detailed breakdown of scores by category"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

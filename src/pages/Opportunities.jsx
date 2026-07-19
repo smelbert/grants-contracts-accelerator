@@ -42,6 +42,11 @@ function DeadlineBadge({ deadline, rolling }) {
   );
   if (!deadline) return null;
   const d = new Date(deadline);
+  if (isNaN(d.getTime())) return (
+    <span className="inline-flex items-center gap-1 text-xs bg-slate-50 text-slate-600 border border-slate-200 rounded-full px-2 py-0.5">
+      <Calendar className="w-3 h-3" /> {String(deadline).slice(0, 20)}
+    </span>
+  );
   const daysLeft = differenceInDays(d, new Date());
   if (isPast(d)) return (
     <span className="inline-flex items-center gap-1 text-xs bg-slate-100 text-slate-500 border border-slate-200 rounded-full px-2 py-0.5">
@@ -230,12 +235,17 @@ function OpportunityDetailModal({ opp, isSaved, onClose, onSave, onUnsave, onRep
                 <AmountDisplay min={opp.amount_min} max={opp.amount_max} />
               </div>
             )}
-            {deadline && (
-              <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-                <p className="text-xs text-slate-500 font-medium mb-1">Deadline</p>
-                <p className="text-sm font-semibold text-slate-900">{format(new Date(deadline), 'MMM d, yyyy')}</p>
-              </div>
-            )}
+            {deadline && (() => {
+              const d = new Date(deadline);
+              return (
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                  <p className="text-xs text-slate-500 font-medium mb-1">Deadline</p>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {isNaN(d.getTime()) ? String(deadline) : format(d, 'MMM d, yyyy')}
+                  </p>
+                </div>
+              );
+            })()}
             {opp.rolling_deadline && (
               <div className="bg-emerald-50 rounded-xl p-3 border border-emerald-100">
                 <p className="text-xs text-emerald-600 font-medium mb-1">Deadline</p>

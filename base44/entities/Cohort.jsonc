@@ -1,0 +1,69 @@
+{
+  "name": "Cohort",
+  "type": "object",
+  "properties": {
+    "cohort_name": {
+      "type": "string",
+      "description": "Name of the cohort"
+    },
+    "course_id": {
+      "type": "string",
+      "description": "ID of the LearningContent this cohort is for"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "description": {
+      "type": "string"
+    },
+    "max_members": {
+      "type": "number",
+      "default": 30
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "active",
+        "completed",
+        "cancelled"
+      ],
+      "default": "upcoming"
+    },
+    "instructor_email": {
+      "type": "string",
+      "description": "Primary instructor for this cohort"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Cohort-specific resources"
+    },
+    "communication_channel_id": {
+      "type": "string",
+      "description": "Associated chat channel for cohort communication"
+    }
+  },
+  "required": [
+    "cohort_name",
+    "course_id"
+  ]
+}

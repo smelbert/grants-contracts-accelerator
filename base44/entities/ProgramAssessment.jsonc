@@ -1,0 +1,61 @@
+{
+  "name": "ProgramAssessment",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "assessment_type": {
+      "type": "string",
+      "enum": [
+        "pre",
+        "post",
+        "evaluation"
+      ]
+    },
+    "is_draft": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if the participant saved progress but has not yet submitted"
+    },
+    "_form_type": {
+      "type": "string",
+      "description": "Internal type tag (e.g. 'evaluation')"
+    },
+    "responses": {
+      "type": "object",
+      "description": "Assessment responses"
+    },
+    "grants_vs_contracts_score": {
+      "type": "number",
+      "description": "0-100 score"
+    },
+    "legal_readiness_score": {
+      "type": "number"
+    },
+    "financial_readiness_score": {
+      "type": "number"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "1-10 scale"
+    },
+    "total_score": {
+      "type": "number",
+      "description": "Aggregate score"
+    },
+    "next_steps": {
+      "type": "string",
+      "description": "Participant's planned next steps (post only)"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "participant_email",
+    "assessment_type"
+  ]
+}

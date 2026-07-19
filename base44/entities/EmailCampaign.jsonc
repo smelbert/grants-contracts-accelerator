@@ -1,0 +1,68 @@
+{
+  "name": "EmailCampaign",
+  "type": "object",
+  "properties": {
+    "campaign_name": {
+      "type": "string"
+    },
+    "subject_line": {
+      "type": "string"
+    },
+    "preview_text": {
+      "type": "string"
+    },
+    "email_body": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "scheduled",
+        "sent",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "target_segments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Which contact segments to send to"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_recipients": {
+      "type": "number",
+      "default": 0
+    },
+    "total_opened": {
+      "type": "number",
+      "default": 0
+    },
+    "total_clicked": {
+      "type": "number",
+      "default": 0
+    },
+    "open_rate": {
+      "type": "number",
+      "default": 0
+    },
+    "click_rate": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "campaign_name",
+    "subject_line",
+    "email_body"
+  ]
+}

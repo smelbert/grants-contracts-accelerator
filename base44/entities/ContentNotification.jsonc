@@ -1,0 +1,60 @@
+{
+  "name": "ContentNotification",
+  "type": "object",
+  "properties": {
+    "learning_content_id": {
+      "type": "string"
+    },
+    "recipient_email": {
+      "type": "string"
+    },
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "review_due",
+        "feedback_critical",
+        "auto_categorized",
+        "update_scheduled",
+        "version_created"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "action_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "action_url": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional context data"
+    }
+  },
+  "required": [
+    "learning_content_id",
+    "recipient_email",
+    "notification_type",
+    "subject",
+    "message"
+  ]
+}

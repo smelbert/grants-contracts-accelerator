@@ -1,0 +1,111 @@
+{
+  "name": "ProposalWorkflow",
+  "type": "object",
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "description": "Reference to FundingOpportunity"
+    },
+    "workflow_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "in_progress",
+        "review",
+        "submitted",
+        "completed"
+      ],
+      "default": "planning"
+    },
+    "proposal_lead": {
+      "type": "string",
+      "description": "Email of lead person"
+    },
+    "team_members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of team member emails"
+    },
+    "final_deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section_id": {
+            "type": "string"
+          },
+          "section_name": {
+            "type": "string"
+          },
+          "section_type": {
+            "type": "string",
+            "enum": [
+              "executive_summary",
+              "program_description",
+              "logic_model",
+              "budget_narrative",
+              "budget_detail",
+              "evaluation_plan",
+              "sustainability",
+              "organizational_capacity",
+              "letters_of_support",
+              "other"
+            ]
+          },
+          "assigned_to": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "not_started",
+              "in_progress",
+              "draft_complete",
+              "in_review",
+              "approved"
+            ],
+            "default": "not_started"
+          },
+          "template_id": {
+            "type": "string"
+          },
+          "document_id": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "completion_percentage": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      }
+    },
+    "overall_progress": {
+      "type": "number",
+      "default": 0,
+      "description": "Overall workflow completion percentage"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "opportunity_id",
+    "workflow_name"
+  ]
+}

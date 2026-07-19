@@ -1,0 +1,53 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "tier": {
+      "type": "string",
+      "enum": [
+        "base",
+        "mid",
+        "premium"
+      ],
+      "default": "base",
+      "description": "Current subscription tier"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "cancelled",
+        "past_due"
+      ],
+      "default": "active"
+    },
+    "monthly_cost": {
+      "type": "number",
+      "description": "Monthly subscription cost in dollars"
+    },
+    "billing_cycle_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "billing_cycle_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "stripe_subscription_id": {
+      "type": "string"
+    },
+    "payment_method_last4": {
+      "type": "string"
+    },
+    "payment_method_brand": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tier",
+    "status"
+  ]
+}

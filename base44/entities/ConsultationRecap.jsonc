@@ -1,0 +1,61 @@
+{
+  "name": "ConsultationRecap",
+  "type": "object",
+  "properties": {
+    "booking_id": {
+      "type": "string",
+      "description": "ID of the ConsultationBooking"
+    },
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "consultant_email": {
+      "type": "string"
+    },
+    "consultation_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "strengths_identified": {
+      "type": "string",
+      "description": "Key organizational strengths"
+    },
+    "gaps_identified": {
+      "type": "string",
+      "description": "Areas needing improvement"
+    },
+    "readiness_level": {
+      "type": "string",
+      "enum": [
+        "not_ready",
+        "emerging",
+        "competitive",
+        "highly_competitive"
+      ]
+    },
+    "recommended_next_steps": {
+      "type": "string",
+      "description": "Action items for participant"
+    },
+    "internal_notes": {
+      "type": "string",
+      "description": "Private notes for EIS team only"
+    },
+    "follow_up_needed": {
+      "type": "boolean",
+      "default": false
+    },
+    "follow_up_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "participant_email",
+    "consultant_email"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "name": "LiveRoom",
+  "type": "object",
+  "properties": {
+    "room_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "room_type": {
+      "type": "string",
+      "enum": [
+        "webinar",
+        "workshop",
+        "office_hours",
+        "networking",
+        "class"
+      ],
+      "default": "webinar"
+    },
+    "scheduled_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduled_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "host_email": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "max_participants": {
+      "type": "number",
+      "default": 100
+    },
+    "meeting_url": {
+      "type": "string",
+      "description": "URL for the live room session"
+    },
+    "room_password": {
+      "type": "string"
+    },
+    "recording_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "recording_url": {
+      "type": "string"
+    },
+    "transcript_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "live",
+        "ended",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "space_id": {
+      "type": "string",
+      "description": "Community space this room belongs to"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of participant emails"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "room_name",
+    "scheduled_start",
+    "host_email"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "name": "LearningRequest",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Reference to Organization"
+    },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "course",
+        "webinar",
+        "workshop",
+        "training",
+        "handout",
+        "guide"
+      ],
+      "description": "Type of learning content requested"
+    },
+    "topic": {
+      "type": "string",
+      "description": "Requested topic or subject"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what they need"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "related_opportunity_id": {
+      "type": "string",
+      "description": "If related to a specific opportunity"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "in_review",
+        "approved",
+        "in_development",
+        "completed",
+        "declined"
+      ],
+      "default": "submitted"
+    },
+    "requester_email": {
+      "type": "string"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "fulfilled_content_id": {
+      "type": "string",
+      "description": "Reference to LearningContent when completed"
+    }
+  },
+  "required": [
+    "topic",
+    "request_type",
+    "requester_email"
+  ]
+}

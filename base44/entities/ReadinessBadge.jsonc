@@ -1,0 +1,48 @@
+{
+  "name": "ReadinessBadge",
+  "type": "object",
+  "properties": {
+    "badge_type": {
+      "type": "string",
+      "enum": [
+        "self_attested_ready",
+        "coach_verified_ready"
+      ],
+      "description": "Type of readiness verification"
+    },
+    "funding_lane": {
+      "type": "string",
+      "enum": [
+        "grants",
+        "contracts",
+        "donors",
+        "public_funds"
+      ]
+    },
+    "attested_by_user_id": {
+      "type": "string"
+    },
+    "verified_by_coach_id": {
+      "type": "string"
+    },
+    "attested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "verification_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "badge_type",
+    "funding_lane"
+  ]
+}

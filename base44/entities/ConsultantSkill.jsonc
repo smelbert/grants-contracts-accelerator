@@ -1,0 +1,135 @@
+{
+  "name": "ConsultantSkill",
+  "type": "object",
+  "properties": {
+    "consultant_email": {
+      "type": "string",
+      "description": "Email of the consultant"
+    },
+    "skill_category": {
+      "type": "string",
+      "enum": [
+        "grant_writing",
+        "proposal_development",
+        "budget_development",
+        "contract_management",
+        "pitch_coaching",
+        "compliance",
+        "report_writing",
+        "client_communication",
+        "research",
+        "project_management"
+      ]
+    },
+    "skill_name": {
+      "type": "string",
+      "description": "Specific skill within the category"
+    },
+    "self_assessment_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Consultant's self-assessed skill level (1-5)"
+    },
+    "coach_validated_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Coach's validated skill level (1-5)"
+    },
+    "ai_projected_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "AI-calculated skill level based on performance data"
+    },
+    "progression_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "number"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "self_assessment",
+              "coach_validation",
+              "ai_calculation"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Historical progression of skill levels"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "training_completed",
+              "document_approved",
+              "feedback_received",
+              "milestone_achieved"
+            ]
+          },
+          "reference_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "impact_score": {
+            "type": "number",
+            "description": "How much this evidence impacts skill level"
+          }
+        }
+      },
+      "description": "Evidence supporting skill level"
+    },
+    "last_self_assessed": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_coach_validated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_ai_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coach_notes": {
+      "type": "string",
+      "description": "Coach's notes on skill development"
+    },
+    "target_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Target skill level for development plan"
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Target date to reach target level"
+    }
+  },
+  "required": [
+    "consultant_email",
+    "skill_category",
+    "skill_name"
+  ]
+}

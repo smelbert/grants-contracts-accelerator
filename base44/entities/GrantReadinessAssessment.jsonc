@@ -1,0 +1,53 @@
+{
+  "name": "GrantReadinessAssessment",
+  "type": "object",
+  "properties": {
+    "assessment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "level_1_responses": {
+      "type": "object",
+      "description": "Foundational Readiness responses"
+    },
+    "level_1_score": {
+      "type": "number",
+      "default": 0
+    },
+    "level_2_responses": {
+      "type": "object",
+      "description": "Fundability Readiness responses"
+    },
+    "level_2_score": {
+      "type": "number",
+      "default": 0
+    },
+    "level_3_responses": {
+      "type": "object",
+      "description": "Competitive Readiness responses"
+    },
+    "level_3_score": {
+      "type": "number",
+      "default": 0
+    },
+    "total_score": {
+      "type": "number",
+      "default": 0
+    },
+    "readiness_level": {
+      "type": "string",
+      "enum": [
+        "apply_now",
+        "prepare_first",
+        "foundation_building"
+      ],
+      "description": "Based on total score"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_date"
+  ]
+}

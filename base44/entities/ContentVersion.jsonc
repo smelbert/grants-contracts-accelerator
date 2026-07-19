@@ -1,0 +1,60 @@
+{
+  "name": "ContentVersion",
+  "type": "object",
+  "properties": {
+    "content_id": {
+      "type": "string",
+      "description": "ID of the LearningContent record"
+    },
+    "version_number": {
+      "type": "number",
+      "description": "Version number (1, 2, 3, etc.)"
+    },
+    "content_snapshot": {
+      "type": "object",
+      "description": "Snapshot of the content at this version"
+    },
+    "change_description": {
+      "type": "string",
+      "description": "Description of what changed"
+    },
+    "changed_by": {
+      "type": "string",
+      "description": "Email of user who made the change"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_review",
+        "approved",
+        "rejected",
+        "published"
+      ],
+      "default": "draft"
+    },
+    "reviewer_email": {
+      "type": "string",
+      "description": "Email of assigned reviewer"
+    },
+    "review_notes": {
+      "type": "string",
+      "description": "Feedback from reviewer"
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_current": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the current published version"
+    }
+  },
+  "required": [
+    "content_id",
+    "version_number",
+    "content_snapshot",
+    "changed_by"
+  ]
+}

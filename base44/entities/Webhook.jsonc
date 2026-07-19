@@ -1,0 +1,44 @@
+{
+  "name": "Webhook",
+  "type": "object",
+  "properties": {
+    "webhook_name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Events that trigger this webhook"
+    },
+    "secret": {
+      "type": "string",
+      "description": "Webhook signing secret"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_triggered": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_calls": {
+      "type": "number",
+      "default": 0
+    },
+    "failed_calls": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "webhook_name",
+    "url",
+    "events"
+  ]
+}

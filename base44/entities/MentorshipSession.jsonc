@@ -1,0 +1,55 @@
+{
+  "name": "MentorshipSession",
+  "type": "object",
+  "properties": {
+    "mentorship_id": {
+      "type": "string",
+      "description": "ID of the Mentorship relationship"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 60
+    },
+    "meeting_link": {
+      "type": "string",
+      "description": "Video conference link"
+    },
+    "agenda": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "completed",
+        "cancelled",
+        "no_show"
+      ],
+      "default": "scheduled"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Session notes/summary"
+    },
+    "mentee_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "mentee_feedback": {
+      "type": "string"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "mentorship_id",
+    "scheduled_date"
+  ]
+}

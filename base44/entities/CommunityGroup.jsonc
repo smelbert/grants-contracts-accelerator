@@ -1,0 +1,48 @@
+{
+  "name": "CommunityGroup",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "target_stage": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "early",
+        "operating",
+        "scaling"
+      ]
+    },
+    "group_type": {
+      "type": "string",
+      "enum": [
+        "lab",
+        "office_hours",
+        "peer_review",
+        "workshop"
+      ]
+    },
+    "meeting_schedule": {
+      "type": "string"
+    },
+    "coach_name": {
+      "type": "string"
+    },
+    "max_members": {
+      "type": "number"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "target_stage",
+    "group_type"
+  ]
+}

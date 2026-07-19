@@ -1,0 +1,95 @@
+{
+  "name": "UserInvitation",
+  "type": "object",
+  "properties": {
+    "recipient_email": {
+      "type": "string",
+      "description": "Email address of the invited user"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of the invited user (optional)"
+    },
+    "invited_by_email": {
+      "type": "string",
+      "description": "Email of the user who sent the invitation"
+    },
+    "invited_by_name": {
+      "type": "string",
+      "description": "Name of the user who sent the invitation"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "coach",
+        "admin"
+      ],
+      "default": "user",
+      "description": "Role to assign to the invited user"
+    },
+    "custom_message": {
+      "type": "string",
+      "description": "Custom invitation message from the inviter"
+    },
+    "program_cohort_id": {
+      "type": "string",
+      "description": "Optional: Specific program cohort for invitation (e.g., IncubateHer)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "accepted",
+        "declined",
+        "expired"
+      ],
+      "default": "pending",
+      "description": "Current status of the invitation"
+    },
+    "invitation_token": {
+      "type": "string",
+      "description": "Unique token for tracking the invitation"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the invitation was sent"
+    },
+    "accepted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the invitation was accepted"
+    },
+    "declined_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the invitation was declined"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the invitation expires"
+    },
+    "email_sent": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether notification email was successfully sent"
+    },
+    "email_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the notification email was sent"
+    },
+    "bulk_invitation_id": {
+      "type": "string",
+      "description": "Reference to parent bulk invitation batch"
+    }
+  },
+  "required": [
+    "recipient_email",
+    "invited_by_email",
+    "role"
+  ]
+}

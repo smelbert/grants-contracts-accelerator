@@ -1,0 +1,145 @@
+{
+  "name": "TrainingFrameworkContent",
+  "type": "object",
+  "properties": {
+    "section_id": {
+      "type": "string",
+      "description": "Unique identifier for the section"
+    },
+    "section_type": {
+      "type": "string",
+      "enum": [
+        "philosophy",
+        "level_definition",
+        "module",
+        "expectations",
+        "format"
+      ],
+      "description": "Type of content section"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "level-1",
+        "level-2",
+        "level-3",
+        "all"
+      ],
+      "description": "Which level this applies to"
+    },
+    "module_number": {
+      "type": "number",
+      "description": "For module sections"
+    },
+    "content": {
+      "type": "string",
+      "description": "Main content in markdown/HTML"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Purpose of the module"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Rationale for the module"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL to video content (YouTube, Vimeo, etc.)"
+    },
+    "embedded_content_url": {
+      "type": "string",
+      "description": "URL for embedded content (slides, presentations, etc.)"
+    },
+    "handouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "file_url": {
+            "type": "string"
+          },
+          "file_type": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Downloadable handouts, PowerPoints, PDFs, etc."
+    },
+    "key_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Bullet points for quick reference"
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "required_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Required outputs or deliverables"
+    },
+    "level_expectations": {
+      "type": "object",
+      "properties": {
+        "level1": {
+          "type": "string"
+        },
+        "level2": {
+          "type": "string"
+        },
+        "level3": {
+          "type": "string"
+        }
+      },
+      "description": "Different expectations per level"
+    },
+    "promotion_gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Requirements for level promotion"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_edited_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "section_id",
+    "section_type",
+    "title"
+  ]
+}

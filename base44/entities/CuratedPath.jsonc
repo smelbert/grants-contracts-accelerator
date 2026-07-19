@@ -1,0 +1,65 @@
+{
+  "name": "CuratedPath",
+  "type": "object",
+  "properties": {
+    "path_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "skill_track": {
+      "type": "string",
+      "enum": [
+        "grant_writing_mastery",
+        "contract_excellence",
+        "donor_relations",
+        "nonprofit_leadership",
+        "evaluation_impact",
+        "budget_finance"
+      ]
+    },
+    "difficulty_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "estimated_hours": {
+      "type": "number"
+    },
+    "module_sequence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "learning_content_id": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "is_required": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    "completion_badge": {
+      "type": "string",
+      "description": "Badge awarded upon completion"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "path_name",
+    "skill_track",
+    "difficulty_level"
+  ]
+}

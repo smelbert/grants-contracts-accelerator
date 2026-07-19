@@ -1,0 +1,35 @@
+{
+  "name": "ChatChannel",
+  "type": "object",
+  "properties": {
+    "channel_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "channel_type": {
+      "type": "string",
+      "enum": [
+        "public",
+        "private",
+        "direct_message"
+      ],
+      "default": "public"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of member emails"
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "channel_name"
+  ]
+}

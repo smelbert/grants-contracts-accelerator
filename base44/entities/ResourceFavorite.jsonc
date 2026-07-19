@@ -1,0 +1,53 @@
+{
+  "name": "ResourceFavorite",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who favorited the resource"
+    },
+    "resource_type": {
+      "type": "string",
+      "enum": [
+        "learning_content",
+        "template",
+        "handout",
+        "document",
+        "external_link"
+      ],
+      "description": "Type of resource being favorited"
+    },
+    "resource_id": {
+      "type": "string",
+      "description": "ID of the resource (if internal)"
+    },
+    "resource_title": {
+      "type": "string",
+      "description": "Title of the resource"
+    },
+    "resource_url": {
+      "type": "string",
+      "description": "URL to access the resource"
+    },
+    "resource_metadata": {
+      "type": "object",
+      "description": "Additional metadata about the resource"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Personal notes about why this was favorited"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Custom tags for organization"
+    }
+  },
+  "required": [
+    "user_email",
+    "resource_type",
+    "resource_title"
+  ]
+}

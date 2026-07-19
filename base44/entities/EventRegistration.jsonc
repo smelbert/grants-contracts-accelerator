@@ -1,0 +1,41 @@
+{
+  "name": "EventRegistration",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "attendee_email": {
+      "type": "string"
+    },
+    "attendee_name": {
+      "type": "string"
+    },
+    "registration_status": {
+      "type": "string",
+      "enum": [
+        "registered",
+        "attended",
+        "cancelled"
+      ],
+      "default": "registered"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "checked_in": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "event_id",
+    "attendee_email"
+  ]
+}

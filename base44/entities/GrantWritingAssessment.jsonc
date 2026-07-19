@@ -1,0 +1,182 @@
+{
+  "name": "GrantWritingAssessment",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "assessment_type": {
+      "type": "string",
+      "enum": [
+        "pre",
+        "post"
+      ],
+      "description": "Pre-training or post-training assessment"
+    },
+    "assessment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "training_cohort_id": {
+      "type": "string",
+      "description": "Link to training cohort if applicable"
+    },
+    "responses": {
+      "type": "object",
+      "properties": {
+        "experience_level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "beginner",
+            "intermediate",
+            "advanced"
+          ],
+          "description": "Self-reported experience level"
+        },
+        "years_experience": {
+          "type": "number"
+        },
+        "grants_written": {
+          "type": "number",
+          "description": "Number of grants written in total"
+        },
+        "grants_funded": {
+          "type": "number",
+          "description": "Number of grants that received funding"
+        },
+        "funding_sources_familiarity": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Types of funders they've worked with"
+        },
+        "section_scores": {
+          "type": "object",
+          "properties": {
+            "needs_assessment": {
+              "type": "number",
+              "description": "Score 0-100"
+            },
+            "goals_objectives": {
+              "type": "number"
+            },
+            "methods_strategies": {
+              "type": "number"
+            },
+            "evaluation_plan": {
+              "type": "number"
+            },
+            "budget_development": {
+              "type": "number"
+            },
+            "sustainability": {
+              "type": "number"
+            },
+            "organizational_capacity": {
+              "type": "number"
+            },
+            "narrative_writing": {
+              "type": "number"
+            },
+            "compliance_requirements": {
+              "type": "number"
+            },
+            "research_funder_alignment": {
+              "type": "number"
+            }
+          }
+        },
+        "skill_ratings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "skill": {
+                "type": "string"
+              },
+              "rating": {
+                "type": "number",
+                "description": "1-5 scale"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "scenario_responses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario_id": {
+                "type": "string"
+              },
+              "response": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              },
+              "feedback": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "writing_sample_url": {
+          "type": "string",
+          "description": "URL to uploaded writing sample"
+        },
+        "writing_sample_score": {
+          "type": "number"
+        },
+        "areas_for_improvement": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "overall_score": {
+      "type": "number",
+      "description": "Overall assessment score 0-100"
+    },
+    "level_assigned": {
+      "type": "string",
+      "enum": [
+        "level-1",
+        "level-2",
+        "level-3"
+      ],
+      "description": "Training level assigned based on assessment"
+    },
+    "reviewer_email": {
+      "type": "string",
+      "description": "Admin/coach who reviewed the assessment"
+    },
+    "reviewer_notes": {
+      "type": "string"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_email",
+    "assessment_type"
+  ]
+}

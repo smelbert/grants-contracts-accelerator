@@ -1,0 +1,316 @@
+{
+  "name": "LearningContent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "course",
+        "webinar",
+        "workshop",
+        "template",
+        "guidebook"
+      ]
+    },
+    "program_cohort_id": {
+      "type": "string",
+      "description": "Link to specific program cohort (e.g., IncubateHer)"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false,
+      "description": "Must be set to true by admin before users can see this content in the Learning Hub. IncubateHer-only content is not affected by this flag."
+    },
+    "facilitators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "lead",
+              "co-facilitator",
+              "guest"
+            ],
+            "default": "co-facilitator"
+          }
+        }
+      },
+      "description": "List of facilitators for this course/workshop"
+    },
+    "is_standalone_resource": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this is a standalone resource for the Resource Library, not part of a course"
+    },
+    "course_type": {
+      "type": "string",
+      "enum": [
+        "self_paced",
+        "structured",
+        "scheduled"
+      ],
+      "description": "Self-paced: all content available immediately. Structured: dripped relative to enrollment. Scheduled: dripped relative to start date."
+    },
+    "scheduled_start_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Required for scheduled courses"
+    },
+    "drip_schedule": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section_index": {
+            "type": "number"
+          },
+          "unlock_after_days": {
+            "type": "number",
+            "description": "Days after enrollment/start to unlock this section"
+          }
+        }
+      },
+      "description": "Define when each section becomes available"
+    },
+    "lessons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "lesson_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "content_type": {
+            "type": "string",
+            "enum": [
+              "video",
+              "text",
+              "quiz",
+              "workbook",
+              "interactive",
+              "reading"
+            ]
+          },
+          "duration_minutes": {
+            "type": "number"
+          },
+          "video_url": {
+            "type": "string"
+          },
+          "text_content": {
+            "type": "string"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "quiz_questions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "correct_answer": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Structured lessons/modules within the course"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of courses that must be completed before accessing this course"
+    },
+    "funding_lane": {
+      "type": "string",
+      "enum": [
+        "grants",
+        "contracts",
+        "donors",
+        "public_funds",
+        "general"
+      ]
+    },
+    "target_stages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "target_org_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "content_url": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Direct file URL for downloadable resources (PDFs, documents, etc.)"
+    },
+    "curriculum_sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "duration_minutes": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Structured curriculum broken into sections"
+    },
+    "handouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "file_url",
+              "upload",
+              "html"
+            ],
+            "default": "file_url",
+            "description": "Type of handout source"
+          },
+          "file_url": {
+            "type": "string",
+            "description": "URL for file_url or upload source types"
+          },
+          "file_type": {
+            "type": "string"
+          },
+          "html_content": {
+            "type": "string",
+            "description": "HTML content for html source type"
+          }
+        }
+      },
+      "description": "Downloadable handouts and resources"
+    },
+    "tips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "best_practice",
+              "common_mistake",
+              "pro_tip",
+              "warning"
+            ]
+          }
+        }
+      },
+      "description": "Practical tips and insights"
+    },
+    "is_premium": {
+      "type": "boolean",
+      "default": false
+    },
+    "incubateher_only": {
+      "type": "boolean",
+      "default": false,
+      "description": "Only accessible to IncubateHer program participants"
+    },
+    "agenda_section": {
+      "type": "string",
+      "description": "Link to specific IncubateHer agenda section (intro, legal, financial, grants, contracts, strategy, consultation, wrap)"
+    },
+    "order": {
+      "type": "number"
+    },
+    "meeting_link": {
+      "type": "string",
+      "description": "Google Meet or Zoom link for live sessions"
+    }
+  },
+  "required": [
+    "title",
+    "content_type",
+    "funding_lane"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "FAQItem",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string"
+    },
+    "answer": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "getting_started",
+        "billing_payments",
+        "subscriptions",
+        "features",
+        "technical",
+        "incubateher_program",
+        "coaching",
+        "account_management",
+        "security",
+        "other"
+      ]
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": true
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "helpful_count": {
+      "type": "number",
+      "default": 0
+    },
+    "not_helpful_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_updated_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "question",
+    "answer",
+    "category"
+  ]
+}

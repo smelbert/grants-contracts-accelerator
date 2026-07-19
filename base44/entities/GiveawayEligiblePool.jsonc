@@ -1,0 +1,81 @@
+{
+  "name": "GiveawayEligiblePool",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort"
+    },
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "is_eligible": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_review",
+        "eligible",
+        "disqualified"
+      ],
+      "default": "pending_review"
+    },
+    "applied_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the participant submitted their application"
+    },
+    "sessions_attended_live": {
+      "type": "string",
+      "description": "Self-reported live session attendance"
+    },
+    "videos_watched": {
+      "type": "string",
+      "description": "Self-reported recordings watched"
+    },
+    "workbook_percent": {
+      "type": "string",
+      "description": "Self-reported workbook completion percentage"
+    },
+    "has_documents": {
+      "type": "boolean",
+      "default": false,
+      "description": "Self-reported document completion"
+    },
+    "additional_notes": {
+      "type": "string"
+    },
+    "pre_assessment_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "post_assessment_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "program_evaluation_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "eligibility_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ineligibility_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participant_email",
+    "participant_name"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "ReadinessProfile",
+  "type": "object",
+  "properties": {
+    "documentation_status": {
+      "type": "string",
+      "enum": [
+        "incomplete",
+        "in_progress",
+        "complete"
+      ],
+      "default": "incomplete"
+    },
+    "compliance_status": {
+      "type": "string",
+      "enum": [
+        "not_assessed",
+        "non_compliant",
+        "partial",
+        "compliant"
+      ],
+      "default": "not_assessed"
+    },
+    "governance_score": {
+      "type": "number",
+      "description": "Score from 0-100 for governance readiness"
+    },
+    "financial_readiness_score": {
+      "type": "number",
+      "description": "Score from 0-100 for financial readiness"
+    },
+    "operational_capacity_score": {
+      "type": "number",
+      "description": "Score from 0-100 for operational capacity"
+    },
+    "classification_state": {
+      "type": "string",
+      "enum": [
+        "pre_funding",
+        "grant_eligible",
+        "contract_ready",
+        "relationship_building",
+        "scaling"
+      ]
+    },
+    "readiness_last_calculated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "readiness_notes": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,84 @@
+{
+  "name": "LandingPage",
+  "type": "object",
+  "properties": {
+    "page_name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL slug"
+    },
+    "page_title": {
+      "type": "string"
+    },
+    "page_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "course",
+        "event",
+        "product"
+      ],
+      "default": "general",
+      "description": "Type of landing page"
+    },
+    "linked_content_id": {
+      "type": "string",
+      "description": "ID of linked course, event, etc."
+    },
+    "hero_section": {
+      "type": "object",
+      "properties": {
+        "headline": {
+          "type": "string"
+        },
+        "subheadline": {
+          "type": "string"
+        },
+        "cta_text": {
+          "type": "string"
+        },
+        "cta_url": {
+          "type": "string"
+        },
+        "background_image": {
+          "type": "string"
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section_type": {
+            "type": "string"
+          },
+          "content": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "custom_css": {
+      "type": "string",
+      "description": "Custom CSS for this page"
+    },
+    "custom_js": {
+      "type": "string",
+      "description": "Custom JavaScript for this page"
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false
+    },
+    "seo_metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "page_name",
+    "slug"
+  ]
+}

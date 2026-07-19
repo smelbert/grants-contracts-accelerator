@@ -1,0 +1,40 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "amount": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "paid",
+        "pending",
+        "failed"
+      ]
+    },
+    "invoice_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "stripe_invoice_id": {
+      "type": "string"
+    },
+    "invoice_pdf_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "amount",
+    "status",
+    "invoice_date"
+  ]
+}

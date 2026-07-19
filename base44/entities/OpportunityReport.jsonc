@@ -1,0 +1,59 @@
+{
+  "name": "OpportunityReport",
+  "type": "object",
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "description": "ID of the reported opportunity"
+    },
+    "reported_by_email": {
+      "type": "string",
+      "description": "Email of user who reported this"
+    },
+    "report_reason": {
+      "type": "string",
+      "enum": [
+        "suspicious_funder",
+        "unrealistic_amounts",
+        "fake_contact_info",
+        "scam_indicators",
+        "duplicate_listing",
+        "outdated_info",
+        "other"
+      ],
+      "description": "Reason for reporting"
+    },
+    "description": {
+      "type": "string",
+      "description": "Additional details about the report"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "under_review",
+        "verified_legitimate",
+        "removed",
+        "false_report"
+      ],
+      "default": "pending"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Admin who reviewed the report"
+    },
+    "review_notes": {
+      "type": "string",
+      "description": "Admin notes on the review"
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "opportunity_id",
+    "reported_by_email",
+    "report_reason"
+  ]
+}

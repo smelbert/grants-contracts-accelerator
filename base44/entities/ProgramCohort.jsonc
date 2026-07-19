@@ -1,0 +1,200 @@
+{
+  "name": "ProgramCohort",
+  "type": "object",
+  "properties": {
+    "program_name": {
+      "type": "string",
+      "description": "Name of the program"
+    },
+    "program_code": {
+      "type": "string",
+      "description": "Unique identifier for the program"
+    },
+    "funder_organization": {
+      "type": "string",
+      "description": "Organization funding the program"
+    },
+    "delivery_organization": {
+      "type": "string",
+      "description": "Organization delivering the program"
+    },
+    "facilitators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "lead",
+              "co-facilitator",
+              "guest"
+            ],
+            "default": "co-facilitator"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "photo_url": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "List of facilitators for this program"
+    },
+    "description": {
+      "type": "string"
+    },
+    "learning_outcomes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "session_days": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "meeting_link": {
+            "type": "string",
+            "description": "Google Meet/Zoom link"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "duration_minutes": {
+                  "type": "number"
+                },
+                "topics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "facilitator_notes": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Complete session day agenda with sections"
+    },
+    "schedule_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "option_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "sessions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "session_date": {
+                  "type": "string"
+                },
+                "session_time": {
+                  "type": "string"
+                },
+                "meeting_link": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "best_for": {
+            "type": "string"
+          },
+          "total_hours": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "giveaway_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "giveaway_revealed": {
+      "type": "boolean",
+      "default": false
+    },
+    "giveaway_prize_description": {
+      "type": "string"
+    },
+    "no_login_message": {
+      "type": "string",
+      "description": "Message shown to participants who have never logged in (access removal warning)"
+    },
+    "access_removal_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when app access will be removed for non-logging-in participants"
+    },
+    "drawing_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the grant writing drawing"
+    },
+    "drawing_reminder_message": {
+      "type": "string",
+      "description": "Message shown to participants who need to complete assessments to enter the drawing"
+    },
+    "one_on_one_message": {
+      "type": "string",
+      "description": "Message shown to participants who need all 3 stages complete to book their 1:1 coaching session"
+    }
+  },
+  "required": [
+    "program_name",
+    "program_code",
+    "funder_organization",
+    "delivery_organization"
+  ]
+}

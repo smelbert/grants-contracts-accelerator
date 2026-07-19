@@ -1,0 +1,32 @@
+{
+  "name": "ResourceSection",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort"
+    },
+    "section_name": {
+      "type": "string"
+    },
+    "section_description": {
+      "type": "string"
+    },
+    "display_order": {
+      "type": "number",
+      "description": "Order in which sections appear"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon identifier for the section"
+    },
+    "is_visible": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "cohort_id",
+    "section_name"
+  ]
+}

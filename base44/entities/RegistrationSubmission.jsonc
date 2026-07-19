@@ -1,0 +1,82 @@
+{
+  "name": "RegistrationSubmission",
+  "type": "object",
+  "properties": {
+    "registration_page_id": {
+      "type": "string",
+      "description": "ID of the registration page"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "entry_point": {
+      "type": "string",
+      "description": "How the user entered the platform"
+    },
+    "registration_data": {
+      "type": "object",
+      "description": "Collected registration information"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "stripe_payment_intent_id": {
+      "type": "string"
+    },
+    "access_granted": {
+      "type": "boolean",
+      "default": false
+    },
+    "access_granted_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "survey_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "survey_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "attachments": {
+      "type": "array",
+      "description": "Uploaded PDF documents (signed agreements, intake forms, etc.)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file_url": {
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "uploaded_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "label": {
+            "type": "string",
+            "description": "e.g. Signed Agreement, Intake Form"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "registration_page_id",
+    "user_email",
+    "user_name",
+    "entry_point"
+  ]
+}

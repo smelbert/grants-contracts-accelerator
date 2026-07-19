@@ -1,0 +1,75 @@
+{
+  "name": "Funder990",
+  "type": "object",
+  "properties": {
+    "funder_id": {
+      "type": "string",
+      "description": "ID of the Funder entity"
+    },
+    "funder_name": {
+      "type": "string",
+      "description": "Name of the funder"
+    },
+    "fiscal_year": {
+      "type": "number",
+      "description": "Fiscal year of the 990 filing"
+    },
+    "total_assets": {
+      "type": "number",
+      "description": "Total assets reported on 990"
+    },
+    "total_giving": {
+      "type": "number",
+      "description": "Total grants/contributions paid"
+    },
+    "median_grant_amount": {
+      "type": "number",
+      "description": "Median grant amount for the year"
+    },
+    "average_grant_amount": {
+      "type": "number",
+      "description": "Average grant amount for the year"
+    },
+    "number_of_grants": {
+      "type": "number",
+      "description": "Number of grants awarded"
+    },
+    "pdf_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the 990 PDF document"
+    },
+    "data_source": {
+      "type": "string",
+      "description": "Source of the 990 data (e.g., Instrumentl, Foundation Directory)"
+    },
+    "past_grantees": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "List of past grantees from 990"
+    }
+  },
+  "required": [
+    "funder_name",
+    "fiscal_year"
+  ]
+}

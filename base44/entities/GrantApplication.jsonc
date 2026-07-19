@@ -1,0 +1,84 @@
+{
+  "name": "GrantApplication",
+  "type": "object",
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "description": "Reference to FundingOpportunity"
+    },
+    "application_name": {
+      "type": "string",
+      "description": "Custom name for this application"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "in_progress",
+        "ready_to_submit",
+        "submitted",
+        "under_review",
+        "awarded",
+        "declined",
+        "withdrawn"
+      ],
+      "default": "planning"
+    },
+    "submission_deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "submitted_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "requested_amount": {
+      "type": "number"
+    },
+    "awarded_amount": {
+      "type": "number"
+    },
+    "proposal_document_id": {
+      "type": "string",
+      "description": "Reference to main proposal document"
+    },
+    "budget_document_id": {
+      "type": "string",
+      "description": "Reference to budget document"
+    },
+    "supporting_documents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of document IDs"
+    },
+    "team_members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of user emails"
+    },
+    "lead_contact": {
+      "type": "string",
+      "description": "Primary contact email"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "completion_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Overall completion percentage"
+    }
+  },
+  "required": [
+    "opportunity_id",
+    "application_name"
+  ]
+}

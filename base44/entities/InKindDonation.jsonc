@@ -1,0 +1,145 @@
+{
+  "name": "InKindDonation",
+  "type": "object",
+  "properties": {
+    "gift_id": {
+      "type": "string",
+      "description": "Auto-generated ID e.g. IK-001"
+    },
+    "date_received": {
+      "type": "string",
+      "format": "date"
+    },
+    "donor_name": {
+      "type": "string"
+    },
+    "donor_type": {
+      "type": "string",
+      "enum": [
+        "Individual",
+        "Corporate",
+        "Faith Community",
+        "Foundation",
+        "Government",
+        "Other"
+      ]
+    },
+    "donor_email": {
+      "type": "string"
+    },
+    "donor_phone": {
+      "type": "string"
+    },
+    "donor_address": {
+      "type": "string"
+    },
+    "gift_kind": {
+      "type": "string",
+      "enum": [
+        "Goods",
+        "Services - Specialized",
+        "Services - General",
+        "Facility/Space Use"
+      ],
+      "description": "Goods = potentially tax-deductible at FMV; Specialized Services = GAAP revenue; General Services/Volunteer = tracking only"
+    },
+    "item_description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Facility/Space",
+        "Food/Bev",
+        "Equipment",
+        "Apparel/Uniforms",
+        "Printing/Marketing",
+        "Professional Services",
+        "Technology",
+        "Transportation",
+        "Other Goods",
+        "Other Services"
+      ]
+    },
+    "quantity": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "fmv_per_unit": {
+      "type": "number"
+    },
+    "total_fmv": {
+      "type": "number"
+    },
+    "valuation_method": {
+      "type": "string",
+      "enum": [
+        "Donor-provided receipt",
+        "Comparable sales",
+        "FMV benchmark/library",
+        "Professional appraisal",
+        "Published rate",
+        "Other"
+      ]
+    },
+    "valuation_notes": {
+      "type": "string"
+    },
+    "is_restricted": {
+      "type": "boolean",
+      "default": false
+    },
+    "restriction_description": {
+      "type": "string"
+    },
+    "program_project": {
+      "type": "string"
+    },
+    "acknowledgment_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "form_8283_required": {
+      "type": "string"
+    },
+    "acknowledgment_sent_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "recurring_gift_id": {
+      "type": "string"
+    },
+    "documentation_filed": {
+      "type": "string"
+    },
+    "gaap_category": {
+      "type": "string",
+      "enum": [
+        "Donated Goods - Equipment",
+        "Donated Goods - Food",
+        "Donated Goods - Apparel/Uniforms",
+        "Donated Goods - Other",
+        "Donated Facility Use",
+        "Donated Professional Services",
+        "Donated General Services (Non-GAAP)",
+        "Other"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    },
+    "org_context": {
+      "type": "string",
+      "description": "User's organization name for filtering"
+    }
+  },
+  "required": [
+    "donor_name",
+    "date_received",
+    "gift_kind",
+    "item_description",
+    "total_fmv"
+  ]
+}

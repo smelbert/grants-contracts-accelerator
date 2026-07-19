@@ -1,0 +1,39 @@
+{
+  "name": "ResourceReview",
+  "type": "object",
+  "properties": {
+    "resource_id": {
+      "type": "string",
+      "description": "ID of the LearningContent resource"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Star rating (1-5)"
+    },
+    "review_text": {
+      "type": "string",
+      "description": "Written review"
+    },
+    "helpful_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of users who found this review helpful"
+    },
+    "is_verified_download": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user actually downloaded the resource"
+    }
+  },
+  "required": [
+    "resource_id",
+    "user_email",
+    "rating"
+  ]
+}

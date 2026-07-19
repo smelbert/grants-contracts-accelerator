@@ -1,0 +1,62 @@
+{
+  "name": "Mentor",
+  "type": "object",
+  "properties": {
+    "mentor_email": {
+      "type": "string",
+      "description": "Email of the mentor (linked to User)"
+    },
+    "mentor_name": {
+      "type": "string"
+    },
+    "specialties": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grant_writing",
+          "contracts_rfp",
+          "financial_management",
+          "organizational_capacity",
+          "fundraising_strategy",
+          "nonprofit_governance",
+          "business_planning",
+          "legal_compliance"
+        ]
+      },
+      "description": "Areas of expertise"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "availability": {
+      "type": "string",
+      "description": "General availability description"
+    },
+    "max_mentees": {
+      "type": "number",
+      "default": 5,
+      "description": "Maximum number of active mentees"
+    },
+    "current_mentees": {
+      "type": "number",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "total_sessions_completed": {
+      "type": "number",
+      "default": 0
+    },
+    "rating": {
+      "type": "number",
+      "description": "Average rating from mentees"
+    }
+  },
+  "required": [
+    "mentor_email",
+    "mentor_name"
+  ]
+}

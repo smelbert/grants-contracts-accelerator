@@ -1,0 +1,54 @@
+{
+  "name": "GiveawayWinner",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort"
+    },
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the winning ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "draw_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the winner was selected"
+    },
+    "drawn_by": {
+      "type": "string",
+      "description": "Email of admin who conducted the drawing"
+    },
+    "prize_description": {
+      "type": "string"
+    },
+    "winner_contacted": {
+      "type": "boolean",
+      "default": false
+    },
+    "contact_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "prize_accepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "admin_notes": {
+      "type": "string",
+      "description": "Internal notes about winner selection and prize delivery"
+    }
+  },
+  "required": [
+    "cohort_id",
+    "enrollment_id",
+    "participant_email",
+    "participant_name"
+  ]
+}

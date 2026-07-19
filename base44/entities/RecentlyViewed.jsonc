@@ -1,0 +1,20 @@
+{
+  "name": "RecentlyViewed",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "learning_content_id": {
+      "type": "string"
+    },
+    "last_viewed": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email",
+    "learning_content_id"
+  ]
+}

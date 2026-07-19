@@ -1,0 +1,45 @@
+{
+  "name": "BoilerplateContent",
+  "type": "object",
+  "properties": {
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "mission_statement",
+        "org_background",
+        "program_description",
+        "statement_of_need",
+        "equity_narrative",
+        "capability_statement",
+        "community_impact"
+      ]
+    },
+    "content": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "is_approved": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "missing_data_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "content_type",
+    "content"
+  ]
+}

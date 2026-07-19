@@ -1,0 +1,61 @@
+{
+  "name": "Contact",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "subscribed",
+        "unsubscribed",
+        "bounced"
+      ],
+      "default": "subscribed"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for segmentation"
+    },
+    "source": {
+      "type": "string",
+      "description": "How they joined (form, manual, import)"
+    },
+    "custom_fields": {
+      "type": "object",
+      "description": "Additional custom data"
+    },
+    "last_email_opened": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_emails_sent": {
+      "type": "number",
+      "default": 0
+    },
+    "total_emails_opened": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "email"
+  ]
+}

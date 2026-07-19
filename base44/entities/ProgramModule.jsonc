@@ -1,0 +1,59 @@
+{
+  "name": "ProgramModule",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the program cohort this module belongs to"
+    },
+    "module_name": {
+      "type": "string",
+      "description": "Name of the module"
+    },
+    "module_number": {
+      "type": "number",
+      "description": "Order/sequence number"
+    },
+    "description": {
+      "type": "string"
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "duration_hours": {
+      "type": "number"
+    },
+    "content_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of LearningContent associated with this module"
+    },
+    "required_for_completion": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether completing this module is required for program certificate"
+    },
+    "assessment_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "passing_score": {
+      "type": "number",
+      "description": "Minimum score required to pass (if assessment required)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "cohort_id",
+    "module_name",
+    "module_number"
+  ]
+}

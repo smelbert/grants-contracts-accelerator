@@ -1,0 +1,90 @@
+{
+  "name": "LevelPromotionGate",
+  "type": "object",
+  "properties": {
+    "gate_name": {
+      "type": "string",
+      "description": "Name of the gate requirement"
+    },
+    "from_level": {
+      "type": "string",
+      "enum": [
+        "level-1",
+        "level-2"
+      ]
+    },
+    "to_level": {
+      "type": "string",
+      "enum": [
+        "level-2",
+        "level-3"
+      ]
+    },
+    "gate_type": {
+      "type": "string",
+      "enum": [
+        "module_completion",
+        "assessment_pass",
+        "live_session_attendance",
+        "clean_draft_count",
+        "funded_proposal",
+        "mentorship_completion",
+        "skill_validation"
+      ]
+    },
+    "requirement_details": {
+      "type": "object",
+      "properties": {
+        "module_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assessment_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minimum_score": {
+          "type": "number"
+        },
+        "required_count": {
+          "type": "number"
+        },
+        "session_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skill_categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minimum_skill_level": {
+          "type": "number"
+        }
+      }
+    },
+    "is_mandatory": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "gate_name",
+    "from_level",
+    "to_level",
+    "gate_type"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "name": "SpacedRepetition",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "activity_id": {
+      "type": "string",
+      "description": "Reference to LearningActivity"
+    },
+    "card_id": {
+      "type": "string",
+      "description": "ID of specific flashcard or quiz item"
+    },
+    "ease_factor": {
+      "type": "number",
+      "default": 2.5,
+      "description": "SM-2 algorithm ease factor (1.3 to 2.5+)"
+    },
+    "interval_days": {
+      "type": "number",
+      "default": 1,
+      "description": "Current interval in days"
+    },
+    "repetitions": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of successful repetitions"
+    },
+    "next_review_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When card should be reviewed next"
+    },
+    "last_review_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "quality_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "quality": {
+            "type": "number",
+            "description": "0-5 rating"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "History of review quality ratings"
+    }
+  },
+  "required": [
+    "user_email",
+    "activity_id",
+    "card_id"
+  ]
+}

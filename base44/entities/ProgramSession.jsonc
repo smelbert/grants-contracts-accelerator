@@ -1,0 +1,57 @@
+{
+  "name": "ProgramSession",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort"
+    },
+    "session_title": {
+      "type": "string"
+    },
+    "session_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start time in 24-hour format (HH:MM)"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "End time in 24-hour format (HH:MM)"
+    },
+    "modality": {
+      "type": "string",
+      "enum": [
+        "in_person",
+        "virtual",
+        "hybrid"
+      ],
+      "default": "virtual"
+    },
+    "location_or_link": {
+      "type": "string",
+      "description": "Physical location or video conference link"
+    },
+    "description": {
+      "type": "string"
+    },
+    "facilitator_name": {
+      "type": "string"
+    },
+    "session_order": {
+      "type": "number",
+      "description": "Sequential order in the program"
+    },
+    "is_required": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "cohort_id",
+    "session_title",
+    "session_date"
+  ]
+}

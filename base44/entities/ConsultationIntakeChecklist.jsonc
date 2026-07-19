@@ -1,0 +1,52 @@
+{
+  "name": "ConsultationIntakeChecklist",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "pre_assessment_reviewed": {
+      "type": "boolean",
+      "default": false
+    },
+    "documents_uploaded": {
+      "type": "boolean",
+      "default": false
+    },
+    "questions_prepared": {
+      "type": "boolean",
+      "default": false
+    },
+    "checklist_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Custom checklist items"
+    },
+    "all_items_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "participant_email"
+  ]
+}

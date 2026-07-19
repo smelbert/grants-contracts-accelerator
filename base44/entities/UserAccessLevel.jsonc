@@ -1,0 +1,102 @@
+{
+  "name": "UserAccessLevel",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "access_level": {
+      "type": "string",
+      "enum": [
+        "community_only",
+        "coaching_portal",
+        "full_platform"
+      ],
+      "default": "community_only"
+    },
+    "entry_point": {
+      "type": "string",
+      "description": "Initial entry point (workshop, coaching, incubateher_program, etc.)"
+    },
+    "allowed_community_spaces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of community space IDs user can access"
+    },
+    "coaching_access": {
+      "type": "boolean",
+      "default": false
+    },
+    "coaching_type": {
+      "type": "string",
+      "enum": [
+        "grant_writing",
+        "professional_development",
+        "career_advancement",
+        "resume_cover_letter",
+        "organizational_capacity"
+      ]
+    },
+    "active_registrations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of active registration page IDs"
+    },
+    "upgrade_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from_level": {
+            "type": "string"
+          },
+          "to_level": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "learning_hub_access": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has access to Learning Hub (upsell)"
+    },
+    "feature_unlocks": {
+      "type": "object",
+      "description": "Feature unlock dates for IncubateHer participants. Keys are page names, values are ISO date strings when access is granted",
+      "additionalProperties": {
+        "type": "string",
+        "format": "date-time"
+      }
+    },
+    "disabled_tabs": {
+      "type": "object",
+      "description": "Map of page names that are disabled for this user. Key = page name, value = true.",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "legal_acknowledged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has acknowledged Terms of Service and copyright notice"
+    },
+    "legal_acknowledged_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date when user acknowledged legal terms"
+    }
+  },
+  "required": [
+    "user_email",
+    "access_level"
+  ]
+}

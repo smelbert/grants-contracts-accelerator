@@ -1,0 +1,79 @@
+{
+  "name": "CoachingIntake",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "coaching_type": {
+      "type": "string",
+      "enum": [
+        "grant_writing",
+        "professional_development",
+        "career_advancement",
+        "resume_cover_letter",
+        "organizational_capacity"
+      ],
+      "description": "Type of coaching"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "current_role": {
+      "type": "string"
+    },
+    "goals": {
+      "type": "string",
+      "description": "Coaching goals"
+    },
+    "challenges": {
+      "type": "string",
+      "description": "Current challenges"
+    },
+    "timeline": {
+      "type": "string",
+      "description": "Desired timeline for goals"
+    },
+    "prior_coaching_experience": {
+      "type": "string"
+    },
+    "preferred_meeting_times": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "package_selected": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "3_session",
+        "6_session",
+        "monthly_ongoing"
+      ]
+    },
+    "additional_notes": {
+      "type": "string"
+    },
+    "intake_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "intake_completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coach_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email",
+    "user_name",
+    "coaching_type",
+    "goals"
+  ]
+}

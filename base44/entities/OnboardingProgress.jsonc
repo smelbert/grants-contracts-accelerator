@@ -1,0 +1,53 @@
+{
+  "name": "OnboardingProgress",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "subscription_plan": {
+      "type": "string"
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "steps_completed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of completed onboarding steps"
+    },
+    "current_step": {
+      "type": "string"
+    },
+    "welcome_video_watched": {
+      "type": "boolean",
+      "default": false
+    },
+    "profile_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "first_resource_viewed": {
+      "type": "boolean",
+      "default": false
+    },
+    "community_joined": {
+      "type": "boolean",
+      "default": false
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "ReviewPayment",
+  "type": "object",
+  "properties": {
+    "review_request_id": {
+      "type": "string",
+      "description": "Reference to ReviewRequest"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount in dollars"
+    },
+    "review_type": {
+      "type": "string",
+      "enum": [
+        "single_document",
+        "proposal_section",
+        "full_proposal",
+        "contract_rfp"
+      ]
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "stripe_payment_intent_id": {
+      "type": "string"
+    },
+    "paid_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "review_request_id",
+    "amount",
+    "review_type"
+  ]
+}

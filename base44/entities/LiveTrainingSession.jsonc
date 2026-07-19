@@ -1,0 +1,105 @@
+{
+  "name": "LiveTrainingSession",
+  "type": "object",
+  "properties": {
+    "session_title": {
+      "type": "string",
+      "description": "Title of the live session"
+    },
+    "session_type": {
+      "type": "string",
+      "enum": [
+        "strategy_lab",
+        "simulation",
+        "qa_calibration",
+        "coaching_roleplay",
+        "budget_workshop",
+        "reviewer_scoring",
+        "discovery_debrief",
+        "escalation_training"
+      ]
+    },
+    "level_required": {
+      "type": "string",
+      "enum": [
+        "level-1",
+        "level-2",
+        "level-3"
+      ]
+    },
+    "related_modules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Module IDs this session supports"
+    },
+    "session_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "facilitator_email": {
+      "type": "string"
+    },
+    "max_participants": {
+      "type": "number",
+      "default": 12
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "attendance_status": {
+            "type": "string",
+            "enum": [
+              "registered",
+              "attended",
+              "absent",
+              "excused"
+            ]
+          },
+          "participation_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "session_materials_url": {
+      "type": "string"
+    },
+    "recording_url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_mandatory": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "session_title",
+    "session_type",
+    "level_required",
+    "session_date"
+  ]
+}

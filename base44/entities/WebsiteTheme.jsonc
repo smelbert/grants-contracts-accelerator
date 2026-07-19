@@ -1,0 +1,73 @@
+{
+  "name": "WebsiteTheme",
+  "type": "object",
+  "properties": {
+    "theme_name": {
+      "type": "string"
+    },
+    "primary_color": {
+      "type": "string"
+    },
+    "secondary_color": {
+      "type": "string"
+    },
+    "accent_color": {
+      "type": "string"
+    },
+    "font_family": {
+      "type": "string"
+    },
+    "heading_font_family": {
+      "type": "string"
+    },
+    "layout_style": {
+      "type": "string",
+      "enum": [
+        "modern",
+        "classic",
+        "minimal",
+        "bold"
+      ]
+    },
+    "header_style": {
+      "type": "string",
+      "enum": [
+        "centered",
+        "left",
+        "split"
+      ]
+    },
+    "navigation_position": {
+      "type": "string",
+      "enum": [
+        "top",
+        "side"
+      ]
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "favicon_url": {
+      "type": "string"
+    },
+    "custom_css": {
+      "type": "string",
+      "description": "Global custom CSS"
+    },
+    "custom_js": {
+      "type": "string",
+      "description": "Global custom JavaScript"
+    },
+    "custom_head_html": {
+      "type": "string",
+      "description": "Custom HTML to inject in head (tracking codes, etc.)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "theme_name"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "LiveStream",
+  "type": "object",
+  "properties": {
+    "stream_title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "stream_url": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "youtube",
+        "zoom",
+        "custom"
+      ],
+      "default": "youtube"
+    },
+    "scheduled_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "live",
+        "ended"
+      ],
+      "default": "scheduled"
+    },
+    "is_members_only": {
+      "type": "boolean",
+      "default": false
+    },
+    "recording_url": {
+      "type": "string"
+    },
+    "total_viewers": {
+      "type": "number",
+      "default": 0
+    },
+    "chat_enabled": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "stream_title",
+    "stream_url"
+  ]
+}

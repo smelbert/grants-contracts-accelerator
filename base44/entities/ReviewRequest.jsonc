@@ -1,0 +1,60 @@
+{
+  "name": "ReviewRequest",
+  "type": "object",
+  "properties": {
+    "document_id": {
+      "type": "string"
+    },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "document_review",
+        "draft_review",
+        "strategy_review"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "assigned",
+        "in_review",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "urgent"
+      ],
+      "default": "standard"
+    },
+    "assigned_coach_id": {
+      "type": "string"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "feedback": {
+      "type": "string"
+    },
+    "feedback_video_url": {
+      "type": "string"
+    },
+    "internal_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_id",
+    "request_type"
+  ]
+}

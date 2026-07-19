@@ -1,0 +1,29 @@
+{
+  "name": "TemplateEditSession",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "Reference to Template"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "last_active": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last activity timestamp"
+    },
+    "cursor_position": {
+      "type": "number",
+      "description": "Current cursor position in editor"
+    }
+  },
+  "required": [
+    "template_id",
+    "user_email"
+  ]
+}

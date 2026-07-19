@@ -1,0 +1,137 @@
+{
+  "name": "ReadinessChecklist",
+  "type": "object",
+  "properties": {
+    "funding_lane": {
+      "type": "string",
+      "enum": [
+        "grants",
+        "contracts",
+        "donors",
+        "public_funds"
+      ]
+    },
+    "checklist_type": {
+      "type": "string",
+      "enum": [
+        "grant_eligible",
+        "contract_ready",
+        "general_fundability"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed_pending_review",
+        "verified"
+      ],
+      "default": "not_started"
+    },
+    "completion_attestation": {
+      "type": "boolean",
+      "default": false
+    },
+    "attested_by_user_id": {
+      "type": "string"
+    },
+    "attested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scoring_mode": {
+      "type": "string",
+      "enum": [
+        "strict",
+        "weighted"
+      ],
+      "default": "weighted"
+    },
+    "completion_percentage": {
+      "type": "number"
+    },
+    "locked": {
+      "type": "boolean",
+      "default": false
+    },
+    "checklist_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "governance",
+              "finance",
+              "program",
+              "compliance",
+              "operations",
+              "contracts"
+            ]
+          },
+          "item_name": {
+            "type": "string"
+          },
+          "item_description": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "acceptable_evidence": {
+            "type": "string"
+          },
+          "user_attested_complete": {
+            "type": "boolean",
+            "default": false
+          },
+          "user_attested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requires_upload": {
+            "type": "boolean",
+            "default": false
+          },
+          "upload_required_for_verification": {
+            "type": "boolean",
+            "default": false
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "uploaded",
+              "submitted_for_review",
+              "approved",
+              "needs_revision"
+            ],
+            "default": "missing"
+          },
+          "coach_comments": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "completed_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "funding_lane"
+  ]
+}

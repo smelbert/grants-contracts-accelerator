@@ -1,0 +1,49 @@
+{
+  "name": "ModuleCompletion",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "module_id": {
+      "type": "string",
+      "description": "ID of the ProgramModule"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "started_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "assessment_score": {
+      "type": "number",
+      "description": "Score if assessment was taken"
+    },
+    "time_spent_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "completion_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "module_id",
+    "participant_email"
+  ]
+}

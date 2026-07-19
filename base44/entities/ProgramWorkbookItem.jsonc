@@ -1,0 +1,56 @@
+{
+  "name": "ProgramWorkbookItem",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "section": {
+      "type": "string",
+      "description": "Which agenda section this belongs to"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "handout",
+        "worksheet",
+        "tips_guide",
+        "consultation_tool",
+        "facilitator_only",
+        "video"
+      ]
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "YouTube, Vimeo, or direct video URL"
+    },
+    "video_duration": {
+      "type": "string",
+      "description": "Duration in format like '5:30' or '12:45'"
+    },
+    "external_link": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number"
+    },
+    "is_visible": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "cohort_id",
+    "title",
+    "item_type"
+  ]
+}

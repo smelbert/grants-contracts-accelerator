@@ -1,0 +1,43 @@
+{
+  "name": "UserBadge",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "badge_type": {
+      "type": "string",
+      "enum": [
+        "first_module",
+        "perfect_score",
+        "week_streak",
+        "month_streak",
+        "master_100_cards",
+        "complete_5_modules",
+        "complete_10_modules",
+        "speed_learner",
+        "grant_expert",
+        "contract_specialist",
+        "donor_relations_pro"
+      ]
+    },
+    "earned_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "badge_name": {
+      "type": "string"
+    },
+    "badge_description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon name or emoji"
+    }
+  },
+  "required": [
+    "user_email",
+    "badge_type"
+  ]
+}

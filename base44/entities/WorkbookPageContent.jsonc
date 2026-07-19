@@ -1,0 +1,59 @@
+{
+  "name": "WorkbookPageContent",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "Optional: Cohort-specific customization"
+    },
+    "page_id": {
+      "type": "string",
+      "description": "ID of the workbook page (matches workbookContent)"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string",
+      "description": "HTML content for the page"
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "video_description": {
+      "type": "string"
+    },
+    "takeaways": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key takeaways bullet points"
+    },
+    "action_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Action items for the user"
+    },
+    "required_for_consultation": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark this page as required for consultation booking eligibility"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_edited_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "page_id"
+  ]
+}

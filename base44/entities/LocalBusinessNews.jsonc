@@ -1,0 +1,59 @@
+{
+  "name": "LocalBusinessNews",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "funding",
+        "grants",
+        "policy",
+        "events",
+        "trends",
+        "general"
+      ],
+      "default": "general"
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "Ohio Statewide",
+        "Columbus / Franklin County",
+        "Central Ohio",
+        "Northeast Ohio",
+        "Southwest Ohio",
+        "Southeast Ohio",
+        "Northwest Ohio"
+      ],
+      "default": "Ohio Statewide"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "fetched_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "summary"
+  ]
+}

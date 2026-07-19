@@ -1,0 +1,97 @@
+{
+  "name": "CertificateTemplate",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string",
+      "description": "Name of the certificate template"
+    },
+    "template_layout": {
+      "type": "string",
+      "enum": [
+        "blue_wave_landscape",
+        "gold_ribbon_landscape",
+        "teal_geometric_landscape",
+        "blue_wave_portrait",
+        "gold_ribbon_portrait",
+        "red_geometric_portrait"
+      ],
+      "default": "blue_wave_landscape",
+      "description": "Professional layout style"
+    },
+    "cohort_id": {
+      "type": "string",
+      "description": "Optional: Link to specific program cohort"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "header_text": {
+      "type": "string",
+      "default": "Certificate of Completion"
+    },
+    "body_template": {
+      "type": "string",
+      "description": "Template text with placeholders"
+    },
+    "footer_text": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "co_logo_url": {
+      "type": "string"
+    },
+    "signature_fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "signature_image_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "primary_color": {
+      "type": "string",
+      "default": "#143A50"
+    },
+    "secondary_color": {
+      "type": "string",
+      "default": "#E5C089"
+    },
+    "background_color": {
+      "type": "string",
+      "default": "#FFFFFF"
+    },
+    "text_color": {
+      "type": "string",
+      "default": "#000000"
+    },
+    "include_qr_code": {
+      "type": "boolean",
+      "default": true
+    },
+    "custom_html": {
+      "type": "string",
+      "description": "Optional: Full custom HTML for the certificate. If set, overrides the layout-based design. Supports placeholders: {participant_name}, {program_name}, {completion_date}, {total_hours}, {funder_organization}, {delivery_organization}, {certificate_number}"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "template_name",
+    "template_layout"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "Mentorship",
+  "type": "object",
+  "properties": {
+    "mentor_email": {
+      "type": "string"
+    },
+    "mentee_email": {
+      "type": "string"
+    },
+    "mentee_name": {
+      "type": "string"
+    },
+    "program_context": {
+      "type": "string",
+      "description": "Which program/cohort this mentorship is part of"
+    },
+    "focus_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Areas of focus for this mentorship"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "completed",
+        "paused"
+      ],
+      "default": "pending"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_sessions": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes about this mentorship"
+    }
+  },
+  "required": [
+    "mentor_email",
+    "mentee_email"
+  ]
+}

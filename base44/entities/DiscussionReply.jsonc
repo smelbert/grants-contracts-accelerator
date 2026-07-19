@@ -1,0 +1,51 @@
+{
+  "name": "DiscussionReply",
+  "type": "object",
+  "properties": {
+    "discussion_id": {
+      "type": "string",
+      "description": "ID of the parent discussion"
+    },
+    "parent_reply_id": {
+      "type": "string",
+      "description": "ID of parent reply for nested threading (null for top-level)"
+    },
+    "content": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "is_marked_helpful": {
+      "type": "boolean",
+      "default": false,
+      "description": "Marked as helpful answer by original author"
+    },
+    "upvote_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_moderated": {
+      "type": "boolean",
+      "default": false
+    },
+    "moderation_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "flagged",
+        "removed"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "discussion_id",
+    "content",
+    "author_email"
+  ]
+}

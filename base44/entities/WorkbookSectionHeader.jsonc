@@ -1,0 +1,27 @@
+{
+  "name": "WorkbookSectionHeader",
+  "type": "object",
+  "properties": {
+    "section_id": {
+      "type": "string",
+      "description": "Unique identifier matching workbookContent sections (e.g., front_matter, funding_foundations)"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Custom display name for the section header"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this section should be displayed"
+    },
+    "display_order": {
+      "type": "number",
+      "description": "Order in which sections appear (lower numbers first)"
+    }
+  },
+  "required": [
+    "section_id",
+    "display_name"
+  ]
+}

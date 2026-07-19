@@ -1,0 +1,213 @@
+{
+  "name": "FundingOpportunity",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "funder_id": {
+      "type": "string",
+      "description": "ID of the Funder entity (if linked)"
+    },
+    "funder_name": {
+      "type": "string"
+    },
+    "project_category": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "grant",
+        "contract",
+        "rfp",
+        "rfq",
+        "rfi",
+        "donor_program",
+        "public_fund"
+      ]
+    },
+    "grant_subtype": {
+      "type": "string",
+      "enum": [
+        "capacity_building",
+        "capital",
+        "programming",
+        "operations",
+        "project",
+        "general_operating",
+        "equipment",
+        "other"
+      ]
+    },
+    "funding_lane": {
+      "type": "string",
+      "enum": [
+        "grants",
+        "contracts",
+        "donors",
+        "public_funds"
+      ]
+    },
+    "amount_min": {
+      "type": "number"
+    },
+    "amount_max": {
+      "type": "number"
+    },
+    "deadline_loi": {
+      "type": "string",
+      "format": "date"
+    },
+    "deadline_pre": {
+      "type": "string",
+      "format": "date"
+    },
+    "deadline_full": {
+      "type": "string",
+      "format": "date"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "rolling_deadline": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_approval",
+        "active",
+        "researching",
+        "drafting",
+        "submitted",
+        "awarded",
+        "declined",
+        "archived"
+      ],
+      "default": "researching"
+    },
+    "description": {
+      "type": "string"
+    },
+    "eligibility_summary": {
+      "type": "string"
+    },
+    "eligibility_requirements": {
+      "type": "string"
+    },
+    "required_org_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_stages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "geographic_focus": {
+      "type": "string"
+    },
+    "geographic_restrictions": {
+      "type": "string"
+    },
+    "sector_focus": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "application_url": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "source_platform": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "ai_vetted": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_vetting_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ai_vetting_notes": {
+      "type": "string"
+    },
+    "ai_scanned": {
+      "type": "boolean",
+      "default": false
+    },
+    "scanned_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "opportunity_type": {
+      "type": "string"
+    },
+    "award_amount_min": {
+      "type": "number"
+    },
+    "award_amount_max": {
+      "type": "number"
+    },
+    "internal_notes": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "attachments": {
+      "type": "array",
+      "description": "Documents and files attached to this opportunity (e.g. RFP PDFs, guidelines)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name of the document"
+          },
+          "file_url": {
+            "type": "string",
+            "description": "URL of the uploaded file"
+          },
+          "file_type": {
+            "type": "string",
+            "description": "MIME type or extension"
+          },
+          "uploaded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uploaded_by": {
+            "type": "string",
+            "description": "Email of uploader"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "title",
+    "type",
+    "funding_lane"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "name": "OpportunityNotificationPreference",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "receive_all_notifications": {
+      "type": "boolean",
+      "default": true,
+      "description": "Receive notifications for all new opportunities"
+    },
+    "funding_lanes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "grants",
+          "contracts",
+          "donors",
+          "public_funds"
+        ]
+      },
+      "description": "Specific funding lanes to receive notifications for"
+    },
+    "grant_subtypes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific grant subtypes to receive notifications for"
+    },
+    "sectors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific sectors/focus areas to receive notifications for"
+    },
+    "min_amount": {
+      "type": "number",
+      "description": "Minimum funding amount to receive notifications for"
+    },
+    "max_amount": {
+      "type": "number",
+      "description": "Maximum funding amount to receive notifications for"
+    },
+    "geographic_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Geographic areas of interest"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

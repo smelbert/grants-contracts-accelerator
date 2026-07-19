@@ -1,0 +1,89 @@
+{
+  "name": "Discussion",
+  "type": "object",
+  "properties": {
+    "space_id": {
+      "type": "string",
+      "description": "ID of the community space"
+    },
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "grants",
+        "contracts",
+        "fundraising",
+        "questions",
+        "success_stories",
+        "resources"
+      ],
+      "default": "general"
+    },
+    "topic": {
+      "type": "string",
+      "description": "Custom topic/category assigned by moderator"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_locked": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_moderated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether content has been reviewed by moderator"
+    },
+    "moderation_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "flagged",
+        "removed"
+      ],
+      "default": "pending"
+    },
+    "moderation_notes": {
+      "type": "string"
+    },
+    "total_replies": {
+      "type": "number",
+      "default": 0
+    },
+    "total_upvotes": {
+      "type": "number",
+      "default": 0
+    },
+    "last_reply_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "author_email",
+    "space_id"
+  ]
+}

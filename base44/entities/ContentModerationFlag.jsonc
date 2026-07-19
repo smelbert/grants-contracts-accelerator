@@ -1,0 +1,108 @@
+{
+  "name": "ContentModerationFlag",
+  "type": "object",
+  "properties": {
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "chat_message",
+        "comment"
+      ],
+      "description": "Type of content being flagged"
+    },
+    "content_id": {
+      "type": "string",
+      "description": "ID of the flagged content"
+    },
+    "content_text": {
+      "type": "string",
+      "description": "The content that was flagged"
+    },
+    "space_id": {
+      "type": "string",
+      "description": "Space where content was posted"
+    },
+    "space_name": {
+      "type": "string",
+      "description": "Name of the space"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Email of content author"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Name of content author"
+    },
+    "flag_reason": {
+      "type": "string",
+      "enum": [
+        "inappropriate_language",
+        "spam",
+        "harmful_content",
+        "misinformation",
+        "harassment",
+        "other"
+      ],
+      "description": "Reason for flagging"
+    },
+    "ai_confidence_score": {
+      "type": "number",
+      "description": "AI confidence score (0-100) that content violates policy"
+    },
+    "ai_analysis": {
+      "type": "string",
+      "description": "Detailed AI analysis of why content was flagged"
+    },
+    "ai_suggested_action": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "hide",
+        "remove"
+      ],
+      "description": "AI suggested moderation action"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_review",
+        "approved",
+        "removed",
+        "hidden",
+        "dismissed"
+      ],
+      "default": "pending_review",
+      "description": "Moderation status"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Email of moderator who reviewed the flag"
+    },
+    "reviewed_by_name": {
+      "type": "string",
+      "description": "Name of moderator"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the flag was reviewed"
+    },
+    "moderator_notes": {
+      "type": "string",
+      "description": "Notes from human moderator"
+    },
+    "auto_flagged": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this was auto-flagged by AI"
+    }
+  },
+  "required": [
+    "content_type",
+    "content_id",
+    "content_text",
+    "flag_reason"
+  ]
+}

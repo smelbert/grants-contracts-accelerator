@@ -1,0 +1,54 @@
+{
+  "name": "SessionAttendance",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "ID of the ProgramSession"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "attended": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if attended live (in-person or Google Meet)"
+    },
+    "watched_recording": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if participant self-reported watching the session recording"
+    },
+    "watched_recording_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the participant marked that they watched the recording"
+    },
+    "attendance_type": {
+      "type": "string",
+      "enum": [
+        "live",
+        "recording",
+        "absent"
+      ],
+      "description": "How the participant attended this session"
+    },
+    "attendance_marked_by": {
+      "type": "string",
+      "description": "Email of facilitator who marked attendance"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional notes about attendance (late, left early, etc.)"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "session_id",
+    "participant_email"
+  ]
+}

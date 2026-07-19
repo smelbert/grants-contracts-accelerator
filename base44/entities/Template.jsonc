@@ -1,0 +1,99 @@
+{
+  "name": "Template",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "foundational",
+        "business_planning",
+        "financial_compliance",
+        "grant_writing",
+        "evaluation_impact",
+        "implementation_planning",
+        "credibility_assets",
+        "renewals",
+        "contracts_rfp",
+        "donor_philanthropy",
+        "public_funding",
+        "strategic",
+        "ai_tools",
+        "quality_tools",
+        "meta_resources"
+      ]
+    },
+    "subcategory": {
+      "type": "string"
+    },
+    "funding_lane": {
+      "type": "string",
+      "enum": [
+        "grants",
+        "contracts",
+        "donors",
+        "public_funds",
+        "general"
+      ]
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "maturity_level": {
+      "type": "string",
+      "enum": [
+        "seed",
+        "growth",
+        "scale",
+        "all"
+      ]
+    },
+    "org_type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "nonprofit",
+          "for_profit",
+          "solopreneur",
+          "community_based"
+        ]
+      }
+    },
+    "when_to_use": {
+      "type": "string"
+    },
+    "when_not_to_use": {
+      "type": "string"
+    },
+    "what_funders_look_for": {
+      "type": "string"
+    },
+    "common_mistakes": {
+      "type": "string"
+    },
+    "ai_assist_notes": {
+      "type": "string"
+    },
+    "template_content": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_published": {
+      "type": "boolean",
+      "default": false,
+      "description": "Must be set to true by admin before users can see this resource in the Resource Library"
+    }
+  },
+  "required": [
+    "template_name",
+    "category",
+    "funding_lane",
+    "maturity_level"
+  ]
+}

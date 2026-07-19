@@ -1,0 +1,40 @@
+{
+  "name": "OpportunityComment",
+  "type": "object",
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "description": "Reference to FundingOpportunity"
+    },
+    "parent_comment_id": {
+      "type": "string",
+      "description": "For threaded replies"
+    },
+    "comment_text": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "is_internal": {
+      "type": "boolean",
+      "default": true,
+      "description": "Only visible to team"
+    },
+    "mentions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of mentioned user emails"
+    }
+  },
+  "required": [
+    "opportunity_id",
+    "comment_text",
+    "author_email"
+  ]
+}

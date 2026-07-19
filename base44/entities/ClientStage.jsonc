@@ -1,0 +1,65 @@
+{
+  "name": "ClientStage",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "lead",
+        "trial",
+        "onboarding",
+        "active",
+        "at_risk",
+        "churned",
+        "won_back"
+      ],
+      "default": "lead"
+    },
+    "health_score": {
+      "type": "number",
+      "description": "0-100 score indicating client health"
+    },
+    "lifetime_value": {
+      "type": "number"
+    },
+    "engagement_score": {
+      "type": "number",
+      "description": "0-100 based on activity"
+    },
+    "last_login": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "documents_created": {
+      "type": "number",
+      "default": 0
+    },
+    "reviews_requested": {
+      "type": "number",
+      "default": 0
+    },
+    "assigned_coach": {
+      "type": "string"
+    },
+    "assigned_account_manager": {
+      "type": "string"
+    },
+    "renewal_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "churn_risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "organization_id",
+    "stage"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "name": "DonorStewardshipPlan",
+  "type": "object",
+  "properties": {
+    "plan_name": {
+      "type": "string",
+      "description": "Name of the stewardship plan"
+    },
+    "organization_id": {
+      "type": "string",
+      "description": "Associated organization"
+    },
+    "fiscal_year": {
+      "type": "string",
+      "description": "Fiscal year for this plan"
+    },
+    "plan_type": {
+      "type": "string",
+      "enum": [
+        "acknowledgement",
+        "donor_experience",
+        "full_stewardship"
+      ],
+      "description": "Type of stewardship plan"
+    },
+    "donor_segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "segment_name": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "gift_range_min": {
+            "type": "number"
+          },
+          "gift_range_max": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Donor segments for this plan"
+    },
+    "touchpoint_matrix": {
+      "type": "object",
+      "description": "Matrix mapping touchpoints to donor segments"
+    },
+    "annual_calendar": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "touchpoint": {
+            "type": "string"
+          },
+          "coordinator": {
+            "type": "string"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_name"
+  ]
+}

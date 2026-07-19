@@ -1,0 +1,288 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "event_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "webinar",
+        "workshop",
+        "networking",
+        "training",
+        "meetup",
+        "conference"
+      ],
+      "default": "webinar"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/New_York"
+    },
+    "location_type": {
+      "type": "string",
+      "enum": [
+        "virtual",
+        "in_person",
+        "hybrid"
+      ],
+      "default": "virtual"
+    },
+    "location_details": {
+      "type": "string"
+    },
+    "meeting_url": {
+      "type": "string"
+    },
+    "is_external": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this is an external training/event not hosted by EIS"
+    },
+    "external_provider": {
+      "type": "string",
+      "description": "Name of the external organization providing this event (e.g., Apex, Urban League)"
+    },
+    "external_registration_url": {
+      "type": "string",
+      "description": "Link to register/learn more on the external provider's site"
+    },
+    "max_attendees": {
+      "type": "number"
+    },
+    "registration_required": {
+      "type": "boolean",
+      "default": true
+    },
+    "cover_image_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "live",
+        "completed",
+        "cancelled"
+      ],
+      "default": "upcoming"
+    },
+    "total_registered": {
+      "type": "number",
+      "default": 0
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false
+    },
+    "recurrence_pattern": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly"
+          ]
+        },
+        "interval": {
+          "type": "number"
+        },
+        "days_of_week": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "end_type": {
+          "type": "string",
+          "enum": [
+            "never",
+            "after",
+            "on_date"
+          ]
+        },
+        "occurrences": {
+          "type": "number"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "parent_event_id": {
+      "type": "string"
+    },
+    "ticketing_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "ticket_tiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tier_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "max_tickets": {
+            "type": "number"
+          },
+          "sold_tickets": {
+            "type": "number",
+            "default": 0
+          },
+          "stripe_price_id": {
+            "type": "string"
+          },
+          "benefits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "agenda": {
+      "type": "array",
+      "description": "Detailed agenda items for the event",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "speakers": {
+      "type": "array",
+      "description": "Speaker bios for the event",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "photo_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "materials": {
+      "type": "array",
+      "description": "Presentation materials and downloadable resources",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "calendar_integration": {
+      "type": "object",
+      "properties": {
+        "google_calendar_enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "outlook_enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "ical_url": {
+          "type": "string"
+        }
+      }
+    },
+    "post_event_survey": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "survey_title": {
+          "type": "string"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "rating",
+                  "multiple_choice",
+                  "checkbox"
+                ]
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "send_after_hours": {
+          "type": "number",
+          "default": 2
+        }
+      }
+    }
+  },
+  "required": [
+    "event_name",
+    "start_date"
+  ]
+}

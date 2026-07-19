@@ -1,0 +1,48 @@
+{
+  "name": "EmailTemplate",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "Unique identifier for the template"
+    },
+    "template_name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body_html": {
+      "type": "string",
+      "description": "HTML email body with variable placeholders"
+    },
+    "available_variables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of available merge variables"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "incubateher",
+        "general",
+        "system"
+      ]
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_edited_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "template_id",
+    "template_name",
+    "subject",
+    "body_html"
+  ]
+}

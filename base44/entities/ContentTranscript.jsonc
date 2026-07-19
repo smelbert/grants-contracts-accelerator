@@ -1,0 +1,69 @@
+{
+  "name": "ContentTranscript",
+  "type": "object",
+  "properties": {
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "live_room",
+        "live_stream",
+        "course_video"
+      ],
+      "description": "Type of content transcribed"
+    },
+    "content_id": {
+      "type": "string",
+      "description": "ID of the related content"
+    },
+    "transcript_text": {
+      "type": "string",
+      "description": "Full transcript text"
+    },
+    "transcript_url": {
+      "type": "string",
+      "description": "URL to stored transcript file"
+    },
+    "language": {
+      "type": "string",
+      "default": "en"
+    },
+    "duration_seconds": {
+      "type": "number"
+    },
+    "processing_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start_time": {
+            "type": "number"
+          },
+          "end_time": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "speaker": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Timestamped transcript segments"
+    }
+  },
+  "required": [
+    "content_type",
+    "content_id"
+  ]
+}

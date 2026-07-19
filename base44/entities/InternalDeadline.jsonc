@@ -1,0 +1,69 @@
+{
+  "name": "InternalDeadline",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Owner of this deadline"
+    },
+    "title": {
+      "type": "string",
+      "description": "Name of the internal deadline"
+    },
+    "deadline_type": {
+      "type": "string",
+      "enum": [
+        "draft_review",
+        "final_assembly",
+        "submission_prep",
+        "other"
+      ],
+      "description": "Type of internal deadline"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this deadline is due"
+    },
+    "linked_opportunity_id": {
+      "type": "string",
+      "description": "Optional link to a FundingOpportunity"
+    },
+    "linked_opportunity_title": {
+      "type": "string",
+      "description": "Cached title of linked opportunity"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "reminder_days_before": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Send reminders this many days before due date (e.g. [7, 3, 1])",
+      "default": [
+        7,
+        3,
+        1
+      ]
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminders_sent": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Which reminder intervals have already been sent"
+    }
+  },
+  "required": [
+    "user_email",
+    "title",
+    "due_date",
+    "deadline_type"
+  ]
+}

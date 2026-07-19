@@ -1,0 +1,63 @@
+{
+  "name": "StewardshipTouchpoint",
+  "type": "object",
+  "properties": {
+    "touchpoint_name": {
+      "type": "string",
+      "description": "Name of the touchpoint"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ways_to_thank",
+        "ways_to_recognize",
+        "gift_impact",
+        "mission_experience",
+        "community_experience",
+        "relationship_management"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "timing": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "within_24_hours",
+        "within_1_week",
+        "within_1_month",
+        "within_1_year",
+        "ongoing",
+        "custom"
+      ],
+      "description": "When this touchpoint should occur"
+    },
+    "responsible_role": {
+      "type": "string",
+      "description": "Who is responsible (e.g., CEO, Stewardship Staff, Relationship Manager)"
+    },
+    "frequency": {
+      "type": "string",
+      "description": "How often this occurs (e.g., 1x per year, 5x per year)"
+    },
+    "template_content": {
+      "type": "string",
+      "description": "Template or sample content for this touchpoint"
+    },
+    "estimated_cost": {
+      "type": "number"
+    },
+    "time_required_minutes": {
+      "type": "number"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "touchpoint_name",
+    "category"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name": "CoachProfile",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the coach/staff member"
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "coach",
+        "staff",
+        "admin",
+        "consultant"
+      ],
+      "default": "coach"
+    },
+    "title": {
+      "type": "string",
+      "description": "Job title (e.g., Senior Grant Coach, Program Manager)"
+    },
+    "headshot_url": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Professional biography"
+    },
+    "specialties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Areas of expertise (e.g., grants, contracts, evaluation)"
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Professional certifications"
+    },
+    "years_experience": {
+      "type": "number"
+    },
+    "linkedin_url": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "availability_status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "limited",
+        "unavailable"
+      ],
+      "default": "available"
+    },
+    "max_clients": {
+      "type": "number",
+      "description": "Maximum number of clients/organizations"
+    },
+    "current_client_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "calendar_link": {
+      "type": "string",
+      "description": "Link to booking calendar"
+    }
+  },
+  "required": [
+    "user_email",
+    "full_name"
+  ]
+}

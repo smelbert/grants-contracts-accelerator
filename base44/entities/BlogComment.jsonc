@@ -1,0 +1,51 @@
+{
+  "name": "BlogComment",
+  "type": "object",
+  "properties": {
+    "blog_post_id": {
+      "type": "string",
+      "description": "ID of the blog post"
+    },
+    "parent_comment_id": {
+      "type": "string",
+      "description": "ID of parent comment for threaded replies"
+    },
+    "commenter_email": {
+      "type": "string",
+      "description": "Email of the commenter"
+    },
+    "commenter_name": {
+      "type": "string",
+      "description": "Name of the commenter"
+    },
+    "content": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "spam",
+        "deleted"
+      ],
+      "default": "approved",
+      "description": "Moderation status"
+    },
+    "is_edited": {
+      "type": "boolean",
+      "default": false
+    },
+    "edited_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "blog_post_id",
+    "commenter_email",
+    "commenter_name",
+    "content"
+  ]
+}

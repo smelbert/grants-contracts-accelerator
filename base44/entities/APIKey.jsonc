@@ -1,0 +1,35 @@
+{
+  "name": "APIKey",
+  "type": "object",
+  "properties": {
+    "key_name": {
+      "type": "string"
+    },
+    "api_key": {
+      "type": "string",
+      "description": "Hashed API key"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of allowed permissions"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_used": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "key_name"
+  ]
+}

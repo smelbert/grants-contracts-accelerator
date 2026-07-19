@@ -1,0 +1,55 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "channel_id": {
+      "type": "string",
+      "description": "Group/channel this message belongs to"
+    },
+    "message_text": {
+      "type": "string"
+    },
+    "sender_email": {
+      "type": "string"
+    },
+    "sender_name": {
+      "type": "string"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "file",
+        "system"
+      ],
+      "default": "text"
+    },
+    "attachment_url": {
+      "type": "string"
+    },
+    "is_edited": {
+      "type": "boolean",
+      "default": false
+    },
+    "reactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "emoji": {
+            "type": "string"
+          },
+          "user_email": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "channel_id",
+    "message_text",
+    "sender_email"
+  ]
+}

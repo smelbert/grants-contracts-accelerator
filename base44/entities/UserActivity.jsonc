@@ -1,0 +1,46 @@
+{
+  "name": "UserActivity",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "post_created",
+        "comment_added",
+        "event_registered",
+        "course_completed",
+        "course_started",
+        "discussion_created",
+        "reply_added",
+        "like_given",
+        "space_joined",
+        "page_visit"
+      ],
+      "description": "Type of activity performed"
+    },
+    "points_earned": {
+      "type": "number",
+      "default": 0
+    },
+    "related_entity_type": {
+      "type": "string"
+    },
+    "related_entity_id": {
+      "type": "string"
+    },
+    "space_id": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "page, duration_seconds, clicks, keystrokes, flush_reason, user_agent for page_visit events"
+    }
+  },
+  "required": [
+    "user_email",
+    "activity_type"
+  ]
+}

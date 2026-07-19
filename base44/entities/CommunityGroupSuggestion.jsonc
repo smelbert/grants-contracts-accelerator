@@ -1,0 +1,65 @@
+{
+  "name": "CommunityGroupSuggestion",
+  "type": "object",
+  "properties": {
+    "group_name": {
+      "type": "string"
+    },
+    "suggested_by_email": {
+      "type": "string"
+    },
+    "suggested_by_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "target_audience": {
+      "type": "string",
+      "description": "Who would benefit from this group"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why this group is needed"
+    },
+    "estimated_interest": {
+      "type": "string",
+      "enum": [
+        "5-10",
+        "10-25",
+        "25-50",
+        "50+"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "created"
+      ],
+      "default": "pending"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "upvotes": {
+      "type": "number",
+      "default": 0
+    },
+    "upvoted_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of user emails who upvoted"
+    }
+  },
+  "required": [
+    "group_name",
+    "suggested_by_email",
+    "description",
+    "target_audience"
+  ]
+}

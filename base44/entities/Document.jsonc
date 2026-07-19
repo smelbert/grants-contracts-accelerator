@@ -1,0 +1,78 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "doc_name": {
+      "type": "string"
+    },
+    "doc_type": {
+      "type": "string",
+      "enum": [
+        "governance",
+        "finance",
+        "proposal",
+        "contract",
+        "narrative",
+        "budget",
+        "other"
+      ]
+    },
+    "version_number": {
+      "type": "number",
+      "default": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted_for_review",
+        "in_review",
+        "approved",
+        "needs_revision",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "ai_assisted": {
+      "type": "boolean",
+      "default": false
+    },
+    "content": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "private",
+        "coach_review",
+        "team"
+      ],
+      "default": "private"
+    },
+    "shared_for_review": {
+      "type": "boolean",
+      "default": false
+    },
+    "review_fee_paid": {
+      "type": "boolean",
+      "default": false
+    },
+    "reviewer_id": {
+      "type": "string"
+    },
+    "review_completed_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "review_summary": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "doc_name",
+    "doc_type"
+  ]
+}

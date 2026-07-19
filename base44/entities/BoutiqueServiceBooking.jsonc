@@ -1,0 +1,102 @@
+{
+  "name": "BoutiqueServiceBooking",
+  "type": "object",
+  "properties": {
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "rfp_rapid_response",
+        "grant_readiness_intensive",
+        "strategy_reset"
+      ],
+      "description": "Type of boutique service"
+    },
+    "tier": {
+      "type": "string",
+      "description": "Service tier selected (e.g., Rapid Review, Standard Readiness)"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date-time",
+      "description": "For RFP Rapid Response - proposal deadline"
+    },
+    "intake_data": {
+      "type": "object",
+      "description": "Service-specific intake information"
+    },
+    "price_paid": {
+      "type": "number"
+    },
+    "stripe_payment_intent_id": {
+      "type": "string"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "failed",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "booking_status": {
+      "type": "string",
+      "enum": [
+        "intake_pending",
+        "scheduled",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "intake_pending"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coach_assigned": {
+      "type": "string",
+      "description": "Email of assigned coach"
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "file_url": {
+            "type": "string"
+          },
+          "delivered_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "service_type",
+    "tier",
+    "user_email",
+    "user_name"
+  ]
+}

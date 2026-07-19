@@ -1,0 +1,70 @@
+{
+  "name": "UserNotification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "new_resource",
+        "resource_update",
+        "community_reply",
+        "community_new_post",
+        "program_announcement",
+        "session_reminder",
+        "new_learning_content",
+        "project_update",
+        "project_invitation",
+        "system_alert",
+        "new_session_scheduled",
+        "giveaway_status_change",
+        "evaluation_feedback"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string",
+      "description": "URL to navigate to when notification is clicked"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_email_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    },
+    "related_entity_type": {
+      "type": "string"
+    },
+    "related_entity_id": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "user_email",
+    "notification_type",
+    "title",
+    "message"
+  ]
+}

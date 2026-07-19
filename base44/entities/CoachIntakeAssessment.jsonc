@@ -1,0 +1,155 @@
+{
+  "name": "CoachIntakeAssessment",
+  "type": "object",
+  "properties": {
+    "coach_email": {
+      "type": "string"
+    },
+    "coach_name": {
+      "type": "string"
+    },
+    "grant_writing_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "grant_writing_experience_years": {
+      "type": "number"
+    },
+    "grant_writing_notes": {
+      "type": "string"
+    },
+    "contract_management_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "contract_experience_years": {
+      "type": "number"
+    },
+    "contract_notes": {
+      "type": "string"
+    },
+    "proposal_development_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "proposal_experience_years": {
+      "type": "number"
+    },
+    "proposal_notes": {
+      "type": "string"
+    },
+    "pitch_coaching_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "pitch_experience_years": {
+      "type": "number"
+    },
+    "pitch_notes": {
+      "type": "string"
+    },
+    "budget_development_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "compliance_expertise_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "nonprofit_sectors_worked_with": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Youth, Education, Health, etc."
+    },
+    "total_grants_written": {
+      "type": "number"
+    },
+    "total_funding_secured": {
+      "type": "number",
+      "description": "Total dollar amount"
+    },
+    "average_grant_size": {
+      "type": "string",
+      "enum": [
+        "under_10k",
+        "10k_50k",
+        "50k_100k",
+        "100k_500k",
+        "500k_plus"
+      ]
+    },
+    "preferred_coaching_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "areas_for_development": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "training_priorities": {
+      "type": "string",
+      "description": "What training topics are most important to you?"
+    },
+    "availability_hours_per_week": {
+      "type": "number"
+    },
+    "preferred_client_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "completed",
+        "reviewed"
+      ],
+      "default": "in_progress"
+    }
+  },
+  "required": [
+    "coach_email"
+  ]
+}

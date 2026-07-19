@@ -1,0 +1,70 @@
+{
+  "name": "UserReport",
+  "type": "object",
+  "properties": {
+    "reported_user_email": {
+      "type": "string",
+      "description": "Email of the user being reported"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of the user submitting the report"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "harassment",
+        "inappropriate_content",
+        "spam",
+        "hate_speech",
+        "impersonation",
+        "other"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the issue"
+    },
+    "related_content_type": {
+      "type": "string",
+      "enum": [
+        "discussion",
+        "comment",
+        "message",
+        "profile"
+      ],
+      "description": "Type of content where the violation occurred"
+    },
+    "related_content_id": {
+      "type": "string",
+      "description": "ID of the related content"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "under_review",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "action_taken": {
+      "type": "string",
+      "description": "Action taken by moderators/admins"
+    },
+    "resolved_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "reported_user_email",
+    "reporter_email",
+    "reason",
+    "description"
+  ]
+}

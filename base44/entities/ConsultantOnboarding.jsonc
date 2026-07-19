@@ -1,0 +1,107 @@
+{
+  "name": "ConsultantOnboarding",
+  "type": "object",
+  "properties": {
+    "consultant_email": {
+      "type": "string"
+    },
+    "consultant_name": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "current_level": {
+      "type": "string",
+      "enum": [
+        "level-1",
+        "level-2",
+        "level-3"
+      ],
+      "default": "level-1",
+      "description": "Foundation, Intermediate, or Senior"
+    },
+    "onboarding_phase": {
+      "type": "string",
+      "enum": [
+        "days_0_30",
+        "days_31_60",
+        "days_61_90",
+        "completed"
+      ],
+      "default": "days_0_30"
+    },
+    "modules_completed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of completed module IDs"
+    },
+    "worksheets_completed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "discovery_calls_shadowed": {
+      "type": "number",
+      "default": 0
+    },
+    "drafts_submitted": {
+      "type": "number",
+      "default": 0
+    },
+    "drafts_approved": {
+      "type": "number",
+      "default": 0
+    },
+    "funded_proposals_count": {
+      "type": "number",
+      "default": 0
+    },
+    "can_lead_pitches": {
+      "type": "boolean",
+      "default": false
+    },
+    "can_submit_final_drafts": {
+      "type": "boolean",
+      "default": false
+    },
+    "can_communicate_with_funders": {
+      "type": "boolean",
+      "default": false
+    },
+    "promotion_eligibility": {
+      "type": "object",
+      "properties": {
+        "eligible_for_level_2": {
+          "type": "boolean",
+          "default": false
+        },
+        "eligible_for_level_3": {
+          "type": "boolean",
+          "default": false
+        },
+        "eligibility_notes": {
+          "type": "string"
+        }
+      }
+    },
+    "mentor_email": {
+      "type": "string",
+      "description": "Assigned mentor/supervisor"
+    },
+    "next_review_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "consultant_email"
+  ]
+}

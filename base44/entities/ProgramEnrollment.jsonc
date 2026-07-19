@@ -1,0 +1,195 @@
+{
+  "name": "ProgramEnrollment",
+  "type": "object",
+  "properties": {
+    "cohort_id": {
+      "type": "string",
+      "description": "ID of the ProgramCohort"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "login_email": {
+      "type": "string",
+      "description": "The email they actually use to log in (may differ from participant_email if they registered with a different address)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Base44 User ID once linked to their login account \u2014 ensures data persists even if emails differ"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "phone_number": {
+      "type": "string"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "selected_schedule_option": {
+      "type": "string",
+      "description": "Which schedule option the participant selected"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "participant",
+        "facilitator",
+        "contractor",
+        "admin",
+        "funder_viewer",
+        "cul_observer"
+      ],
+      "default": "participant",
+      "description": "CUL observers can participate but are not required to complete work"
+    },
+    "enrollment_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "withdrawn"
+      ],
+      "default": "active"
+    },
+    "enrolled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "enrollment_notes": {
+      "type": "string"
+    },
+    "jotform_data": {
+      "type": "object",
+      "description": "All data submitted by participant in JotForm registration",
+      "properties": {
+        "submission_date": {
+          "type": "string"
+        },
+        "cohort": {
+          "type": "string"
+        },
+        "participation_plan": {
+          "type": "string"
+        },
+        "attend_in_person": {
+          "type": "string"
+        },
+        "interested_in_consultation": {
+          "type": "string"
+        },
+        "documents_needed": {
+          "type": "string"
+        },
+        "funding_barrier": {
+          "type": "string"
+        },
+        "existing_items": {
+          "type": "string"
+        },
+        "goals": {
+          "type": "string"
+        },
+        "org_type": {
+          "type": "string"
+        },
+        "years_in_business": {
+          "type": "string"
+        },
+        "annual_revenue": {
+          "type": "string"
+        },
+        "employees": {
+          "type": "string"
+        },
+        "grant_experience": {
+          "type": "string"
+        },
+        "how_heard": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "pre_assessment_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "pre_assessment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "pre_assessment_score": {
+      "type": "number"
+    },
+    "post_assessment_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "post_assessment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "post_assessment_score": {
+      "type": "number"
+    },
+    "consultation_booked": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when the participant has booked their 1:1 via Calendly"
+    },
+    "consultation_booked_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date/time the Calendly booking was made or recorded"
+    },
+    "consultation_booked_notes": {
+      "type": "string",
+      "description": "Admin notes about the booking (e.g. scheduled date/time from Calendly)"
+    },
+    "consultation_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "consultation_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "documents_uploaded": {
+      "type": "boolean",
+      "default": false
+    },
+    "attendance_sessions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of attended session IDs"
+    },
+    "attendance_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "program_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "giveaway_eligible": {
+      "type": "boolean",
+      "default": false
+    },
+    "giveaway_winner": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "cohort_id",
+    "participant_email",
+    "participant_name"
+  ]
+}

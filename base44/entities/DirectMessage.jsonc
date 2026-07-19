@@ -1,0 +1,45 @@
+{
+  "name": "DirectMessage",
+  "type": "object",
+  "properties": {
+    "sender_email": {
+      "type": "string"
+    },
+    "recipient_email": {
+      "type": "string"
+    },
+    "message_text": {
+      "type": "string"
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "Unique ID for the conversation thread"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "read_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "attachment_url": {
+      "type": "string"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "file"
+      ],
+      "default": "text"
+    }
+  },
+  "required": [
+    "sender_email",
+    "recipient_email",
+    "message_text",
+    "conversation_id"
+  ]
+}

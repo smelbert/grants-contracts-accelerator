@@ -1,0 +1,31 @@
+{
+  "name": "WorkbookResponse",
+  "type": "object",
+  "properties": {
+    "enrollment_id": {
+      "type": "string",
+      "description": "ID of the ProgramEnrollment"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "page_id": {
+      "type": "string",
+      "description": "Unique identifier for the workbook page"
+    },
+    "responses": {
+      "type": "object",
+      "description": "Key-value pairs of field_id: response"
+    },
+    "last_saved": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "enrollment_id",
+    "participant_email",
+    "page_id",
+    "responses"
+  ]
+}

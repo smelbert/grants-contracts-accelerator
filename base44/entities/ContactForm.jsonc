@@ -1,0 +1,50 @@
+{
+  "name": "ContactForm",
+  "type": "object",
+  "properties": {
+    "form_name": {
+      "type": "string"
+    },
+    "form_fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field_name": {
+            "type": "string"
+          },
+          "field_type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "success_message": {
+      "type": "string"
+    },
+    "redirect_url": {
+      "type": "string"
+    },
+    "auto_add_segments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Automatically add these segments when form submitted"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "total_submissions": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "form_name"
+  ]
+}

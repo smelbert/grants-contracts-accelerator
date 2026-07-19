@@ -1,0 +1,64 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "User who performed the action"
+    },
+    "user_role": {
+      "type": "string"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "user_created",
+        "user_updated",
+        "user_deleted",
+        "subscription_created",
+        "subscription_updated",
+        "subscription_cancelled",
+        "payment_successful",
+        "payment_failed",
+        "login",
+        "logout",
+        "password_reset",
+        "settings_changed",
+        "entity_created",
+        "entity_updated",
+        "entity_deleted",
+        "file_uploaded",
+        "admin_action",
+        "other"
+      ]
+    },
+    "entity_type": {
+      "type": "string",
+      "description": "Type of entity affected (if applicable)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of entity affected"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the action"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional context about the action"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email",
+    "action_type",
+    "description"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "name": "UserEnrollment",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the enrolled user"
+    },
+    "content_id": {
+      "type": "string",
+      "description": "ID of the LearningContent they're enrolled in"
+    },
+    "enrollment_type": {
+      "type": "string",
+      "enum": [
+        "course",
+        "coaching",
+        "workshop"
+      ],
+      "default": "course"
+    },
+    "cohort_id": {
+      "type": "string",
+      "description": "Optional cohort identifier for group management"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "withdrawn",
+        "pending"
+      ],
+      "default": "active"
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "enrolled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "welcome_email_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "prep_materials_accessed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_email",
+    "content_id",
+    "enrollment_type"
+  ]
+}

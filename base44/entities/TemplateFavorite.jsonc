@@ -1,0 +1,21 @@
+{
+  "name": "TemplateFavorite",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "Reference to Template"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "organization_id": {
+      "type": "string",
+      "description": "Reference to Organization"
+    }
+  },
+  "required": [
+    "template_id",
+    "user_email"
+  ]
+}
