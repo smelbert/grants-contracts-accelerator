@@ -18,6 +18,8 @@ import TemplateEditor from '@/components/templates/TemplateEditor';
 import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
 import ComingSoonPipeline from '@/components/library/ComingSoonPipeline';
 import ResourceReadinessAssessment from '@/components/assessment/ResourceReadinessAssessment';
+import PacketDownloadButton from '@/components/shared/PacketDownloadButton';
+import { buildResourceTemplateItem } from '@/lib/packetBuilder';
 import { createPageUrl } from '@/utils';
 
 const CATEGORY_CONFIG = {
@@ -184,13 +186,25 @@ export default function ResourceLibrary() {
             <h1 className="text-4xl font-bold text-[#143A50] mb-2">Resource Library</h1>
             <p className="text-slate-600">Templates, guidebooks, and workbooks to support your funding journey</p>
           </div>
-          <Button
-            onClick={() => setAssessmentOpen(true)}
-            className="bg-[#AC1A5B] hover:bg-[#8e1049] text-white gap-2 shadow-lg flex-shrink-0"
-          >
-            <Target className="w-4 h-4" />
-            Find My Best Templates
-          </Button>
+          <div className="flex gap-2 flex-shrink-0">
+            {filteredResources.length > 0 && (
+              <PacketDownloadButton
+                items={filteredResources.map(r => buildResourceTemplateItem(r))}
+                zipName={`EIS_Resource_Library_${new Date().toLocaleDateString().replace(/\//g, '-')}`}
+                label="Download All"
+                icon={Download}
+                variant="outline"
+                className="border-2 border-[#143A50] text-[#143A50] hover:bg-[#143A50]/10"
+              />
+            )}
+            <Button
+              onClick={() => setAssessmentOpen(true)}
+              className="bg-[#AC1A5B] hover:bg-[#8e1049] text-white gap-2 shadow-lg"
+            >
+              <Target className="w-4 h-4" />
+              Find My Best Templates
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -331,7 +345,16 @@ export default function ResourceLibrary() {
                       <div className="flex items-center gap-3 mb-4 pb-2 border-b-2 border-slate-100">
                         <Icon className="w-6 h-6 text-[#143A50]" />
                         <h2 className="text-xl font-bold text-[#143A50]">{cfg.label}</h2>
-                        <Badge variant="outline" className="ml-auto">{items.length}</Badge>
+                        <Badge variant="outline" className="ml-2">{items.length}</Badge>
+                        <PacketDownloadButton
+                          items={items.map(r => buildResourceTemplateItem(r))}
+                          zipName={`EIS_${cfg.label.replace(/\s+/g, '_')}`}
+                          label="Download Category"
+                          icon={Download}
+                          variant="outline"
+                          size="sm"
+                          className="ml-auto border-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/10"
+                        />
                       </div>
                       <ResourceGrid
                         resources={items}

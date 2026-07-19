@@ -9,7 +9,7 @@ import { Download, FileText, CheckCircle2, Edit, ExternalLink } from 'lucide-rea
 import { toast } from 'sonner';
 import EditableDocumentTemplate from './EditableDocumentTemplate';
 
-const DOCUMENT_TEMPLATES = {
+export const DOCUMENT_TEMPLATES = {
   day1: [
     {
       id: 'org-overview',
@@ -108,7 +108,7 @@ const DOCUMENT_TEMPLATES = {
   ]
 };
 
-const DOCUMENTS_TO_GATHER = {
+export const DOCUMENTS_TO_GATHER = {
   day1: {
     title: 'Legal & Structure Documents',
     items: [

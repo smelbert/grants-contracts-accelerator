@@ -12,8 +12,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, FileText, CheckCircle2, Edit, Upload, Download, Sparkles, Trash2, FolderOpen } from 'lucide-react';
-import DocumentTemplates from '@/components/incubateher/DocumentTemplates';
+import DocumentTemplates, { DOCUMENT_TEMPLATES, DOCUMENTS_TO_GATHER } from '@/components/incubateher/DocumentTemplates';
 import SuggestTemplatePanel from '@/components/incubateher/SuggestTemplatePanel';
+import PacketDownloadButton from '@/components/shared/PacketDownloadButton';
+import { buildIncubateHerTemplateItem, buildGatherListItem } from '@/lib/packetBuilder';
 import { toast } from 'sonner';
 
 export default function IncubateHerDocuments() {
@@ -255,7 +257,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
         </Card>
 
         <Tabs value={selectedDay} onValueChange={setSelectedDay}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="day1" className="flex flex-col gap-1 py-3">
               <span className="text-lg">🟢 Day 1</span>
               <span className="text-xs">Structure & Eligibility</span>
@@ -267,6 +269,10 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             <TabsTrigger value="day3" className="flex flex-col gap-1 py-3">
               <span className="text-lg">🟣 Day 3</span>
               <span className="text-xs">Strategy & Positioning</span>
+            </TabsTrigger>
+            <TabsTrigger value="packets" className="flex flex-col gap-1 py-3">
+              <span className="text-lg">📦 Packets</span>
+              <span className="text-xs">Download All</span>
             </TabsTrigger>
             <TabsTrigger value="mydocs" className="flex flex-col gap-1 py-3">
               <span className="text-lg">📁 My Documents</span>
@@ -367,6 +373,126 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
 
             <DocumentTemplates day="day3" />
             <SuggestTemplatePanel userEmail={user?.email} userName={user?.full_name} context="day3_documents" />
+          </TabsContent>
+
+          <TabsContent value="packets" className="mt-8">
+            <Card className="mb-6 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <FolderOpen className="w-8 h-8 text-[#E5C089]" />
+                  <div>
+                    <CardTitle className="text-2xl text-white">Download Document Packets</CardTitle>
+                    <p className="text-white/80 mt-1">
+                      Download all templates and checklists for a single day or the entire three-day program as a ZIP file.
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {/* Day 1 Packet */}
+              <Card className="border-l-4 border-green-500">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <span className="text-2xl">🟢</span> Day 1 Packet
+                    </CardTitle>
+                    <Badge className="bg-green-600 text-white">{DOCUMENT_TEMPLATES.day1.length + 1} files</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-600 mb-4">Structure & Eligibility — all templates plus the documents-to-gather checklist.</p>
+                  <PacketDownloadButton
+                    items={[
+                      ...DOCUMENT_TEMPLATES.day1.map(t => buildIncubateHerTemplateItem(t, 'Day 1')),
+                      buildGatherListItem(DOCUMENTS_TO_GATHER.day1, 'Day 1'),
+                    ]}
+                    zipName="IncubateHer_Day1_Packet"
+                    label="Download Day 1 Packet"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Day 2 Packet */}
+              <Card className="border-l-4 border-blue-500">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <span className="text-2xl">🔵</span> Day 2 Packet
+                    </CardTitle>
+                    <Badge className="bg-blue-600 text-white">{DOCUMENT_TEMPLATES.day2.length + 1} files</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-600 mb-4">Financial & Data — all templates plus the documents-to-gather checklist.</p>
+                  <PacketDownloadButton
+                    items={[
+                      ...DOCUMENT_TEMPLATES.day2.map(t => buildIncubateHerTemplateItem(t, 'Day 2')),
+                      buildGatherListItem(DOCUMENTS_TO_GATHER.day2, 'Day 2'),
+                    ]}
+                    zipName="IncubateHer_Day2_Packet"
+                    label="Download Day 2 Packet"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Day 3 Packet */}
+              <Card className="border-l-4 border-purple-500">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <span className="text-2xl">🟣</span> Day 3 Packet
+                    </CardTitle>
+                    <Badge className="bg-purple-600 text-white">{DOCUMENT_TEMPLATES.day3.length + 1} files</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-600 mb-4">Strategy & Positioning — all templates plus the documents-to-gather checklist.</p>
+                  <PacketDownloadButton
+                    items={[
+                      ...DOCUMENT_TEMPLATES.day3.map(t => buildIncubateHerTemplateItem(t, 'Day 3')),
+                      buildGatherListItem(DOCUMENTS_TO_GATHER.day3, 'Day 3'),
+                    ]}
+                    zipName="IncubateHer_Day3_Packet"
+                    label="Download Day 3 Packet"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Full Program Packet */}
+              <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#E5C089]/10 to-[#143A50]/5">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <span className="text-2xl">📦</span> Full Program Packet
+                    </CardTitle>
+                    <Badge className="bg-[#143A50] text-white">
+                      {DOCUMENT_TEMPLATES.day1.length + DOCUMENT_TEMPLATES.day2.length + DOCUMENT_TEMPLATES.day3.length + 3} files
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-600 mb-4">All three days combined — every template and checklist in one download.</p>
+                  <PacketDownloadButton
+                    items={[
+                      ...DOCUMENT_TEMPLATES.day1.map(t => ({ ...buildIncubateHerTemplateItem(t, 'Day 1'), name: `Day1 - ${t.title}` })),
+                      { ...buildGatherListItem(DOCUMENTS_TO_GATHER.day1, 'Day 1'), name: 'Day 1 - Documents to Gather' },
+                      ...DOCUMENT_TEMPLATES.day2.map(t => ({ ...buildIncubateHerTemplateItem(t, 'Day 2'), name: `Day2 - ${t.title}` })),
+                      { ...buildGatherListItem(DOCUMENTS_TO_GATHER.day2, 'Day 2'), name: 'Day 2 - Documents to Gather' },
+                      ...DOCUMENT_TEMPLATES.day3.map(t => ({ ...buildIncubateHerTemplateItem(t, 'Day 3'), name: `Day3 - ${t.title}` })),
+                      { ...buildGatherListItem(DOCUMENTS_TO_GATHER.day3, 'Day 3'), name: 'Day 3 - Documents to Gather' },
+                    ]}
+                    zipName="IncubateHer_Full_Program_Packet"
+                    label="Download Full Program Packet"
+                    className="w-full bg-[#143A50] hover:bg-[#1E4F58] text-white"
+                  />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="mydocs" className="mt-8">
