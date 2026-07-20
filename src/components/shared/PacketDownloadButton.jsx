@@ -5,11 +5,11 @@ import { toast } from 'sonner';
 import { Download, Loader2, Archive } from 'lucide-react';
 
 /**
- * Reusable button that sends an array of { name, html } items to the
- * exportPacket backend function and downloads the resulting ZIP (or single PDF).
+ * Reusable button that sends structured-content items to the exportPacket
+ * backend function and downloads the resulting ZIP (or single PDF).
  *
  * Props:
- *  - items: Array<{ name: string, html: string }>
+ *  - items: Array<{ name, title, subtitle?, meta?, badges?, sections? }>
  *  - zipName: string (name of the ZIP file without .zip)
  *  - label: string (button text)
  *  - icon: optional icon component
