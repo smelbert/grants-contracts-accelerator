@@ -402,14 +402,23 @@ export default function ResourceLibrary() {
                       size="sm"
                       variant="outline"
                       onClick={async () => {
-                        const res = await base44.functions.invoke('exportTemplate', { templateId: previewResource.id, templateName: previewResource.template_name, templateContent: previewResource.template_content });
-                        const url = window.URL.createObjectURL(new Blob([res.data]));
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.setAttribute('download', `${previewResource.template_name.replace(/\s+/g, '_')}.pdf`);
-                        document.body.appendChild(link);
-                        link.click();
-                        link.parentChild.removeChild(link);
+                        try {
+                          const res = await base44.functions.invoke('exportPacket', {
+                            items: [buildResourceTemplateItem(previewResource)],
+                            zipName: previewResource.template_name,
+                          });
+                          const blob = new Blob([res.data], { type: 'application/pdf' });
+                          const url = window.URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.setAttribute('download', `${previewResource.template_name.replace(/\s+/g, '_')}.pdf`);
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                          window.URL.revokeObjectURL(url);
+                        } catch (err) {
+                          toast.error('Export failed: ' + (err.message || 'Unknown error'));
+                        }
                       }}
                       className="gap-2"
                     >

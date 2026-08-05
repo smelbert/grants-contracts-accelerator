@@ -1,4 +1,5 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
+import { jsPDF } from 'npm:jspdf@4.0.0';
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
@@ -13,7 +14,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { templateId, templateName, templateContent, whenToUse, whenNotToUse, whatFundersLookFor, commonMistakes } = await req.json();
+    const { templateId, templateName } = await req.json();
 
     if (!templateId || !templateName) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
@@ -27,204 +28,143 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Template not found' }, { status: 404 });
     }
 
-    // Create HTML for PDF
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>${templateName}</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-          }
-          .header {
-            border-bottom: 3px solid #143A50;
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-          }
-          .header h1 {
-            color: #143A50;
-            margin: 0 0 10px 0;
-            font-size: 28px;
-          }
-          .header p {
-            color: #666;
-            margin: 5px 0;
-            font-size: 14px;
-          }
-          .metadata {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-          }
-          .badge {
-            background: #E5C089;
-            color: #143A50;
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-          }
-          .guidance-boxes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 30px 0;
-          }
-          .guidance-box {
-            padding: 15px;
-            border-left: 4px solid #999;
-            background: #f9f9f9;
-            page-break-inside: avoid;
-          }
-          .guidance-box.when-to-use {
-            border-left-color: #10b981;
-            background: #f0fdf4;
-          }
-          .guidance-box.when-not {
-            border-left-color: #ef4444;
-            background: #fef2f2;
-          }
-          .guidance-box.funders {
-            border-left-color: #3b82f6;
-            background: #eff6ff;
-          }
-          .guidance-box.mistakes {
-            border-left-color: #f59e0b;
-            background: #fffbeb;
-          }
-          .guidance-box h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-          }
-          .guidance-box p {
-            margin: 0;
-            font-size: 13px;
-          }
-          .template-content-header {
-            background: linear-gradient(to right, #143A50, #1E4F58);
-            color: white;
-            padding: 12px 15px;
-            margin: 30px 0 0 0;
-            border-radius: 4px 4px 0 0;
-            font-weight: bold;
-          }
-          .template-content {
-            border: 2px solid #143A50;
-            border-top: none;
-            padding: 20px;
-            background: white;
-            border-radius: 0 0 4px 4px;
-          }
-          .template-content h1, .template-content h2, .template-content h3 {
-            color: #143A50;
-          }
-          .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-          }
-          table th, table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-          }
-          table th {
-            background: #f5f5f5;
-            font-weight: bold;
-          }
-          @media print {
-            body { margin: 0; padding: 0; }
-            .guidance-boxes { page-break-inside: avoid; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>${template.template_name}</h1>
-          <p><strong>${template.purpose || ''}</strong></p>
-          <p>Exported: ${new Date().toLocaleDateString()} | From: Elbert Innovative Solutions</p>
-        </div>
+    // Build structured content from the template entity
+    const formatDate = () =>
+      new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-        <div class="metadata">
-          <span class="badge">${template.category || 'General'}</span>
-          <span class="badge">${template.maturity_level || 'All'}</span>
-          <span class="badge">${template.funding_lane || 'General'}</span>
-        </div>
+    const badges = [
+      template.category || 'General',
+      template.maturity_level || 'All',
+      template.funding_lane || 'General',
+    ].filter(Boolean);
 
-        ${
-          (template.when_to_use || template.when_not_to_use || template.what_funders_look_for || template.common_mistakes) 
-            ? `<div class="guidance-boxes">
-                ${template.when_to_use ? `<div class="guidance-box when-to-use"><h3>✓ When to Use</h3><p>${template.when_to_use}</p></div>` : ''}
-                ${template.when_not_to_use ? `<div class="guidance-box when-not"><h3>✗ When NOT to Use</h3><p>${template.when_not_to_use}</p></div>` : ''}
-                ${template.what_funders_look_for ? `<div class="guidance-box funders"><h3>👁 What Funders Look For</h3><p>${template.what_funders_look_for}</p></div>` : ''}
-                ${template.common_mistakes ? `<div class="guidance-box mistakes"><h3>⚠ Common Mistakes</h3><p>${template.common_mistakes}</p></div>` : ''}
-              </div>`
-            : ''
-        }
+    const sections: Array<{ heading: string; body?: string; listItems?: string[] }> = [];
+    if (template.when_to_use) sections.push({ heading: '✓ When to Use', body: template.when_to_use });
+    if (template.when_not_to_use) sections.push({ heading: '✗ When NOT to Use', body: template.when_not_to_use });
+    if (template.what_funders_look_for) sections.push({ heading: '👁 What Funders Look For', body: template.what_funders_look_for });
+    if (template.common_mistakes) sections.push({ heading: '⚠ Common Mistakes to Avoid', body: template.common_mistakes });
 
-        ${
-          template.template_content
-            ? `<div class="template-content-header">Template Content</div>
-               <div class="template-content">${template.template_content}</div>`
-            : ''
-        }
-
-        <div class="footer">
-          <p>© Elbert Innovative Solutions | Funding Readiness Resource Library</p>
-          <p>For questions or support, contact your EIS advisor</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Convert HTML to PDF using html2pdf
-    const response = await fetch('https://html2pdf.app/api/convert', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        html: htmlContent,
-        options: {
-          margin: [10, 10, 10, 10],
-          filename: `${template.template_name.replace(/\s+/g, '_')}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
-        }
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`PDF generation failed: ${response.statusText}`);
+    if (template.template_content) {
+      const plainContent = template.template_content
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (plainContent) sections.push({ heading: 'Template Content', body: plainContent });
     }
 
-    const pdfBlob = await response.blob();
-    return new Response(pdfBlob, {
+    // Render the structured content to a PDF with jsPDF
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    const maxWidth = pageWidth - margin * 2;
+    let y = margin;
+
+    const addNewPageIfNeeded = (neededHeight: number) => {
+      if (y + neededHeight > pageHeight - margin) {
+        doc.addPage();
+        y = margin;
+      }
+    };
+
+    // Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(20, 58, 80);
+    const titleLines = doc.splitTextToSize(template.template_name || 'Untitled', maxWidth);
+    titleLines.forEach((line: string) => {
+      addNewPageIfNeeded(8);
+      doc.text(line, margin, y);
+      y += 8;
+    });
+    y += 3;
+
+    // Subtitle (purpose)
+    if (template.purpose) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      const subLines = doc.splitTextToSize(template.purpose, maxWidth);
+      subLines.forEach((line: string) => {
+        addNewPageIfNeeded(6);
+        doc.text(line, margin, y);
+        y += 6;
+      });
+      y += 3;
+    }
+
+    // Meta line
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    const metaText = `Exported: ${formatDate()} | From: Elbert Innovative Solutions`;
+    doc.text(metaText, margin, y);
+    y += 8;
+
+    // Badges
+    if (badges.length > 0) {
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(20, 58, 80);
+      let badgeX = margin;
+      badges.forEach((badge) => {
+        const badgeText = `  ${badge}  `;
+        const badgeWidth = doc.getTextWidth(badgeText) + 6;
+        addNewPageIfNeeded(8);
+        doc.setFillColor(229, 192, 137);
+        doc.roundedRect(badgeX, y - 4, badgeWidth, 6, 1, 1, 'F');
+        doc.setTextColor(20, 58, 80);
+        doc.text(badgeText, badgeX + 3, y);
+        badgeX += badgeWidth + 3;
+      });
+      y += 10;
+    }
+
+    // Sections
+    for (const section of sections) {
+      addNewPageIfNeeded(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(20, 58, 80);
+      const headingLines = doc.splitTextToSize(section.heading, maxWidth);
+      headingLines.forEach((line: string) => {
+        addNewPageIfNeeded(7);
+        doc.text(line, margin, y);
+        y += 7;
+      });
+      y += 2;
+
+      if (section.body) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        doc.setTextColor(51, 51, 51);
+        const bodyLines = doc.splitTextToSize(section.body, maxWidth);
+        bodyLines.forEach((line: string) => {
+          addNewPageIfNeeded(6);
+          doc.text(line, margin, y);
+          y += 6;
+        });
+        y += 4;
+      }
+      y += 3;
+    }
+
+    // Footer
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(153, 153, 153);
+    doc.text('© Elbert Innovative Solutions', pageWidth / 2, pageHeight - 8, { align: 'center' });
+
+    const pdfBytes = doc.output('arraybuffer');
+    return new Response(pdfBytes, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${template.template_name.replace(/\s+/g, '_')}.pdf"`
-      }
+        'Content-Disposition': `attachment; filename="${(template.template_name || 'template').replace(/\s+/g, '_')}.pdf"`,
+      },
     });
-
   } catch (error) {
-    console.error('Export error:', error);
+    console.error('Export template error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

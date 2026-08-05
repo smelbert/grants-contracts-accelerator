@@ -200,29 +200,54 @@ export default function EditableDocumentTemplate({ template, open, onOpenChange,
     }
   };
 
-  const handleDownloadDocx = async () => {
+  const handleDownloadDocx = () => {
     try {
-      // Create Word doc content
-      const docContent = template.fields
-        ?.map(field => `${field.label}\n${formData[field.id] || '(Not completed)'}\n`)
-        .join('\n---\n\n');
+      const escapeHtml = (str) => (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 
-      const blob = new Blob([`${template.title}\n\n${docContent}`], { type: 'text/plain' });
-      const file = new File([blob], `${template.title}.docx`, { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-      
-      // Upload to storage
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      
-      // Create a temporary link and download
+      const fieldsHtml = template.fields
+        ?.map(field => `
+          <h3 style="color:#143A50;margin:18px 0 4px 0;font-size:14px;">${escapeHtml(field.label)}</h3>
+          <p style="margin:0 0 12px 0;font-size:12px;line-height:1.5;white-space:pre-wrap;">${escapeHtml(formData[field.id] || '(Not completed)')}</p>
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0;" />`)
+        .join('');
+
+      const html = `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>${escapeHtml(template.title)}</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->
+<style>
+body { font-family: Calibri, Arial, sans-serif; color: #1f2937; }
+h1 { color: #143A50; font-size: 22px; margin: 0 0 6px 0; }
+.lead { color: #475569; font-style: italic; font-size: 12px; margin: 0 0 20px 0; }
+.footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #94a3b8; text-align: center; }
+</style>
+</head>
+<body>
+<h1>${escapeHtml(template.title)}</h1>
+${template.description ? `<p class="lead">${escapeHtml(template.description)}</p>` : ''}
+${fieldsHtml}
+<p class="footer">© Elbert Innovative Solutions | Funding Readiness Resource</p>
+</body>
+</html>`;
+
+      const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = file_url;
-      link.download = `${template.title}.docx`;
+      link.href = url;
+      link.download = `${template.title.replace(/\s+/g, '_')}.doc`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
-      toast.success('Document downloaded!');
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Word document downloaded!');
     } catch (error) {
+      console.error('Word download error:', error);
       toast.error('Failed to download Word document');
     }
   };
@@ -326,13 +351,13 @@ Provide a professional, concise response suitable for funding applications (2-3 
       }
 
       // Field label
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       doc.setTextColor(20, 58, 80);
       doc.text(field.label, margin, yPos);
       yPos += 7;
 
       // Field value
-      doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
       doc.setTextColor(60, 60, 60);
       const value = formData[field.id] || '(Not completed)';
       const lines = doc.splitTextToSize(value, pageWidth - 2 * margin);
