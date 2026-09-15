@@ -22,6 +22,17 @@
       "type": "string",
       "description": "Link to specific program cohort (e.g., IncubateHer)"
     },
+    "program_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Program codes this content is assigned to. Empty array = available to all non-IncubateHer programs. IncubateHer content continues to use incubateher_only=true."
+    },
+    "topic": {
+      "type": "string",
+      "description": "Topic grouping for topic-based learning layout (e.g. 'legal', 'financial', 'grants')"
+    },
     "is_published": {
       "type": "boolean",
       "default": false,

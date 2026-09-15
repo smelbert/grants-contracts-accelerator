@@ -69,6 +69,12 @@ const getUserPortalNav = () => [
     ]
   },
   {
+    groupName: 'Programs',
+    items: [
+      { name: 'My Programs', page: 'ProgramOverview', icon: Target },
+    ]
+  },
+  {
     groupName: 'IncubateHer Program',
     incubateherOnly: true,
     items: [
@@ -184,6 +190,12 @@ const getAdminPortalNav = () => [
       { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
       { name: 'Community Spaces Manager', page: 'CommunityAdmin', icon: MessageCircle },
       { name: 'Community Moderation', page: 'CommunityModerationDashboard', icon: AlertTriangle },
+    ]
+  },
+  {
+    groupName: 'Programs & Curriculum',
+    items: [
+      { name: 'Program Cohorts', page: 'ProgramCohortManager', icon: Target },
     ]
   },
   {

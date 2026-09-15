@@ -57,6 +57,66 @@
         "type": "string"
       }
     },
+    "program_type": {
+      "type": "string",
+      "enum": [
+        "cohort_based",
+        "self_paced"
+      ],
+      "default": "cohort_based",
+      "description": "Cohort-based: scheduled sessions with a group. Self-paced: individual learners progress independently."
+    },
+    "brand_config": {
+      "type": "object",
+      "description": "Per-program branding applied to generic program pages",
+      "properties": {
+        "primary_color": {
+          "type": "string",
+          "description": "Header/footer background color (hex)"
+        },
+        "secondary_color": {
+          "type": "string"
+        },
+        "accent_color": {
+          "type": "string",
+          "description": "Highlight/badge color (hex)"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "header_title": {
+          "type": "string",
+          "description": "Overrides program name in header if set"
+        },
+        "header_subtitle": {
+          "type": "string"
+        },
+        "footer_text": {
+          "type": "string"
+        }
+      }
+    },
+    "curriculum_topics": {
+      "type": "array",
+      "description": "Topics courses are organized by in the generic Program Learning page",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      }
+    },
     "session_days": {
       "type": "array",
       "items": {

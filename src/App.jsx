@@ -14,6 +14,9 @@ import GrantDiscovery from './pages/GrantDiscovery';
 import CourseViewer from './pages/CourseViewer';
 import ProposalReview from './pages/ProposalReview';
 import UserOnboarding from './pages/UserOnboarding';
+import ProgramOverview from './pages/ProgramOverview';
+import ProgramLearning from './pages/ProgramLearning';
+import ProgramCohortManager from './pages/ProgramCohortManager';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -84,6 +87,9 @@ const AuthenticatedApp = () => {
       <Route path="/InKindTracker" element={<LayoutWrapper currentPageName="InKindTracker"><InKindTracker /></LayoutWrapper>} />
       <Route path="/ProposalReview" element={<LayoutWrapper currentPageName="ProposalReview"><ProposalReview /></LayoutWrapper>} />
       <Route path="/UserOnboarding" element={<LayoutWrapper currentPageName="UserOnboarding"><UserOnboarding /></LayoutWrapper>} />
+      <Route path="/ProgramOverview" element={<LayoutWrapper currentPageName="ProgramOverview"><ProgramOverview /></LayoutWrapper>} />
+      <Route path="/ProgramLearning" element={<LayoutWrapper currentPageName="ProgramLearning"><ProgramLearning /></LayoutWrapper>} />
+      <Route path="/ProgramCohortManager" element={<LayoutWrapper currentPageName="ProgramCohortManager"><ProgramCohortManager /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
