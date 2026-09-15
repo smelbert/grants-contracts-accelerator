@@ -180,22 +180,40 @@ const getAdminPortalNav = () => [
     ]
   },
   {
-    groupName: 'Community & Engagement',
-    items: [
-      { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
-      { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
-      { name: 'Event Management', page: 'EventManagement', icon: Calendar },
-      { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
-      { name: 'User Onboarding & Access', page: 'UserOnboarding', icon: UserPlus },
-      { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
-      { name: 'Community Spaces Manager', page: 'CommunityAdmin', icon: MessageCircle },
-      { name: 'Community Moderation', page: 'CommunityModerationDashboard', icon: AlertTriangle },
-    ]
-  },
-  {
     groupName: 'Programs & Curriculum',
     items: [
       { name: 'Program Cohorts', page: 'ProgramCohortManager', icon: Target },
+      { name: 'Program Management', page: 'ProgramManagement', icon: Settings },
+      { name: 'Program Modules', page: 'ProgramModuleManager', icon: BookOpen },
+      { name: 'Training Framework', page: 'TrainingFramework', icon: BookOpen },
+      { name: 'Content Editor', page: 'TrainingFrameworkEditor', icon: FileText },
+      { name: 'Live Sessions', page: 'LiveSessionManagement', icon: Video },
+      { name: 'Assessment Management', page: 'AssessmentManagement', icon: FileText },
+      { name: 'All Assessments & Surveys', page: 'AssessmentSurveyAdmin', icon: FileText },
+      { name: 'Promotion Gates', page: 'PromotionGateConfig', icon: Target },
+      { name: 'Certificate Templates', page: 'CertificateTemplates', icon: BadgeIcon },
+      { name: 'Issued Certificates', page: 'IssuedCertificates', icon: BadgeIcon },
+      { name: 'Program Analytics', page: 'ProgramAnalytics', icon: TrendingUp },
+    ]
+  },
+  {
+    groupName: 'IncubateHer Program',
+    items: [
+      { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
+      { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
+      { name: 'Program Control', page: 'IncubateHerProgramControl', icon: Settings },
+      { name: 'Participant Workbooks', page: 'IncubateHerParticipantWorkbooks', icon: BookOpen },
+      { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
+      { name: 'Template Editor', page: 'DocumentTemplateEditor', icon: FileText },
+      { name: 'Workbook Content Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
+      { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
+      { name: 'Program Announcements', page: 'ProgramAnnouncements', icon: Bell },
+      { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
+      { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: Calendar },
+      { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
+      { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
+      { name: 'Giveaway Draw', page: 'IncubateHerGiveawayDraw', icon: Gift },
+      { name: 'Content Export', page: 'AdminContentExport', icon: Download },
     ]
   },
   {
@@ -209,11 +227,15 @@ const getAdminPortalNav = () => [
     ]
   },
   {
-    groupName: 'AI & Automation',
+    groupName: 'Community & Engagement',
     items: [
-      { name: 'AI Content Management', page: 'AIContentManagement', icon: Sparkles },
-      { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
-      { name: 'Workflows & Automation', page: 'WorkflowsAutomation', icon: SettingsIcon },
+      { name: 'Community Spaces', page: 'SpaceManagement', icon: LayoutDashboard },
+      { name: 'Live Rooms', page: 'LiveRoomManagement', icon: Video },
+      { name: 'Event Management', page: 'EventManagement', icon: Calendar },
+      { name: 'Member & Role Management', page: 'MemberManagement', icon: Users },
+      { name: 'User Onboarding & Access', page: 'UserOnboarding', icon: UserPlus },
+      { name: 'Registration Management', page: 'RegistrationManagement', icon: Users },
+      { name: 'Community Moderation', page: 'CommunityModerationDashboard', icon: AlertTriangle },
     ]
   },
   {
@@ -225,13 +247,11 @@ const getAdminPortalNav = () => [
     ]
   },
   {
-    groupName: 'Training System',
+    groupName: 'AI & Automation',
     items: [
-      { name: 'Training Framework', page: 'TrainingFramework', icon: BookOpen },
-      { name: 'Content Editor', page: 'TrainingFrameworkEditor', icon: FileText },
-      { name: 'Live Sessions', page: 'LiveSessionManagement', icon: Video },
-      { name: 'Assessment Management', page: 'AssessmentManagement', icon: FileText },
-      { name: 'Promotion Gates', page: 'PromotionGateConfig', icon: Target },
+      { name: 'AI Content Management', page: 'AIContentManagement', icon: Sparkles },
+      { name: 'AI Guardrails', page: 'AIGuardrails', icon: Sparkles },
+      { name: 'Workflows & Automation', page: 'WorkflowsAutomation', icon: SettingsIcon },
     ]
   },
   {
@@ -243,59 +263,10 @@ const getAdminPortalNav = () => [
     ]
   },
   {
-    groupName: 'IncubateHer Program',
-    items: [
-      { name: 'Program Dashboard', page: 'IncubateHerAdmin', icon: Target },
-      { name: 'Participants', page: 'IncubateHerParticipants', icon: Users },
-      { name: 'Program Control', page: 'IncubateHerProgramControl', icon: Settings },
-      { name: 'Participant Workbooks', page: 'IncubateHerParticipantWorkbooks', icon: BookOpen },
-      { name: 'Document Templates', page: 'IncubateHerDocuments', icon: FileText },
-      { name: 'Template Editor', page: 'DocumentTemplateEditor', icon: FileText },
-      { name: 'Learning Content Editor', page: 'LearningContentManagement', icon: FileText },
-      { name: 'Workbook Content Editor', page: 'IncubateHerWorkbookEditor', icon: FileText },
-      { name: 'Email Templates', page: 'IncubateHerEmailTemplates', icon: Mail },
-      { name: 'Program Announcements', page: 'ProgramAnnouncements', icon: Bell },
-      { name: 'Program Messaging', page: 'ProgramMessaging', icon: MessageCircle },
-      { name: 'Attendance Tracking', page: 'IncubateHerAttendance', icon: Calendar },
-      { name: 'CUL Dashboard', page: 'IncubateHerCULDashboard', icon: TrendingUp },
-      { name: 'CUL Report Builder', page: 'IncubateHerReport', icon: FileText },
-      { name: 'Giveaway Draw', page: 'IncubateHerGiveawayDraw', icon: Gift },
-      { name: 'Content Export', page: 'AdminContentExport', icon: Download },
-    ]
-  },
-  {
-    groupName: 'Analytics & Reporting',
-    items: [
-      { name: 'Program Analytics', page: 'ProgramAnalytics', icon: TrendingUp },
-      { name: 'All Assessments & Surveys', page: 'AssessmentSurveyAdmin', icon: FileText },
-    ]
-  },
-  {
-    groupName: 'Program Setup',
-    items: [
-      { name: 'Program Management', page: 'ProgramManagement', icon: Settings },
-      { name: 'Program Modules', page: 'ProgramModuleManager', icon: BookOpen },
-      { name: 'Certificate Templates', page: 'CertificateTemplates', icon: BadgeIcon },
-      { name: 'Issued Certificates', page: 'IssuedCertificates', icon: BadgeIcon },
-    ]
-  },
-  {
-    groupName: 'SaaS Management',
+    groupName: 'Platform Administration',
     items: [
       { name: 'Platform Hub', page: 'PlatformManagement', icon: LayoutDashboard },
       { name: 'SaaS Dashboard', page: 'SaaSAdminDashboard', icon: TrendingUp },
-      { name: 'Opportunity Reports', page: 'OpportunityReports', icon: Flag },
-      { name: 'Blog Management', page: 'BlogManagement', icon: BookOpen },
-      { name: 'Support Tickets', page: 'SupportTickets', icon: MessageSquare },
-      { name: 'Testimonials', page: 'TestimonialManagement', icon: Target },
-      { name: 'FAQ Management', page: 'FAQManagement', icon: HelpCircle },
-      { name: 'User Activity Analytics', page: 'UserActivityAnalytics', icon: TrendingUp },
-      { name: 'Audit Logs', page: 'AuditLogs', icon: Shield },
-    ]
-  },
-  {
-    groupName: 'Platform Configuration',
-    items: [
       { name: 'Registration Pages', page: 'RegistrationBuilder', icon: Plus },
       { name: 'Subscription Plans', page: 'SubscriptionPlans', icon: DollarSign },
       { name: 'Learning Hub Content', page: 'LearningContentManagement', icon: BookOpen },
@@ -303,6 +274,13 @@ const getAdminPortalNav = () => [
       { name: 'Branding & Theme', page: 'BrandingSettings', icon: Palette },
       { name: 'Email Hub', page: 'EmailHub', icon: Mail },
       { name: 'Website Builder', page: 'WebsiteBuilder', icon: LayoutDashboard },
+      { name: 'Opportunity Reports', page: 'OpportunityReports', icon: Flag },
+      { name: 'Blog Management', page: 'BlogManagement', icon: BookOpen },
+      { name: 'Support Tickets', page: 'SupportTickets', icon: MessageSquare },
+      { name: 'Testimonials', page: 'TestimonialManagement', icon: Target },
+      { name: 'FAQ Management', page: 'FAQManagement', icon: HelpCircle },
+      { name: 'User Activity Analytics', page: 'UserActivityAnalytics', icon: TrendingUp },
+      { name: 'Audit Logs', page: 'AuditLogs', icon: Shield },
       { name: 'Platform Settings', page: 'PlatformSettings', icon: SettingsIcon },
       { name: 'Developer Tools', page: 'DeveloperTools', icon: Shield },
     ]
