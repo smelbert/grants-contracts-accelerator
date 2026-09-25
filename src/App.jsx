@@ -17,6 +17,7 @@ import UserOnboarding from './pages/UserOnboarding';
 import ProgramOverview from './pages/ProgramOverview';
 import ProgramLearning from './pages/ProgramLearning';
 import ProgramCohortManager from './pages/ProgramCohortManager';
+import PartnerSignup from './pages/PartnerSignup';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -90,6 +91,7 @@ const AuthenticatedApp = () => {
       <Route path="/ProgramOverview" element={<LayoutWrapper currentPageName="ProgramOverview"><ProgramOverview /></LayoutWrapper>} />
       <Route path="/ProgramLearning" element={<LayoutWrapper currentPageName="ProgramLearning"><ProgramLearning /></LayoutWrapper>} />
       <Route path="/ProgramCohortManager" element={<LayoutWrapper currentPageName="ProgramCohortManager"><ProgramCohortManager /></LayoutWrapper>} />
+      <Route path="/PartnerSignup" element={<LayoutWrapper currentPageName="PartnerSignup"><PartnerSignup /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

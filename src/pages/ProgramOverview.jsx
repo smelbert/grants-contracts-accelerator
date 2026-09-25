@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ProgramHeader from '@/components/program/ProgramHeader';
 import ProgramFooter from '@/components/program/ProgramFooter';
-import { BookOpen, Users, Calendar, ArrowRight, Target, CheckCircle2, Lock } from 'lucide-react';
+import { BookOpen, Users, Calendar, ArrowRight, Target, CheckCircle2, Lock, Sparkles } from 'lucide-react';
 
 export default function ProgramOverview() {
   const params = new URLSearchParams(window.location.search);
@@ -27,8 +27,17 @@ export default function ProgramOverview() {
   if (!programCode) {
     return (
       <div className="p-6 max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Programs</h1>
-        <p className="text-slate-600 mb-8">Choose a funding-readiness program to get started.</p>
+        <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Programs</h1>
+            <p className="text-slate-600">Choose a funding-readiness program to get started.</p>
+          </div>
+          <Link to={`${createPageUrl('PartnerSignup')}`}>
+            <Button size="sm" className="bg-[#143A50]">
+              <Sparkles className="w-4 h-4 mr-2" /> Register a Program
+            </Button>
+          </Link>
+        </div>
         {loadingCohorts ? (
           <div className="grid md:grid-cols-2 gap-4">
             {[1, 2].map((i) => (

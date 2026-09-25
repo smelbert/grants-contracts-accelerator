@@ -72,6 +72,7 @@ const getUserPortalNav = () => [
     groupName: 'Programs',
     items: [
       { name: 'My Programs', page: 'ProgramOverview', icon: Target },
+      { name: 'Register a Program', page: 'PartnerSignup', icon: UserPlus },
     ]
   },
   {
