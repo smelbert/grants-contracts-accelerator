@@ -1,226 +1,267 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import FundingReadinessAssessmentForm from '@/components/assessment/FundingReadinessAssessmentForm';
-import AssessmentProgressChart from '@/components/assessment/AssessmentProgressChart';
-import { FileText, History, TrendingUp } from 'lucide-react';
-import FundingReadinessGapDashboard from '@/components/assessment/FundingReadinessGapDashboard';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import { STRUCTURES, ACKNOWLEDGMENTS } from '@/lib/assessmentConfig';
+import { itemApplies, getTrackLevelItems, computeResults } from '@/lib/assessmentScoring';
+import ProgressBar from '@/components/assessment-wizard/ProgressBar';
+import TrackStep from '@/components/assessment-wizard/TrackStep';
+import ContactStep from '@/components/assessment-wizard/ContactStep';
+import OrgProfileStep from '@/components/assessment-wizard/OrgProfileStep';
+import ChecklistStep from '@/components/assessment-wizard/ChecklistStep';
+import AcknowledgmentsStep from '@/components/assessment-wizard/AcknowledgmentsStep';
+import ResultsView from '@/components/assessment-wizard/ResultsView';
 
-export default function FundingReadinessAssessmentPage() {
-  const [activeTab, setActiveTab] = useState('assessment');
+function buildSteps(track, structure, allItems) {
+  const steps = [
+    { type: 'track', label: 'Choose your track' },
+    { type: 'contact', label: 'Your contact information' },
+    { type: 'org_profile', label: 'Organization profile' },
+  ];
 
-  const { data: user } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me()
-  });
+  if (track && structure && allItems.length > 0) {
+    const trackKeys = track === 'both' ? ['grant', 'proposal'] : [track === 'proposals' ? 'proposal' : track];
+    trackKeys.forEach(t => {
+      for (let level = 1; level <= 3; level++) {
+        const items = getTrackLevelItems(allItems, t, level, structure);
+        if (items.length > 0) {
+          steps.push({
+            type: 'checklist',
+            trackKey: t,
+            level,
+            items,
+            label: `Level ${level} of 3 · ${items[0]?.level_name || ''}`,
+          });
+        }
+      }
+    });
+  }
 
-  const { data: assessments = [], refetch } = useQuery({
-    queryKey: ['funding-readiness-assessments', user?.email],
-    queryFn: async () => {
-      if (!user?.email) return [];
-      return await base44.entities.FundingReadinessAssessment.filter({
-        user_email: user.email
-      }, '-assessment_date');
-    },
-    enabled: !!user?.email
-  });
+  steps.push({ type: 'acknowledgments', label: 'Acknowledgments' });
+  return steps;
+}
 
-  const latestAssessment = assessments[0];
+export default function FundingReadinessAssessment() {
+  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState('wizard');
+  const [allItems, setAllItems] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [track, setTrack] = useState('');
+  const [form, setForm] = useState({ outreach_preference: 'results_only' });
+  const [responses, setResponses] = useState({});
+  const [acknowledgments, setAcknowledgments] = useState({});
+  const [startTime] = useState(Date.now());
+  const [results, setResults] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-  const getLevelColor = (level) => {
-    switch (level) {
-      case 'highly_ready': return 'text-green-600 bg-green-50';
-      case 'ready': return 'text-blue-600 bg-blue-50';
-      case 'building_readiness': return 'text-amber-600 bg-amber-50';
-      default: return 'text-red-600 bg-red-50';
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await base44.auth.me();
+        const items = await base44.entities.AssessmentItem.list('sort_order', 200);
+        setAllItems(items);
+
+        // Pre-fill form from user profile
+        setForm(prev => ({
+          ...prev,
+          first_name: user.full_name?.split(' ')[0] || '',
+          last_name: user.full_name?.split(' ').slice(1).join(' ') || '',
+          email: user.email || '',
+        }));
+
+        // Check for existing assessment
+        const existing = await base44.entities.FundingReadinessAssessment.filter(
+          { user_email: user.email },
+          '-created_date',
+          1
+        );
+        if (existing.length > 0 && existing[0].results_data) {
+          setResults({ ...existing[0].results_data, structure: existing[0].structure });
+          setView('results');
+        }
+      } catch (err) {
+        console.error('Assessment load error:', err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const steps = useMemo(() => buildSteps(track, form.structure, allItems), [track, form.structure, allItems]);
+
+  const canProceed = () => {
+    const step = steps[currentStep];
+    if (!step) return false;
+    switch (step.type) {
+      case 'track': return !!track;
+      case 'contact': return !!(form.first_name && form.last_name && form.email && form.organization && form.consent);
+      case 'org_profile': return !!form.structure;
+      case 'checklist': return true;
+      case 'acknowledgments': return ACKNOWLEDGMENTS.every((_, i) => acknowledgments[i]);
+      default: return false;
     }
   };
 
-  const getLevelLabel = (level) => {
-    return level?.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || 'Unknown';
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      handleSubmit();
+    }
   };
 
+  const handleBack = () => {
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
+  };
+
+  const handleToggleResponse = (itemId) => {
+    setResponses(prev => ({ ...prev, [itemId]: !prev[itemId] }));
+  };
+
+  const handleToggleAck = (index) => {
+    setAcknowledgments(prev => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const handleSubmit = async () => {
+    setSaving(true);
+    try {
+      const user = await base44.auth.me();
+      const computed = computeResults(allItems, responses, track, form.structure, form);
+      const minutesTaken = Math.max(1, Math.round((Date.now() - startTime) / 60000));
+
+      const assessmentData = {
+        user_email: user.email,
+        track,
+        structure: form.structure,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        organization: form.organization,
+        website: form.website,
+        phone: form.phone,
+        role: form.role,
+        heard_about: form.heard_about,
+        outreach_preference: form.outreach_preference,
+        years: form.years,
+        budget: form.budget,
+        funding_sources: form.funding_sources,
+        largest_award: form.largest_award,
+        federal_experience: form.federal_experience,
+        target_amount: form.target_amount,
+        timeline: form.timeline,
+        proposal_writer: form.proposal_writer,
+        assessment_responses: responses,
+        acknowledgments,
+        grant_percent: computed.trackResults.grant?.percent,
+        grant_earned: computed.trackResults.grant?.earned,
+        grant_available: computed.trackResults.grant?.available,
+        grant_l1: computed.trackResults.grant?.levelScores[0]?.scoreString,
+        grant_l2: computed.trackResults.grant?.levelScores[1]?.scoreString,
+        grant_l3: computed.trackResults.grant?.levelScores[2]?.scoreString,
+        grant_band: computed.trackResults.grant?.band?.label,
+        proposal_percent: computed.trackResults.proposal?.percent,
+        proposal_earned: computed.trackResults.proposal?.earned,
+        proposal_available: computed.trackResults.proposal?.available,
+        proposal_l1: computed.trackResults.proposal?.levelScores[0]?.scoreString,
+        proposal_l2: computed.trackResults.proposal?.levelScores[1]?.scoreString,
+        proposal_l3: computed.trackResults.proposal?.levelScores[2]?.scoreString,
+        proposal_band: computed.trackResults.proposal?.band?.label,
+        holds: computed.holds,
+        open_items: computed.openItems,
+        recommended_documents: computed.recommendedDocs,
+        next_steps: computed.nextSteps,
+        minutes_taken: minutesTaken,
+        assessment_date: new Date().toISOString(),
+        results_data: computed,
+      };
+
+      await base44.entities.FundingReadinessAssessment.create(assessmentData);
+      setResults({ ...computed, first_name: form.first_name, last_name: form.last_name, organization: form.organization, structure: form.structure });
+      setView('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      console.error('Assessment save error:', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRetake = () => {
+    setView('wizard');
+    setCurrentStep(0);
+    setTrack('');
+    setForm({ outreach_preference: 'results_only' });
+    setResponses({});
+    setAcknowledgments({});
+    setResults(null);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F9F4EF] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#143A50]" />
+      </div>
+    );
+  }
+
+  if (view === 'results' && results) {
+    return <ResultsView results={results} onRetake={handleRetake} />;
+  }
+
+  const step = steps[currentStep];
+  const isLastStep = currentStep === steps.length - 1;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-[#143A50] mb-2">
-            Funding Readiness Assessment
-          </h1>
-          <p className="text-slate-600">
-            Evaluate your organization's readiness to pursue grants and contracts
-          </p>
+    <div className="min-h-screen bg-[#F9F4EF]">
+      <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
+        <div className="bg-white rounded-2xl border border-[#E5C089]/30 shadow-sm p-6 sm:p-8">
+          <ProgressBar
+            currentStep={currentStep}
+            totalSteps={steps.length}
+            stepLabel={step?.label || ''}
+          />
+
+          <div className="mt-6">
+            {step?.type === 'track' && <TrackStep track={track} onSelect={setTrack} />}
+            {step?.type === 'contact' && <ContactStep form={form} setForm={setForm} />}
+            {step?.type === 'org_profile' && <OrgProfileStep form={form} setForm={setForm} />}
+            {step?.type === 'checklist' && (
+              <ChecklistStep
+                items={step.items}
+                level={step.level}
+                trackKey={step.trackKey}
+                responses={responses}
+                onToggle={handleToggleResponse}
+                allItems={allItems}
+                structure={form.structure}
+              />
+            )}
+            {step?.type === 'acknowledgments' && (
+              <AcknowledgmentsStep acknowledgments={acknowledgments} onToggle={handleToggleAck} />
+            )}
+          </div>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+            <Button
+              variant="ghost"
+              onClick={handleBack}
+              disabled={currentStep === 0 || saving}
+              className="text-slate-500 hover:text-[#143A50]"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            </Button>
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed() || saving}
+              className="bg-[#143A50] hover:bg-[#1E4F58] text-white"
+            >
+              {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {saving ? 'Saving…' : isLastStep ? 'See My Results' : 'Continue'}
+              {!saving && !isLastStep && <ArrowRight className="w-4 h-4 ml-1" />}
+            </Button>
+          </div>
         </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="assessment" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Take Assessment
-            </TabsTrigger>
-            <TabsTrigger value="current" className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Score &amp; Gap Plan
-            </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <History className="w-4 h-4" />
-              History
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="assessment">
-            <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-[#143A50] mb-2">Before You Begin</h3>
-              <ul className="text-sm text-slate-700 space-y-1 list-disc ml-5">
-                <li>Answer honestly - this helps you plan effectively</li>
-                <li>Takes about 5 minutes to complete</li>
-                <li>Results are saved and you can track progress over time</li>
-              </ul>
-            </div>
-            <FundingReadinessAssessmentForm onComplete={() => {
-              refetch();
-              setActiveTab('current');
-            }} />
-          </TabsContent>
-
-          <TabsContent value="current">
-            {latestAssessment ? (
-              <div className="space-y-6">
-                <Card className={`border-2 ${getLevelColor(latestAssessment.readiness_level)}`}>
-                  <CardHeader>
-                    <CardTitle className="text-2xl">Your Current Readiness</CardTitle>
-                    <CardDescription>
-                      Assessed on {new Date(latestAssessment.assessment_date).toLocaleDateString()}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between mb-6">
-                      <div>
-                        <div className="text-5xl font-bold text-[#143A50]">
-                          {latestAssessment.overall_score}/100
-                        </div>
-                        <div className={`text-lg font-semibold mt-2 px-3 py-1 rounded-full inline-block ${getLevelColor(latestAssessment.readiness_level)}`}>
-                          {getLevelLabel(latestAssessment.readiness_level)}
-                        </div>
-                      </div>
-                    </div>
-
-                    {latestAssessment.score_breakdown && (
-                      <div className="space-y-3 mb-6">
-                        <h4 className="font-semibold text-[#143A50]">Score Breakdown</h4>
-                        {Object.entries(latestAssessment.score_breakdown).map(([key, value]) => {
-                          const label = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                          return (
-                            <div key={key}>
-                              <div className="flex justify-between text-sm mb-1">
-                                <span className="font-medium">{label}</span>
-                                <span className="text-slate-600">{value.score}/{value.max} points</span>
-                              </div>
-                              <div className="w-full bg-slate-200 rounded-full h-2">
-                                <div 
-                                  className="bg-[#143A50] h-2 rounded-full transition-all" 
-                                  style={{ width: `${value.percentage}%` }}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    <div className="space-y-3">
-                      <div className="bg-white rounded-lg p-4 border">
-                        <div className="flex justify-between mb-1">
-                          <span className="font-medium text-slate-700">Legal Status</span>
-                          <span className="text-sm text-slate-600">{latestAssessment.legal_status}</span>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded-lg p-4 border">
-                        <div className="flex justify-between mb-1">
-                          <span className="font-medium text-slate-700">Financial Records</span>
-                          <span className="text-sm text-slate-600">{latestAssessment.financial_records}</span>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded-lg p-4 border">
-                        <div className="flex justify-between mb-1">
-                          <span className="font-medium text-slate-700">Program Clarity</span>
-                          <span className="text-sm text-slate-600">{latestAssessment.program_clarity}</span>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded-lg p-4 border">
-                        <div className="flex justify-between mb-1">
-                          <span className="font-medium text-slate-700">Capacity</span>
-                          <span className="text-sm text-slate-600">{latestAssessment.capacity}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {latestAssessment.notes && (
-                      <div className="mt-4 bg-slate-50 rounded-lg p-4">
-                        <p className="text-sm font-medium text-slate-700 mb-1">Notes:</p>
-                        <p className="text-sm text-slate-600">{latestAssessment.notes}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                <FundingReadinessGapDashboard assessment={latestAssessment} />
-
-                {assessments.length > 0 && (
-                  <AssessmentProgressChart assessments={assessments} />
-                )}
-              </div>
-            ) : (
-              <Card>
-                <CardContent className="text-center py-12">
-                  <FileText className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-600">No assessment completed yet</p>
-                  <p className="text-sm text-slate-500 mt-2">Take your first assessment to see your readiness score</p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="history">
-            {assessments.length > 0 ? (
-              <div className="space-y-4">
-                {assessments.map((assessment, idx) => (
-                  <Card key={assessment.id} className="border-2">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg">
-                            Assessment #{assessments.length - idx}
-                          </CardTitle>
-                          <CardDescription>
-                            {new Date(assessment.assessment_date).toLocaleString()}
-                          </CardDescription>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-3xl font-bold text-[#143A50]">
-                            {assessment.overall_score}/100
-                          </div>
-                          <div className={`text-sm font-semibold mt-1 px-2 py-1 rounded-full ${getLevelColor(assessment.readiness_level)}`}>
-                            {getLevelLabel(assessment.readiness_level)}
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <Card>
-                <CardContent className="text-center py-12">
-                  <History className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-600">No assessment history yet</p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
       </div>
     </div>
   );

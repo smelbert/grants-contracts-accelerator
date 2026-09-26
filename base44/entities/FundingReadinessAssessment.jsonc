@@ -5,65 +5,227 @@
     "user_email": {
       "type": "string"
     },
-    "legal_status": {
+    "track": {
       "type": "string",
       "enum": [
-        "full",
-        "partial",
-        "none"
+        "grant",
+        "proposals",
+        "both"
       ]
     },
-    "financial_records": {
+    "structure": {
+      "type": "string"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "heard_about": {
+      "type": "string"
+    },
+    "outreach_preference": {
       "type": "string",
       "enum": [
-        "professional",
-        "basic",
-        "none"
-      ]
-    },
-    "program_clarity": {
-      "type": "string",
-      "enum": [
-        "documented",
-        "developing",
-        "exploring"
-      ]
-    },
-    "capacity": {
-      "type": "string",
-      "enum": [
-        "ready",
-        "tight",
-        "overextended"
-      ]
-    },
-    "overall_score": {
-      "type": "number",
-      "description": "Calculated readiness score out of 100"
-    },
-    "readiness_level": {
-      "type": "string",
-      "enum": [
-        "not_ready",
-        "building_readiness",
-        "ready",
-        "highly_ready"
+        "results_only",
+        "consultation",
+        "calendly_booked"
       ],
-      "description": "Overall readiness category"
+      "default": "results_only"
+    },
+    "years": {
+      "type": "string"
+    },
+    "budget": {
+      "type": "string"
+    },
+    "funding_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "largest_award": {
+      "type": "string"
+    },
+    "federal_experience": {
+      "type": "string"
+    },
+    "target_amount": {
+      "type": "string"
+    },
+    "timeline": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "near_term",
+        "mid_term",
+        "long_term"
+      ]
+    },
+    "proposal_writer": {
+      "type": "string"
+    },
+    "assessment_responses": {
+      "type": "object",
+      "description": "Map of itemId to boolean"
+    },
+    "acknowledgments": {
+      "type": "object",
+      "description": "Map of ackId to boolean"
+    },
+    "grant_percent": {
+      "type": "number"
+    },
+    "grant_earned": {
+      "type": "number"
+    },
+    "grant_available": {
+      "type": "number"
+    },
+    "grant_l1": {
+      "type": "string"
+    },
+    "grant_l2": {
+      "type": "string"
+    },
+    "grant_l3": {
+      "type": "string"
+    },
+    "grant_band": {
+      "type": "string"
+    },
+    "proposal_percent": {
+      "type": "number"
+    },
+    "proposal_earned": {
+      "type": "number"
+    },
+    "proposal_available": {
+      "type": "number"
+    },
+    "proposal_l1": {
+      "type": "string"
+    },
+    "proposal_l2": {
+      "type": "string"
+    },
+    "proposal_l3": {
+      "type": "string"
+    },
+    "proposal_band": {
+      "type": "string"
+    },
+    "holds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "open_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "track": {
+            "type": "string"
+          },
+          "level": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "is_gate": {
+            "type": "boolean"
+          },
+          "levelName": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "recommended_documents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "minutes_taken": {
+      "type": "number"
     },
     "assessment_date": {
       "type": "string",
       "format": "date-time"
     },
+    "results_data": {
+      "type": "object",
+      "description": "Full computed results object for display"
+    },
     "notes": {
       "type": "string"
-    },
-    "score_breakdown": {
-      "type": "object",
-      "description": "Detailed breakdown of scores by category"
     }
   },
   "required": [
-    "user_email"
-  ]
+    "user_email",
+    "track"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

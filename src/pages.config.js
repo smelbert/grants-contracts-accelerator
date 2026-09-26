@@ -104,7 +104,6 @@ import FundingReadinessAssessment from './pages/FundingReadinessAssessment';
 import GrantAssistant from './pages/GrantAssistant';
 import GrantDashboard from './pages/GrantDashboard';
 import GrantGlossary from './pages/GrantGlossary.jsx';
-import GrantReadinessAssessment from './pages/GrantReadinessAssessment';
 import GrantReadinessDashboard from './pages/GrantReadinessDashboard';
 import GrantReadinessIntensive from './pages/GrantReadinessIntensive';
 import GrantSubmission from './pages/GrantSubmission';
@@ -285,7 +284,6 @@ export const PAGES = {
     "GrantAssistant": GrantAssistant,
     "GrantDashboard": GrantDashboard,
     "GrantGlossary": GrantGlossary,
-    "GrantReadinessAssessment": GrantReadinessAssessment,
     "GrantReadinessDashboard": GrantReadinessDashboard,
     "GrantReadinessIntensive": GrantReadinessIntensive,
     "GrantSubmission": GrantSubmission,

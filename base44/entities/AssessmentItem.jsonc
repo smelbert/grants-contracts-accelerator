@@ -1,0 +1,91 @@
+{
+  "name": "AssessmentItem",
+  "type": "object",
+  "properties": {
+    "track": {
+      "type": "string",
+      "enum": [
+        "grant",
+        "proposal"
+      ],
+      "description": "Which track this item belongs to"
+    },
+    "level": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3
+      ],
+      "description": "Readiness level 1, 2, or 3"
+    },
+    "text": {
+      "type": "string",
+      "description": "The checklist item text shown to the user"
+    },
+    "points": {
+      "type": "number",
+      "enum": [
+        1,
+        2
+      ],
+      "default": 1,
+      "description": "1 for regular items, 2 for gate items"
+    },
+    "is_gate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Gate items are weighted double and flagged in the action plan"
+    },
+    "level_name": {
+      "type": "string",
+      "description": "Name of the level this item belongs to"
+    },
+    "item_index": {
+      "type": "number",
+      "description": "Item position within its level"
+    },
+    "sort_order": {
+      "type": "number",
+      "description": "Global sort order for display"
+    },
+    "applies_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Structure keys this item applies to. If populated, item ONLY applies to these structures."
+    },
+    "na_structures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Structure keys this item does NOT apply to. If populated (and applies_to is empty), item applies to all EXCEPT these."
+    }
+  },
+  "required": [
+    "track",
+    "level",
+    "text",
+    "points"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
