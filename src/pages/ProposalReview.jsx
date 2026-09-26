@@ -1,21 +1,153 @@
 import React, { useState, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  Upload, FileText, Sparkles, Loader2, AlertTriangle, CheckCircle2,
-  MessageSquare, TrendingUp, ChevronDown, ChevronUp, RefreshCw, X, Lightbulb
+  Upload,
+  FileText,
+  Sparkles,
+  Loader2,
+  AlertTriangle,
+  CheckCircle2,
+  MessageSquare,
+  TrendingUp,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
+  X,
+  Lightbulb,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import ReactMarkdown from 'react-markdown';
+import TargetTypeSelector from '@/components/proposal-review/TargetTypeSelector';
+import TargetContextPanel from '@/components/proposal-review/TargetContextPanel';
 
 const SCORE_COLORS = {
   high: 'text-emerald-700 bg-emerald-50 border-emerald-200',
   medium: 'text-amber-700 bg-amber-50 border-amber-200',
   low: 'text-red-700 bg-red-50 border-red-200',
+};
+
+// Distinct rubrics + prompts per target type
+const TARGET_CONFIG = {
+  grant: {
+    label: 'Grant',
+    reviewLabel: 'Grant Review',
+    scoreLabels: {
+      clarity: 'Clarity',
+      impact: 'Impact',
+      feasibility: 'Feasibility',
+      budget_alignment: 'Budget Alignment',
+      funder_fit: 'Funder Fit',
+    },
+    contextLabel: 'Grant Criteria / Funder Guidelines',
+    contextPlaceholder:
+      'Paste the grant guidelines, funder priorities, or RFA criteria you are applying to...',
+    questionsLabel: 'Funder Interview',
+    questionsIntro:
+      'Likely questions a grant reviewer would ask during an interview or site visit. Click each to see tips on how to answer.',
+    loadingLabel: 'Reviewing your grant proposal...',
+    prompt: (proposal, context) =>
+      `You are an expert grant reviewer and funder interview coach with 20+ years of experience reviewing nonprofit and small business grant applications for foundations, government agencies, and institutional funders.
+
+${context ? `TARGET GRANT / FUNDER CRITERIA:\n"""\n${context}\n"""\n\nTailor your review specifically to these criteria. Judge funder_fit against what this specific funder prioritizes. Flag any stated criteria the proposal fails to address.\n\n` : ''}Analyze the following grant proposal and return a JSON response with this exact structure:
+
+1. scores: object with keys: clarity (0-100), impact (0-100), feasibility (0-100), budget_alignment (0-100), funder_fit (0-100)
+2. overall_score: number 0-100 (weighted average; weight funder_fit and impact highest)
+3. summary: 2-3 sentence executive summary of the proposal's strengths and weaknesses
+4. strengths: array of 3-5 objects with { point: string, detail: string }
+5. improvements: array of 4-6 objects with { area: string, issue: string, suggestion: string, priority: "high"|"medium"|"low" }
+6. funder_questions: array of 8-10 objects with { question: string, why: string, tip: string, difficulty: "easy"|"medium"|"hard" }
+7. red_flags: array of 0-4 strings (critical issues funders may reject on)
+8. quick_wins: array of 3-5 strings (fast fixes that would improve the proposal immediately)
+
+PROPOSAL:
+${proposal}`,
+  },
+  rfp: {
+    label: 'RFP / RFI',
+    reviewLabel: 'RFP / RFI Review',
+    scoreLabels: {
+      scope_compliance: 'Scope Compliance',
+      technical_approach: 'Technical Approach',
+      qualifications: 'Qualifications',
+      pricing: 'Pricing',
+      risk_management: 'Risk Management',
+    },
+    contextLabel: 'RFP / RFI Requirements',
+    contextPlaceholder:
+      'Paste the RFP/RFI scope, mandatory requirements, and evaluation criteria...',
+    questionsLabel: 'Evaluation Q&A',
+    questionsIntro:
+      'Likely questions an evaluation committee or procurement officer would ask. Click each to see tips on how to answer.',
+    loadingLabel: 'Reviewing your RFP / RFI response...',
+    prompt: (proposal, context) =>
+      `You are an expert procurement evaluator and RFP/RFI response consultant with 20+ years of experience on both sides of organizational procurement — government, corporate, and institutional RFPs, RFIs, and RFQs.
+
+${context ? `TARGET RFP / RFI REQUIREMENTS:\n"""\n${context}\n"""\n\nScore scope_compliance against these specific requirements. Flag any mandatory or compliance requirements the response fails to address. Judge pricing and risk_management against what this buyer would expect.\n\n` : ''}Analyze the following RFP/RFI response and return a JSON response with this exact structure:
+
+1. scores: object with keys: scope_compliance (0-100), technical_approach (0-100), qualifications (0-100), pricing (0-100), risk_management (0-100)
+2. overall_score: number 0-100 (weighted average; weight scope_compliance and technical_approach highest)
+3. summary: 2-3 sentence executive summary of the response's strengths and weaknesses
+4. strengths: array of 3-5 objects with { point: string, detail: string }
+5. improvements: array of 4-6 objects with { area: string, issue: string, suggestion: string, priority: "high"|"medium"|"low" }
+6. funder_questions: array of 8-10 objects with { question: string, why: string, tip: string, difficulty: "easy"|"medium"|"hard" } — questions an evaluation committee or procurement officer would ask
+7. red_flags: array of 0-4 strings (compliance gaps or disqualifying issues)
+8. quick_wins: array of 3-5 strings (fast fixes that would improve the response immediately)
+
+PROPOSAL:
+${proposal}`,
+  },
+  donor: {
+    label: 'Donor Pitch',
+    reviewLabel: 'Donor Pitch Review',
+    scoreLabels: {
+      mission_fit: 'Mission Fit',
+      relationship_potential: 'Relationship Potential',
+      impact_story: 'Impact Story',
+      stewardship_plan: 'Stewardship Plan',
+      sustainability: 'Sustainability',
+    },
+    contextLabel: 'Donor Priorities / Philanthropic Focus',
+    contextPlaceholder:
+      'Paste the donor priorities, giving history, or philanthropic focus areas...',
+    questionsLabel: 'Donor Conversations',
+    questionsIntro:
+      'Likely questions a donor or their advisor would ask in a cultivation meeting. Click each to see tips on how to answer.',
+    loadingLabel: 'Reviewing your donor pitch...',
+    prompt: (proposal, context) =>
+      `You are an expert philanthropic advisor and major-donor fundraiser with 20+ years of experience crafting donor pitches and cases for support for individual philanthropists, family foundations, and corporate giving programs.
+
+${context ? `DONOR / PHILANTHROPY CONTEXT:\n"""\n${context}\n"""\n\nTailor mission_fit to these donor priorities. Judge relationship_potential and stewardship_plan against what this specific donor would expect.\n\n` : ''}Analyze the following donor pitch / case for support and return a JSON response with this exact structure:
+
+1. scores: object with keys: mission_fit (0-100), relationship_potential (0-100), impact_story (0-100), stewardship_plan (0-100), sustainability (0-100)
+2. overall_score: number 0-100 (weighted average; weight mission_fit and impact_story highest)
+3. summary: 2-3 sentence executive summary of the pitch's strengths and weaknesses
+4. strengths: array of 3-5 objects with { point: string, detail: string }
+5. improvements: array of 4-6 objects with { area: string, issue: string, suggestion: string, priority: "high"|"medium"|"low" }
+6. funder_questions: array of 8-10 objects with { question: string, why: string, tip: string, difficulty: "easy"|"medium"|"hard" } — questions a donor or their advisor would ask in a cultivation meeting
+7. red_flags: array of 0-4 strings (turn-offs that would close a donor's wallet)
+8. quick_wins: array of 3-5 strings (fast fixes that would improve the pitch immediately)
+
+PROPOSAL:
+${proposal}`,
+  },
+};
+
+const RESPONSE_SCHEMA = {
+  type: 'object',
+  properties: {
+    scores: { type: 'object' },
+    overall_score: { type: 'number' },
+    summary: { type: 'string' },
+    strengths: { type: 'array', items: { type: 'object' } },
+    improvements: { type: 'array', items: { type: 'object' } },
+    funder_questions: { type: 'array', items: { type: 'object' } },
+    red_flags: { type: 'array', items: { type: 'string' } },
+    quick_wins: { type: 'array', items: { type: 'string' } },
+  },
 };
 
 function ScoreBar({ label, score }) {
@@ -24,10 +156,19 @@ function ScoreBar({ label, score }) {
     <div className="space-y-1">
       <div className="flex justify-between text-sm">
         <span className="text-slate-700 font-medium">{label}</span>
-        <span className={`font-bold ${score >= 75 ? 'text-emerald-700' : score >= 50 ? 'text-amber-700' : 'text-red-600'}`}>{score}/100</span>
+        <span
+          className={`font-bold ${
+            score >= 75 ? 'text-emerald-700' : score >= 50 ? 'text-amber-700' : 'text-red-600'
+          }`}
+        >
+          {score}/100
+        </span>
       </div>
       <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-        <div className={`h-2 rounded-full transition-all duration-700 ${color}`} style={{ width: `${score}%` }} />
+        <div
+          className={`h-2 rounded-full transition-all duration-700 ${color}`}
+          style={{ width: `${score}%` }}
+        />
       </div>
     </div>
   );
@@ -39,30 +180,44 @@ function QuestionCard({ question, index }) {
     <div className="border border-slate-200 rounded-xl overflow-hidden">
       <button
         className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 transition-colors"
-        onClick={() => setExpanded(v => !v)}
+        onClick={() => setExpanded((v) => !v)}
       >
         <div className="flex items-start gap-3">
-          <span className="w-7 h-7 rounded-full bg-[#143A50] text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{index + 1}</span>
+          <span className="w-7 h-7 rounded-full bg-[#143A50] text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+            {index + 1}
+          </span>
           <span className="font-medium text-slate-900">{question.question}</span>
         </div>
-        {expanded ? <ChevronUp className="w-4 h-4 text-slate-400 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />}
+        {expanded ? (
+          <ChevronUp className="w-4 h-4 text-slate-400 flex-shrink-0" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0" />
+        )}
       </button>
       {expanded && (
         <div className="border-t border-slate-100 bg-[#143A50]/5 p-4 space-y-3">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Why they ask this</p>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">
+              Why they ask this
+            </p>
             <p className="text-sm text-slate-700">{question.why}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold text-[#143A50] uppercase tracking-wide mb-1">How to answer well</p>
+            <p className="text-xs font-semibold text-[#143A50] uppercase tracking-wide mb-1">
+              How to answer well
+            </p>
             <p className="text-sm text-slate-700">{question.tip}</p>
           </div>
           {question.difficulty && (
-            <Badge className={
-              question.difficulty === 'hard' ? 'bg-red-100 text-red-700' :
-              question.difficulty === 'medium' ? 'bg-amber-100 text-amber-700' :
-              'bg-emerald-100 text-emerald-700'
-            }>
+            <Badge
+              className={
+                question.difficulty === 'hard'
+                  ? 'bg-red-100 text-red-700'
+                  : question.difficulty === 'medium'
+                  ? 'bg-amber-100 text-amber-700'
+                  : 'bg-emerald-100 text-emerald-700'
+              }
+            >
               {question.difficulty} difficulty
             </Badge>
           )}
@@ -73,12 +228,16 @@ function QuestionCard({ question, index }) {
 }
 
 export default function ProposalReview() {
+  const [targetType, setTargetType] = useState('grant');
   const [proposalText, setProposalText] = useState('');
+  const [targetContext, setTargetContext] = useState('');
   const [fileName, setFileName] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [activeTab, setActiveTab] = useState('feedback');
   const fileRef = useRef();
+
+  const config = TARGET_CONFIG[targetType];
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -89,8 +248,12 @@ export default function ProposalReview() {
       setProposalText(text);
       setFileName(file.name);
       toast.success('File loaded successfully');
-    } else if (file.type === 'application/pdf' || file.type.includes('word') || file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
-      // Upload and extract via AI
+    } else if (
+      file.type === 'application/pdf' ||
+      file.type.includes('word') ||
+      file.name.endsWith('.docx') ||
+      file.name.endsWith('.doc')
+    ) {
       setFileName(file.name);
       toast.info('Extracting text from document...');
       try {
@@ -99,8 +262,8 @@ export default function ProposalReview() {
           file_url,
           json_schema: {
             type: 'object',
-            properties: { text: { type: 'string', description: 'Full text content of the document' } }
-          }
+            properties: { text: { type: 'string', description: 'Full text content of the document' } },
+          },
         });
         if (extracted.status === 'success') {
           setProposalText(extracted.output?.text || '');
@@ -116,6 +279,11 @@ export default function ProposalReview() {
     }
   };
 
+  const handleTargetTypeChange = (t) => {
+    setTargetType(t);
+    setResult(null);
+  };
+
   const analyze = async () => {
     if (!proposalText.trim() || proposalText.trim().length < 100) {
       toast.error('Please provide a proposal with at least 100 characters.');
@@ -126,36 +294,10 @@ export default function ProposalReview() {
     try {
       const data = await base44.integrations.Core.InvokeLLM({
         model: 'claude_sonnet_4_6',
-        prompt: `You are an expert grant reviewer and funder interview coach with 20+ years of experience reviewing nonprofit and small business proposals.
-
-Analyze the following grant/funding proposal and return a JSON response with this exact structure:
-
-1. scores: object with keys: clarity (0-100), impact (0-100), feasibility (0-100), budget_alignment (0-100), funder_fit (0-100)
-2. overall_score: number 0-100 (weighted average)
-3. summary: 2-3 sentence executive summary of the proposal's strengths and weaknesses
-4. strengths: array of 3-5 objects with { point: string, detail: string }
-5. improvements: array of 4-6 objects with { area: string, issue: string, suggestion: string, priority: "high"|"medium"|"low" }
-6. funder_questions: array of 8-10 objects with { question: string, why: string, tip: string, difficulty: "easy"|"medium"|"hard" }
-7. red_flags: array of 0-4 strings (critical issues funders may reject on)
-8. quick_wins: array of 3-5 strings (fast fixes that would improve the proposal immediately)
-
-PROPOSAL:
-${proposalText}`,
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            scores: { type: 'object' },
-            overall_score: { type: 'number' },
-            summary: { type: 'string' },
-            strengths: { type: 'array', items: { type: 'object' } },
-            improvements: { type: 'array', items: { type: 'object' } },
-            funder_questions: { type: 'array', items: { type: 'object' } },
-            red_flags: { type: 'array', items: { type: 'string' } },
-            quick_wins: { type: 'array', items: { type: 'string' } }
-          }
-        }
+        prompt: config.prompt(proposalText, targetContext),
+        response_json_schema: RESPONSE_SCHEMA,
       });
-      setResult(data);
+      setResult({ ...data, _targetType: targetType });
       setActiveTab('feedback');
     } catch (err) {
       toast.error('Analysis failed. Please try again.');
@@ -164,23 +306,38 @@ ${proposalText}`,
     }
   };
 
+  const resultConfig = result?._targetType ? TARGET_CONFIG[result._targetType] : config;
+
   const overallColor = result
-    ? result.overall_score >= 75 ? 'text-emerald-700' : result.overall_score >= 50 ? 'text-amber-600' : 'text-red-600'
+    ? result.overall_score >= 75
+      ? 'text-emerald-700'
+      : result.overall_score >= 50
+      ? 'text-amber-600'
+      : 'text-red-600'
     : '';
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-6">
       <div className="max-w-5xl mx-auto space-y-6">
-
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Proposal Review & Mock Interview</h1>
-            <p className="text-slate-500 text-sm mt-1">Upload your draft proposal for AI-powered feedback and funder interview prep</p>
+            <p className="text-slate-500 text-sm mt-1">
+              Tailored AI review for grants, RFPs/RFIs, and donor pitches — with mock-interview prep
+            </p>
           </div>
           <Badge className="bg-[#143A50]/10 text-[#143A50] border-[#143A50]/20 gap-1.5 px-3 py-1.5">
             <Sparkles className="w-3.5 h-3.5" /> AI Powered
           </Badge>
+        </div>
+
+        {/* Target Type Selector */}
+        <div className="space-y-2">
+          <p className="text-sm font-semibold text-slate-700">
+            What are you pitching to? <span className="text-slate-400 font-normal">— pick one to tailor the review</span>
+          </p>
+          <TargetTypeSelector value={targetType} onChange={handleTargetTypeChange} />
         </div>
 
         {/* Input Area */}
@@ -192,7 +349,12 @@ ${proposalText}`,
                 <div className="flex items-center gap-2 text-sm text-slate-500">
                   <FileText className="w-4 h-4" />
                   <span>{fileName}</span>
-                  <button onClick={() => { setFileName(''); setProposalText(''); }}>
+                  <button
+                    onClick={() => {
+                      setFileName('');
+                      setProposalText('');
+                    }}
+                  >
                     <X className="w-4 h-4 hover:text-red-500" />
                   </button>
                 </div>
@@ -200,24 +362,37 @@ ${proposalText}`,
             </div>
 
             <Textarea
-              placeholder="Paste your grant proposal, project narrative, or funding application here... (minimum 100 characters)"
+              placeholder="Paste your grant proposal, RFP response, or donor pitch here... (minimum 100 characters)"
               value={proposalText}
-              onChange={e => setProposalText(e.target.value)}
+              onChange={(e) => setProposalText(e.target.value)}
               rows={10}
               className="font-mono text-sm resize-none"
             />
 
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <input ref={fileRef} type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleFileUpload} />
-                <Button variant="outline" size="sm" className="gap-2" onClick={() => fileRef.current.click()}>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept=".txt,.pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => fileRef.current.click()}
+                >
                   <Upload className="w-4 h-4" /> Upload Document
                 </Button>
                 <span className="text-xs text-slate-400">PDF, DOCX, or TXT</span>
               </div>
               <div className="flex items-center gap-3">
                 {proposalText && (
-                  <span className="text-xs text-slate-400">{proposalText.length.toLocaleString()} characters</span>
+                  <span className="text-xs text-slate-400">
+                    {proposalText.length.toLocaleString()} characters
+                  </span>
                 )}
                 <Button
                   className="bg-[#143A50] hover:bg-[#1E4F58] gap-2 px-6"
@@ -225,15 +400,26 @@ ${proposalText}`,
                   disabled={isAnalyzing || proposalText.trim().length < 100}
                 >
                   {isAnalyzing ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</>
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Analyzing...
+                    </>
                   ) : (
-                    <><Sparkles className="w-4 h-4" /> Analyze Proposal</>
+                    <>
+                      <Sparkles className="w-4 h-4" /> Analyze Proposal
+                    </>
                   )}
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* Target Context */}
+        <TargetContextPanel
+          contextLabel={config.contextLabel}
+          contextPlaceholder={config.contextPlaceholder}
+          onContextChange={setTargetContext}
+        />
 
         {/* Loading State */}
         {isAnalyzing && (
@@ -243,11 +429,11 @@ ${proposalText}`,
                 <Sparkles className="w-8 h-8 text-[#143A50] animate-pulse" />
               </div>
               <div>
-                <p className="font-semibold text-slate-900">Reviewing your proposal...</p>
+                <p className="font-semibold text-slate-900">{config.loadingLabel}</p>
                 <p className="text-sm text-slate-500 mt-1">This takes about 15–30 seconds</p>
               </div>
-              <div className="flex justify-center gap-6 text-xs text-slate-400 mt-4">
-                {['Scoring clarity & impact', 'Identifying gaps', 'Generating funder questions'].map(s => (
+              <div className="flex justify-center gap-6 text-xs text-slate-400 mt-4 flex-wrap">
+                {['Scoring against rubric', 'Identifying gaps', 'Generating likely questions'].map((s) => (
                   <span key={s} className="flex items-center gap-1.5">
                     <Loader2 className="w-3 h-3 animate-spin" /> {s}
                   </span>
@@ -260,18 +446,38 @@ ${proposalText}`,
         {/* Results */}
         {result && !isAnalyzing && (
           <div className="space-y-6">
+            {/* Target type badge */}
+            <div className="flex items-center gap-2">
+              <Badge className="bg-[#143A50] text-white gap-1.5 px-3 py-1.5">
+                <Sparkles className="w-3.5 h-3.5" /> {resultConfig.reviewLabel}
+              </Badge>
+              {targetContext && (
+                <span className="text-xs text-slate-500">Tailored to your provided target context</span>
+              )}
+            </div>
+
             {/* Overall Score */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="border-0 shadow-sm md:col-span-1 flex flex-col items-center justify-center py-6">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Overall Score</p>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                  Overall Score
+                </p>
                 <p className={`text-6xl font-bold ${overallColor}`}>{result.overall_score}</p>
                 <p className="text-slate-400 text-sm mt-1">out of 100</p>
-                <Badge className={`mt-3 ${
-                  result.overall_score >= 75 ? 'bg-emerald-100 text-emerald-800' :
-                  result.overall_score >= 50 ? 'bg-amber-100 text-amber-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
-                  {result.overall_score >= 75 ? 'Strong Proposal' : result.overall_score >= 50 ? 'Needs Refinement' : 'Needs Significant Work'}
+                <Badge
+                  className={`mt-3 ${
+                    result.overall_score >= 75
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : result.overall_score >= 50
+                      ? 'bg-amber-100 text-amber-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  {result.overall_score >= 75
+                    ? 'Strong Proposal'
+                    : result.overall_score >= 50
+                    ? 'Needs Refinement'
+                    : 'Needs Significant Work'}
                 </Badge>
               </Card>
 
@@ -279,7 +485,11 @@ ${proposalText}`,
                 <CardContent className="p-5 space-y-3">
                   <p className="font-semibold text-slate-800 mb-1">Score Breakdown</p>
                   {Object.entries(result.scores || {}).map(([key, val]) => (
-                    <ScoreBar key={key} label={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())} score={val} />
+                    <ScoreBar
+                      key={key}
+                      label={resultConfig.scoreLabels[key] || key.replace(/_/g, ' ')}
+                      score={val}
+                    />
                   ))}
                 </CardContent>
               </Card>
@@ -343,7 +553,8 @@ ${proposalText}`,
                   <CheckCircle2 className="w-4 h-4" /> Strengths
                 </TabsTrigger>
                 <TabsTrigger value="interview" className="gap-1.5">
-                  <MessageSquare className="w-4 h-4" /> Mock Interview ({result.funder_questions?.length || 0})
+                  <MessageSquare className="w-4 h-4" /> {resultConfig.questionsLabel} (
+                  {result.funder_questions?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
@@ -354,17 +565,23 @@ ${proposalText}`,
                     <CardContent className="p-5">
                       <div className="flex items-start justify-between mb-2">
                         <p className="font-semibold text-slate-900">{item.area}</p>
-                        <Badge className={
-                          item.priority === 'high' ? SCORE_COLORS.low :
-                          item.priority === 'medium' ? SCORE_COLORS.medium :
-                          SCORE_COLORS.high
-                        }>
+                        <Badge
+                          className={
+                            item.priority === 'high'
+                              ? SCORE_COLORS.low
+                              : item.priority === 'medium'
+                              ? SCORE_COLORS.medium
+                              : SCORE_COLORS.high
+                          }
+                        >
                           {item.priority} priority
                         </Badge>
                       </div>
                       <p className="text-sm text-slate-600 mb-3">{item.issue}</p>
                       <div className="bg-[#143A50]/5 rounded-lg p-3 border border-[#143A50]/10">
-                        <p className="text-xs font-semibold text-[#143A50] uppercase tracking-wide mb-1">Suggested Improvement</p>
+                        <p className="text-xs font-semibold text-[#143A50] uppercase tracking-wide mb-1">
+                          Suggested Improvement
+                        </p>
                         <p className="text-sm text-slate-700">{item.suggestion}</p>
                       </div>
                     </CardContent>
@@ -392,9 +609,7 @@ ${proposalText}`,
               {/* Mock Interview Questions */}
               <TabsContent value="interview" className="space-y-3">
                 <div className="p-4 bg-[#143A50]/5 rounded-xl border border-[#143A50]/10 mb-2">
-                  <p className="text-sm text-[#143A50] font-medium">
-                    These are likely questions a funder would ask during an interview or site visit. Click each to see tips on how to answer.
-                  </p>
+                  <p className="text-sm text-[#143A50] font-medium">{resultConfig.questionsIntro}</p>
                 </div>
                 {(result.funder_questions || []).map((q, i) => (
                   <QuestionCard key={i} question={q} index={i} />
@@ -403,7 +618,16 @@ ${proposalText}`,
             </Tabs>
 
             <div className="flex justify-end pb-6">
-              <Button variant="outline" className="gap-2" onClick={() => { setResult(null); setProposalText(''); setFileName(''); }}>
+              <Button
+                variant="outline"
+                className="gap-2"
+                onClick={() => {
+                  setResult(null);
+                  setProposalText('');
+                  setFileName('');
+                  setTargetContext('');
+                }}
+              >
                 <RefreshCw className="w-4 h-4" /> Start Over
               </Button>
             </div>
