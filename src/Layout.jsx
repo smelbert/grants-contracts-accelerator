@@ -156,6 +156,7 @@ const getCoachPortalNav = (isFacilitator = false) => [
   { name: 'Post-Assessment', page: 'TrainingPostAssessment', icon: FileText },
   { name: 'Mentor Dashboard', page: 'MentorDashboard', icon: Target },
   { name: 'Assigned Organizations', page: 'AssignedOrganizations', icon: Building2 },
+  { name: 'Cohort Readiness', page: 'CohortReadinessDashboard', icon: BarChart3 },
   { name: 'Review Queue', page: 'ReviewQueue', icon: FileText },
   { name: 'Video Feedback', page: 'VideoFeedback', icon: Video },
   { name: 'Grant Submission', page: 'GrantSubmission', icon: Plus },
@@ -195,6 +196,7 @@ const getAdminPortalNav = () => [
       { name: 'Certificate Templates', page: 'CertificateTemplates', icon: BadgeIcon },
       { name: 'Issued Certificates', page: 'IssuedCertificates', icon: BadgeIcon },
       { name: 'Program Analytics', page: 'ProgramAnalytics', icon: TrendingUp },
+      { name: 'Cohort Readiness', page: 'CohortReadinessDashboard', icon: BarChart3 },
     ]
   },
   {
