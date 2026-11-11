@@ -2,7 +2,7 @@
 
 export const BRAND = {
   navy: '#143A50',
-  gold: '#E5C089',
+  gold: '#C89A45',
   goldDeep: '#7E5F22',
   berry: '#AC1A5B',
   teal: '#1E4F58',
@@ -108,8 +108,8 @@ export const BANDS = {
     min: 45, max: 72,
     colorKey: 'gold',
     textColorClass: 'text-[#7E5F22]',
-    bgColorClass: 'bg-[#E5C089]/20',
-    dotClass: 'bg-[#E5C089]',
+    bgColorClass: 'bg-[#C89A45]/20',
+    dotClass: 'bg-[#C89A45]',
     description: 'You have a solid foundation but key gaps need attention before you are fully competitive. Targeted improvements can close these gaps quickly.',
     interpretation: "When an organization lands here, I see one that's close — closer than it probably feels. The gap between where you are and competitive is real, but it's closeable, and it's worth closing now, not later. Most of what's missing is paperwork and process, not mission or capacity. A few focused months of cleanup changes your standing. This is the moment where the right help pays for itself.",
     cta: "This is where a readiness review earns its keep. EIS turns this report into a sequenced plan — what to fix first, what can wait, and what to pursue now. Over $22.4 million secured for clients, and most of those organizations started right where you are. Let's close the gap.",

@@ -214,7 +214,7 @@ export default function FundingReadinessAssessment() {
   return (
     <div className="min-h-screen bg-[#F9F4EF]">
       <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
-        <div className="bg-white rounded-2xl border border-[#E5C089]/30 shadow-sm p-6 sm:p-8">
+        <div className="bg-white rounded-2xl border border-[#C89A45]/30 shadow-sm p-6 sm:p-8">
           <ProgressBar
             currentStep={currentStep}
             totalSteps={steps.length}

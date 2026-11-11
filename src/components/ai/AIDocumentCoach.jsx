@@ -180,7 +180,7 @@ Be specific, actionable, and encouraging. Focus on helping them improve while ac
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#143A50] to-[#1E4F58] flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-[#E5C089]" />
+                <Sparkles className="w-6 h-6 text-[#C89A45]" />
               </div>
               <div>
                 <CardTitle className="text-2xl">AI Document Coach</CardTitle>
@@ -263,7 +263,7 @@ Be specific, actionable, and encouraging. Focus on helping them improve while ac
           className="space-y-6"
         >
           {/* Overall Score */}
-          <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#E5C089]/5 to-white">
+          <Card className="border-2 border-[#C89A45] bg-gradient-to-br from-[#C89A45]/5 to-white">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -432,7 +432,7 @@ Be specific, actionable, and encouraging. Focus on helping them improve while ac
             </TabsContent>
 
             <TabsContent value="highlights" className="space-y-3">
-              <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#E5C089]/5 to-white">
+              <Card className="border-2 border-[#C89A45] bg-gradient-to-br from-[#C89A45]/5 to-white">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-[#143A50]">
                     <Sparkles className="w-5 h-5" />
@@ -443,7 +443,7 @@ Be specific, actionable, and encouraging. Focus on helping them improve while ac
                 <CardContent>
                   <div className="space-y-4">
                     {feedback.positive_highlights.map((highlight, idx) => (
-                      <div key={idx} className="bg-white border-2 border-[#E5C089] rounded-lg p-4">
+                      <div key={idx} className="bg-white border-2 border-[#C89A45] rounded-lg p-4">
                         <p className="text-slate-700 italic">"{highlight}"</p>
                       </div>
                     ))}

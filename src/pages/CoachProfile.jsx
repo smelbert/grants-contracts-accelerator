@@ -446,8 +446,8 @@ export default function CoachProfilePage() {
 
               {/* Right Column - Contact & Info */}
               <div className="space-y-6">
-                <Card className="shadow-md hover:shadow-lg transition-shadow border-[#E5C089]">
-                  <CardHeader className="border-b border-slate-100 bg-[#E5C089]/10">
+                <Card className="shadow-md hover:shadow-lg transition-shadow border-[#C89A45]">
+                  <CardHeader className="border-b border-slate-100 bg-[#C89A45]/10">
                     <CardTitle className="text-[#143A50]">Contact Information</CardTitle>
                     <CardDescription className="text-xs text-slate-500">Internal use only</CardDescription>
                   </CardHeader>
@@ -547,10 +547,10 @@ export default function CoachProfilePage() {
                       <img
                         src={profile.headshot_url}
                         alt={profile.full_name}
-                        className="w-40 h-40 rounded-3xl object-cover border-6 border-white shadow-2xl ring-4 ring-[#E5C089]/50"
+                        className="w-40 h-40 rounded-3xl object-cover border-6 border-white shadow-2xl ring-4 ring-[#C89A45]/50"
                       />
                     ) : (
-                      <div className="w-40 h-40 rounded-3xl bg-white flex items-center justify-center border-6 shadow-2xl ring-4 ring-[#E5C089]/50">
+                      <div className="w-40 h-40 rounded-3xl bg-white flex items-center justify-center border-6 shadow-2xl ring-4 ring-[#C89A45]/50">
                         <User className="w-20 h-20 text-slate-400" />
                       </div>
                     )}

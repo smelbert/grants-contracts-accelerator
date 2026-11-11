@@ -97,7 +97,7 @@ export default function ProgramModuleManager() {
                   }}
                   className={`w-full text-left p-3 rounded-lg border-2 transition-all ${
                     selectedCohort === cohort.id
-                      ? 'border-[#143A50] bg-[#E5C089]/10'
+                      ? 'border-[#143A50] bg-[#C89A45]/10'
                       : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >

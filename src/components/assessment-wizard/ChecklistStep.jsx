@@ -42,7 +42,7 @@ export default function ChecklistStep({ items, level, trackKey, responses, onTog
           <label
             key={item.id}
             className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
-              responses[item.id] ? 'border-[#143A50] bg-[#143A50]/5' : 'border-slate-200 hover:border-[#E5C089] hover:bg-[#F9F4EF]'
+              responses[item.id] ? 'border-[#143A50] bg-[#143A50]/5' : 'border-slate-200 hover:border-[#C89A45] hover:bg-[#F9F4EF]'
             }`}
           >
             <Checkbox
@@ -53,7 +53,7 @@ export default function ChecklistStep({ items, level, trackKey, responses, onTog
             <div className="flex-1">
               <span className="text-sm text-slate-800">{item.text}</span>
               {item.is_gate && (
-                <span className="inline-flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#E5C089]/20 text-[#7E5F22]">
+                <span className="inline-flex items-center gap-1 ml-2 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#C89A45]/20 text-[#7E5F22]">
                   <Lock className="w-2.5 h-2.5" /> gate
                 </span>
               )}

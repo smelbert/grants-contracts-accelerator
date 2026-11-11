@@ -350,7 +350,7 @@ export default function DocumentTemplates({ day }) {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {templates.map((template, idx) => (
-            <Card key={template.id} className="border-l-4 border-[#E5C089]">
+            <Card key={template.id} className="border-l-4 border-[#C89A45]">
               <CardHeader>
                 <div className="flex items-start justify-between mb-2">
                   <Badge className="bg-[#143A50] text-white">{idx + 1}️⃣</Badge>
@@ -380,7 +380,7 @@ export default function DocumentTemplates({ day }) {
                 ) : (
                   <Button 
                     onClick={() => handleEdit(template)}
-                    className="w-full bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90"
+                    className="w-full bg-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/90"
                   >
                     <Edit className="w-4 h-4 mr-2" />
                     Edit & Download
@@ -431,7 +431,7 @@ export default function DocumentTemplates({ day }) {
           </CardHeader>
           <CardContent>
             <div className="space-y-2 font-mono text-sm">
-              <p className="text-[#E5C089]">📁 Funding Readiness Vault/</p>
+              <p className="text-[#C89A45]">📁 Funding Readiness Vault/</p>
               <p className="ml-4">├─ 📁 Legal & Structure</p>
               <p className="ml-4">├─ 📁 Financial</p>
               <p className="ml-4">├─ 📁 Program & Data</p>
@@ -452,7 +452,7 @@ export default function DocumentTemplates({ day }) {
                 <li>✔ A sustainability outline</li>
                 <li>✔ A data collection plan</li>
               </ul>
-              <p className="mt-4 text-[#E5C089] font-bold text-center">That is real readiness.</p>
+              <p className="mt-4 text-[#C89A45] font-bold text-center">That is real readiness.</p>
             </div>
           </CardContent>
         </Card>

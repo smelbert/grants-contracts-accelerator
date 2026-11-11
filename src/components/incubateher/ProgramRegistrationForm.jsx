@@ -127,7 +127,7 @@ export default function ProgramRegistrationForm() {
         body: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
             <div style="background-color: #143A50; padding: 30px; text-align: center;">
-              <h1 style="color: #E5C089; margin: 0;">Application Received!</h1>
+              <h1 style="color: #C89A45; margin: 0;">Application Received!</h1>
               <p style="color: #fff; margin-top: 8px;">${program.label}</p>
             </div>
             <div style="padding: 30px;">
@@ -222,7 +222,7 @@ export default function ProgramRegistrationForm() {
                 key={program.id}
                 type="button"
                 onClick={() => setSelectedProgram(program.id)}
-                className={`text-left p-4 rounded-xl border-2 transition-all ${selectedProgram === program.id ? 'border-[#E5C089] bg-[#E5C089]/10' : 'border-slate-200 hover:border-slate-300'}`}
+                className={`text-left p-4 rounded-xl border-2 transition-all ${selectedProgram === program.id ? 'border-[#C89A45] bg-[#C89A45]/10' : 'border-slate-200 hover:border-slate-300'}`}
               >
                 <p className="font-semibold text-sm mb-1" style={{ color: BRAND_COLORS.neutralDark }}>{program.label}</p>
                 <p className="text-xs" style={{ color: BRAND_COLORS.eisNavy }}>{program.description}</p>

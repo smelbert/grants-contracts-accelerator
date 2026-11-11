@@ -99,14 +99,14 @@ export default function CourseViewer() {
               className="h-8 w-auto"
             />
           </div>
-          <Badge className="bg-[#E5C089]/20 text-[#E5C089] border-[#E5C089]/30">Shared Course</Badge>
+          <Badge className="bg-[#C89A45]/20 text-[#C89A45] border-[#C89A45]/30">Shared Course</Badge>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         {/* Welcome */}
         {learnerName && (
-          <div className="bg-[#E5C089]/10 border border-[#E5C089]/30 rounded-xl px-5 py-3">
+          <div className="bg-[#C89A45]/10 border border-[#C89A45]/30 rounded-xl px-5 py-3">
             <p className="text-sm text-[#143A50] font-medium">Welcome, {learnerName}!</p>
             <p className="text-xs text-slate-500 mt-0.5">This course was shared with you by Elbert Innovative Solutions.</p>
           </div>

@@ -38,7 +38,7 @@ export default function PersonalizedMilestones({ milestones, userStage, orgType 
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="w-5 h-5 text-[#AC1A5B]" />
         <h2 className="text-lg font-semibold text-[#143A50]">Personalized Action Prompts</h2>
-        <Badge className="bg-[#E5C089]/30 text-[#143A50] border-[#E5C089]">{stageLabel}</Badge>
+        <Badge className="bg-[#C89A45]/30 text-[#143A50] border-[#C89A45]">{stageLabel}</Badge>
       </div>
       <p className="text-sm text-slate-500 mb-4">
         Based on your registration profile — here's what to focus on this month to elevate your business.

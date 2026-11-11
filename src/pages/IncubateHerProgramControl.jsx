@@ -473,7 +473,7 @@ export default function IncubateHerProgramControl() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-600">Avg. Attendance</p>
-                  <p className="text-3xl font-bold text-[#E5C089]">
+                  <p className="text-3xl font-bold text-[#C89A45]">
                     {Math.round(
                       enrollments.reduce((sum, e) => sum + calculateAttendanceRate(e.id), 0) /
                         (enrollments.length || 1)
@@ -1040,7 +1040,7 @@ export default function IncubateHerProgramControl() {
                     <AlertDialogTrigger asChild>
                       <Button
                         size="lg"
-                        className="w-full bg-[#E5C089] hover:bg-[#d4af78] text-[#143A50]"
+                        className="w-full bg-[#C89A45] hover:bg-[#d4af78] text-[#143A50]"
                         disabled={drawWinnerMutation.isPending}
                       >
                         <Gift className="w-5 h-5 mr-2" />
@@ -1058,7 +1058,7 @@ export default function IncubateHerProgramControl() {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => drawWinnerMutation.mutate()}
-                          className="bg-[#E5C089] hover:bg-[#d4af78] text-[#143A50]"
+                          className="bg-[#C89A45] hover:bg-[#d4af78] text-[#143A50]"
                         >
                           Draw Winner
                         </AlertDialogAction>

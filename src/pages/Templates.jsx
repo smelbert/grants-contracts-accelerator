@@ -329,7 +329,7 @@ export default function TemplatesPage() {
                         className="px-8 py-6 border-b-4 flex items-center justify-between"
                         style={{ 
                           backgroundColor: '#FFFFFF',
-                          borderBottomColor: '#E5C089'
+                          borderBottomColor: '#C89A45'
                         }}
                       >
                         <div className="flex items-center gap-6">
@@ -381,7 +381,7 @@ export default function TemplatesPage() {
                         className="px-8 py-6 border-t-4 mt-8"
                         style={{ 
                           backgroundColor: '#143A50',
-                          borderTopColor: '#E5C089'
+                          borderTopColor: '#C89A45'
                         }}
                       >
                         <div className="flex items-center justify-between">
@@ -391,7 +391,7 @@ export default function TemplatesPage() {
                             </p>
                             <p 
                               className="text-xs"
-                              style={{ color: '#E5C089' }}
+                              style={{ color: '#C89A45' }}
                             >
                               Empowering organizations to secure funding and achieve their missions
                             </p>

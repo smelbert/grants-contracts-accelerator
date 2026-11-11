@@ -65,7 +65,7 @@ Provide specific, actionable recommendations that address gaps and build on stre
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-[#E5C089]" />
+          <Lightbulb className="w-5 h-5 text-[#C89A45]" />
           Strategic Guidance
         </CardTitle>
         <CardDescription>Personalized recommendations to improve your grant readiness</CardDescription>

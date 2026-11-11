@@ -44,7 +44,7 @@ export default function AIThreadSummary({ discussionId, repliesCount }) {
         size="sm"
         onClick={generateSummary}
         disabled={loading}
-        className="text-[#143A50] border-[#E5C089] hover:bg-[#E5C089]/10"
+        className="text-[#143A50] border-[#C89A45] hover:bg-[#C89A45]/10"
       >
         {loading ? (
           <>
@@ -68,7 +68,7 @@ export default function AIThreadSummary({ discussionId, repliesCount }) {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="mt-3 p-4 bg-gradient-to-br from-[#E5C089]/5 to-[#143A50]/5 border-[#E5C089]/30">
+            <Card className="mt-3 p-4 bg-gradient-to-br from-[#C89A45]/5 to-[#143A50]/5 border-[#C89A45]/30">
               <div className="flex items-start gap-2 mb-2">
                 <Sparkles className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
                 <p className="text-sm font-medium text-[#143A50]">AI Thread Summary</p>

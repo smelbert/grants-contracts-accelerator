@@ -2,7 +2,7 @@ import React from 'react';
 
 const DEFAULT_BRAND = {
   primary_color: '#143A50',
-  accent_color: '#E5C089',
+  accent_color: '#C89A45',
   footer_text: '',
 };
 

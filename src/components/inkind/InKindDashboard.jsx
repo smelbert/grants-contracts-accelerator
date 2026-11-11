@@ -61,7 +61,7 @@ export default function InKindDashboard({ donations, volunteers, recurring }) {
             <p className="text-xs text-slate-400 mt-1">per FASB ASU 2020-07</p>
           </CardContent>
         </Card>
-        <Card className="border-l-4 border-l-[#E5C089]">
+        <Card className="border-l-4 border-l-[#C89A45]">
           <CardContent className="pt-5">
             <p className="text-xs text-slate-500 uppercase tracking-wide mb-1">Combined In-Kind Value</p>
             <p className="text-3xl font-bold text-amber-700">${combinedTotal.toLocaleString()}</p>

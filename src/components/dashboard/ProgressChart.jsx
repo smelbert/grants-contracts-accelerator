@@ -101,7 +101,7 @@ export default function ProgressChart({ assessments = [] }) {
                   <Legend />
                   <Bar dataKey="legal" fill="#143A50" name="Legal Readiness" />
                   <Bar dataKey="financial" fill="#1E4F58" name="Financial Readiness" />
-                  <Bar dataKey="confidence" fill="#E5C089" name="Confidence" />
+                  <Bar dataKey="confidence" fill="#C89A45" name="Confidence" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

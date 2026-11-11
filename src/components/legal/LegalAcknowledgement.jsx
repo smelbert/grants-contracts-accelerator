@@ -15,7 +15,7 @@ export default function LegalAcknowledgement({ open, onAccept }) {
     <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
       {/* Header */}
       <div className="bg-[#143A50] text-white px-8 py-6 flex items-center gap-3">
-        <Shield className="w-7 h-7 text-[#E5C089] flex-shrink-0" />
+        <Shield className="w-7 h-7 text-[#C89A45] flex-shrink-0" />
         <div>
           <h2 className="text-xl font-bold">Terms of Service & Copyright Protection</h2>
           <p className="text-white/70 text-sm mt-0.5">Please read and accept before continuing</p>

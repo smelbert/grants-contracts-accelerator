@@ -65,7 +65,7 @@ export default function ContactStep({ form, setForm }) {
               className={`w-full text-left p-3 rounded-lg border transition-all ${
                 form.outreach_preference === opt.value
                   ? 'border-[#143A50] bg-[#143A50]/5'
-                  : 'border-slate-200 hover:border-[#E5C089]'
+                  : 'border-slate-200 hover:border-[#C89A45]'
               }`}
             >
               <p className="font-medium text-sm text-[#143A50]">{opt.label}</p>

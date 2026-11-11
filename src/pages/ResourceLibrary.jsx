@@ -208,7 +208,7 @@ export default function ResourceLibrary() {
         </div>
 
         {/* Filters */}
-        <Card className="mb-6 border-2 border-[#E5C089] shadow-lg">
+        <Card className="mb-6 border-2 border-[#C89A45] shadow-lg">
           <CardContent className="p-5">
             <div className="flex flex-wrap gap-3">
               {/* Search */}
@@ -294,16 +294,16 @@ export default function ResourceLibrary() {
         )}
 
         {/* In-Kind Tracker Promo */}
-        <Card className="mb-6 border-2 border-[#E5C089] bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
+        <Card className="mb-6 border-2 border-[#C89A45] bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
           <CardContent className="py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
-              <p className="font-bold text-[#E5C089] text-lg">🎁 In-Kind Contribution Tracker</p>
+              <p className="font-bold text-[#C89A45] text-lg">🎁 In-Kind Contribution Tracker</p>
               <p className="text-sm text-white/80 mt-1">
                 Track non-cash gifts, volunteer hours, and recurring partnerships — with IRS acknowledgment tracking, GAAP compliance flags, and an FMV reference library built in.
               </p>
             </div>
             <a href="/InKindTracker">
-              <Button className="bg-[#E5C089] hover:bg-[#d4b070] text-[#143A50] font-bold flex-shrink-0">Open Tracker →</Button>
+              <Button className="bg-[#C89A45] hover:bg-[#d4b070] text-[#143A50] font-bold flex-shrink-0">Open Tracker →</Button>
             </a>
           </CardContent>
         </Card>
@@ -353,7 +353,7 @@ export default function ResourceLibrary() {
                           icon={Download}
                           variant="outline"
                           size="sm"
-                          className="ml-auto border-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/10"
+                          className="ml-auto border-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/10"
                         />
                       </div>
                       <ResourceGrid
@@ -454,7 +454,7 @@ export default function ResourceLibrary() {
                       />
                     </div>
                     <div className="flex items-center gap-3 flex-wrap">
-                      <Badge className="bg-[#E5C089] text-[#143A50]">
+                      <Badge className="bg-[#C89A45] text-[#143A50]">
                         {CATEGORY_CONFIG[previewResource.category]?.label || previewResource.category}
                       </Badge>
                       <Badge variant="outline">{previewResource.maturity_level}</Badge>
@@ -546,16 +546,16 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {resources.map((resource) => (
-        <Card key={resource.id} className={`hover:shadow-xl transition-all border-2 ${resource.isFavorited ? 'border-[#AC1A5B]' : 'hover:border-[#E5C089]'}`}>
+        <Card key={resource.id} className={`hover:shadow-xl transition-all border-2 ${resource.isFavorited ? 'border-[#AC1A5B]' : 'hover:border-[#C89A45]'}`}>
           <CardHeader className="bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
             <div className="flex items-start justify-between mb-2">
-              <FileText className="w-7 h-7 text-[#E5C089]" />
+              <FileText className="w-7 h-7 text-[#C89A45]" />
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="bg-white/20 text-white text-xs">
                   {CATEGORY_CONFIG[resource.category]?.label || resource.category}
                 </Badge>
                 <button onClick={() => onFavorite(resource)} className="hover:scale-110 transition-transform">
-                  <Heart className={`w-5 h-5 ${resource.isFavorited ? 'fill-[#E5C089] text-[#E5C089]' : 'text-white/60'}`} />
+                  <Heart className={`w-5 h-5 ${resource.isFavorited ? 'fill-[#C89A45] text-[#C89A45]' : 'text-white/60'}`} />
                 </button>
               </div>
             </div>
@@ -596,7 +596,7 @@ function ResourceGrid({ resources, onDownload, onPreview, onFavorite, onReview }
               )}
               {resource.avgRating > 0 && (
                 <span className="flex items-center gap-1 text-xs text-slate-500 ml-auto">
-                  <Star className="w-3 h-3 fill-[#E5C089] text-[#E5C089]" />
+                  <Star className="w-3 h-3 fill-[#C89A45] text-[#C89A45]" />
                   {resource.avgRating.toFixed(1)} ({resource.reviewCount})
                 </span>
               )}
@@ -640,7 +640,7 @@ function ReviewDialog({ resource, userEmail, onClose, onSubmit }) {
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button key={star} onClick={() => setRating(star)} className="hover:scale-110 transition-transform">
-                  <Star className={`w-8 h-8 ${star <= rating ? 'fill-[#E5C089] text-[#E5C089]' : 'text-slate-300'}`} />
+                  <Star className={`w-8 h-8 ${star <= rating ? 'fill-[#C89A45] text-[#C89A45]' : 'text-slate-300'}`} />
                 </button>
               ))}
             </div>

@@ -26,7 +26,7 @@ const PROGRAM_LABELS = {
 const PROGRAM_COLORS = {
   incubateher: '#143A50',
   coaching: '#AC1A5B',
-  boutique_services: '#E5C089',
+  boutique_services: '#C89A45',
   learning_hub: '#1E4F58',
   general: '#A65D40',
 };
@@ -301,7 +301,7 @@ function AnalyticsPanel({ testimonials }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Total Testimonials', value: testimonials.length, color: '#143A50' },
-          { label: 'Avg Rating', value: `${avgRating} / 5`, color: '#E5C089' },
+          { label: 'Avg Rating', value: `${avgRating} / 5`, color: '#C89A45' },
           { label: 'Approved', value: testimonials.filter(t => t.admin_approved).length, color: '#22c55e' },
           { label: 'Featured', value: testimonials.filter(t => t.is_featured).length, color: '#f59e0b' },
         ].map(s => (
@@ -343,7 +343,7 @@ function AnalyticsPanel({ testimonials }) {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="count" fill="#E5C089" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" fill="#C89A45" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

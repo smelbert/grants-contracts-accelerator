@@ -46,7 +46,7 @@ export default function GrantResultCard({ grant }) {
         <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm mb-4">
           {grant.amount && (
             <div className="flex items-center gap-1.5 text-slate-700">
-              <DollarSign className="w-4 h-4 text-[#E5C089]" />
+              <DollarSign className="w-4 h-4 text-[#C89A45]" />
               <span className="font-medium">{grant.amount}</span>
             </div>
           )}

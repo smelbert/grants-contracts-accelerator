@@ -110,7 +110,7 @@ export default function IssuedCertificatesPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <Award className="w-5 h-5 text-[#E5C089]" />
+                        <Award className="w-5 h-5 text-[#C89A45]" />
                         {cert.program_name}
                       </CardTitle>
                       <p className="text-sm text-slate-600 mt-1">{cert.participant_name}</p>

@@ -49,7 +49,7 @@ export default function GrantDiscovery({ embedded = false }) {
         {!embedded && (
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-[#143A50]/5 rounded-full px-4 py-1.5 mb-4">
-            <Sparkles className="w-4 h-4 text-[#E5C089]" />
+            <Sparkles className="w-4 h-4 text-[#C89A45]" />
             <span className="text-sm font-medium text-[#143A50]">AI-Powered Grant Discovery</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[#143A50] mb-2">
@@ -103,7 +103,7 @@ export default function GrantDiscovery({ embedded = false }) {
             <div className="inline-flex flex-col items-center gap-4">
               <div className="relative">
                 <div className="w-16 h-16 rounded-full border-4 border-[#143A50]/10 border-t-[#143A50] animate-spin" />
-                <Sparkles className="absolute inset-0 m-auto w-6 h-6 text-[#E5C089]" />
+                <Sparkles className="absolute inset-0 m-auto w-6 h-6 text-[#C89A45]" />
               </div>
               <div>
                 <p className="font-medium text-[#143A50]">Searching across grants & foundations...</p>
@@ -145,7 +145,7 @@ export default function GrantDiscovery({ embedded = false }) {
             )}
 
             {/* Anonymous key notice */}
-            <div className="mt-6 bg-[#E5C089]/10 border border-[#E5C089]/30 rounded-xl p-4 text-sm text-[#143A50]">
+            <div className="mt-6 bg-[#C89A45]/10 border border-[#C89A45]/30 rounded-xl p-4 text-sm text-[#143A50]">
               <p>
                 <strong>Note:</strong> You're using the shared anonymous Granted API key (3 AI searches/day). 
                 Create a free account at{' '}

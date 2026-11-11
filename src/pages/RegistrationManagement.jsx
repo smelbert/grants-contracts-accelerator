@@ -139,7 +139,7 @@ export default function RegistrationManagement() {
         body: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
             <div style="background-color: #143A50; padding: 30px; text-align: center;">
-              <h1 style="color: #E5C089; margin: 0;">You're Enrolled!</h1>
+              <h1 style="color: #C89A45; margin: 0;">You're Enrolled!</h1>
               <p style="color: #fff; margin-top: 8px;">${rd.program || 'Program'}</p>
             </div>
             <div style="padding: 30px;">
@@ -253,7 +253,7 @@ export default function RegistrationManagement() {
           </div>
           <Button
             size="sm"
-            className="bg-[#E5C089] text-[#143A50] font-semibold hover:bg-[#d4af76] shrink-0"
+            className="bg-[#C89A45] text-[#143A50] font-semibold hover:bg-[#d4af76] shrink-0"
             onClick={() => syncAllMutation.mutate()}
             disabled={syncAllMutation.isPending}
           >
@@ -328,7 +328,7 @@ export default function RegistrationManagement() {
                                 ? <CheckCircle2 className="w-4 h-4 text-emerald-500" title="ToS Signed" />
                                 : <AlertCircle className="w-4 h-4 text-amber-400" title="ToS Pending" />
                               }
-                              {hasJotformData && <Badge className="bg-[#E5C089]/30 text-[#7a5c1e] text-xs">JotForm ✓</Badge>}
+                              {hasJotformData && <Badge className="bg-[#C89A45]/30 text-[#7a5c1e] text-xs">JotForm ✓</Badge>}
                               {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
                             </div>
                           </div>

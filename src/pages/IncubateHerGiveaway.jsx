@@ -164,9 +164,9 @@ export default function IncubateHerGiveaway() {
 
         {/* Winner announced (someone else won) */}
         {cohort?.giveaway_revealed && winnerEnrollment && !isWinner && (
-          <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#143A50]/5 to-[#E5C089]/10 shadow-lg">
+          <Card className="border-2 border-[#C89A45] bg-gradient-to-br from-[#143A50]/5 to-[#C89A45]/10 shadow-lg">
             <CardContent className="pt-8 text-center">
-              <Trophy className="w-16 h-16 text-[#E5C089] mx-auto mb-4" />
+              <Trophy className="w-16 h-16 text-[#C89A45] mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-[#143A50] mb-2">🏆 Giveaway Winner Announced!</h2>
               <p className="text-lg font-semibold text-[#AC1A5B] mb-1">{winnerEnrollment.participant_name}</p>
               <p className="text-slate-600 text-sm">Has been selected as the IncubateHer Giveaway winner!</p>
@@ -183,7 +183,7 @@ export default function IncubateHerGiveaway() {
             <CardTitle className="flex items-center gap-2 text-2xl"><Gift className="w-6 h-6" /> About the Grand Prize</CardTitle>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="bg-gradient-to-br from-[#143A50]/5 to-[#E5C089]/10 border-2 border-[#E5C089] rounded-xl p-6">
+            <div className="bg-gradient-to-br from-[#143A50]/5 to-[#C89A45]/10 border-2 border-[#C89A45] rounded-xl p-6">
               <p className="text-slate-800 text-lg leading-relaxed">
                 {cohort?.giveaway_prize_description || 'Comprehensive grant writing support for a non-federal funding opportunity — including personalized funder research, narrative development, budget preparation, and submission guidance.'}
               </p>
@@ -227,7 +227,7 @@ export default function IncubateHerGiveaway() {
         {cohort?.giveaway_revealed ? (
           <Card className="border-2 border-slate-300 bg-slate-50">
             <CardContent className="pt-6 pb-6 text-center">
-              <Trophy className="w-10 h-10 text-[#E5C089] mx-auto mb-3" />
+              <Trophy className="w-10 h-10 text-[#C89A45] mx-auto mb-3" />
               <h3 className="text-lg font-bold text-slate-700 mb-1">Giveaway Closed</h3>
               <p className="text-slate-500 text-sm">The winner has been selected. The giveaway is now closed.</p>
             </CardContent>

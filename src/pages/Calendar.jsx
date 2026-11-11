@@ -210,7 +210,7 @@ export default function CalendarPage() {
                         className={`
                           relative p-2 h-20 rounded-lg border-2 transition-all text-left
                           ${!isSameMonth(day, currentDate) ? 'opacity-30' : ''}
-                          ${isSelected ? 'border-[#143A50] bg-[#E5C089]/20' : 'border-slate-200 hover:border-slate-300'}
+                          ${isSelected ? 'border-[#143A50] bg-[#C89A45]/20' : 'border-slate-200 hover:border-slate-300'}
                           ${isCurrentDay && !isSelected ? 'border-blue-400 bg-blue-50' : ''}
                         `}
                       >

@@ -13,7 +13,7 @@ const CHART_TYPES = [
   { value: 'pie', label: 'Pie Chart' }
 ];
 
-const COLORS = ['#143A50', '#AC1A5B', '#E5C089', '#1E4F58', '#A65D40', '#B5A698'];
+const COLORS = ['#143A50', '#AC1A5B', '#C89A45', '#1E4F58', '#A65D40', '#B5A698'];
 
 export default function ChartBuilder({ value = {}, onChange, readOnly = false }) {
   const [chartConfig, setChartConfig] = useState(value.type ? value : {

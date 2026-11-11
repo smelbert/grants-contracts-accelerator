@@ -120,7 +120,7 @@ export default function PlatformGuidelinesDialog({ open, onAccepted, userEmail }
               </ul>
             </section>
 
-            <section className="bg-[#E5C089]/20 border border-[#E5C089] rounded-lg p-4">
+            <section className="bg-[#C89A45]/20 border border-[#C89A45] rounded-lg p-4">
               <h3 className="font-semibold text-[#143A50] text-base mb-2">Our Commitment</h3>
               <p>
                 We are committed to maintaining a safe, inclusive, and supportive community. 

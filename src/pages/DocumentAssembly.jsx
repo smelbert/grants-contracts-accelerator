@@ -259,7 +259,7 @@ Make the content specific, compelling, and tailored to this funder's priorities.
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-[#143A50] flex items-center justify-center">
-              <Wand2 className="w-6 h-6 text-[#E5C089]" />
+              <Wand2 className="w-6 h-6 text-[#C89A45]" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Document Assembly</h1>

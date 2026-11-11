@@ -110,7 +110,7 @@ export default function GrantMemoOpportunitiesPanel({ opportunities = [] }) {
             <RefreshCw className="w-4 h-4 text-[#143A50]" />
             Curated Grant Opportunities
           </CardTitle>
-          <Badge className="bg-[#E5C089]/30 text-[#143A50]">{memoOpps.length} opportunities</Badge>
+          <Badge className="bg-[#C89A45]/30 text-[#143A50]">{memoOpps.length} opportunities</Badge>
         </div>
         <p className="text-xs text-slate-500">Grants researched and vetted for your organization type</p>
       </CardHeader>

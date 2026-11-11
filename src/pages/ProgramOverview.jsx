@@ -101,7 +101,7 @@ export default function ProgramOverview() {
   }
 
   const brandColor = cohort.brand_config?.primary_color || '#143A50';
-  const accentColor = cohort.brand_config?.accent_color || '#E5C089';
+  const accentColor = cohort.brand_config?.accent_color || '#C89A45';
 
   return (
     <div className="min-h-screen bg-slate-50">

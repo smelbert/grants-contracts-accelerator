@@ -74,7 +74,7 @@ Format as JSON with this structure:
 
   if (loading) {
     return (
-      <Card className="border-[#E5C089]/30">
+      <Card className="border-[#C89A45]/30">
         <CardContent className="py-8 flex items-center justify-center">
           <Loader2 className="w-6 h-6 animate-spin text-[#143A50]" />
         </CardContent>
@@ -85,7 +85,7 @@ Format as JSON with this structure:
   if (!suggestions || suggestions.length === 0) return null;
 
   return (
-    <Card className="border-[#E5C089]/30 bg-gradient-to-br from-white to-[#E5C089]/5">
+    <Card className="border-[#C89A45]/30 bg-gradient-to-br from-white to-[#C89A45]/5">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-[#143A50]" />

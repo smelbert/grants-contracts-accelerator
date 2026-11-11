@@ -85,7 +85,7 @@ function Spotlight({ targetSelector }) {
   const pad = 8;
   return (
     <div
-      className="fixed pointer-events-none z-[9998] rounded-xl ring-4 ring-[#E5C089] ring-offset-0 shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]"
+      className="fixed pointer-events-none z-[9998] rounded-xl ring-4 ring-[#C89A45] ring-offset-0 shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]"
       style={{
         top: rect.top - pad,
         left: rect.left - pad,

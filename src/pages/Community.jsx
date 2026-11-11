@@ -114,17 +114,17 @@ export default function CommunityPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[#E5C089]/5">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[#C89A45]/5">
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Users className="w-8 h-8 text-[#E5C089]" />
+                <Users className="w-8 h-8 text-[#C89A45]" />
                 <h1 className="text-4xl font-bold">Community Spaces</h1>
               </div>
-              <p className="text-lg text-[#E5C089]/80 max-w-2xl">
+              <p className="text-lg text-[#C89A45]/80 max-w-2xl">
                 Connect with peers, share insights, and grow together in spaces designed for your organization type and learning goals
               </p>
             </div>
@@ -135,28 +135,28 @@ export default function CommunityPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <div className="flex items-center gap-3">
-                <Users className="w-5 h-5 text-[#E5C089]" />
+                <Users className="w-5 h-5 text-[#C89A45]" />
                 <div>
                   <p className="text-2xl font-bold">{spaces.reduce((acc, s) => acc + (s.member_count || 0), 0)}</p>
-                  <p className="text-sm text-[#E5C089]/70">Active Members</p>
+                  <p className="text-sm text-[#C89A45]/70">Active Members</p>
                 </div>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <div className="flex items-center gap-3">
-                <MessageSquare className="w-5 h-5 text-[#E5C089]" />
+                <MessageSquare className="w-5 h-5 text-[#C89A45]" />
                 <div>
                   <p className="text-2xl font-bold">{spaces.reduce((acc, s) => acc + (s.content_count || 0), 0)}</p>
-                  <p className="text-sm text-[#E5C089]/70">Discussions</p>
+                  <p className="text-sm text-[#C89A45]/70">Discussions</p>
                 </div>
               </div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <div className="flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-[#E5C089]" />
+                <Sparkles className="w-5 h-5 text-[#C89A45]" />
                 <div>
                   <p className="text-2xl font-bold">AI-Powered</p>
-                  <p className="text-sm text-[#E5C089]/70">Smart Insights</p>
+                  <p className="text-sm text-[#C89A45]/70">Smart Insights</p>
                 </div>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function CommunityPage() {
               <div className="space-y-6">
                 <div className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <Sparkles className="w-8 h-8 text-[#E5C089]" />
+                    <Sparkles className="w-8 h-8 text-[#C89A45]" />
                     <h2 className="text-2xl font-bold">IncubateHer Community</h2>
                   </div>
                   <p className="text-white/90 max-w-2xl">
@@ -206,7 +206,7 @@ export default function CommunityPage() {
                                 </div>
                                 <div>
                                   <CardTitle className="text-2xl">{space.space_name}</CardTitle>
-                                  <Badge className="bg-[#E5C089] text-[#143A50] mt-2">
+                                  <Badge className="bg-[#C89A45] text-[#143A50] mt-2">
                                     {space.visibility === 'members_only' ? 'Members Only' : 'Open'}
                                   </Badge>
                                 </div>
@@ -347,7 +347,7 @@ export default function CommunityPage() {
                           <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#AC1A5B] to-[#A65D40] flex items-center justify-center">
                             <Icon className="w-6 h-6 text-white" />
                           </div>
-                          <Badge className="bg-[#E5C089] text-[#143A50]">
+                          <Badge className="bg-[#C89A45] text-[#143A50]">
                             {space.visibility === 'members_only' ? 'Members Only' : 'Open'}
                           </Badge>
                         </div>
@@ -394,7 +394,7 @@ export default function CommunityPage() {
                 // Determine space color scheme
                 let colorScheme = {
                   gradient: 'from-[#143A50] to-[#1E4F58]',
-                  badge: 'bg-[#E5C089] text-[#143A50]',
+                  badge: 'bg-[#C89A45] text-[#143A50]',
                   border: 'border-[#143A50]/30',
                   button: 'bg-[#143A50] hover:bg-[#1E4F58]'
                 };
@@ -409,7 +409,7 @@ export default function CommunityPage() {
                 } else if (['GraduationCap', 'MessageCircle'].includes(space.icon)) {
                   colorScheme = {
                     gradient: 'from-[#AC1A5B] to-[#A65D40]',
-                    badge: 'bg-[#E5C089] text-[#143A50]',
+                    badge: 'bg-[#C89A45] text-[#143A50]',
                     border: 'border-[#AC1A5B]/30',
                     button: 'bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] hover:opacity-90'
                   };

@@ -15,7 +15,7 @@ export default function AcknowledgmentsStep({ acknowledgments, onToggle }) {
           <label
             key={i}
             className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all ${
-              acknowledgments[i] ? 'border-[#143A50] bg-[#143A50]/5' : 'border-slate-200 hover:border-[#E5C089]'
+              acknowledgments[i] ? 'border-[#143A50] bg-[#143A50]/5' : 'border-slate-200 hover:border-[#C89A45]'
             }`}
           >
             <Checkbox

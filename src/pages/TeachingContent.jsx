@@ -237,7 +237,7 @@ export default function TeachingContentPage() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <StickyNote className="w-5 h-5 text-[#E5C089]" />
+                  <StickyNote className="w-5 h-5 text-[#C89A45]" />
                   Teaching Prep Notes
                 </CardTitle>
                 <CardDescription>Build notes to prepare for your sessions</CardDescription>

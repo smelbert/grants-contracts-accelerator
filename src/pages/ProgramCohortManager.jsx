@@ -24,7 +24,7 @@ const EMPTY_COHORT = {
   brand_config: {
     primary_color: '#143A50',
     secondary_color: '#1E4F58',
-    accent_color: '#E5C089',
+    accent_color: '#C89A45',
     logo_url: '',
     header_title: '',
     header_subtitle: '',

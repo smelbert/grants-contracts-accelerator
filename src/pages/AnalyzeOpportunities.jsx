@@ -193,7 +193,7 @@ export default function AnalyzeOpportunitiesPage() {
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-3">
             <div className="w-14 h-14 rounded-2xl bg-[#143A50] flex items-center justify-center">
-              <Upload className="w-7 h-7 text-[#E5C089]" />
+              <Upload className="w-7 h-7 text-[#C89A45]" />
             </div>
             <div>
               <h1 className="text-4xl font-bold text-[#143A50]">Analyze Opportunities</h1>

@@ -104,21 +104,21 @@ export default function BoutiqueServices() {
             <h2 className="text-3xl font-bold text-center mb-8">Why Choose Boutique Services?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="text-center">
-                <Clock className="w-12 h-12 mx-auto mb-4 text-[#E5C089]" />
+                <Clock className="w-12 h-12 mx-auto mb-4 text-[#C89A45]" />
                 <h3 className="font-semibold mb-2">Rapid Turnaround</h3>
                 <p className="text-blue-100 text-sm">
                   Get expert guidance when you need it most, with fast turnaround times
                 </p>
               </div>
               <div className="text-center">
-                <Target className="w-12 h-12 mx-auto mb-4 text-[#E5C089]" />
+                <Target className="w-12 h-12 mx-auto mb-4 text-[#C89A45]" />
                 <h3 className="font-semibold mb-2">Tailored Expertise</h3>
                 <p className="text-blue-100 text-sm">
                   Work directly with experienced consultants who understand your context
                 </p>
               </div>
               <div className="text-center">
-                <CheckCircle2 className="w-12 h-12 mx-auto mb-4 text-[#E5C089]" />
+                <CheckCircle2 className="w-12 h-12 mx-auto mb-4 text-[#C89A45]" />
                 <h3 className="font-semibold mb-2">Actionable Results</h3>
                 <p className="text-blue-100 text-sm">
                   Walk away with clear guidance, not generic advice

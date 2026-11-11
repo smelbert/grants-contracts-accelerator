@@ -264,9 +264,9 @@ const SECTIONS = [
   },
   {
     id: 'after',
-    icon: <Star className="w-5 h-5 text-[#E5C089]" />,
+    icon: <Star className="w-5 h-5 text-[#C89A45]" />,
     title: 'After the Consultation',
-    color: 'border-l-[#E5C089]',
+    color: 'border-l-[#C89A45]',
     content: (
       <div className="space-y-4">
         <p className="text-slate-700 leading-relaxed">
@@ -475,11 +475,11 @@ export default function IncubateHerConsultationGuide() {
         })}
 
         {/* CTA */}
-        <Card className="border-2 border-[#E5C089] bg-amber-50/30 shadow-md">
+        <Card className="border-2 border-[#C89A45] bg-amber-50/30 shadow-md">
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
               <div className="w-14 h-14 mx-auto rounded-full bg-[#143A50] flex items-center justify-center">
-                <CheckCircle2 className="w-7 h-7 text-[#E5C089]" />
+                <CheckCircle2 className="w-7 h-7 text-[#C89A45]" />
               </div>
               <h3 className="text-xl font-bold text-[#143A50]">Ready to Book?</h3>
               <p className="text-slate-600 max-w-lg mx-auto">

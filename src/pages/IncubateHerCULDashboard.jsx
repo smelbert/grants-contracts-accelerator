@@ -17,7 +17,7 @@ import {
 const BRAND = {
   navy: '#143A50',
   magenta: '#AC1A5B',
-  gold: '#E5C089',
+  gold: '#C89A45',
   teal: '#1E4F58',
   rust: '#A65D40',
 };
@@ -588,7 +588,7 @@ export default function IncubateHerCULDashboard() {
                   <p>
                     Participants demonstrated significant growth in funding readiness, with average assessment scores
                     increasing from <strong className="text-white">{avgPreScore}</strong> to <strong className="text-white">{avgPostScore}</strong>, representing an average improvement
-                    of <strong className="text-[#E5C089]">+{avgDelta} points</strong>.
+                    of <strong className="text-[#C89A45]">+{avgDelta} points</strong>.
                   </p>
                   <p>
                     Program engagement was strong, with <strong className="text-white">{totalEnrolled > 0 ? Math.round((consultationsComplete / totalEnrolled) * 100) : 0}%</strong> of

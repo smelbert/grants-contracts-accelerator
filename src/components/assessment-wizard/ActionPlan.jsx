@@ -5,7 +5,7 @@ import { PRIORITY_LABELS } from '@/lib/assessmentConfig';
 export default function ActionPlan({ actionPlan }) {
   if (!actionPlan || actionPlan.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#E5C089]/30 p-6">
+      <div className="bg-white rounded-2xl border border-[#C89A45]/30 p-6">
         <h3 className="text-lg font-serif text-[#143A50] mb-2">Action Plan</h3>
         <p className="text-sm text-slate-600">All items checked — no gaps to address.</p>
       </div>
@@ -36,7 +36,7 @@ export default function ActionPlan({ actionPlan }) {
                     <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PRIORITY_LABELS[item.rank].badgeClass}`}>{PRIORITY_LABELS[item.rank].label}</span>
                     <span className="text-[10px] text-slate-500">{item.trackName} · {item.levelName}</span>
                     {item.is_gate && (
-                      <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#E5C089]/20 text-[#7E5F22]"><Lock className="w-2.5 h-2.5" /> gate</span>
+                      <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#C89A45]/20 text-[#7E5F22]"><Lock className="w-2.5 h-2.5" /> gate</span>
                     )}
                   </div>
                   <p className="text-sm text-slate-800">{item.text}</p>
@@ -49,7 +49,7 @@ export default function ActionPlan({ actionPlan }) {
 
       {/* Then strengthen these */}
       {strengthen.length > 0 && (
-        <div className="bg-white rounded-2xl border border-[#E5C089]/30 p-6">
+        <div className="bg-white rounded-2xl border border-[#C89A45]/30 p-6">
           <h3 className="text-lg font-serif text-[#143A50] mb-1">Then strengthen these</h3>
           <p className="text-sm text-slate-600 mb-4">
             Foundational items unlock the rest of your readiness; competitive-edge items set you apart. Work through these in order.

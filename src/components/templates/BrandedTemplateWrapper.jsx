@@ -3,7 +3,7 @@ import React from 'react';
 const EIS_COLORS = {
   darkTeal: '#143A50',
   magenta: '#AC1A5B',
-  gold: '#E5C089',
+  gold: '#C89A45',
   copper: '#A65D40',
   teal: '#1E4F58',
   tan: '#B5A698',
@@ -84,7 +84,7 @@ export default function BrandedTemplateWrapper({ children }) {
             margin-top: 28px;
             margin-bottom: 10px;
             padding-bottom: 6px;
-            border-bottom: 2px solid #E5C089;
+            border-bottom: 2px solid #C89A45;
           }
           .eis-template-body h3 {
             font-size: 1rem;
@@ -106,7 +106,7 @@ export default function BrandedTemplateWrapper({ children }) {
           }
           .eis-template-body hr {
             border: none;
-            border-top: 2px solid #E5C089;
+            border-top: 2px solid #C89A45;
             margin: 24px 0;
           }
         `}</style>

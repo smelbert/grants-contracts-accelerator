@@ -153,13 +153,13 @@ export default function TemplateEditor({ resource, open, onClose }) {
         {/* Top Bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-[#143A50] text-white rounded-t-lg flex-shrink-0">
           <div className="flex items-center gap-3">
-            <FileText className="w-5 h-5 text-[#E5C089]" />
+            <FileText className="w-5 h-5 text-[#C89A45]" />
             <div>
               <h2 className="font-bold text-lg leading-tight">{resource.template_name}</h2>
               <p className="text-white/60 text-xs">
                 {filledCount}/{totalCount} fields filled
                 {totalCount > 0 && filledCount < totalCount && (
-                  <span className="ml-2 text-[#E5C089]">— {totalCount - filledCount} remaining</span>
+                  <span className="ml-2 text-[#C89A45]">— {totalCount - filledCount} remaining</span>
                 )}
               </p>
             </div>
@@ -187,7 +187,7 @@ export default function TemplateEditor({ resource, open, onClose }) {
             <Button
               onClick={handleExportPDF}
               disabled={exporting}
-              className="bg-[#E5C089] hover:bg-[#d4b070] text-[#143A50] font-bold gap-2"
+              className="bg-[#C89A45] hover:bg-[#d4b070] text-[#143A50] font-bold gap-2"
             >
               {exporting ? (
                 <><div className="w-4 h-4 border-2 border-[#143A50]/30 border-t-[#143A50] rounded-full animate-spin" />Exporting...</>
@@ -289,7 +289,7 @@ export default function TemplateEditor({ resource, open, onClose }) {
                     style={{ height: '52px', width: 'auto' }}
                     crossOrigin="anonymous"
                   />
-                  <div style={{ textAlign: 'right', color: '#E5C089' }}>
+                  <div style={{ textAlign: 'right', color: '#C89A45' }}>
                     <div style={{ fontSize: '12px', fontWeight: '600' }}>Elbert Innovative Solutions</div>
                     <div style={{ fontSize: '11px', color: 'rgba(229,192,137,0.75)' }}>Funding Readiness Resource Library</div>
                   </div>

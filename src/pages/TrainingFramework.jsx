@@ -45,7 +45,7 @@ const PHILOSOPHY = [
     body: 'Mentorship is a formal responsibility at Levels 2 and 3 — not an informal courtesy. Senior consultants are expected to develop junior ones. The institutional investment in training is returned through the multiplication of quality consulting capacity. A Level 3 consultant who hoards knowledge has missed the point. One who develops two strong Level 2 consultants has created lasting institutional value.'
   },
   {
-    icon: <Star className="w-6 h-6 text-[#E5C089]" />,
+    icon: <Star className="w-6 h-6 text-[#C89A45]" />,
     title: 'Equity Is Embedded — Not an Add-On',
     body: 'EIS serves organizations working at the intersection of social need, underfunding, and systemic inequity. Our consultants must understand the communities they serve, write with dignity and accuracy about those communities, and recognize the difference between equitable framing and performative language. Equity competency is woven through every module — it is not a standalone topic.'
   }
@@ -269,7 +269,7 @@ const FORMAT_DATA = [
   },
   {
     title: 'Use of AI Tools in Consulting Work',
-    icon: <Sparkles className="w-5 h-5 text-[#E5C089] fill-[#E5C089]" />,
+    icon: <Sparkles className="w-5 h-5 text-[#C89A45] fill-[#C89A45]" />,
     description: 'EIS permits the use of AI tools as research and drafting support instruments. AI tools do not replace consultant judgment, compliance responsibility, or quality standards.',
     items: [
       { label: 'Permitted Uses', detail: 'AI tools may be used for: initial research support, outlining narrative structure, checking draft language for clarity, and grammar review. All AI-assisted content must be reviewed, fact-checked, and rewritten to meet EIS voice standards.' },
@@ -354,7 +354,7 @@ export default function TrainingFrameworkPage() {
             <Card className="border-2 border-[#1E4F58] shadow-lg">
               <CardHeader className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-t-lg">
                 <div className="flex items-center gap-3">
-                  <Sparkles className="w-7 h-7 text-[#E5C089]" />
+                  <Sparkles className="w-7 h-7 text-[#C89A45]" />
                   <div>
                     <CardTitle className="text-2xl text-white">Training Philosophy</CardTitle>
                     <p className="text-white/80 text-sm mt-1">The foundational beliefs that govern how we develop consultants at EIS</p>
@@ -491,13 +491,13 @@ export default function TrainingFrameworkPage() {
 
                     {/* Promotion Gates */}
                     <div className="mt-6 p-4 bg-slate-900 rounded-xl">
-                      <h4 className="font-bold text-[#E5C089] mb-3 flex items-center gap-2 text-sm uppercase tracking-wide">
+                      <h4 className="font-bold text-[#C89A45] mb-3 flex items-center gap-2 text-sm uppercase tracking-wide">
                         <ArrowRight className="w-4 h-4" /> Promotion Gates to Next Level
                       </h4>
                       <div className="grid sm:grid-cols-2 gap-2">
                         {data.promotionGates.map((gate, i) => (
                           <div key={i} className="flex items-start gap-2 text-sm text-slate-200">
-                            <span className="text-[#E5C089] font-bold flex-shrink-0">→</span>
+                            <span className="text-[#C89A45] font-bold flex-shrink-0">→</span>
                             {gate}
                           </div>
                         ))}
@@ -588,7 +588,7 @@ export default function TrainingFrameworkPage() {
             <Card className="border-2 border-[#143A50] shadow-lg">
               <CardHeader className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-t-lg">
                 <div className="flex items-center gap-3">
-                  <Star className="w-7 h-7 text-[#E5C089]" />
+                  <Star className="w-7 h-7 text-[#C89A45]" />
                   <div>
                     <CardTitle className="text-2xl text-white">Consultant Expectations</CardTitle>
                     <p className="text-white/80 text-sm mt-1">What EIS expects from every consultant, at every level, every day</p>
@@ -634,7 +634,7 @@ export default function TrainingFrameworkPage() {
             <Card className="border-2 border-[#1E4F58] shadow-lg">
               <CardHeader className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-t-lg">
                 <div className="flex items-center gap-3">
-                  <Layers className="w-7 h-7 text-[#E5C089]" />
+                  <Layers className="w-7 h-7 text-[#C89A45]" />
                   <div>
                     <CardTitle className="text-2xl text-white">Training Format & Structure</CardTitle>
                     <p className="text-white/80 text-sm mt-1">How this training works, what is required, and how advancement is determined</p>
@@ -676,10 +676,10 @@ export default function TrainingFrameworkPage() {
             ))}
 
             {/* Quick Reference */}
-            <Card className="border-2 border-[#E5C089] bg-amber-50/30 shadow-md">
+            <Card className="border-2 border-[#C89A45] bg-amber-50/30 shadow-md">
               <CardHeader>
                 <CardTitle className="text-[#143A50] flex items-center gap-2">
-                  <Lightbulb className="w-5 h-5 text-[#E5C089]" />
+                  <Lightbulb className="w-5 h-5 text-[#C89A45]" />
                   Quick Reference: Module Timeline
                 </CardTitle>
               </CardHeader>

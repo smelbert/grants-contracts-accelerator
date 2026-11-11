@@ -129,7 +129,7 @@ Analyze the fit between this organization and this opportunity. Be direct, hones
 
       {/* Input */}
       {!result && (
-        <Card className="border-2 border-[#E5C089]">
+        <Card className="border-2 border-[#C89A45]">
           <CardContent className="pt-5 space-y-4">
             {/* Mode toggle */}
             <div className="flex gap-2 p-1 bg-slate-100 rounded-xl">

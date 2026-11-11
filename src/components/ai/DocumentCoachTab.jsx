@@ -230,8 +230,8 @@ Give this applicant your full expert coaching review. Be specific — quote thei
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
           <div className="p-5 bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white rounded-2xl">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#E5C089]/20 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-6 h-6 text-[#E5C089]" />
+              <div className="w-12 h-12 rounded-full bg-[#C89A45]/20 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-6 h-6 text-[#C89A45]" />
               </div>
               <div>
                 <h2 className="text-xl font-bold mb-1">AI Document Coach</h2>
@@ -325,7 +325,7 @@ Give this applicant your full expert coaching review. Be specific — quote thei
           </div>
 
           {/* Score Hero */}
-          <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
+          <Card className="border-2 border-[#C89A45] bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
             <CardContent className="pt-6 pb-5">
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -336,7 +336,7 @@ Give this applicant your full expert coaching review. Be specific — quote thei
                   <p className="text-white/60 text-xs mt-1">out of 100</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-[#E5C089]" />
+                  <Sparkles className="w-6 h-6 text-[#C89A45]" />
                 </div>
               </div>
               {feedback.coach_summary && (
@@ -465,17 +465,17 @@ Give this applicant your full expert coaching review. Be specific — quote thei
 
           {/* Standout lines */}
           {feedback.standout_lines?.length > 0 && (
-            <Card className="border-[#E5C089] bg-[#E5C089]/5">
+            <Card className="border-[#C89A45] bg-[#C89A45]/5">
               <CardHeader className="pb-2">
                 <CardTitle className="text-[#143A50] text-sm flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#E5C089]" /> Lines Worth Keeping
+                  <Sparkles className="w-4 h-4 text-[#C89A45]" /> Lines Worth Keeping
                 </CardTitle>
                 <CardDescription className="text-xs">These phrases are particularly strong — protect them in your revisions</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   {feedback.standout_lines.map((line, i) => (
-                    <div key={i} className="bg-white border border-[#E5C089]/50 rounded-lg p-3">
+                    <div key={i} className="bg-white border border-[#C89A45]/50 rounded-lg p-3">
                       <p className="text-sm text-slate-700 italic">"{line}"</p>
                     </div>
                   ))}

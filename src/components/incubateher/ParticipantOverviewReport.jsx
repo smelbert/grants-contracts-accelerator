@@ -195,7 +195,7 @@ Based on this data, provide a comprehensive facilitator preparation overview. Re
               <CardContent>
                 <ul className="space-y-2 max-h-60 overflow-y-auto">
                   {allGoals.map((g, i) => (
-                    <li key={i} className="text-xs text-slate-600 border-l-2 border-[#E5C089] pl-2">{g}</li>
+                    <li key={i} className="text-xs text-slate-600 border-l-2 border-[#C89A45] pl-2">{g}</li>
                   ))}
                 </ul>
               </CardContent>

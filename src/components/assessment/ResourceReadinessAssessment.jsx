@@ -291,7 +291,7 @@ export default function ResourceReadinessAssessment({ open, onClose, onUseTempla
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-[#143A50]">
-            <Target className="w-5 h-5 text-[#E5C089]" />
+            <Target className="w-5 h-5 text-[#C89A45]" />
             Readiness & Resource Matcher
           </DialogTitle>
         </DialogHeader>
@@ -401,7 +401,7 @@ function ResultsPanel({ results, colors, onReset, onUseTemplate, onClose }) {
       {/* Recommended Templates */}
       <div className="mb-4">
         <h4 className="font-semibold text-[#143A50] mb-3 flex items-center gap-2">
-          <FileText className="w-4 h-4 text-[#E5C089]" />
+          <FileText className="w-4 h-4 text-[#C89A45]" />
           Your Prioritized Template Recommendations ({recommended.length})
         </h4>
         {recommended.length === 0 ? (

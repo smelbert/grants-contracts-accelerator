@@ -902,13 +902,13 @@ export default function ModuleDetailView({ moduleNumber, currentLevel, defaultEx
           {module.outputs && module.outputs.length > 0 && (
             <div className="p-4 bg-slate-900 rounded-xl text-white">
               <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
-                <FileText className="w-4 h-4 text-[#E5C089]" />
-                <span className="text-[#E5C089]">Required Outputs to Complete This Module</span>
+                <FileText className="w-4 h-4 text-[#C89A45]" />
+                <span className="text-[#C89A45]">Required Outputs to Complete This Module</span>
               </h4>
               <ul className="space-y-2">
                 {module.outputs.map((output, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-slate-200">
-                    <span className="text-[#E5C089] font-bold flex-shrink-0">→</span>
+                    <span className="text-[#C89A45] font-bold flex-shrink-0">→</span>
                     {output}
                   </li>
                 ))}

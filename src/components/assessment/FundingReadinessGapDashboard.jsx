@@ -212,7 +212,7 @@ export default function FundingReadinessGapDashboard({ assessment }) {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
-            <Zap className="w-4 h-4 text-[#E5C089]" />
+            <Zap className="w-4 h-4 text-[#C89A45]" />
             Gap Analysis — Focus Areas Ranked by Impact
           </CardTitle>
           <p className="text-sm text-slate-500">Areas at the top have the most points available to gain</p>
@@ -293,7 +293,7 @@ export default function FundingReadinessGapDashboard({ assessment }) {
 
       {/* Quick-win callout */}
       {partialGaps.length > 0 && (
-        <Card className="border-[#E5C089] bg-[#E5C089]/10">
+        <Card className="border-[#C89A45] bg-[#C89A45]/10">
           <CardContent className="pt-4 pb-4">
             <p className="text-sm font-semibold text-[#143A50] mb-1">💡 Quickest Wins</p>
             <p className="text-sm text-slate-700">

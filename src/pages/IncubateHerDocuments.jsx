@@ -225,15 +225,15 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
   const day3Module = dayModules.find(m => m.title?.includes('Day 3'));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[#E5C089]/5">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-[#C89A45]/5">
       {/* Header */}
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white py-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center gap-3 mb-4">
-            <FileText className="w-10 h-10 text-[#E5C089]" />
+            <FileText className="w-10 h-10 text-[#C89A45]" />
             <h1 className="text-4xl font-bold">Document Templates & Modules</h1>
           </div>
-          <p className="text-lg text-[#E5C089]/80 max-w-3xl">
+          <p className="text-lg text-[#C89A45]/80 max-w-3xl">
             Three-day structure to build complete funding readiness with templates you can use immediately
           </p>
         </div>
@@ -331,7 +331,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             <DocumentTemplates day="day2" />
 
             {/* In-Kind Tracker Callout */}
-            <Card className="mt-6 border-l-4 border-l-[#E5C089] bg-amber-50">
+            <Card className="mt-6 border-l-4 border-l-[#C89A45] bg-amber-50">
               <CardContent className="py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="flex-1">
                   <p className="font-bold text-[#143A50]">📋 In-Kind Contribution Tracker</p>
@@ -379,7 +379,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
             <Card className="mb-6 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <FolderOpen className="w-8 h-8 text-[#E5C089]" />
+                  <FolderOpen className="w-8 h-8 text-[#C89A45]" />
                   <div>
                     <CardTitle className="text-2xl text-white">Download Document Packets</CardTitle>
                     <p className="text-white/80 mt-1">
@@ -464,7 +464,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
               </Card>
 
               {/* Full Program Packet */}
-              <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#E5C089]/10 to-[#143A50]/5">
+              <Card className="border-2 border-[#C89A45] bg-gradient-to-br from-[#C89A45]/10 to-[#143A50]/5">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
@@ -538,7 +538,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
                       return (
                         <div key={category} className="space-y-2">
                           <h3 className="font-semibold text-[#143A50] flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-[#E5C089]"></span>
+                            <span className="w-2 h-2 rounded-full bg-[#C89A45]"></span>
                             {category}
                           </h3>
                           <div className="space-y-2">
@@ -595,7 +595,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
         </Tabs>
 
         {/* Final Outcome Card */}
-        <Card className="mt-8 bg-gradient-to-br from-[#E5C089] to-[#B5A698] text-[#143A50]">
+        <Card className="mt-8 bg-gradient-to-br from-[#C89A45] to-[#B5A698] text-[#143A50]">
           <CardHeader>
             <CardTitle className="text-2xl flex items-center gap-2">
               <CheckCircle2 className="w-8 h-8" />
@@ -712,7 +712,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#E5C089]" />
+              <Sparkles className="w-5 h-5 text-[#C89A45]" />
               AI Document Enhancement
             </DialogTitle>
           </DialogHeader>
@@ -737,7 +737,7 @@ Provide an enhanced version that is more compelling, clear, and professional.`,
               <Button
                 onClick={handleAIEnhance}
                 disabled={isEnhancing}
-                className="flex-1 bg-[#E5C089] hover:bg-[#B5A698] text-[#143A50]"
+                className="flex-1 bg-[#C89A45] hover:bg-[#B5A698] text-[#143A50]"
               >
                 {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
               </Button>

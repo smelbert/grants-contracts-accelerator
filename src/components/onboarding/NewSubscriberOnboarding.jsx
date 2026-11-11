@@ -73,7 +73,7 @@ export default function NewSubscriberOnboarding({ userEmail, subscriptionPlan, o
           <p className="text-slate-600 mb-6">
             Thank you for subscribing to {subscriptionPlan}. We're excited to help you succeed in your funding journey.
           </p>
-          <div className="bg-[#E5C089]/10 border border-[#E5C089] rounded-lg p-6 mb-6">
+          <div className="bg-[#C89A45]/10 border border-[#C89A45] rounded-lg p-6 mb-6">
             <h3 className="font-semibold mb-2">What's Next?</h3>
             <p className="text-sm text-slate-600">
               We'll guide you through a quick setup process to personalize your experience and ensure you get the most out of our platform.

@@ -167,7 +167,7 @@ export default function MyProfile() {
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
-        <Card className="mb-6 border-2 border-[#E5C089]">
+        <Card className="mb-6 border-2 border-[#C89A45]">
           <CardContent className="py-8">
             <div className="flex items-start gap-6">
               <Avatar className="w-24 h-24 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white text-3xl font-bold flex items-center justify-center">
@@ -398,7 +398,7 @@ export default function MyProfile() {
                     return (
                       <div key={progress.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-[#E5C089]/20 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-12 bg-[#C89A45]/20 rounded-lg flex items-center justify-center">
                             <BookOpen className="w-6 h-6 text-[#143A50]" />
                           </div>
                           <div>
@@ -418,7 +418,7 @@ export default function MyProfile() {
                   {enrollments.map((enrollment) => (
                     <div key={enrollment.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-[#E5C089]/20 rounded-lg flex items-center justify-center">
+                        <div className="w-12 h-12 bg-[#C89A45]/20 rounded-lg flex items-center justify-center">
                           <BookOpen className="w-6 h-6 text-[#143A50]" />
                         </div>
                         <div>

@@ -42,10 +42,10 @@ export default function InKindTracker() {
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white py-8 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
-            <Gift className="w-8 h-8 text-[#E5C089]" />
+            <Gift className="w-8 h-8 text-[#C89A45]" />
             <h1 className="text-3xl font-bold">In-Kind Contribution Tracker</h1>
           </div>
-          <p className="text-[#E5C089]/80 text-sm max-w-2xl">
+          <p className="text-[#C89A45]/80 text-sm max-w-2xl">
             Track, value, acknowledge, and report every non-cash gift. Designed for IRS + GAAP compliance. 
             Works for nonprofits, for-profits, and entrepreneurial businesses.
           </p>

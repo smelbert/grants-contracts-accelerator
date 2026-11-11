@@ -141,7 +141,7 @@ If the org profile is incomplete, make reasonable inferences but note what addit
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#143A50] flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#E5C089]" />
+              <Sparkles className="w-5 h-5 text-[#C89A45]" />
             </div>
             <div>
               <CardTitle className="text-[#143A50]">AI Opportunity Matcher</CardTitle>

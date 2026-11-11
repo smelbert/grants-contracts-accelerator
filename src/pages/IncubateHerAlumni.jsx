@@ -15,9 +15,9 @@ import {
 const SECTIONS = [
   {
     id: 'congratulations',
-    icon: <Award className="w-5 h-5 text-[#E5C089]" />,
+    icon: <Award className="w-5 h-5 text-[#C89A45]" />,
     title: "Completing the Program: What You've Accomplished",
-    color: 'border-l-[#E5C089]',
+    color: 'border-l-[#C89A45]',
     content: (
       <div className="space-y-4">
         <p className="text-slate-700 leading-relaxed">
@@ -37,7 +37,7 @@ const SECTIONS = [
             'Established a baseline of knowledge that most of your competitors in the funding space do not have',
             'Demonstrated the discipline and commitment to complete a structured program'
           ].map((item, i) => (
-            <div key={i} className="flex items-start gap-2 p-3 bg-[#E5C089]/20 border border-[#E5C089]/40 rounded-lg">
+            <div key={i} className="flex items-start gap-2 p-3 bg-[#C89A45]/20 border border-[#C89A45]/40 rounded-lg">
               <CheckCircle2 className="w-4 h-4 text-[#143A50] mt-0.5 flex-shrink-0" />
               <span className="text-sm text-slate-700">{item}</span>
             </div>
@@ -265,7 +265,7 @@ const SECTIONS = [
             {
               title: 'EIS Platform — Ongoing Access',
               badge: 'Your Platform',
-              badgeColor: 'bg-[#E5C089]/30 text-[#143A50]',
+              badgeColor: 'bg-[#C89A45]/30 text-[#143A50]',
               body: 'Your access to the EIS platform and its resources does not end when the program does. The Resource Library, Learning Hub, template library, and AI document tools remain available to support your ongoing work. Log in whenever you need strategic support tools.'
             }
           ].map((item, i) => (
@@ -433,9 +433,9 @@ const SECTIONS = [
   },
   {
     id: 'mindset',
-    icon: <Lightbulb className="w-5 h-5 text-[#E5C089]" />,
+    icon: <Lightbulb className="w-5 h-5 text-[#C89A45]" />,
     title: 'The Long-Game Mindset: What Sustained Success Looks Like',
-    color: 'border-l-[#E5C089]',
+    color: 'border-l-[#C89A45]',
     content: (
       <div className="space-y-4">
         <p className="text-slate-700 leading-relaxed">
@@ -468,7 +468,7 @@ const SECTIONS = [
               body: 'A $5,000 seed grant is a win. It represents a funder\'s confidence in your organization. It is a line on your track record. It is proof that your application quality is award-worthy. Celebrate it, report on it excellently, and use it to pursue the next one.'
             }
           ].map((insight, i) => (
-            <div key={i} className="p-4 border-l-4 border-[#E5C089] bg-amber-50/40 rounded-r-lg">
+            <div key={i} className="p-4 border-l-4 border-[#C89A45] bg-amber-50/40 rounded-r-lg">
               <p className="font-semibold text-[#143A50] mb-1">{insight.title}</p>
               <p className="text-sm text-slate-700 leading-relaxed">{insight.body}</p>
             </div>
@@ -579,7 +579,7 @@ export default function IncubateHerAlumni() {
         <div className="p-6 bg-gradient-to-br from-[#143A50] via-[#1E4F58] to-[#AC1A5B]/40 text-white rounded-2xl shadow-xl">
           <div className="flex items-start gap-4">
             <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="w-8 h-8 text-[#E5C089]" />
+              <TrendingUp className="w-8 h-8 text-[#C89A45]" />
             </div>
             <div>
               <h2 className="text-2xl font-bold mb-2">The program ends. Your journey doesn't.</h2>
@@ -632,7 +632,7 @@ export default function IncubateHerAlumni() {
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#143A50] to-[#AC1A5B] flex items-center justify-center">
-                <Star className="w-8 h-8 text-[#E5C089]" />
+                <Star className="w-8 h-8 text-[#C89A45]" />
               </div>
               <h3 className="text-2xl font-bold text-[#143A50]">You've got what it takes.</h3>
               <p className="text-slate-600 max-w-lg mx-auto leading-relaxed">

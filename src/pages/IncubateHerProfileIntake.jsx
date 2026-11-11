@@ -307,7 +307,7 @@ Provide a concise, professional response. Be inclusive — this could be a nonpr
 
       <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Progress Card */}
-        <Card className="mb-6 border-2 border-[#E5C089]">
+        <Card className="mb-6 border-2 border-[#C89A45]">
           <CardContent className="py-6">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -333,7 +333,7 @@ Provide a concise, professional response. Be inclusive — this could be a nonpr
         {/* AI Auto-Fill Banner */}
         {aiAutoFilling && (
           <div className="mb-6 p-4 bg-[#143A50] text-white rounded-lg flex items-center gap-3 animate-pulse">
-            <Wand2 className="w-5 h-5 text-[#E5C089] flex-shrink-0" />
+            <Wand2 className="w-5 h-5 text-[#C89A45] flex-shrink-0" />
             <div>
               <p className="font-semibold text-sm">AI is researching your organization...</p>
               <p className="text-xs text-white/80">Using your website to fill in mission, vision, and programs</p>
@@ -347,7 +347,7 @@ Provide a concise, professional response. Be inclusive — this could be a nonpr
           <div className="mb-6"><JotFormProfile enrollment={enrollment} /></div>
         )}
 
-        <Card className="mb-6 bg-gradient-to-r from-[#143A50]/5 to-[#E5C089]/10 border-2 border-[#E5C089]">
+        <Card className="mb-6 bg-gradient-to-r from-[#143A50]/5 to-[#C89A45]/10 border-2 border-[#C89A45]">
           <CardContent className="py-4">
             <div className="flex items-start gap-3">
               <Wand2 className="w-5 h-5 text-[#143A50] mt-0.5 flex-shrink-0" />
@@ -683,7 +683,7 @@ Provide a concise, professional response. Be inclusive — this could be a nonpr
         </Tabs>
 
         {/* Save Button */}
-        <div className="sticky bottom-6 mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow-xl border-2 border-[#E5C089]">
+        <div className="sticky bottom-6 mt-8 flex justify-between items-center bg-white p-4 rounded-lg shadow-xl border-2 border-[#C89A45]">
           <div className="flex items-center gap-3">
             <Progress value={progress} className="w-32 h-2" />
             <span className="text-sm text-slate-600">{progress}% Complete</span>

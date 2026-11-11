@@ -338,7 +338,7 @@ export default function IncubateHerAssessments() {
             </Card>
 
             {/* Giveaway auto-entry notice */}
-            <Card className="border-2 border-[#E5C089] bg-gradient-to-r from-yellow-50 to-white">
+            <Card className="border-2 border-[#C89A45] bg-gradient-to-r from-yellow-50 to-white">
               <CardContent className="pt-5 pb-5">
                 <div className="flex items-start gap-4">
                   <Gift className="w-9 h-9 text-[#AC1A5B] flex-shrink-0 mt-0.5" />

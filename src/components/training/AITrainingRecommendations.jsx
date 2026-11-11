@@ -124,7 +124,7 @@ Be specific, actionable, and aligned with their current level and goals.`;
 
   return (
     <Card className="shadow-lg border-2 border-[#AC1A5B]">
-      <CardHeader className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10">
+      <CardHeader className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#C89A45]/10">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
@@ -214,7 +214,7 @@ Be specific, actionable, and aligned with their current level and goals.`;
             {/* Recommended Exercises */}
             <div>
               <h3 className="text-lg font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                <Target className="w-5 h-5 text-[#E5C089]" />
+                <Target className="w-5 h-5 text-[#C89A45]" />
                 Recommended Exercises
               </h3>
               <div className="space-y-2">
@@ -246,7 +246,7 @@ Be specific, actionable, and aligned with their current level and goals.`;
             </div>
 
             {/* Mentorship Needs */}
-            <Card className="bg-[#E5C089]/10 border-[#E5C089]">
+            <Card className="bg-[#C89A45]/10 border-[#C89A45]">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Users className="w-4 h-4 text-[#A65D40]" />

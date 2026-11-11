@@ -50,7 +50,7 @@ Format as JSON:
 
   if (loading) {
     return (
-      <Card className="border-[#E5C089]/30">
+      <Card className="border-[#C89A45]/30">
         <CardContent className="py-8 flex items-center justify-center">
           <Loader2 className="w-6 h-6 animate-spin text-[#143A50]" />
         </CardContent>
@@ -61,7 +61,7 @@ Format as JSON:
   if (!prompts || prompts.length === 0) return null;
 
   return (
-    <Card className="border-[#E5C089]/30 bg-gradient-to-br from-[#143A50]/5 to-[#AC1A5B]/5">
+    <Card className="border-[#C89A45]/30 bg-gradient-to-br from-[#143A50]/5 to-[#AC1A5B]/5">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ Format as JSON:
               >
                 <div className="flex items-start gap-3">
                   <MessageSquare className={`w-4 h-4 mt-1 flex-shrink-0 ${
-                    selectedPrompt === idx ? 'text-[#E5C089]' : 'text-[#143A50]'
+                    selectedPrompt === idx ? 'text-[#C89A45]' : 'text-[#143A50]'
                   }`} />
                   <p className={`text-sm ${
                     selectedPrompt === idx ? 'text-white' : 'text-slate-700'

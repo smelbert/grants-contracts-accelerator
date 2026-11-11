@@ -266,7 +266,7 @@ export default function IncubateHerWorkbook() {
           </div>
 
           <div className="lg:col-span-4 space-y-6">
-            <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#E5C089]">
+            <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#C89A45]">
               <CardContent className="py-4">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-3">

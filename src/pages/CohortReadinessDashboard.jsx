@@ -173,7 +173,7 @@ export default function CohortReadinessDashboard() {
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-xl bg-[#143A50] flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-[#E5C089]" />
+              <BarChart3 className="w-6 h-6 text-[#C89A45]" />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Cohort Funding Lane Readiness</h1>

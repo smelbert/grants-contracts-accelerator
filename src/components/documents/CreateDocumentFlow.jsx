@@ -208,7 +208,7 @@ Provide the refined version with improved formatting and language.`
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-[#E5C089]/20 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-[#C89A45]/20 flex items-center justify-center flex-shrink-0">
                         <BookOpen className="w-6 h-6 text-[#143A50]" />
                       </div>
                       <div className="flex-1">
@@ -324,7 +324,7 @@ Provide the refined version with improved formatting and language.`
                   />
                 </div>
 
-                <Card className="bg-[#E5C089]/10 border-[#E5C089]">
+                <Card className="bg-[#C89A45]/10 border-[#C89A45]">
                   <CardContent className="p-4">
                     <p className="text-sm text-slate-700">
                       <strong>Selected Template:</strong> {selectedTemplate?.template_name}

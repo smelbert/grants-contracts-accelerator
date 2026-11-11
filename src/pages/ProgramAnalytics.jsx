@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-const COLORS = ['#143A50', '#AC1A5B', '#E5C089', '#A65D40', '#1E4F58', '#B5A698'];
+const COLORS = ['#143A50', '#AC1A5B', '#C89A45', '#A65D40', '#1E4F58', '#B5A698'];
 
 export default function ProgramAnalyticsPage() {
   const [dateRange, setDateRange] = useState('all');
@@ -295,7 +295,7 @@ Write professionally but accessibly. Focus on the story the data tells about par
 
       {/* AI Narrative Report */}
       {aiNarrative && (
-        <Card className="bg-gradient-to-br from-[#AC1A5B]/10 to-[#E5C089]/10 border-[#AC1A5B]">
+        <Card className="bg-gradient-to-br from-[#AC1A5B]/10 to-[#C89A45]/10 border-[#AC1A5B]">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-[#AC1A5B]" />
@@ -560,7 +560,7 @@ Write professionally but accessibly. Focus on the story the data tells about par
                       <p className="text-slate-600">{completedPrograms} graduated</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-[#E5C089]/20 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-[#C89A45]/20 rounded-lg">
                     <Users className="w-5 h-5 text-[#143A50]" />
                     <div>
                       <p className="font-medium text-slate-900">Currently Enrolled</p>
@@ -583,17 +583,17 @@ Write professionally but accessibly. Focus on the story the data tells about par
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white/10 p-6 rounded-lg">
-                  <Award className="w-8 h-8 text-[#E5C089] mb-3" />
+                  <Award className="w-8 h-8 text-[#C89A45] mb-3" />
                   <h3 className="text-lg font-semibold mb-2">Participant Growth</h3>
-                  <p className="text-3xl font-bold text-[#E5C089] mb-2">+{averageImprovement} points</p>
+                  <p className="text-3xl font-bold text-[#C89A45] mb-2">+{averageImprovement} points</p>
                   <p className="text-sm text-slate-200">
                     Average score improvement from pre to post assessment demonstrates measurable skill development
                   </p>
                 </div>
                 <div className="bg-white/10 p-6 rounded-lg">
-                  <TrendingUp className="w-8 h-8 text-[#E5C089] mb-3" />
+                  <TrendingUp className="w-8 h-8 text-[#C89A45] mb-3" />
                   <h3 className="text-lg font-semibold mb-2">Program Completion</h3>
-                  <p className="text-3xl font-bold text-[#E5C089] mb-2">{completionRate}%</p>
+                  <p className="text-3xl font-bold text-[#C89A45] mb-2">{completionRate}%</p>
                   <p className="text-sm text-slate-200">
                     High completion rate indicates strong participant engagement and program design
                   </p>
@@ -604,7 +604,7 @@ Write professionally but accessibly. Focus on the story the data tells about par
                 <h3 className="text-lg font-semibold mb-4">Evidence-Based Outcomes</h3>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#E5C089] mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89A45] mt-0.5" />
                     <div>
                       <p className="font-medium">Assessment Data Shows Learning</p>
                       <p className="text-sm text-slate-200">
@@ -613,7 +613,7 @@ Write professionally but accessibly. Focus on the story the data tells about par
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#E5C089] mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89A45] mt-0.5" />
                     <div>
                       <p className="font-medium">Active Application of Skills</p>
                       <p className="text-sm text-slate-200">
@@ -622,7 +622,7 @@ Write professionally but accessibly. Focus on the story the data tells about par
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#E5C089] mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89A45] mt-0.5" />
                     <div>
                       <p className="font-medium">Resource Utilization</p>
                       <p className="text-sm text-slate-200">
@@ -631,7 +631,7 @@ Write professionally but accessibly. Focus on the story the data tells about par
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#E5C089] mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-[#C89A45] mt-0.5" />
                     <div>
                       <p className="font-medium">Community Building</p>
                       <p className="text-sm text-slate-200">

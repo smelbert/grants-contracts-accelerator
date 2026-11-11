@@ -60,7 +60,7 @@ export default function SuggestSpaceButton() {
       <Button
         onClick={() => setOpen(true)}
         variant="outline"
-        className="border-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/10"
+        className="border-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/10"
       >
         <Lightbulb className="w-4 h-4 mr-2" />
         Suggest a Space

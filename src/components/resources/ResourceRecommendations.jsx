@@ -115,11 +115,11 @@ Focus on their specific needs based on readiness level and funding lane.`;
   }
 
   return (
-    <Card className="mb-6 border-2 border-[#E5C089] bg-gradient-to-br from-[#E5C089]/5 to-[#143A50]/5">
+    <Card className="mb-6 border-2 border-[#C89A45] bg-gradient-to-br from-[#C89A45]/5 to-[#143A50]/5">
       <CardHeader>
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#143A50] to-[#1E4F58] flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-[#E5C089]" />
+            <Sparkles className="w-5 h-5 text-[#C89A45]" />
           </div>
           <div>
             <CardTitle className="text-xl text-[#143A50]">Recommended For You</CardTitle>
@@ -146,7 +146,7 @@ Focus on their specific needs based on readiness level and funding lane.`;
                         rec.priority === 'high' 
                           ? 'bg-[#AC1A5B] text-white' 
                           : rec.priority === 'medium'
-                          ? 'bg-[#E5C089] text-[#143A50]'
+                          ? 'bg-[#C89A45] text-[#143A50]'
                           : 'bg-slate-200 text-slate-700'
                       }
                     >

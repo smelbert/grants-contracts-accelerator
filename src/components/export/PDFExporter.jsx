@@ -119,7 +119,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
           </DialogHeader>
 
           <div className="space-y-4 py-2">
-            <div className="rounded-xl border-2 border-[#E5C089] bg-[#E5C089]/10 p-4 space-y-1">
+            <div className="rounded-xl border-2 border-[#C89A45] bg-[#C89A45]/10 p-4 space-y-1">
               <p className="text-sm font-semibold text-[#143A50]">
                 {type === 'document' ? document?.doc_name : 'IncubateHer Workbook Responses'}
               </p>
@@ -159,12 +159,12 @@ export default function PDFExporter({ type = 'document', document, workbookData,
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 60px 40px', background: 'linear-gradient(180deg, #f8f6f0 0%, #ffffff 100%)', position: 'relative', overflow: 'hidden' }}>
 
               {/* Watermark circle */}
-              <div style={{ position: 'absolute', top: -80, right: -80, width: 340, height: 340, borderRadius: '50%', background: 'radial-gradient(circle, #E5C089 0%, transparent 70%)', opacity: 0.15 }} />
+              <div style={{ position: 'absolute', top: -80, right: -80, width: 340, height: 340, borderRadius: '50%', background: 'radial-gradient(circle, #C89A45 0%, transparent 70%)', opacity: 0.15 }} />
               <div style={{ position: 'absolute', bottom: -60, left: -60, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, #143A50 0%, transparent 70%)', opacity: 0.08 }} />
 
               {/* Logo area */}
               <div style={{ width: 80, height: 80, background: 'linear-gradient(135deg, #143A50, #1E4F58)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28, boxShadow: '0 8px 32px rgba(20,58,80,0.25)' }}>
-                <span style={{ color: '#E5C089', fontSize: 36, fontWeight: 'bold', fontFamily: 'serif' }}>EIS</span>
+                <span style={{ color: '#C89A45', fontSize: 36, fontWeight: 'bold', fontFamily: 'serif' }}>EIS</span>
               </div>
 
               {/* Program tag */}
@@ -183,10 +183,10 @@ export default function PDFExporter({ type = 'document', document, workbookData,
               </div>
 
               {/* Gold divider */}
-              <div style={{ width: 120, height: 3, background: 'linear-gradient(90deg, transparent, #E5C089, transparent)', marginBottom: 36, borderRadius: 2 }} />
+              <div style={{ width: 120, height: 3, background: 'linear-gradient(90deg, transparent, #C89A45, transparent)', marginBottom: 36, borderRadius: 2 }} />
 
               {/* Org info box */}
-              <div style={{ background: 'white', border: '2px solid #E5C089', borderRadius: 14, padding: '24px 40px', textAlign: 'center', minWidth: 360, boxShadow: '0 4px 24px rgba(229,192,137,0.2)' }}>
+              <div style={{ background: 'white', border: '2px solid #C89A45', borderRadius: 14, padding: '24px 40px', textAlign: 'center', minWidth: 360, boxShadow: '0 4px 24px rgba(229,192,137,0.2)' }}>
                 <div style={{ fontSize: 12, color: '#AC1A5B', textTransform: 'uppercase', letterSpacing: 2, fontWeight: 700, marginBottom: 8 }}>Prepared For</div>
                 <div style={{ fontSize: 22, fontWeight: 800, color: '#143A50', marginBottom: 4 }}>{orgName}</div>
                 <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 2 }}>{participantName}</div>
@@ -196,7 +196,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
 
             {/* Footer band */}
             <div style={{ background: '#143A50', padding: '14px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#E5C089', fontSize: 11, fontWeight: 600 }}>Elbert Innovative Solutions</span>
+              <span style={{ color: '#C89A45', fontSize: 11, fontWeight: 600 }}>Elbert Innovative Solutions</span>
               <span style={{ color: 'rgba(229,192,137,0.6)', fontSize: 10 }}>Funded by Columbus Urban League</span>
               <span style={{ color: 'rgba(229,192,137,0.6)', fontSize: 10 }}>elbertinnovativesolutions.org</span>
             </div>
@@ -206,7 +206,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
           {type === 'document' && (
             <div className="pdf-page" style={pageStyle}>
               <div style={innerHeaderStyle}>
-                <span style={{ color: '#E5C089', fontWeight: 700, fontSize: 11 }}>ELBERT INNOVATIVE SOLUTIONS</span>
+                <span style={{ color: '#C89A45', fontWeight: 700, fontSize: 11 }}>ELBERT INNOVATIVE SOLUTIONS</span>
                 <span style={{ color: 'rgba(229,192,137,0.7)', fontSize: 10 }}>{document?.doc_name}</span>
               </div>
               <div style={{ flex: 1, padding: '36px 48px', background: '#fff', overflowHidden: true }}>
@@ -220,7 +220,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
                 </div>
 
                 {/* Meta row */}
-                <div style={{ display: 'flex', gap: 24, marginBottom: 28, padding: '12px 20px', background: '#f8f6f0', borderRadius: 8, borderLeft: '3px solid #E5C089' }}>
+                <div style={{ display: 'flex', gap: 24, marginBottom: 28, padding: '12px 20px', background: '#f8f6f0', borderRadius: 8, borderLeft: '3px solid #C89A45' }}>
                   <div><span style={metaLabelStyle}>Organization</span><span style={metaValueStyle}>{orgName}</span></div>
                   <div><span style={metaLabelStyle}>Author</span><span style={metaValueStyle}>{participantName}</span></div>
                   <div><span style={metaLabelStyle}>Status</span><span style={{ ...metaValueStyle, color: '#059669', fontWeight: 700 }}>{(document?.status || 'draft').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</span></div>
@@ -242,7 +242,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
           {type === 'workbook' && chunkWorkbookPages().map((chunk, chunkIdx) => (
             <div key={chunkIdx} className="pdf-page" style={pageStyle}>
               <div style={innerHeaderStyle}>
-                <span style={{ color: '#E5C089', fontWeight: 700, fontSize: 11 }}>INCUBATEHER WORKBOOK</span>
+                <span style={{ color: '#C89A45', fontWeight: 700, fontSize: 11 }}>INCUBATEHER WORKBOOK</span>
                 <span style={{ color: 'rgba(229,192,137,0.7)', fontSize: 10 }}>{orgName}</span>
               </div>
               <div style={{ flex: 1, padding: '28px 48px', background: '#fff', overflow: 'hidden' }}>
@@ -271,7 +271,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
                         const val = resp[field.id];
                         if (!val) return null;
                         return (
-                          <div key={field.id} style={{ marginBottom: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 6, borderLeft: '2px solid #E5C089' }}>
+                          <div key={field.id} style={{ marginBottom: 10, padding: '8px 12px', background: '#f9fafb', borderRadius: 6, borderLeft: '2px solid #C89A45' }}>
                             <div style={{ fontSize: 10, fontWeight: 700, color: '#374151', marginBottom: 3 }}>{field.label}</div>
                             <div style={{ fontSize: 11, color: '#4b5563', lineHeight: 1.6 }}>
                               {typeof val === 'string' ? val : Array.isArray(val) ? val.join(', ') : String(val)}
@@ -303,7 +303,7 @@ export default function PDFExporter({ type = 'document', document, workbookData,
 function PageFooter({ page, total }) {
   return (
     <div style={{ background: '#143A50', padding: '10px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <span style={{ color: '#E5C089', fontSize: 10, fontWeight: 600 }}>Elbert Innovative Solutions</span>
+      <span style={{ color: '#C89A45', fontSize: 10, fontWeight: 600 }}>Elbert Innovative Solutions</span>
       <span style={{ color: 'rgba(229,192,137,0.5)', fontSize: 10 }}>Page {page} of {total}</span>
     </div>
   );

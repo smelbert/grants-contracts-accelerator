@@ -159,7 +159,7 @@ export default function AssessmentAnalytics() {
       });
 
     return [
-      { name: 'Level 1 (Beginner)', value: distribution['level-1'], color: '#E5C089' },
+      { name: 'Level 1 (Beginner)', value: distribution['level-1'], color: '#C89A45' },
       { name: 'Level 2 (Intermediate)', value: distribution['level-2'], color: '#143A50' },
       { name: 'Level 3 (Advanced)', value: distribution['level-3'], color: '#AC1A5B' }
     ];
@@ -288,7 +288,7 @@ export default function AssessmentAnalytics() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <Award className="w-8 h-8 text-[#E5C089]" />
+                <Award className="w-8 h-8 text-[#C89A45]" />
                 <div>
                   <p className="text-sm text-slate-600">Avg Pre Score</p>
                   <p className="text-2xl font-bold">{stats.avgPreScore}/100</p>
@@ -346,7 +346,7 @@ export default function AssessmentAnalytics() {
                       <YAxis domain={[0, 100]} />
                       <Tooltip />
                       <Legend />
-                      <Bar dataKey="pre" fill="#E5C089" name="Pre-Assessment" />
+                      <Bar dataKey="pre" fill="#C89A45" name="Pre-Assessment" />
                       <Bar dataKey="post" fill="#143A50" name="Post-Assessment" />
                     </BarChart>
                   </ResponsiveContainer>
@@ -466,7 +466,7 @@ export default function AssessmentAnalytics() {
                             </div>
                             <div className="w-full bg-slate-200 rounded-full h-2">
                               <div
-                                className="bg-[#E5C089] h-2 rounded-full"
+                                className="bg-[#C89A45] h-2 rounded-full"
                                 style={{ width: `${user.preScore}%` }}
                               />
                             </div>
@@ -533,7 +533,7 @@ export default function AssessmentAnalytics() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 bg-slate-50 rounded">
                       <span className="text-sm font-medium">Pre-Assessments</span>
-                      <Badge className="bg-[#E5C089] text-[#143A50]">{stats.preCount}</Badge>
+                      <Badge className="bg-[#C89A45] text-[#143A50]">{stats.preCount}</Badge>
                     </div>
                     <div className="flex items-center justify-between p-3 bg-slate-50 rounded">
                       <span className="text-sm font-medium">Post-Assessments</span>

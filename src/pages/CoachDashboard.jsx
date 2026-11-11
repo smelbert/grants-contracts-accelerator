@@ -153,7 +153,7 @@ export default function CoachDashboard() {
                   </div>
                   
                   {onboarding.onboarding_phase !== 'completed' && (
-                    <div className="bg-[#E5C089]/10 rounded-lg p-4">
+                    <div className="bg-[#C89A45]/10 rounded-lg p-4">
                       <p className="text-sm font-medium text-[#143A50] mb-2">Current Phase: {
                         onboarding.onboarding_phase === 'days_0_30' ? 'Foundation (Days 0-30)' :
                         onboarding.onboarding_phase === 'days_31_60' ? 'Application (Days 31-60)' :
@@ -224,8 +224,8 @@ export default function CoachDashboard() {
           <div className="space-y-6">
             {/* Upcoming Review Widget */}
             {onboarding?.next_review_date && (
-              <Card className="shadow-lg border-2 border-[#E5C089]">
-                <CardHeader className="bg-[#E5C089]/10">
+              <Card className="shadow-lg border-2 border-[#C89A45]">
+                <CardHeader className="bg-[#C89A45]/10">
                   <div className="flex items-center gap-3">
                     <Clock className="w-6 h-6 text-[#A65D40]" />
                     <div>
@@ -347,7 +347,7 @@ export default function CoachDashboard() {
             <Card className="shadow-lg">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <Sparkles className="w-6 h-6 text-[#E5C089]" />
+                  <Sparkles className="w-6 h-6 text-[#C89A45]" />
                   <CardTitle className="text-lg">Quick Actions</CardTitle>
                 </div>
               </CardHeader>

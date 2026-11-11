@@ -83,12 +83,12 @@ export default function AssessmentItemsAdmin() {
                   <h3 className="text-sm font-semibold text-slate-600 mb-2">Level {level} · {LEVEL_NAMES[trackKey]?.[level]}</h3>
                   <div className="space-y-1.5">
                     {levelItems.map(item => (
-                      <div key={item.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-slate-200 hover:border-[#E5C089] transition-all">
+                      <div key={item.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-slate-200 hover:border-[#C89A45] transition-all">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm text-slate-800">{item.text}</span>
                             {item.is_gate && (
-                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#E5C089]/20 text-[#7E5F22]"><Lock className="w-2.5 h-2.5" /> gate</span>
+                              <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#C89A45]/20 text-[#7E5F22]"><Lock className="w-2.5 h-2.5" /> gate</span>
                             )}
                             <span className="text-xs text-slate-400">{item.points}pt{item.points > 1 ? 's' : ''}</span>
                           </div>

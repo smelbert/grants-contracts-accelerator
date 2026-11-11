@@ -39,7 +39,7 @@ function Avatar({ name, size = 'md', color = '#143A50' }) {
 function ReplyThread({ reply, depth = 0, user, onReply, onUpvote, discussionAuthorEmail }) {
   const [expanded, setExpanded] = useState(true);
   const hasChildren = reply.children?.length > 0;
-  const borderColors = ['border-[#143A50]', 'border-[#AC1A5B]', 'border-[#E5C089]', 'border-slate-300'];
+  const borderColors = ['border-[#143A50]', 'border-[#AC1A5B]', 'border-[#C89A45]', 'border-slate-300'];
   const borderColor = borderColors[Math.min(depth, borderColors.length - 1)];
   const avatarColors = ['#143A50', '#AC1A5B', '#1E4F58', '#A65D40'];
 
@@ -398,7 +398,7 @@ export default function Discussions() {
       <div className="min-h-screen bg-slate-50">
         <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white px-6 py-4">
           <div className="max-w-3xl mx-auto flex items-center gap-3">
-            <Hash className="w-5 h-5 text-[#E5C089]" />
+            <Hash className="w-5 h-5 text-[#C89A45]" />
             <span className="font-semibold">{space.space_name}</span>
           </div>
         </div>
@@ -418,13 +418,13 @@ export default function Discussions() {
       {/* Header */}
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white">
         <div className="max-w-4xl mx-auto px-6 py-8">
-          <Link to="/Community" className="inline-flex items-center gap-1 text-[#E5C089]/70 hover:text-[#E5C089] text-sm mb-4 transition-colors">
+          <Link to="/Community" className="inline-flex items-center gap-1 text-[#C89A45]/70 hover:text-[#C89A45] text-sm mb-4 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" /> All Spaces
           </Link>
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold mb-1">{space.space_name}</h1>
-              <p className="text-[#E5C089]/80">{space.description}</p>
+              <p className="text-[#C89A45]/80">{space.description}</p>
               <div className="flex items-center gap-4 mt-3 text-sm text-white/60">
                 <span className="flex items-center gap-1"><Users className="w-4 h-4" />{space.member_count || 0} members</span>
                 <span className="flex items-center gap-1"><MessageCircle className="w-4 h-4" />{discussions.length} posts</span>
@@ -432,7 +432,7 @@ export default function Discussions() {
             </div>
             <Button
               onClick={() => setShowNewPost(true)}
-              className="bg-[#E5C089] hover:bg-[#E5C089]/90 text-[#143A50] font-semibold flex-shrink-0"
+              className="bg-[#C89A45] hover:bg-[#C89A45]/90 text-[#143A50] font-semibold flex-shrink-0"
             >
               <Plus className="w-4 h-4 mr-1" /> New Post
             </Button>

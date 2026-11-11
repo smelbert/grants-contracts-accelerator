@@ -65,7 +65,7 @@ const DEFAULTS = {
   learning_outcomes: [],
   // branding
   primary_color: '#143A50',
-  accent_color: '#E5C089',
+  accent_color: '#C89A45',
   secondary_color: '#1E4F58',
   logo_url: '',
   header_subtitle: '',
@@ -226,7 +226,7 @@ export default function PartnerSignup() {
       {/* Hero */}
       <div className="bg-[#143A50] text-white">
         <div className="max-w-3xl mx-auto px-6 py-10">
-          <Badge className="bg-[#E5C089]/20 text-[#E5C089] border-0 mb-3">
+          <Badge className="bg-[#C89A45]/20 text-[#C89A45] border-0 mb-3">
             <Sparkles className="w-3 h-3 mr-1" /> Partner Registration
           </Badge>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Register your program</h1>

@@ -261,7 +261,7 @@ export default function FundingReadinessAssessmentForm({ onComplete, initialData
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2">
                   <div 
-                    className="bg-[#E5C089] h-2 rounded-full transition-all" 
+                    className="bg-[#C89A45] h-2 rounded-full transition-all" 
                     style={{ width: `${breakdown.program_clarity.percentage}%` }}
                   />
                 </div>
@@ -286,7 +286,7 @@ export default function FundingReadinessAssessmentForm({ onComplete, initialData
               <h4 className="font-semibold text-[#143A50] mb-3">Personalized Action Plan</h4>
               <div className="space-y-4">
                 {levelInfo.recommendations.map((rec, idx) => (
-                  <div key={idx} className="border-l-4 border-[#E5C089] pl-4 pb-3 border-b last:border-b-0">
+                  <div key={idx} className="border-l-4 border-[#C89A45] pl-4 pb-3 border-b last:border-b-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-semibold text-[#143A50]">{rec.area}</span>
                       <span className={`text-xs px-2 py-0.5 rounded-full ${

@@ -366,7 +366,7 @@ export default function ConsultantOnboardingPage() {
             </div>
 
             {onboarding?.next_review_date && (
-              <Card className="mt-6 bg-[#E5C089]/10 border-[#E5C089]">
+              <Card className="mt-6 bg-[#C89A45]/10 border-[#C89A45]">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-3">
                     <Clock className="w-8 h-8 text-[#A65D40]" />

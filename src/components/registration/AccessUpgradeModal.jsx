@@ -84,7 +84,7 @@ export default function AccessUpgradeModal({ isOpen, onClose, userEmail, current
               <CardContent className="p-6">
                 {plan.highlight && (
                   <div className="flex items-center gap-2 mb-4">
-                    <Sparkles className="w-4 h-4 text-[#E5C089]" />
+                    <Sparkles className="w-4 h-4 text-[#C89A45]" />
                     <span className="text-sm font-medium text-[#143A50]">Most Popular</span>
                   </div>
                 )}

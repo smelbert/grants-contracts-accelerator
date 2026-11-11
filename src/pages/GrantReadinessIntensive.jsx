@@ -401,7 +401,7 @@ export default function GrantReadinessIntensive() {
             <Button
               onClick={() => setShowIntake(true)}
               size="lg"
-              className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 h-12 px-8"
+              className="bg-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/90 h-12 px-8"
             >
               Start Readiness Intake
             </Button>

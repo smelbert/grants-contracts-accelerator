@@ -337,7 +337,7 @@ function WrapGuideInline() {
       content: (
         <div className="grid md:grid-cols-2 gap-2">
           {['Built foundational literacy in how grants and contracts work','Learned how funders evaluate applicants','Developed or strengthened your funding documents','Completed pre/post assessments and tracked your growth','Received personalized consultation feedback','Connected with peers navigating the same landscape','Established knowledge most competitors in the funding space lack','Demonstrated discipline to complete a structured program'].map((item,i)=>(
-            <div key={i} className="flex items-start gap-2 p-2.5 bg-[#E5C089]/20 border border-[#E5C089]/40 rounded-lg">
+            <div key={i} className="flex items-start gap-2 p-2.5 bg-[#C89A45]/20 border border-[#C89A45]/40 rounded-lg">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#143A50] mt-0.5 flex-shrink-0"/>
               <span className="text-xs text-slate-700">{item}</span>
             </div>
@@ -389,7 +389,7 @@ function WrapGuideInline() {
       content: (
         <div className="space-y-2">
           {[{t:'Rejection is data, not failure',b:'Ask for reviewer feedback, study funded applications, improve and reapply. An organization that stops after one rejection will never win.'},{t:'Start with smaller, accessible opportunities',b:'Build your track record with appropriately-scaled opportunities. Funders look for track record. You build it by winning smaller awards and executing them well.'},{t:'Relationships compound over time',b:'Funders who see your name and quality work consistently over 2–3 years look at your applications differently. One touchpoint rarely creates a relationship.'},{t:'Quality is always worth the extra hour',b:'The difference between funded and unfunded is often one vague section or one unsupported claim. Don\'t rush the final review.'},{t:'Celebrate every win',b:'A $5,000 seed grant is a win. It\'s a line on your track record and proof your application quality is award-worthy.'}].map((insight,i)=>(
-            <div key={i} className="p-3 border-l-4 border-[#E5C089] bg-amber-50/40 rounded-r-lg">
+            <div key={i} className="p-3 border-l-4 border-[#C89A45] bg-amber-50/40 rounded-r-lg">
               <p className="font-semibold text-xs text-[#143A50] mb-0.5">{insight.t}</p>
               <p className="text-xs text-slate-700">{insight.b}</p>
             </div>

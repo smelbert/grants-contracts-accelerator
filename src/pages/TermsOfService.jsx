@@ -62,7 +62,7 @@ export default function TermsOfService() {
         return (
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#143A50]">2. Intellectual Property Rights</h2>
-            <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10 p-6 rounded-lg border-2 border-[#AC1A5B]">
+            <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#C89A45]/10 p-6 rounded-lg border-2 border-[#AC1A5B]">
               <p className="font-mono text-lg font-bold text-[#143A50] mb-2">
                 ©{currentYear} {companyName}. All rights reserved.
               </p>
@@ -127,7 +127,7 @@ export default function TermsOfService() {
         return (
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#143A50]">5. Protection of EIS Frameworks and Materials — No Derivative Works / No Teaching</h2>
-            <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10 p-6 rounded-lg border-2 border-[#AC1A5B]">
+            <div className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#C89A45]/10 p-6 rounded-lg border-2 border-[#AC1A5B]">
               <div className="flex gap-3 items-start">
                 <Lock className="w-6 h-6 text-[#AC1A5B] flex-shrink-0 mt-1" />
                 <div>
@@ -151,7 +151,7 @@ export default function TermsOfService() {
                   'Written guides, exercises & materials'
                 ].map((item, idx) => (
                   <li key={idx} className="text-sm flex gap-2">
-                    <span className="text-[#E5C089]">▪</span> {item}
+                    <span className="text-[#C89A45]">▪</span> {item}
                   </li>
                 ))}
               </ul>
@@ -228,7 +228,7 @@ export default function TermsOfService() {
         return (
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#143A50]">8. Payment and Refunds</h2>
-            <div className="bg-[#E5C089]/10 border-l-4 border-[#E5C089] p-4 rounded">
+            <div className="bg-[#C89A45]/10 border-l-4 border-[#C89A45] p-4 rounded">
               <p className="text-sm">
                 All fees are <strong>non-refundable</strong> unless otherwise stated in writing for a specific program. Payment is due at the time of registration unless an approved payment plan is in place.
               </p>
@@ -442,7 +442,7 @@ export default function TermsOfService() {
                     onClick={() => setActiveTab(section.id)}
                     className={`w-full text-left px-4 py-3 text-sm font-medium transition-all ${
                       activeTab === section.id
-                        ? 'bg-[#143A50] text-white border-l-4 border-[#E5C089]'
+                        ? 'bg-[#143A50] text-white border-l-4 border-[#C89A45]'
                         : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >

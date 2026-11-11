@@ -6,14 +6,14 @@ export default function ScoreCard({ trackKey, trackResult }) {
   const band = trackResult.band;
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E5C089]/30 p-6 sm:p-8 shadow-sm">
+    <div className="bg-white rounded-2xl border border-[#C89A45]/30 p-6 sm:p-8 shadow-sm">
       <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{trackLabel}</p>
       <div className="flex items-baseline gap-4 mb-3">
         <span className="text-6xl font-serif text-[#143A50]">{trackResult.percent}%</span>
         <span className={`text-2xl font-serif ${band.textColorClass}`}>{band.label}</span>
       </div>
       <p className="text-sm text-slate-600 mb-4">{band.description}</p>
-      <div className="border-l-2 border-[#E5C089] pl-4 mb-6">
+      <div className="border-l-2 border-[#C89A45] pl-4 mb-6">
         <p className="text-sm text-slate-700 italic">{band.interpretation}</p>
       </div>
 

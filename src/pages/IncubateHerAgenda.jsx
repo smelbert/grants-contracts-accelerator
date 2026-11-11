@@ -346,7 +346,7 @@ export default function IncubateHerAgenda() {
                       )}
                       <div>
                         <div className="flex items-center gap-2">
-                          <Badge className="bg-[#E5C089] text-[#143A50]">
+                          <Badge className="bg-[#C89A45] text-[#143A50]">
                             {sectionIdx + 1}
                           </Badge>
                           <CardTitle className="text-lg">{section.title}</CardTitle>
@@ -366,7 +366,7 @@ export default function IncubateHerAgenda() {
                   <ul className="space-y-1">
                     {section.topics.map((topic, idx) => (
                       <li key={idx} className="text-slate-600 flex items-start gap-2">
-                        <span className="text-[#E5C089] mt-1">•</span>
+                        <span className="text-[#C89A45] mt-1">•</span>
                         <span>{topic}</span>
                       </li>
                     ))}

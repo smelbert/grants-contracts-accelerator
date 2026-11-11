@@ -196,7 +196,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
           </p>
 
           {/* Profile */}
-          <div className={`border-2 rounded-lg p-4 flex items-center justify-between gap-4 ${profileComplete ? 'border-green-300 bg-green-50' : 'border-[#E5C089] bg-amber-50'}`}>
+          <div className={`border-2 rounded-lg p-4 flex items-center justify-between gap-4 ${profileComplete ? 'border-green-300 bg-green-50' : 'border-[#C89A45] bg-amber-50'}`}>
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${profileComplete ? 'bg-green-100' : 'bg-[#143A50]'}`}>
                 {profileComplete ? <CheckCircle2 className="w-5 h-5 text-green-600" /> : <User className="w-5 h-5 text-white" />}
@@ -218,7 +218,7 @@ export default function IncubateHerProgramGate({ user, userAccess, enrollment, o
           </div>
 
           {/* Pre-Assessment */}
-          <div className={`border-2 rounded-lg p-4 flex items-center justify-between gap-4 ${preAssessmentComplete ? 'border-green-300 bg-green-50' : 'border-[#E5C089] bg-amber-50'}`}>
+          <div className={`border-2 rounded-lg p-4 flex items-center justify-between gap-4 ${preAssessmentComplete ? 'border-green-300 bg-green-50' : 'border-[#C89A45] bg-amber-50'}`}>
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${preAssessmentComplete ? 'bg-green-100' : 'bg-[#143A50]'}`}>
                 {preAssessmentComplete ? <CheckCircle2 className="w-5 h-5 text-green-600" /> : <Target className="w-5 h-5 text-white" />}

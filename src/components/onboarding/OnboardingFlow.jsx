@@ -204,16 +204,16 @@ export default function OnboardingFlow({ userEmail, userRole, onComplete }) {
                   {completedCount} of {totalCount} completed
                 </span>
                 <div className="flex items-center gap-3">
-                  <Badge className="bg-[#E5C089] text-[#143A50]">
+                  <Badge className="bg-[#C89A45] text-[#143A50]">
                     <Award className="w-3 h-3 mr-1" />
                     {totalPoints} / {maxPoints} pts
                   </Badge>
-                  <span className="text-sm font-semibold text-[#E5C089]">{progressPercent}%</span>
+                  <span className="text-sm font-semibold text-[#C89A45]">{progressPercent}%</span>
                 </div>
               </div>
               <Progress value={progressPercent} className="h-2 bg-white/20" />
               {progressPercent === 100 && (
-                <div className="bg-[#E5C089]/20 border border-[#E5C089] rounded-lg p-3 mt-2">
+                <div className="bg-[#C89A45]/20 border border-[#C89A45] rounded-lg p-3 mt-2">
                   <p className="text-sm text-white flex items-center gap-2">
                     <TrendingUp className="w-4 h-4" />
                     <strong>Congratulations!</strong> You've completed your onboarding journey!

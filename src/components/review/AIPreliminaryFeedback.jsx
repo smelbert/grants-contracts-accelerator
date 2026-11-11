@@ -102,7 +102,7 @@ Be constructive, specific, and actionable.`;
 
   return (
     <Card className="border-2 border-[#AC1A5B] shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10">
+      <CardHeader className="bg-gradient-to-r from-[#AC1A5B]/10 to-[#C89A45]/10">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">

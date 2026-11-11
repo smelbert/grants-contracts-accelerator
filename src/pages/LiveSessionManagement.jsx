@@ -169,7 +169,7 @@ const agendaColors = {
   intro: 'border-slate-300 bg-slate-50',
   activity: 'border-[#1E4F58] bg-[#1E4F58]/5',
   qa: 'border-blue-300 bg-blue-50',
-  wrap: 'border-[#E5C089] bg-amber-50'
+  wrap: 'border-[#C89A45] bg-amber-50'
 };
 
 // ─── Handout Viewer ──────────────────────────────────────────────────────────
@@ -269,16 +269,16 @@ function SessionOutlineView({ session }) {
         <CardContent className="pt-6 pb-6">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-              <Play className="w-6 h-6 text-[#E5C089]" />
+              <Play className="w-6 h-6 text-[#C89A45]" />
             </div>
             <div>
-              <Badge className="bg-[#E5C089] text-[#143A50] mb-2 text-xs font-bold">PRE-SESSION VIDEO REQUIRED</Badge>
+              <Badge className="bg-[#C89A45] text-[#143A50] mb-2 text-xs font-bold">PRE-SESSION VIDEO REQUIRED</Badge>
               <h3 className="font-bold text-white mb-1">{session.videoGuide.title}</h3>
               <p className="text-white/70 text-sm mb-4">{session.videoGuide.description}</p>
               <div className="grid sm:grid-cols-2 gap-2">
                 {session.videoGuide.topics.map((topic, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm text-white/80">
-                    <ArrowRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-[#E5C089]" />
+                    <ArrowRight className="w-3 h-3 mt-0.5 flex-shrink-0 text-[#C89A45]" />
                     {topic}
                   </div>
                 ))}

@@ -68,7 +68,7 @@ export default function ComingSoonPipeline({ mode = 'learning' }) {
           <Clock className="w-5 h-5 text-[#143A50]" />
           <h2 className="text-xl font-bold text-[#143A50]">Coming to the Pipeline</h2>
         </div>
-        <Badge className="bg-[#E5C089] text-[#143A50] border-0">{items.length} in development</Badge>
+        <Badge className="bg-[#C89A45] text-[#143A50] border-0">{items.length} in development</Badge>
       </div>
       <p className="text-slate-500 text-sm mb-5">
         These {mode === 'learning' ? 'courses, webinars, and workshops' : 'templates and guides'} are actively being built out and will be published soon. No need to request something that's already in the queue!

@@ -54,16 +54,16 @@ export default function LocalBusinessNews() {
       <div className="bg-[#143A50] text-white px-6 py-10">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
-            <Newspaper className="w-7 h-7 text-[#E5C089]" />
+            <Newspaper className="w-7 h-7 text-[#C89A45]" />
             <h1 className="text-3xl font-bold">Ohio Business News</h1>
           </div>
           <p className="text-white/70 text-sm max-w-xl">
             Stay current with funding opportunities, policy updates, and business trends across Ohio.
           </p>
           <div className="flex flex-wrap gap-4 mt-6 text-sm text-white/60">
-            <span><strong className="text-[#E5C089]">{articles.length}</strong> articles</span>
-            <span><strong className="text-[#E5C089]">{[...new Set(articles.map(a => a.region))].length}</strong> regions covered</span>
-            <span><strong className="text-[#E5C089]">{[...new Set(articles.map(a => a.category))].length}</strong> categories</span>
+            <span><strong className="text-[#C89A45]">{articles.length}</strong> articles</span>
+            <span><strong className="text-[#C89A45]">{[...new Set(articles.map(a => a.region))].length}</strong> regions covered</span>
+            <span><strong className="text-[#C89A45]">{[...new Set(articles.map(a => a.category))].length}</strong> categories</span>
           </div>
         </div>
       </div>

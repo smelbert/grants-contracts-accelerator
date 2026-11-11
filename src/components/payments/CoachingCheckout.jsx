@@ -175,7 +175,7 @@ export default function CoachingCheckout({ coachingType, userEmail, userName, on
       <Button
         onClick={handleCheckout}
         disabled={isProcessing || !selectedPlan?.priceId}
-        className="w-full h-14 text-lg bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90"
+        className="w-full h-14 text-lg bg-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/90"
       >
         {isProcessing ? (
           <>

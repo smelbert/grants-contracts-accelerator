@@ -84,7 +84,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#E5C089]/20 via-white to-[#143A50]/10">
+    <div className="min-h-screen bg-gradient-to-br from-[#C89A45]/20 via-white to-[#143A50]/10">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white py-12">
         <div className="max-w-4xl mx-auto px-4 text-center">
@@ -105,15 +105,15 @@ export default function RegisterPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-[#E5C089]" />
+                <CheckCircle2 className="w-5 h-5 text-[#C89A45]" />
                 <span>Expert Coaching</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-[#E5C089]" />
+                <CheckCircle2 className="w-5 h-5 text-[#C89A45]" />
                 <span>AI-Powered Tools</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-[#E5C089]" />
+                <CheckCircle2 className="w-5 h-5 text-[#C89A45]" />
                 <span>Stage-Based Templates</span>
               </div>
             </div>

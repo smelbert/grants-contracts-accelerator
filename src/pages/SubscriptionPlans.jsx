@@ -131,7 +131,7 @@ export default function SubscriptionPlans() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge className="mb-4 bg-[#E5C089] text-[#143A50]">Pricing Plans</Badge>
+          <Badge className="mb-4 bg-[#C89A45] text-[#143A50]">Pricing Plans</Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Choose Your Growth Path
           </h1>

@@ -131,7 +131,7 @@ If funder feedback was provided, use it as your anchor point and expand on it.`,
           <div className="p-5 bg-gradient-to-r from-[#1E4F58] to-[#143A50] text-white rounded-2xl">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                <History className="w-6 h-6 text-[#E5C089]" />
+                <History className="w-6 h-6 text-[#C89A45]" />
               </div>
               <div>
                 <h2 className="text-xl font-bold mb-1">Previous Submissions Review</h2>
@@ -210,7 +210,7 @@ If funder feedback was provided, use it as your anchor point and expand on it.`,
           <Button variant="ghost" size="sm" onClick={() => setFeedback(null)} className="text-slate-500">← Review Another Submission</Button>
 
           {/* Score Hero */}
-          <Card className="border-2 border-[#E5C089] bg-gradient-to-br from-[#1E4F58] to-[#143A50] text-white">
+          <Card className="border-2 border-[#C89A45] bg-gradient-to-br from-[#1E4F58] to-[#143A50] text-white">
             <CardContent className="pt-6 pb-5">
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -301,14 +301,14 @@ If funder feedback was provided, use it as your anchor point and expand on it.`,
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-[#143A50] text-sm flex items-center gap-2">
-                  <Lightbulb className="w-4 h-4 text-[#E5C089]" /> Missed Opportunities
+                  <Lightbulb className="w-4 h-4 text-[#C89A45]" /> Missed Opportunities
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
                   {feedback.missed_opportunities.map((item, i) => (
                     <li key={i} className="text-sm text-slate-700 flex items-start gap-2">
-                      <span className="text-[#E5C089] mt-0.5 shrink-0 font-bold">→</span>{item}
+                      <span className="text-[#C89A45] mt-0.5 shrink-0 font-bold">→</span>{item}
                     </li>
                   ))}
                 </ul>
@@ -318,10 +318,10 @@ If funder feedback was provided, use it as your anchor point and expand on it.`,
 
           {/* Transferable elements */}
           {feedback.transferable_elements?.length > 0 && (
-            <Card className="border-[#E5C089] bg-[#E5C089]/5">
+            <Card className="border-[#C89A45] bg-[#C89A45]/5">
               <CardHeader className="pb-2">
                 <CardTitle className="text-[#143A50] text-sm flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#E5C089]" /> Keep These — Use Again
+                  <Sparkles className="w-4 h-4 text-[#C89A45]" /> Keep These — Use Again
                 </CardTitle>
                 <CardDescription className="text-xs">Strong elements worth reusing in future submissions</CardDescription>
               </CardHeader>
@@ -329,7 +329,7 @@ If funder feedback was provided, use it as your anchor point and expand on it.`,
                 <ul className="space-y-1.5">
                   {feedback.transferable_elements.map((el, i) => (
                     <li key={i} className="text-sm text-slate-700 flex items-start gap-2">
-                      <span className="text-[#E5C089] mt-0.5 font-bold shrink-0">★</span>{el}
+                      <span className="text-[#C89A45] mt-0.5 font-bold shrink-0">★</span>{el}
                     </li>
                   ))}
                 </ul>

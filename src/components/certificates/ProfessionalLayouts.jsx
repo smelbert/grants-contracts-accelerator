@@ -9,7 +9,7 @@ export const professionalLayouts = {
   blue_wave_landscape: {
     name: 'Blue Wave (Landscape)',
     orientation: 'landscape',
-    baseColors: { primary: '#0047AB', secondary: '#E5C089', background: '#FFFFFF', text: '#000000' },
+    baseColors: { primary: '#0047AB', secondary: '#C89A45', background: '#FFFFFF', text: '#000000' },
     render: ({ headerText, participantName, bodyText, signatures, colors }) => (
       <div className="relative w-full aspect-video bg-white overflow-hidden">
         {/* Background Gradient */}
@@ -172,7 +172,7 @@ export const professionalLayouts = {
   teal_geometric_landscape: {
     name: 'Teal Geometric (Landscape)',
     orientation: 'landscape',
-    baseColors: { primary: '#1E4F58', secondary: '#E5C089', background: '#FFFFFF', text: '#1E4F58' },
+    baseColors: { primary: '#1E4F58', secondary: '#C89A45', background: '#FFFFFF', text: '#1E4F58' },
     render: ({ headerText, participantName, bodyText, signatures, colors }) => (
       <div className="relative w-full aspect-video bg-white overflow-hidden">
         {/* Abstract Geometric Background */}
@@ -249,7 +249,7 @@ export const professionalLayouts = {
   blue_wave_portrait: {
     name: 'Blue Wave (Portrait)',
     orientation: 'portrait',
-    baseColors: { primary: '#0047AB', secondary: '#E5C089', background: '#FFFFFF', text: '#000000' },
+    baseColors: { primary: '#0047AB', secondary: '#C89A45', background: '#FFFFFF', text: '#000000' },
     render: ({ headerText, participantName, bodyText, signatures, colors }) => (
       <div className="relative w-full aspect-[8.5/11] bg-white overflow-hidden">
         {/* Background */}

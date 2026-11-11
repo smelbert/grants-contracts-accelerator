@@ -156,7 +156,7 @@ export default function GrantAssistantPage() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-[#143A50] flex items-center justify-center">
-              <MessageCircle className="w-6 h-6 text-[#E5C089]" />
+              <MessageCircle className="w-6 h-6 text-[#C89A45]" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-[#143A50]">Grant Assistant</h1>

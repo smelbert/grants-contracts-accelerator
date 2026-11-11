@@ -93,7 +93,7 @@ export default function PersonalizedDashboard({ user, userAccess }) {
       <div className="space-y-6">
         {/* Giveaway Winner Banner */}
         {winner && (
-          <div className="rounded-xl bg-gradient-to-r from-[#E5C089] via-yellow-300 to-[#E5C089] p-1 shadow-lg">
+          <div className="rounded-xl bg-gradient-to-r from-[#C89A45] via-yellow-300 to-[#C89A45] p-1 shadow-lg">
             <div className="rounded-lg bg-white px-6 py-5 flex items-center gap-4">
               <div className="text-4xl">🏆</div>
               <div className="flex-1">
@@ -103,7 +103,7 @@ export default function PersonalizedDashboard({ user, userAccess }) {
                   {winner.prize_description || 'Comprehensive grant writing support package'} — an EIS team member will be in touch.
                 </p>
               </div>
-              <Gift className="w-10 h-10 text-[#E5C089] flex-shrink-0" />
+              <Gift className="w-10 h-10 text-[#C89A45] flex-shrink-0" />
             </div>
           </div>
         )}
@@ -119,7 +119,7 @@ export default function PersonalizedDashboard({ user, userAccess }) {
                   Continue building your funding readiness foundation
                 </p>
               </div>
-              <Target className="w-12 h-12 text-[#E5C089]" />
+              <Target className="w-12 h-12 text-[#C89A45]" />
             </div>
           </CardContent>
         </Card>
@@ -250,7 +250,7 @@ export default function PersonalizedDashboard({ user, userAccess }) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#E5C089]" />
+                <Sparkles className="w-5 h-5 text-[#C89A45]" />
                 Recommended for You
               </CardTitle>
               <p className="text-sm text-slate-600">
@@ -301,7 +301,7 @@ export default function PersonalizedDashboard({ user, userAccess }) {
           <Link to={createPageUrl('Community')}>
             <Card className="hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="pt-6">
-                <Target className="w-8 h-8 text-[#E5C089] mb-3" />
+                <Target className="w-8 h-8 text-[#C89A45] mb-3" />
                 <p className="font-semibold mb-1">Join Community</p>
                 <p className="text-sm text-slate-600">Connect with peers</p>
               </CardContent>
@@ -364,7 +364,7 @@ export default function PersonalizedDashboard({ user, userAccess }) {
         <Link to={createPageUrl('Opportunities')}>
           <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="pt-6">
-              <TrendingUp className="w-8 h-8 text-[#E5C089] mb-3" />
+              <TrendingUp className="w-8 h-8 text-[#C89A45] mb-3" />
               <p className="font-semibold mb-1">Opportunities</p>
               <p className="text-sm text-slate-600">Find funding</p>
             </CardContent>

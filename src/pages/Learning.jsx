@@ -285,7 +285,7 @@ export default function LearningPage() {
           <TabsContent value="incubateher">
             {enrollment && learningContent ? (
               <div className="space-y-6">
-                <Card className="border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/10 to-[#E5C089]/10">
+                <Card className="border-[#AC1A5B] bg-gradient-to-r from-[#AC1A5B]/10 to-[#C89A45]/10">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
@@ -302,15 +302,15 @@ export default function LearningPage() {
                   <CardContent>
                     <div className="grid grid-cols-1 gap-2 text-sm">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#E5C089]" />
+                        <CheckCircle2 className="w-4 h-4 text-[#C89A45]" />
                         <span>Earn 10 points for completing each section</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-[#E5C089]" />
+                        <Sparkles className="w-4 h-4 text-[#C89A45]" />
                         <span>Earn 50 bonus points for completing a full course</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Award className="w-4 h-4 text-[#E5C089]" />
+                        <Award className="w-4 h-4 text-[#C89A45]" />
                         <span>Unlock badges as you progress through the curriculum</span>
                       </div>
                     </div>

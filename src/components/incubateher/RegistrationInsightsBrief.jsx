@@ -53,8 +53,8 @@ const TEACHING_IMPLICATIONS = [
     signal: 'Credit/debt/revenue constraints, knowledge gaps ("I\'m a sponge"), not knowing where to look, and internal approvals/authority barriers appear repeatedly.',
     implication: 'Normalize that funding barriers are often systems problems, not character flaws. Include at least one "funding path for early-stage" section.',
     icon: AlertTriangle,
-    color: 'border-l-[#E5C089]',
-    badgeColor: 'bg-[#E5C089] text-slate-900',
+    color: 'border-l-[#C89A45]',
+    badgeColor: 'bg-[#C89A45] text-slate-900',
   },
 ];
 
@@ -177,7 +177,7 @@ export default function RegistrationInsightsBrief() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-[#E5C089]" />
+            <Lightbulb className="w-5 h-5 text-[#C89A45]" />
             What They Want Help With — The Loudest Signals
           </CardTitle>
         </CardHeader>
@@ -245,22 +245,22 @@ export default function RegistrationInsightsBrief() {
       <Card className="bg-[#143A50] text-white">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-[#E5C089]" />
+            <Lightbulb className="w-5 h-5 text-[#C89A45]" />
             Recommendations for How You Teach This Cohort
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5 text-slate-100">
           <div>
-            <p className="font-semibold text-[#E5C089] mb-2">Your Best Opening (5–7 minutes)</p>
+            <p className="font-semibold text-[#C89A45] mb-2">Your Best Opening (5–7 minutes)</p>
             <p className="text-sm mb-2">Give them a calm, confident frame:</p>
             <ul className="space-y-1 text-sm">
-              <li className="flex gap-2"><span className="text-[#E5C089]">"</span>You're not behind — you're building a system."</li>
-              <li className="flex gap-2"><span className="text-[#E5C089]">"</span>We're moving from random searches to a repeatable funding strategy."</li>
-              <li className="flex gap-2"><span className="text-[#E5C089]">"</span>Today is about clarity, sequence, and confidence."</li>
+              <li className="flex gap-2"><span className="text-[#C89A45]">"</span>You're not behind — you're building a system."</li>
+              <li className="flex gap-2"><span className="text-[#C89A45]">"</span>We're moving from random searches to a repeatable funding strategy."</li>
+              <li className="flex gap-2"><span className="text-[#C89A45]">"</span>Today is about clarity, sequence, and confidence."</li>
             </ul>
           </div>
           <div>
-            <p className="font-semibold text-[#E5C089] mb-2">Teach in 3 Lanes (Simple + Sticky)</p>
+            <p className="font-semibold text-[#C89A45] mb-2">Teach in 3 Lanes (Simple + Sticky)</p>
             <div className="grid grid-cols-3 gap-3">
               {['Readiness (foundation)', 'Fit (what to pursue, what to skip)', 'Execution (how to package + submit + follow up)'].map((lane, i) => (
                 <div key={lane} className="bg-white/10 rounded-lg p-3 text-center text-sm">{lane}</div>
@@ -268,12 +268,12 @@ export default function RegistrationInsightsBrief() {
             </div>
           </div>
           <div>
-            <p className="font-semibold text-[#E5C089] mb-2">The Map They're Craving</p>
+            <p className="font-semibold text-[#C89A45] mb-2">The Map They're Craving</p>
             <div className="flex flex-wrap gap-1 items-center text-xs">
               {['Idea', 'Readiness Docs', 'Eligibility', 'Opportunity Match', 'Narrative + Budget', 'Submission', 'Follow-up', 'Reporting / Relationship'].map((step, i, arr) => (
                 <React.Fragment key={step}>
                   <span className="bg-white/20 px-2 py-1 rounded">{step}</span>
-                  {i < arr.length - 1 && <span className="text-[#E5C089]">→</span>}
+                  {i < arr.length - 1 && <span className="text-[#C89A45]">→</span>}
                 </React.Fragment>
               ))}
             </div>

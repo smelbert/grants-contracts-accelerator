@@ -174,7 +174,7 @@ export default function GrantReadinessDashboard() {
         {/* Phase 4: Performance Analytics */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#E5C089] text-[#143A50] flex items-center justify-center text-sm font-bold">4</div>
+            <div className="w-8 h-8 rounded-full bg-[#C89A45] text-[#143A50] flex items-center justify-center text-sm font-bold">4</div>
             Performance Analytics
           </h2>
 

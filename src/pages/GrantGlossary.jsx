@@ -142,8 +142,8 @@ export default function GrantGlossary() {
         </div>
         <div className="max-w-5xl mx-auto relative">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-[#E5C089]/20 flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-[#E5C089]" />
+            <div className="w-10 h-10 rounded-xl bg-[#C89A45]/20 flex items-center justify-center">
+              <BookOpen className="w-5 h-5 text-[#C89A45]" />
             </div>
             <h1 className="text-3xl font-bold">Grant & Fundraising Glossary</h1>
           </div>
@@ -153,15 +153,15 @@ export default function GrantGlossary() {
           {/* Stats row */}
           <div className="flex flex-wrap gap-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-[#E5C089]">{TERMS.length}</p>
+              <p className="text-2xl font-bold text-[#C89A45]">{TERMS.length}</p>
               <p className="text-xs text-white/50 mt-0.5">Terms</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-[#E5C089]">{CATEGORIES.length - 1}</p>
+              <p className="text-2xl font-bold text-[#C89A45]">{CATEGORIES.length - 1}</p>
               <p className="text-xs text-white/50 mt-0.5">Categories</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-[#E5C089]">{availableLetters.size}</p>
+              <p className="text-2xl font-bold text-[#C89A45]">{availableLetters.size}</p>
               <p className="text-xs text-white/50 mt-0.5">Letters</p>
             </div>
           </div>
@@ -234,7 +234,7 @@ export default function GrantGlossary() {
                   onClick={() => { setActiveLetter(active ? null : letter); setSearch(''); }}
                   className={`w-8 h-8 rounded-lg text-sm font-bold transition-all ${
                     active
-                      ? 'bg-[#E5C089] text-[#143A50] shadow-md scale-110'
+                      ? 'bg-[#C89A45] text-[#143A50] shadow-md scale-110'
                       : available
                       ? 'bg-slate-100 text-slate-700 hover:bg-[#143A50] hover:text-white'
                       : 'bg-slate-50 text-slate-300 cursor-not-allowed'
@@ -264,7 +264,7 @@ export default function GrantGlossary() {
                 {/* Letter divider */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-xl bg-[#143A50] flex items-center justify-center flex-shrink-0">
-                    <span className="text-[#E5C089] font-black text-lg">{letter}</span>
+                    <span className="text-[#C89A45] font-black text-lg">{letter}</span>
                   </div>
                   <div className="flex-1 h-px bg-slate-200" />
                   <span className="text-xs text-slate-400">{terms.length} term{terms.length !== 1 ? 's' : ''}</span>

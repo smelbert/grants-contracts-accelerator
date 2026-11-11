@@ -51,13 +51,13 @@ export default function WorkbookProgressTracker({ responses, currentPageId, onPa
   const progress = calculateProgress();
 
   return (
-    <Card className="border-2 border-[#E5C089] shadow-lg">
+    <Card className="border-2 border-[#C89A45] shadow-lg">
       <CardHeader className="bg-gradient-to-r from-[#143A50] to-[#1E4F58] text-white pb-4">
         <CardTitle className="text-lg">Workbook Progress</CardTitle>
         <div className="mt-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-white/90">Overall Completion</span>
-            <span className="text-sm font-bold text-[#E5C089]">{progress.percentage}%</span>
+            <span className="text-sm font-bold text-[#C89A45]">{progress.percentage}%</span>
           </div>
           <Progress value={progress.percentage} className="h-3 bg-white/20" />
           <p className="text-xs text-white/70 mt-2">{progress.completed} of {progress.total} pages completed</p>
@@ -89,7 +89,7 @@ export default function WorkbookProgressTracker({ responses, currentPageId, onPa
                         onClick={() => onPageSelect(page.id)}
                         className={`w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors ${
                           isCurrent 
-                            ? 'bg-[#E5C089]/20 border-l-4 border-[#143A50]' 
+                            ? 'bg-[#C89A45]/20 border-l-4 border-[#143A50]' 
                             : 'hover:bg-slate-50'
                         }`}
                       >

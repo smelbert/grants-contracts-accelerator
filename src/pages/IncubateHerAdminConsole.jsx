@@ -155,7 +155,7 @@ export default function IncubateHerAdminConsole() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-600">Giveaway Eligible</p>
-                  <p className="text-3xl font-bold text-[#E5C089]">{eligibleCount}</p>
+                  <p className="text-3xl font-bold text-[#C89A45]">{eligibleCount}</p>
                 </div>
                 <Gift className="w-8 h-8 text-slate-400" />
               </div>
@@ -295,7 +295,7 @@ export default function IncubateHerAdminConsole() {
                   <Button
                     onClick={() => drawWinnerMutation.mutate()}
                     size="lg"
-                    className="w-full bg-[#E5C089] hover:bg-[#d4af78] text-[#143A50]"
+                    className="w-full bg-[#C89A45] hover:bg-[#d4af78] text-[#143A50]"
                   >
                     <Gift className="w-5 h-5 mr-2" />
                     Draw Random Winner

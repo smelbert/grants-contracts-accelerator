@@ -139,7 +139,7 @@ export default function VerifyCertificatePage() {
                 {certificate.modules_completed && certificate.modules_completed.length > 0 && (
                   <div className="p-6 border rounded-lg">
                     <div className="flex items-center gap-2 mb-3">
-                      <Award className="w-5 h-5 text-[#E5C089]" />
+                      <Award className="w-5 h-5 text-[#C89A45]" />
                       <h3 className="font-semibold">Completed Modules</h3>
                     </div>
                     <div className="flex flex-wrap gap-2">

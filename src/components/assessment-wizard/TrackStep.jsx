@@ -14,7 +14,7 @@ export default function TrackStep({ track, onSelect }) {
             className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
               track === t.value
                 ? 'border-[#143A50] bg-[#143A50]/5 shadow-sm'
-                : 'border-slate-200 hover:border-[#E5C089] hover:bg-[#F9F4EF]'
+                : 'border-slate-200 hover:border-[#C89A45] hover:bg-[#F9F4EF]'
             }`}
           >
             <div className="flex items-center justify-between">

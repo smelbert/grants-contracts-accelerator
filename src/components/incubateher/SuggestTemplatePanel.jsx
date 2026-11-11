@@ -45,10 +45,10 @@ export default function SuggestTemplatePanel({ userEmail, userName, context = 'd
   };
 
   return (
-    <Card className="border-dashed border-2 border-[#E5C089] bg-[#E5C089]/5 mt-6">
+    <Card className="border-dashed border-2 border-[#C89A45] bg-[#C89A45]/5 mt-6">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-[#143A50] text-lg">
-          <Lightbulb className="w-5 h-5 text-[#E5C089]" />
+          <Lightbulb className="w-5 h-5 text-[#C89A45]" />
           Suggest a Template or Resource
         </CardTitle>
         <p className="text-sm text-slate-600">

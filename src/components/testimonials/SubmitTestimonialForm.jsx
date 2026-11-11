@@ -162,7 +162,7 @@ export default function SubmitTestimonialForm({ trigger }) {
             />
           </div>
 
-          <div className="flex items-start gap-3 bg-[#E5C089]/10 p-4 rounded-lg">
+          <div className="flex items-start gap-3 bg-[#C89A45]/10 p-4 rounded-lg">
             <Checkbox
               id="website_approval"
               checked={approvedForWebsite}

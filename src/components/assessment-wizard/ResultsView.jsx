@@ -28,14 +28,14 @@ export default function ResultsView({ results, onRetake }) {
       <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
         {/* Dr. E opening message */}
         <div className="mb-8">
-          <div className="w-12 h-0.5 bg-[#E5C089] mb-4" />
+          <div className="w-12 h-0.5 bg-[#C89A45] mb-4" />
           <p className="text-lg text-slate-700 italic font-serif leading-relaxed">{drEMessage}</p>
           <p className="text-sm text-[#143A50] mt-3 font-medium">{DR_E_SIGNATURE}</p>
         </div>
 
         {/* Eligibility holds */}
         {holds && holds.length > 0 && (
-          <div className="mb-8 bg-[#E5C089]/20 border border-[#E5C089]/40 rounded-xl p-5">
+          <div className="mb-8 bg-[#C89A45]/20 border border-[#C89A45]/40 rounded-xl p-5">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="w-5 h-5 text-[#7E5F22]" />
               <h3 className="font-semibold text-[#7E5F22]">Eligibility Holds</h3>
@@ -63,7 +63,7 @@ export default function ResultsView({ results, onRetake }) {
               <div className="mb-8 bg-[#143A50] rounded-xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                 {PROOF_STRIP.map((stat, i) => (
                   <div key={i}>
-                    <p className="text-xl font-bold text-[#E5C089]">{stat.stat}</p>
+                    <p className="text-xl font-bold text-[#C89A45]">{stat.stat}</p>
                     <p className="text-xs text-white/80 mt-1">{stat.label}</p>
                   </div>
                 ))}
@@ -93,7 +93,7 @@ export default function ResultsView({ results, onRetake }) {
           if (trackOpen.length === 0) return null;
           const trackLabel = tk === 'grant' ? 'Grant Funding' : 'Proposals & Contracts';
           return (
-            <div key={tk} className="mb-8 bg-white rounded-2xl border border-[#E5C089]/30 p-6">
+            <div key={tk} className="mb-8 bg-white rounded-2xl border border-[#C89A45]/30 p-6">
               <h4 className="font-serif text-[#143A50] mb-1">What to work on — {trackLabel}</h4>
               <p className="text-xs text-slate-500 mb-4">A gap can be closed while you pursue opportunities; a hold should be resolved before you submit.</p>
               {[1, 2, 3].map(level => {
@@ -108,7 +108,7 @@ export default function ResultsView({ results, onRetake }) {
                           <span className="text-slate-400 mt-1">•</span>
                           <span className="text-sm text-slate-700">{item.text}</span>
                           {item.is_gate && (
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#E5C089]/20 text-[#7E5F22]"><Lock className="w-2.5 h-2.5" /> gate</span>
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#C89A45]/20 text-[#7E5F22]"><Lock className="w-2.5 h-2.5" /> gate</span>
                           )}
                         </div>
                       ))}
@@ -121,7 +121,7 @@ export default function ResultsView({ results, onRetake }) {
         })}
 
         {/* Recommended documents */}
-        <div className="mb-8 bg-white rounded-2xl border border-[#E5C089]/30 p-6">
+        <div className="mb-8 bg-white rounded-2xl border border-[#C89A45]/30 p-6">
           <h4 className="font-serif text-[#143A50] mb-1">For your structure</h4>
           <p className="text-xs text-slate-500 mb-4">Recommended documents for a {structureLabel}.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -135,7 +135,7 @@ export default function ResultsView({ results, onRetake }) {
         </div>
 
         {/* Next steps */}
-        <div className="mb-8 bg-white rounded-2xl border border-[#E5C089]/30 p-6">
+        <div className="mb-8 bg-white rounded-2xl border border-[#C89A45]/30 p-6">
           <h4 className="font-serif text-[#143A50] mb-4">Your prioritized next steps</h4>
           <div className="space-y-3">
             {nextSteps.map((step, i) => (
@@ -149,7 +149,7 @@ export default function ResultsView({ results, onRetake }) {
 
         {/* Consultation card */}
         <div className="mb-8 bg-[#143A50] rounded-2xl p-6">
-          <h4 className="font-serif text-[#E5C089] mb-1">{CONSULTATION_CARD.title}</h4>
+          <h4 className="font-serif text-[#C89A45] mb-1">{CONSULTATION_CARD.title}</h4>
           <p className="text-sm text-white/80 mb-4">{CONSULTATION_CARD.body}</p>
           <CalendlyEmbed />
         </div>

@@ -122,7 +122,7 @@ export default function AssessmentProgressChart({ assessments }) {
                   <Line 
                     type="monotone" 
                     dataKey="financial" 
-                    stroke="#E5C089" 
+                    stroke="#C89A45" 
                     strokeWidth={2}
                     name="Financial"
                   />

@@ -320,7 +320,7 @@ export default function CaseForSupport() {
           </div>
 
           {/* Progress Bar */}
-          <Card className="border-2 border-[#E5C089]">
+          <Card className="border-2 border-[#C89A45]">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-slate-700">Overall Progress</span>
@@ -353,7 +353,7 @@ export default function CaseForSupport() {
                     onClick={() => setCurrentSection(index)}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
                       isCurrent
-                        ? 'bg-[#E5C089]/20 border-l-4 border-[#143A50]'
+                        ? 'bg-[#C89A45]/20 border-l-4 border-[#143A50]'
                         : 'hover:bg-slate-50'
                     }`}
                   >

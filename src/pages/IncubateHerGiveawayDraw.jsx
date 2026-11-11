@@ -257,8 +257,8 @@ export default function IncubateHerGiveawayDraw() {
 
                 {/* Winner Display */}
                 {winner && (
-                  <div className={`rounded-xl border-2 p-6 text-center transition-all ${isDrawing ? 'border-[#E5C089] bg-[#E5C089]/10 animate-pulse' : 'border-green-400 bg-green-50'}`}>
-                    <Gift className={`w-12 h-12 mx-auto mb-3 ${isDrawing ? 'text-[#E5C089]' : 'text-green-600'}`} />
+                  <div className={`rounded-xl border-2 p-6 text-center transition-all ${isDrawing ? 'border-[#C89A45] bg-[#C89A45]/10 animate-pulse' : 'border-green-400 bg-green-50'}`}>
+                    <Gift className={`w-12 h-12 mx-auto mb-3 ${isDrawing ? 'text-[#C89A45]' : 'text-green-600'}`} />
                     <p className="text-2xl font-bold text-slate-900">{winner.participant_name}</p>
                     <p className="text-slate-500">{winner.participant_email}</p>
                     {!isDrawing && (

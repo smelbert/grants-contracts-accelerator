@@ -1022,7 +1022,7 @@ export const WORKBOOK_PAGES = [
       </div>
       
       <div class="text-center">
-        <h3 class="text-xl font-bold text-[#E5C089] mb-2">🎁 Completion Giveaway</h3>
+        <h3 class="text-xl font-bold text-[#C89A45] mb-2">🎁 Completion Giveaway</h3>
         <p class="text-sm mb-3">As a program completer, you're eligible for a randomized drawing!</p>
         
         <p class="text-sm mb-2"><strong>Prize:</strong> Complimentary grant-writing consultation session with EIS</p>
@@ -1062,14 +1062,14 @@ export const WORKBOOK_PAGES = [
     content: `
       <div class="bg-gradient-to-r from-[#1E4F58] to-[#143A50] text-white p-6 rounded-lg mb-6 -mx-3">
         <h2 class="text-2xl font-bold mb-2">INCUBATEHER | Funding Readiness Reflection</h2>
-        <p class="text-sm text-[#E5C089]">Delivered by Elbert Innovative Solutions</p>
-        <p class="text-sm text-[#E5C089]">Funded by Columbus Urban League</p>
+        <p class="text-sm text-[#C89A45]">Delivered by Elbert Innovative Solutions</p>
+        <p class="text-sm text-[#C89A45]">Funded by Columbus Urban League</p>
       </div>
       
-      <div class="border-b-2 border-[#E5C089] mb-6"></div>
+      <div class="border-b-2 border-[#C89A45] mb-6"></div>
       
       <div class="space-y-6 text-sm">
-        <div class="bg-[#E5C089]/10 p-4 rounded-lg border-l-4 border-[#E5C089]">
+        <div class="bg-[#C89A45]/10 p-4 rounded-lg border-l-4 border-[#C89A45]">
           <p class="font-semibold text-[#143A50] mb-2">💡 Reminder:</p>
           <p class="text-slate-700">Funding should strengthen your business — not destabilize it. Structure first. Submission second.</p>
         </div>

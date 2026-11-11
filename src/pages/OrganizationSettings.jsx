@@ -225,7 +225,7 @@ function BrandingTab({ organization, onUpdate }) {
   const [logoUrl, setLogoUrl] = useState(organization.custom_logo_url || '');
   const [brandColors, setBrandColors] = useState({
     primary: organization.brand_primary_color || '#143A50',
-    secondary: organization.brand_secondary_color || '#E5C089'
+    secondary: organization.brand_secondary_color || '#C89A45'
   });
 
   const handleSave = () => {

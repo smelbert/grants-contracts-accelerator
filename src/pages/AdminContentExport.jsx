@@ -414,7 +414,7 @@ export default function AdminContentExport() {
           <CardContent className="p-6 flex items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                <Package className="w-6 h-6 text-[#E5C089]" />
+                <Package className="w-6 h-6 text-[#C89A45]" />
               </div>
               <div>
                 <h2 className="text-lg font-bold">Export Everything</h2>
@@ -422,7 +422,7 @@ export default function AdminContentExport() {
               </div>
             </div>
             <Button
-              className="bg-[#E5C089] text-[#143A50] font-bold hover:bg-[#d4af76] shrink-0"
+              className="bg-[#C89A45] text-[#143A50] font-bold hover:bg-[#d4af76] shrink-0"
               onClick={handleExportAll}
               disabled={!!exporting}
             >

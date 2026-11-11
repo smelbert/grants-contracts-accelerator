@@ -245,7 +245,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         {/* Action Items Callout */}
         {(displayPage.actionItems || displayPage.action_items) && (
           <div className="relative">
-            <div className="absolute -left-4 top-0 w-1 h-full bg-[#E5C089]" />
+            <div className="absolute -left-4 top-0 w-1 h-full bg-[#C89A45]" />
             <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 border-2 border-amber-300 rounded-xl p-4 shadow-md">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center">
@@ -271,7 +271,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
             <div 
               className="prose prose-slate max-w-none 
                 prose-headings:text-[#143A50] prose-headings:font-bold prose-headings:mb-4
-                prose-h3:text-xl prose-h3:mt-6 prose-h3:border-b-2 prose-h3:border-[#E5C089] prose-h3:pb-2
+                prose-h3:text-xl prose-h3:mt-6 prose-h3:border-b-2 prose-h3:border-[#C89A45] prose-h3:pb-2
                 prose-a:text-[#AC1A5B] prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
                 prose-strong:text-[#143A50] prose-strong:font-bold
                 prose-ul:space-y-2 prose-ul:my-4
@@ -280,7 +280,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                 prose-table:border-collapse prose-table:w-full
                 prose-th:bg-[#143A50] prose-th:text-white prose-th:p-3 prose-th:text-left prose-th:font-semibold
                 prose-td:border prose-td:border-slate-300 prose-td:p-3
-                prose-blockquote:border-l-4 prose-blockquote:border-[#E5C089] prose-blockquote:bg-[#E5C089]/5 prose-blockquote:pl-4 prose-blockquote:py-2"
+                prose-blockquote:border-l-4 prose-blockquote:border-[#C89A45] prose-blockquote:bg-[#C89A45]/5 prose-blockquote:pl-4 prose-blockquote:py-2"
               dangerouslySetInnerHTML={{ __html: displayPage.content }}
             />
           </div>
@@ -300,7 +300,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
         {page.fields && page.fields.length > 0 && (
           <div className="relative">
             <div className="absolute -left-4 top-0 w-1 h-full bg-[#AC1A5B]" />
-            <div className="bg-gradient-to-br from-[#E5C089]/10 to-[#E5C089]/5 border-2 border-[#E5C089] rounded-xl p-4 shadow-lg">
+            <div className="bg-gradient-to-br from-[#C89A45]/10 to-[#C89A45]/5 border-2 border-[#C89A45] rounded-xl p-4 shadow-lg">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-8 h-8 rounded-full bg-[#143A50] flex items-center justify-center">
                   <CheckSquare className="w-4 h-4 text-white" />
@@ -369,7 +369,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                           onChange={(e) => handleFieldChange(field.id, e.target.value)}
                           placeholder={field.placeholder}
                           rows={field.rows || 4}
-                          className="w-full border-2 border-slate-300 focus:border-[#E5C089] focus:ring-2 focus:ring-[#E5C089]/20"
+                          className="w-full border-2 border-slate-300 focus:border-[#C89A45] focus:ring-2 focus:ring-[#C89A45]/20"
                         />
                       </div>
                       {activeAIField === field.id && (
@@ -421,7 +421,7 @@ export default function WorkbookPage({ page, responses, onResponseChange, assess
                         value={fieldValue}
                         onChange={(e) => handleFieldChange(field.id, e.target.value)}
                         placeholder={field.placeholder}
-                        className="w-full border-2 border-slate-300 focus:border-[#E5C089] focus:ring-2 focus:ring-[#E5C089]/20"
+                        className="w-full border-2 border-slate-300 focus:border-[#C89A45] focus:ring-2 focus:ring-[#C89A45]/20"
                       />
                     </div>
                   );

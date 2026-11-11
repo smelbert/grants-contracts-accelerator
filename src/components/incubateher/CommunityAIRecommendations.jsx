@@ -97,7 +97,7 @@ export default function CommunityAIRecommendations({ userEmail }) {
       <Card className="bg-gradient-to-r from-[#AC1A5B] to-[#A65D40] text-white border-0">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-[#E5C089]" />
+            <Sparkles className="w-8 h-8 text-[#C89A45]" />
             <div>
               <CardTitle className="text-2xl">AI-Powered Community Insights</CardTitle>
               <CardDescription className="text-white/80">
@@ -154,7 +154,7 @@ export default function CommunityAIRecommendations({ userEmail }) {
                                 <strong>Why this matters for you:</strong> {rec.reason}
                               </CardDescription>
                             </div>
-                            <Badge className="ml-4 bg-[#E5C089] text-[#143A50]">
+                            <Badge className="ml-4 bg-[#C89A45] text-[#143A50]">
                               {rec.relevance_score}/10 Match
                             </Badge>
                           </div>
@@ -334,7 +334,7 @@ export default function CommunityAIRecommendations({ userEmail }) {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: idx * 0.1 }}
                       >
-                        <Card className="bg-gradient-to-br from-white to-[#E5C089]/10">
+                        <Card className="bg-gradient-to-br from-white to-[#C89A45]/10">
                           <CardHeader>
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
@@ -349,7 +349,7 @@ export default function CommunityAIRecommendations({ userEmail }) {
                                   </div>
                                 </div>
                               </div>
-                              <Badge className="bg-[#E5C089] text-[#143A50]">
+                              <Badge className="bg-[#C89A45] text-[#143A50]">
                                 {conn.match_score}/10 Match
                               </Badge>
                             </div>
