@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import FamilyFooter from '@/components/brand/FamilyFooter';
+import SectionKicker from '@/components/brand/SectionKicker';
 import { ArrowLeft } from 'lucide-react';
 import { 
   Award, 
@@ -335,40 +337,7 @@ export default function PublicHomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#143A50] text-slate-400 py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
-                alt="EIS" 
-                className="h-10 w-auto mb-4"
-              />
-              <p className="text-sm">
-                Empowering all organizations to achieve sustainable growth through strategic funding, capacity building, and leadership development.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to={createPageUrl('PublicHome')} className="hover:text-[#E5C089]">Home</Link></li>
-                <li><Link to={createPageUrl('AboutEIS')} className="hover:text-[#E5C089]">About EIS</Link></li>
-                <li><a href="https://www.elbertinnovativesolutions.org/" className="hover:text-[#E5C089]" target="_blank" rel="noopener noreferrer">Website</a></li>
-                <li><Link to={createPageUrl('Register')} className="hover:text-[#E5C089]">Get Started</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Contact</h4>
-              <p className="text-sm">
-                Visit: <a href="https://www.elbertinnovativesolutions.org/" className="hover:text-[#E5C089]" target="_blank" rel="noopener noreferrer">elbertinnovativesolutions.org</a>
-              </p>
-            </div>
-          </div>
-          <div className="border-t border-[#1E4F58] mt-8 pt-8 text-center text-sm">
-            <p>&copy; 2026 Elbert Innovative Solutions. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <FamilyFooter />
     </div>
   );
 }

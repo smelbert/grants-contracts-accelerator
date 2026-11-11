@@ -659,15 +659,32 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Global Top Bar - Desktop */}
-      <div className="hidden lg:block lg:pl-64 sticky top-0 z-30 bg-white border-b border-slate-100">
-        <div className="flex items-center justify-end gap-4 px-6 py-3">
-          <Button variant="ghost" size="icon" className="relative text-[#143A50] hover:bg-[#143A50]/10">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-[#AC1A5B] rounded-full"></span>
-          </Button>
-          <Button variant="ghost" size="icon" className="text-[#143A50] hover:bg-[#143A50]/10">
-            <HelpCircle className="w-5 h-5" />
-          </Button>
+      <div className="hidden lg:block lg:pl-64 sticky top-0 z-30 bg-white border-b border-[#E3D9CB]">
+        <div className="flex items-center justify-between gap-4 px-6 py-3">
+          <div className="flex items-center gap-3">
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png"
+              alt="Elbert Innovative Solutions"
+              className="h-9 w-auto"
+            />
+            <div>
+              <p className="font-heading text-[17px] font-bold leading-none text-[#143A50]">
+                Funding-Ready by Design<span className="text-[#C89A45]">™</span>
+              </p>
+              <p className="mt-1 font-body text-[8px] font-bold uppercase tracking-[0.22em] text-[#7E5F22]">
+                By Elbert Innovative Solutions
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" className="relative text-[#143A50] hover:bg-[#143A50]/10">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-[#AC1A5B] rounded-full"></span>
+            </Button>
+            <Button variant="ghost" size="icon" className="text-[#143A50] hover:bg-[#143A50]/10">
+              <HelpCircle className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -785,7 +802,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Footer */}
-      <footer className="lg:pl-64 bg-white border-t border-slate-100 mt-auto">
+      <footer className="lg:pl-64 bg-white border-t border-[#E3D9CB] mt-auto">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">
