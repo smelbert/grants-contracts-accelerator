@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import FamilyBar from '@/components/brand/FamilyBar';
+import Wordmark from '@/components/brand/Wordmark';
 import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
 import AIOnboardingAssistant from '@/components/onboarding/AIOnboardingAssistant';
 import IncubateHerOnboarding from '@/components/incubateher/IncubateHerOnboarding';
@@ -461,7 +463,12 @@ export default function Layout({ children, currentPageName }) {
 
   // Render public pages without any authenticated layout
   if (isPublic) {
-    return <>{children}</>;
+    return (
+      <>
+        <FamilyBar />
+        {children}
+      </>
+    );
   }
 
   // Show loading screen while user is being fetched (prevents white flash)
@@ -469,8 +476,8 @@ export default function Layout({ children, currentPageName }) {
     return (
       <div className="min-h-screen bg-[#143A50] flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block w-8 h-8 border-4 border-[#E5C089] border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-[#E5C089]/70">Loading...</p>
+          <div className="inline-block w-8 h-8 border-4 border-[#C89A45] border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-[#C89A45]/70">Loading...</p>
         </div>
       </div>
     );
@@ -481,7 +488,7 @@ export default function Layout({ children, currentPageName }) {
   const handleLogout = () => { base44.auth.logout(); };
 
   const portalColors = {
-    user: { bg: 'bg-[#E5C089]/10', border: 'border-[#E5C089]', accent: 'bg-[#143A50]', accentHover: 'hover:bg-[#1E4F58]', text: 'text-[#143A50]' },
+    user: { bg: 'bg-[#C89A45]/10', border: 'border-[#C89A45]', accent: 'bg-[#143A50]', accentHover: 'hover:bg-[#1E4F58]', text: 'text-[#143A50]' },
     coach: { bg: 'bg-[#1E4F58]/10', border: 'border-[#1E4F58]', accent: 'bg-[#1E4F58]', accentHover: 'hover:bg-[#143A50]', text: 'text-[#1E4F58]' },
     admin: { bg: 'bg-[#AC1A5B]/10', border: 'border-[#AC1A5B]', accent: 'bg-[#AC1A5B]', accentHover: 'hover:bg-[#A65D40]', text: 'text-[#AC1A5B]' }
   };
@@ -495,24 +502,22 @@ export default function Layout({ children, currentPageName }) {
   const canSwitchPortals = user?.role === 'owner' || user?.role === 'admin' || user?.role === 'coach';
 
   return (
-    <div className="min-h-screen bg-slate-50/80">
+    <div className="min-h-screen bg-[#F9F4EF]">
+      <div className="lg:pl-64">
+        <FamilyBar />
+      </div>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden bg-[#143A50] border-r border-[#1E4F58] px-4 py-6">
           {/* Logo */}
-          <Link to={createPageUrl('Home')} className="flex items-center justify-center mt-10 px-2">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
-              alt="Elbert Innovative Solutions" 
-              className="h-auto object-contain"
-              style={{ width: '140px', maxWidth: 'calc(100% - 8px)' }}
-            />
+          <Link to={createPageUrl('Home')} className="mt-4 px-2">
+            <Wordmark onDark align="center" logoClassName="h-10" />
           </Link>
 
           {/* Portal Switcher */}
           {canSwitchPortals && (
             <div className="mb-4">
-              <p className="text-xs text-[#E5C089]/70 mb-2">Portal View</p>
+              <p className="text-xs text-[#C89A45]/70 mb-2">Portal View</p>
               <select
                 value={portalView}
                 onChange={(e) => handlePortalChange(e.target.value)}
@@ -541,17 +546,13 @@ export default function Layout({ children, currentPageName }) {
             <ul className="flex flex-1 flex-col gap-6">
               {navItems.map((group, groupIdx) => (
                 <li key={groupIdx}>
-                  <p className="text-xs font-semibold text-[#E5C089]/60 uppercase tracking-wider mb-2 px-3">
+                  <p className="text-xs font-semibold text-[#C89A45]/60 uppercase tracking-wider mb-2 px-3">
                     {group.groupName}
                   </p>
                   <ul className="space-y-1">
                     {group.items.map((item) => {
                       const isActive = currentPageName === item.page;
-                      const activeClass = effectiveRole === 'admin'
-                        ? 'bg-[#AC1A5B]/20 text-[#E5C089] border-l-4 border-[#AC1A5B]'
-                        : effectiveRole === 'coach'
-                        ? 'bg-[#1E4F58] text-[#E5C089] border-l-4 border-[#E5C089]'
-                        : 'bg-[#1E4F58] text-[#E5C089] border-l-4 border-[#E5C089]';
+                      const activeClass = 'bg-[#1E4F58] font-bold text-white border-l-[3px] border-[#C89A45]';
                       return (
                         <li key={item.name}>
                           <Link
@@ -563,10 +564,10 @@ export default function Layout({ children, currentPageName }) {
                                 : 'text-white/70 hover:bg-[#1E4F58] hover:text-white'
                             }`}
                           >
-                            <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#E5C089]' : 'text-white/50 group-hover:text-white'}`} />
+                            <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#C89A45]' : 'text-white/50 group-hover:text-white'}`} />
                             <span className="truncate">{item.name}</span>
                             {isActive && (
-                              <ChevronRight className="w-3 h-3 ml-auto flex-shrink-0 text-[#E5C089]" />
+                              <ChevronRight className="w-3 h-3 ml-auto flex-shrink-0 text-[#C89A45]" />
                             )}
                           </Link>
                         </li>
@@ -583,7 +584,7 @@ export default function Layout({ children, currentPageName }) {
             <div className="border-t border-[#1E4F58] pt-4">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-full bg-[#1E4F58] flex items-center justify-center">
-                  <span className="text-sm font-medium text-[#E5C089]">
+                  <span className="text-sm font-medium text-[#C89A45]">
                     {user.full_name?.[0] || user.email?.[0]?.toUpperCase()}
                   </span>
                 </div>
@@ -594,7 +595,7 @@ export default function Layout({ children, currentPageName }) {
               </div>
               <div className="space-y-1 mb-3">
                 <a href="https://www.elbertinnovativesolutions.org/" target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="sm" className="w-full justify-start text-[#E5C089] hover:bg-[#1E4F58] hover:text-[#E5C089]">
+                  <Button variant="ghost" size="sm" className="w-full justify-start text-[#C89A45] hover:bg-[#1E4F58] hover:text-[#C89A45]">
                     Visit EIS Website
                   </Button>
                 </a>
@@ -624,7 +625,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Global Top Bar - Mobile */}
-      <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-slate-200">
+      <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-[#E3D9CB]">
         <div className="flex items-center justify-between px-4 py-3">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
             <img 
@@ -632,6 +633,14 @@ export default function Layout({ children, currentPageName }) {
               alt="EIS" 
               className="h-8 w-auto"
             />
+            <div>
+              <p className="font-heading text-[15px] font-bold leading-none text-[#143A50]">
+                Funding-Ready by Design<span className="text-[#C89A45]">™</span>
+              </p>
+              <p className="mt-0.5 font-body text-[7px] font-bold uppercase tracking-[0.2em] text-[#7E5F22]">
+                By Elbert Innovative Solutions
+              </p>
+            </div>
           </Link>
           <div className="flex items-center gap-2">
             <NotificationBell userEmail={user?.email} />
