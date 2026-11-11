@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import FamilyFooter from '@/components/brand/FamilyFooter';
 import { Badge } from '@/components/ui/badge';
 import { 
   CheckCircle2, XCircle, Shield, Users, Sparkles, 
@@ -308,6 +309,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
+      <FamilyFooter />
     </div>
   );
 }

@@ -135,7 +135,7 @@ export default function BlogPost() {
             <div className="max-w-[1280px] mx-auto px-6 pb-12">
               <Link 
                 to={createPageUrl('Blog')}
-                className="inline-flex items-center gap-2 text-white hover:text-[#E5C089] mb-4 transition-colors"
+                className="inline-flex items-center gap-2 text-white hover:text-[#C89A45] mb-4 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="font-medium">Back to Blog</span>
@@ -164,7 +164,7 @@ export default function BlogPost() {
                   variant="ghost"
                   size="sm"
                   onClick={handleShare}
-                  className="text-white hover:text-[#E5C089] hover:bg-white/10"
+                  className="text-white hover:text-[#C89A45] hover:bg-white/10"
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   Share
@@ -187,7 +187,7 @@ export default function BlogPost() {
               margin-top: 3rem;
               margin-bottom: 1.5rem;
               line-height: 1.2;
-              border-bottom: 3px solid #E5C089;
+              border-bottom: 3px solid #C89A45;
               padding-bottom: 0.75rem;
             }
             
@@ -264,7 +264,7 @@ export default function BlogPost() {
             }
             
             article blockquote {
-              border-left: 4px solid #E5C089;
+              border-left: 4px solid #C89A45;
               padding-left: 1.5rem;
               margin: 2rem 0;
               font-style: italic;
@@ -335,8 +335,8 @@ export default function BlogPost() {
 
         {/* Author Bio - always Dr. Shawnte Elbert */}
         <div className="border-t border-slate-200 pt-8 mt-12">
-          <div className="flex items-start gap-5 bg-gradient-to-r from-[#143A50]/5 to-[#E5C089]/10 rounded-xl p-6 border border-[#E5C089]/30">
-            <div className="w-20 h-20 bg-[#143A50] rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0 border-4 border-[#E5C089]">
+          <div className="flex items-start gap-5 bg-gradient-to-r from-[#143A50]/5 to-[#C89A45]/10 rounded-xl p-6 border border-[#C89A45]/30">
+            <div className="w-20 h-20 bg-[#143A50] rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0 border-4 border-[#C89A45]">
               SE
             </div>
             <div>
@@ -370,7 +370,7 @@ export default function BlogPost() {
               {relatedPosts.map((relatedPost) => (
                 <Link key={relatedPost.id} to={createPageUrl('BlogPost') + '?slug=' + relatedPost.slug}>
                   <div className="bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
-                    <div className="aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-[#E5C089]/30 to-[#143A50]/20">
+                    <div className="aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-[#C89A45]/30 to-[#143A50]/20">
                       {relatedPost.featured_image ? (
                         <img 
                           src={relatedPost.featured_image} 
@@ -427,7 +427,7 @@ export default function BlogPost() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link to={createPageUrl('Register')}>
-                <Button className="bg-[#FFD700] text-[#143A50] hover:bg-[#E5C089] font-semibold px-8 py-6 text-lg">
+                <Button className="bg-[#FFD700] text-[#143A50] hover:bg-[#C89A45] font-semibold px-8 py-6 text-lg">
                   Get Started Today
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>

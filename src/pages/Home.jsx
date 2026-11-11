@@ -129,12 +129,13 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/20 p-6">
+    <div className="min-h-screen bg-[#F9F4EF] p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">
+            <p className="kicker mb-2">Funding readiness</p>
+            <h1 className="text-3xl font-heading font-bold text-[#143A50]">
               Welcome back, {user.full_name?.split(' ')[0] || 'there'}!
             </h1>
             <p className="text-slate-600 mt-1">Here's what's happening with your funding journey</p>

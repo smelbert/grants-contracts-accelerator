@@ -114,7 +114,7 @@ export default function Blog() {
                 />
                 <button 
                   onClick={() => {}}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-8 py-2 bg-[#FFD700] hover:bg-[#E5C089] text-[#143A50] font-semibold rounded-lg transition-colors"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-8 py-2 bg-[#FFD700] hover:bg-[#C89A45] text-[#143A50] font-semibold rounded-lg transition-colors"
                 >
                   Search
                 </button>
@@ -150,7 +150,7 @@ export default function Blog() {
                             {featuredPost.category}
                           </span>
                         )}
-                        <h2 className="text-2xl md:text-3xl font-bold mb-2 group-hover:text-[#E5C089] transition-colors">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-2 group-hover:text-[#C89A45] transition-colors">
                           {featuredPost.title}
                         </h2>
                         {featuredPost.excerpt && (
@@ -222,7 +222,7 @@ export default function Blog() {
                     to={createPageUrl('BlogPost') + '?slug=' + post.slug}
                     className="flex gap-3 group"
                   >
-                    <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-[#E5C089] to-[#B5A698]">
+                    <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-[#C89A45] to-[#B5A698]">
                       {post.featured_image ? (
                         <img 
                           src={post.featured_image} 

@@ -64,10 +64,10 @@ export default function AboutEISPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-[#E5C089]/10 via-[#B5A698]/10 to-white">
+      <section className="py-20 bg-gradient-to-br from-[#C89A45]/10 via-[#B5A698]/10 to-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-[#E5C089]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 bg-[#C89A45]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Heart className="w-4 h-4" />
               Our Story
             </div>
@@ -95,7 +95,7 @@ export default function AboutEISPage() {
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <Card className="bg-[#E5C089]/20 border-[#E5C089]">
+              <Card className="bg-[#C89A45]/20 border-[#C89A45]">
                 <CardContent className="pt-6">
                   <Building2 className="w-10 h-10 text-[#143A50] mb-4" />
                   <h3 className="font-semibold text-slate-900 mb-2">500+</h3>
@@ -133,7 +133,7 @@ export default function AboutEISPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 bg-[#E5C089]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 bg-[#C89A45]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
                 <Sparkles className="w-4 h-4" />
                 Founder & Lead Consultant
               </div>
@@ -153,7 +153,7 @@ export default function AboutEISPage() {
 
               <div className="mt-8 space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E5C089]/30 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-[#C89A45]/30 flex items-center justify-center flex-shrink-0">
                     <Users className="w-5 h-5 text-[#143A50]" />
                   </div>
                   <div>
@@ -186,7 +186,7 @@ export default function AboutEISPage() {
               <div className="relative flex items-center justify-center">
                 {/* Layered 3D backdrop */}
                 <div className="absolute w-80 h-96 bg-[#B5A698]/40 rounded-2xl -rotate-6 translate-x-4 translate-y-4"></div>
-                <div className="absolute w-80 h-96 bg-[#E5C089]/50 rounded-2xl -rotate-3 translate-x-2 translate-y-2"></div>
+                <div className="absolute w-80 h-96 bg-[#C89A45]/50 rounded-2xl -rotate-3 translate-x-2 translate-y-2"></div>
                 
                 {/* Main photo */}
                 <div className="relative z-10">
@@ -197,7 +197,7 @@ export default function AboutEISPage() {
                   />
                 </div>
                 
-                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl border border-[#E5C089] max-w-xs z-20">
+                <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl border border-[#C89A45] max-w-xs z-20">
                   <p className="text-sm font-medium text-slate-900 mb-2">
                     "Perfectly Positioned to Empower, Lead, and Thrive."
                   </p>
@@ -222,7 +222,7 @@ export default function AboutEISPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card>
               <CardContent className="pt-6">
-                <div className="w-12 h-12 rounded-lg bg-[#E5C089]/30 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-lg bg-[#C89A45]/30 flex items-center justify-center mb-4">
                   <Target className="w-6 h-6 text-[#143A50]" />
                 </div>
                 <h3 className="text-xl font-semibold text-slate-900 mb-3">Personalized Strategy</h3>
@@ -263,12 +263,12 @@ export default function AboutEISPage() {
       <section className="py-20 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Work Together?</h2>
-          <p className="text-xl text-[#E5C089]/80 mb-8">
+          <p className="text-xl text-[#C89A45]/80 mb-8">
             Join the EIS community and start building your sustainable funding future today
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Register')}>
-              <Button size="lg" className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 text-lg px-8">
+              <Button size="lg" className="bg-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/90 text-lg px-8">
                 Get Started
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>

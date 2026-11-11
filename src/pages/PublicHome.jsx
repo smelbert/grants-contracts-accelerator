@@ -46,7 +46,7 @@ function TestimonialsSection() {
           {testimonials.map((testimonial) => (
             <Card key={testimonial.id} className="hover:shadow-xl transition-shadow">
               <CardContent className="p-6">
-                <Quote className="w-8 h-8 text-[#E5C089] mb-4" />
+                <Quote className="w-8 h-8 text-[#C89A45] mb-4" />
                 <div className="flex mb-3">
                   {[...Array(5)].map((_, i) => (
                     <Star
@@ -117,15 +117,12 @@ export default function PublicHomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#E5C089]/10 via-[#B5A698]/10 to-white py-20 md:py-32">
+      <section className="relative bg-gradient-to-br from-[#C89A45]/10 via-[#F9F4EF] to-[#F9F4EF] py-20 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 bg-[#E5C089]/20 text-[#143A50] px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <Award className="w-4 h-4" />
-                Strategic Funding for Every Organization
-              </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+              <SectionKicker className="mb-4">Strategic Funding for Every Organization</SectionKicker>
+              <h1 className="text-5xl md:text-6xl font-heading font-bold text-[#143A50] mb-6 leading-[1.05]">
                 Transform Your Organization with Strategic Funding Solutions
               </h1>
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
@@ -149,7 +146,7 @@ export default function PublicHomePage() {
               <div className="bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-[#E5C089]/30 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-[#C89A45]/30 flex items-center justify-center">
                       <Target className="w-6 h-6 text-[#143A50]" />
                     </div>
                     <div>
@@ -187,15 +184,15 @@ export default function PublicHomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
-              <p className="text-5xl font-bold text-[#E5C089] mb-2">$50M+</p>
+              <p className="text-5xl font-bold text-[#C89A45] mb-2">$50M+</p>
               <p className="text-slate-300">In Funding Secured</p>
             </div>
             <div>
-              <p className="text-5xl font-bold text-[#E5C089] mb-2">500+</p>
+              <p className="text-5xl font-bold text-[#C89A45] mb-2">500+</p>
               <p className="text-slate-300">Organizations Served</p>
             </div>
             <div>
-              <p className="text-5xl font-bold text-[#E5C089] mb-2">95%</p>
+              <p className="text-5xl font-bold text-[#C89A45] mb-2">95%</p>
               <p className="text-slate-300">Client Success Rate</p>
             </div>
           </div>
@@ -307,12 +304,12 @@ export default function PublicHomePage() {
       <section className="py-20 bg-gradient-to-br from-[#143A50] to-[#1E4F58] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Funding Future?</h2>
-          <p className="text-xl text-[#E5C089]/80 mb-8">
+          <p className="text-xl text-[#C89A45]/80 mb-8">
             Join hundreds of organizations—nonprofits, for-profits, and entrepreneurs—who have successfully secured sustainable funding with EIS
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Register')}>
-              <Button size="lg" className="bg-[#E5C089] text-[#143A50] hover:bg-[#E5C089]/90 text-lg px-8">
+              <Button size="lg" className="bg-[#C89A45] text-[#143A50] hover:bg-[#C89A45]/90 text-lg px-8">
                 Get Started Today
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>

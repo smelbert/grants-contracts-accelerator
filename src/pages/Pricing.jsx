@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import FamilyFooter from '@/components/brand/FamilyFooter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -532,6 +533,7 @@ export default function PricingPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <FamilyFooter />
     </div>
   );
 }

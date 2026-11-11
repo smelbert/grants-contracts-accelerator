@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import FamilyFooter from '@/components/brand/FamilyFooter';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
@@ -482,6 +483,7 @@ export default function TermsOfService() {
           </div>
         </div>
       </div>
+      <FamilyFooter />
     </div>
   );
 }
