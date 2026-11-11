@@ -69,7 +69,7 @@ export default function LocalBusinessNews() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-10">
+      <div className="bg-white border-b border-slate-200 px-6 py-4 sticky top-14 lg:top-16 z-20">
         <div className="max-w-5xl mx-auto flex flex-wrap gap-3 items-center">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />

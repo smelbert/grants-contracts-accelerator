@@ -625,8 +625,8 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Global Top Bar - Mobile */}
-      <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-[#E3D9CB]">
-        <div className="flex items-center justify-between px-4 py-3">
+      <header className="lg:hidden sticky top-0 z-40 bg-white border-b border-[#E3D9CB] shadow-sm">
+        <div className="flex h-14 items-center justify-between px-4">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png" 
@@ -659,8 +659,8 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Global Top Bar - Desktop */}
-      <div className="hidden lg:block lg:pl-64 sticky top-0 z-30 bg-white border-b border-[#E3D9CB]">
-        <div className="flex items-center justify-between gap-4 px-6 py-3">
+      <div className="hidden lg:block lg:ml-64 sticky top-0 z-30 bg-white border-b border-[#E3D9CB] shadow-sm">
+        <div className="flex h-16 items-center justify-between gap-4 px-6">
           <div className="flex items-center gap-3">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69718907de4a3924f5e6155c/f1267a80a_EISLogotransparent.png"
@@ -802,7 +802,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Footer */}
-      <footer className="lg:pl-64 bg-white border-t border-[#E3D9CB] mt-auto">
+      <footer className="lg:ml-64 bg-white border-t border-[#E3D9CB] mt-auto">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">

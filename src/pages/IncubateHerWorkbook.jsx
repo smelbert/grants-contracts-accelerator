@@ -252,7 +252,7 @@ export default function IncubateHerWorkbook() {
       <div className="max-w-[1920px] mx-auto py-8 px-4">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-1 hidden lg:block">
-            <div className="sticky top-4">
+            <div className="sticky top-20">
               <WorkbookProgressTracker
                 responses={allResponses}
                 currentPageId={currentPage.id}
@@ -266,7 +266,7 @@ export default function IncubateHerWorkbook() {
           </div>
 
           <div className="lg:col-span-4 space-y-6">
-            <Card className="sticky top-4 z-10 shadow-xl border-2 border-[#C89A45]">
+            <Card className="sticky top-16 lg:top-20 z-20 shadow-xl border-2 border-[#C89A45]">
               <CardContent className="py-4">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-3">

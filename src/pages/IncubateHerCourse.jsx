@@ -423,7 +423,7 @@ export default function IncubateHerCourse() {
   return (
     <div className="min-h-screen bg-white">
       {/* Sticky Top Navigation Bar */}
-      <div className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+      <div className="sticky top-14 lg:top-16 z-20 bg-white border-b border-slate-200 shadow-sm">
         <div className="px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
