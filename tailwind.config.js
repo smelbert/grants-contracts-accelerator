@@ -61,6 +61,11 @@ module.exports = {
   				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
+  		fontFamily: {
+  			heading: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+  			display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+  			body: ['"DM Sans"', 'system-ui', 'sans-serif']
+  		},
   		keyframes: {
   			'accordion-down': {
   				from: {
